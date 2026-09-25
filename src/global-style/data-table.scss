@@ -428,12 +428,18 @@ app-primedatatable {
   .action-pill-group {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     background: var(--border);
-    padding: 4px 6px;
+    padding: 2px 4px;
     border-radius: var(--radius-lg);
 
-    .btn-action-icon {
+    /* compact row actions so they don't set the row height */
+    .btn-action-icon,
+    .btn-kebab {
+      --btn-h: 28px;
+      width: 28px;
+      height: 28px;
+      font-size: 13px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
