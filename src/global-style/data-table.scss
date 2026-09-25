@@ -165,7 +165,7 @@ app-primedatatable {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
     margin-bottom: 20px;
 
     .toolbar-left {
@@ -191,7 +191,7 @@ app-primedatatable {
         }
 
         input {
-          padding-left: 36px;
+          padding-left: 32px;
           min-width: 230px;
 
         }
@@ -304,7 +304,7 @@ app-primedatatable {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 16px;
+    padding: 6px 16px;
     border-radius: var(--radius-sm);
     font-size: 13px;
     font-weight: 600;
@@ -444,7 +444,7 @@ app-primedatatable {
   .whrs-wrap {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
     min-width: 100px;
 
     .whrs-label {
@@ -527,7 +527,7 @@ app-primedatatable {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 3px 12px;
+      padding: 2px 12px;
       border-radius: var(--radius-xs);
       border: 1px solid var(--border);
       background: var(--bg-soft);
@@ -617,7 +617,7 @@ app-primedatatable {
     align-items: center;
     justify-content: space-between;
 
-    padding: 22px 26px;
+    padding: 20px 24px;
 
     background: var(--white);
 
@@ -673,12 +673,12 @@ app-primedatatable {
 
     min-height: 0;
 
-    padding: 18px 26px 26px;
+    padding: 16px 24px 24px;
 
     display: flex;
     flex-direction: column;
 
-    gap: 14px;
+    gap: 12px;
 
     /* Scroll only here */
     overflow-y: auto;
@@ -717,7 +717,7 @@ app-primedatatable {
     align-items: center;
     justify-content: space-between;
 
-    padding: 16px 18px;
+    padding: 16px 16px;
 
     border: 1px solid var(--neutral-50-3);
 
@@ -795,7 +795,7 @@ app-primedatatable {
 
     margin-top: 4px;
 
-    padding: 10px 18px;
+    padding: 10px 16px;
 
     border-radius: var(--radius-md);
 
@@ -836,11 +836,11 @@ app-primedatatable {
     }
 
     .columns-offcanvas-header {
-      padding: 18px 20px;
+      padding: 16px 20px;
     }
 
     .columns-offcanvas-body {
-      padding: 16px 20px 22px;
+      padding: 16px 20px 20px;
     }
   }
 
@@ -957,7 +957,7 @@ app-primedatatable {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 12px;
+    padding: 8px 12px;
     border: 0;
     background: transparent;
     border-radius: var(--radius-sm);
@@ -999,7 +999,7 @@ app-primedatatable {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 4px;
     border: none;
     padding: 0 12px;
     font-size: 12px;

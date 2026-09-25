@@ -92,7 +92,7 @@ button {
 .role-tab {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 
 }
 
@@ -200,7 +200,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 14px 20px;
+  padding: 12px 20px;
   border-bottom: 1px solid var(--ps-line);
 
   &.wrap {
@@ -267,7 +267,7 @@ button {
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   padding: 4px 10px;
   border-radius: 99px;
   font-size: 11px;
@@ -275,7 +275,7 @@ button {
   white-space: nowrap;
 
   &.small {
-    padding: 3px 9px;
+    padding: 2px 8px;
     font-size: 10px;
   }
   &.pending {
@@ -361,7 +361,7 @@ button {
   }
 
   thead th {
-    padding: 10px 14px;
+    padding: 10px 12px;
     background: var(--border);
     color: var(--ps-ink);
     font-size: 12px;
@@ -380,7 +380,7 @@ button {
   }
 
   tbody td {
-    padding: 8px 14px;
+    padding: 8px 12px;
     background: var(--white);
     color: var(--neutral-700);
     font-size: 12px;
@@ -659,7 +659,7 @@ button {
   &.brand {
     background: linear-gradient(135deg, var(--primary-dark), var(--primary-dark));
     color: var(--white);
-    padding: 18px 24px;
+    padding: 16px 24px;
   }
   &.solid {
     background: var(--ps-primary);
@@ -693,7 +693,7 @@ button {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 14px 24px;
+  padding: 12px 24px;
   border-top: 1px solid var(--ps-line);
 }
 
@@ -759,7 +759,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 20px;
+  padding: 12px 20px;
   border-radius: var(--card-radius);
   background: linear-gradient(135deg, var(--primary-dark), var(--primary-dark));
   color: var(--white);

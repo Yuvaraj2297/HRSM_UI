@@ -149,7 +149,7 @@
       color: var(--ink-400);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-top: 3px;
+      margin-top: 2px;
     }
   }
 }
@@ -182,7 +182,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 7px 9px;
+  padding: 6px 8px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   user-select: none;
 
@@ -208,7 +208,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    padding: 1.5px 6px;
+    padding: 2px 6px;
     border-radius: 999px;
     background: rgba(var(--white-rgb), 0.7);
   }
@@ -295,7 +295,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
-  margin-top: 14px;
+  margin-top: 12px;
   padding-top: 12px;
   border-top: 1px dashed var(--border-soft);
 

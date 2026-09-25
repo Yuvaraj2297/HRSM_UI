@@ -83,17 +83,16 @@
 
   /* =====================================================
      FONT FAMILY — single source of truth for the whole app.
-     Loaded via @fontsource/inter + @fontsource/sora (see
-     angular.json "styles": inter 400/500/600/700/800/900,
-     sora 700/800). Change a font here only; components should
+     Loaded via @fontsource/inter (see angular.json "styles":
+     400/500/600/700/800/900). Inter is the ONLY font in the app. Change a font here only; components should
      use these variables instead of hardcoding a font name.
        --font-family-base    body copy (everything inherits this)
        --font-family-display headings / titles / emphasis (bold only)
        --font-family-mono    codes, IDs, tokens
   ===================================================== */
   --font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-family-display: 'Sora', var(--font-family-base);
-  --font-family-mono: 'Consolas', 'SFMono-Regular', Menlo, Monaco, 'Courier New', monospace;
+  --font-family-display: var(--font-family-base); /* one font app-wide: titles use Inter too */
+  --font-family-mono: var(--font-family-base); /* codes / IDs use Inter too (one font app-wide) */
 
   /* back-compat alias: some components already reference --font-display */
   --font-display: var(--font-family-display);

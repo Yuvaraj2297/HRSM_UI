@@ -21,7 +21,7 @@
 }
 
 .punchin-report-page {
-  padding-bottom: 30px;
+  padding-bottom: 28px;
 }
 
 /* =========================================================
@@ -44,7 +44,7 @@
   background: var(--white);
   border: 1px solid var(--border-soft);
   border-radius: var(--card-radius);
-  padding: 10px 14px;
+  padding: 10px 12px;
   box-shadow: 0 2px 8px rgba(var(--neutral-900-rgb), 0.03);
 
   &.show {
@@ -132,7 +132,7 @@
     width: 100%;
     border: none;
     background: transparent;
-    padding: 7px 12px;
+    padding: 6px 12px;
     font-size: 12.5px;
     font-weight: 500;
     color: var(--ink-700);
@@ -163,7 +163,7 @@
       font-size: 11.5px;
       font-weight: 700;
       color: var(--table-head-text);
-      padding: 10px 14px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--table-border);
       border-top: none;
       vertical-align: middle;
@@ -199,7 +199,7 @@
     }
 
     td {
-      padding: 10px 14px;
+      padding: 10px 12px;
       vertical-align: middle;
       border-bottom: 1px solid var(--table-row-border);
       border-left: 1px solid var(--table-row-border);
@@ -299,7 +299,7 @@
       background: var(--warning-soft);
       color: var(--orange-450);
       font-size: 9.5px;
-      margin-left: 3px;
+      margin-left: 2px;
       vertical-align: middle;
     }
   }
@@ -333,7 +333,7 @@
   animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
   .offcanvas-header {
-    padding: 18px 24px;
+    padding: 16px 24px;
     background: var(--white);
     border-bottom: 1px solid var(--border-soft);
     flex-shrink: 0;
@@ -370,7 +370,7 @@
 /* Day summary hero card */
 .al-hero {
   margin: 16px 20px 4px;
-  padding: 16px 18px;
+  padding: 16px 16px;
   border-radius: var(--card-radius);
   background: var(--white);
   border: 1px solid var(--bg-muted);
@@ -408,7 +408,7 @@
       font-weight: 700;
       color: var(--ink-400);
       letter-spacing: 0.3px;
-      margin-top: 3px;
+      margin-top: 2px;
       text-transform: uppercase;
     }
   }
@@ -418,13 +418,13 @@
 .al-status-badge {
   font-size: 11.5px;
   font-weight: 700;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 999px;
   white-space: nowrap;
   letter-spacing: 0.3px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 
   &.full-day {
     background: var(--green-50-2);
@@ -454,12 +454,12 @@
   color: var(--ink-400);
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  padding: 18px 20px 8px;
+  padding: 16px 20px 8px;
 }
 
 .al-timeline {
   position: relative;
-  padding: 4px 20px 6px 50px;
+  padding: 4px 20px 6px 48px;
   max-width: 100%;
   box-sizing: border-box;
 
@@ -517,7 +517,7 @@
   align-items: center;
   gap: 12px;
   margin: 0 0 20px 0;
-  padding: 12px 14px;
+  padding: 12px 12px;
   background: var(--white);
   border: 1px solid var(--bg-muted);
   border-left: 4px solid var(--border);
@@ -628,7 +628,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 7px 12px;
+    padding: 6px 12px;
     border: none;
     background: none;
     font-size: 12px;
@@ -654,8 +654,8 @@
 .al-break-badge {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 14px;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: var(--radius-sm);
   background: var(--yellow-50-2);
   border: 1px dashed var(--orange-200);
@@ -695,7 +695,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 20px 18px;
+  padding: 20px 16px;
   background: var(--white);
   border: 1px dashed var(--border);
   border-radius: var(--card-radius);
@@ -706,7 +706,7 @@
 
 /* Offcanvas Sections (Quick Actions & Insight) */
 .al-section {
-  margin: 14px 20px;
+  margin: 12px 20px;
   background: var(--white);
   border: 1px solid var(--bg-muted);
   border-radius: var(--card-radius);
@@ -717,7 +717,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 13px 18px;
+    padding: 12px 16px;
     border: none;
     background: var(--bg-soft);
     font-size: 13.5px;
@@ -750,7 +750,7 @@
     }
 
     .al-section-body-inner {
-      padding: 14px 18px 16px;
+      padding: 12px 16px 16px;
       border-top: 1px solid var(--bg-muted);
     }
   }
@@ -760,7 +760,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 15px;
+  padding: 6px 16px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
   background: var(--white);
@@ -787,7 +787,7 @@
 
 .al-stat-card {
   text-align: center;
-  padding: 14px 6px;
+  padding: 12px 6px;
   border-radius: var(--card-radius);
   background: var(--bg-soft);
   border: 1px solid var(--bg-muted);
@@ -810,7 +810,7 @@
     font-weight: 700;
     color: var(--ink-400);
     letter-spacing: 0.3px;
-    margin-top: 3px;
+    margin-top: 2px;
     text-transform: uppercase;
   }
 }
@@ -834,7 +834,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  padding: 20px;
   pointer-events: none;
   overflow-y: auto;
 
@@ -849,7 +849,7 @@
 .ap-header {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 20px 24px;
   background: linear-gradient(135deg, var(--green-400) 0%, var(--primary-dark) 100%);
   color: var(--white);
@@ -908,7 +908,7 @@
 }
 
 .ap-body {
-  padding: 22px 24px 8px;
+  padding: 20px 24px 8px;
 }
 
 .ap-toggle-wrap {
@@ -918,8 +918,8 @@
   gap: 12px;
   background: var(--neutral-50-2);
   border-radius: var(--card-radius);
-  padding: 10px 14px;
-  margin-bottom: 18px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
 
   .ap-toggle-label {
     font-size: 13px;
@@ -938,7 +938,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 4px;
 
     }
   }
@@ -990,7 +990,7 @@
       background: var(--white);
       border: 1px solid var(--neutral-50-3);
       color: var(--ink-600);
-      padding: 7px 4px;
+      padding: 6px 4px;
       font-size: 11.5px;
       font-weight: 700;
       border-radius: var(--radius-sm);
@@ -1014,7 +1014,7 @@
   color: var(--primary-dark);
   font-size: 12px;
   font-weight: 600;
-  padding: 10px 14px;
+  padding: 10px 12px;
   border-radius: var(--card-radius);
   margin: 0 0 8px;
   line-height: 1.45;
@@ -1024,7 +1024,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 14px 24px 20px;
+  padding: 12px 24px 20px;
 
   .ap-save-btn {
     min-width: 140px;

@@ -6,7 +6,7 @@
 .ct-hero {
   background: linear-gradient(115deg, var(--blue-600) 0%, var(--blue-450) 52%, var(--teal-350) 100%);
   border-radius: var(--card-radius);
-  padding: 22px 28px;
+  padding: 20px 28px;
   position: relative;
   overflow: hidden;
   margin-bottom: 16px;
@@ -39,7 +39,7 @@
   .hero-crumb {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
     font-size: 12.5px;
     color: rgba(var(--white-rgb), 0.85);
     margin-bottom: 4px;
@@ -77,7 +77,7 @@
 
 /* Form card */
 .ct-form-card {
-  padding: 26px 28px;
+  padding: 24px 28px;
 }
 
 /* field look is global (classes.scss); only the icon offset and error state here */
@@ -85,7 +85,7 @@
   width: 100%;
 
   &.has-icon-left {
-    padding-left: 36px;
+    padding-left: 32px;
   }
 
   &.err {
@@ -213,7 +213,7 @@
 .ct-prio {
   border: 1.5px solid var(--bg-muted);
   border-radius: 99px;
-  padding: 7px 16px;
+  padding: 6px 16px;
   font-size: 12px;
   font-weight: 800;
   cursor: pointer;
@@ -255,7 +255,7 @@
   border: 1px dashed var(--blue-200);
   background: var(--blue-50-4);
   border-radius: var(--card-radius);
-  padding: 10px 14px;
+  padding: 10px 12px;
   font-size: 12px;
   font-weight: 700;
   color: var(--blue-600);
@@ -321,7 +321,7 @@
 .ct-success {
   display: none;
   text-align: center;
-  padding: 30px 10px;
+  padding: 28px 10px;
 
   &.show {
     display: block;
@@ -336,7 +336,7 @@
     display: grid;
     place-items: center;
     font-size: 32px;
-    margin: 0 auto 14px;
+    margin: 0 auto 12px;
   }
 
   .ticket-id-title {
@@ -355,7 +355,7 @@
   font-weight: 800;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   color: var(--neutral-850);
 }
 

@@ -174,7 +174,7 @@
           <td class="text-center" (click)="$event.stopPropagation()">
             @if (t.status.toLowerCase() === 'new') {
             <button type="button" class="btn btn-sm btn-primary text-nowrap" (click)="openQuickAssign(t, $event)"
-              style="font-size: 11px; padding: 3px 8px;">
+              style="font-size: 11px; padding: 2px 8px;">
               <i class="bi bi-person-plus"></i>Assign
             </button>
             } @else {
@@ -253,7 +253,7 @@
           <div class="min-w-0 flex-grow-1">
             <div class=" text-truncate" style="font-size: 12px;">{{ s.person }}</div>
             <div class="text-muted" style="font-size: 10.5px;">{{ s.team }}</div>
-            <div style="height: 5px; border-radius: 99px; background: var(--bg-muted); margin-top: 5px; overflow: hidden;">
+            <div style="height: 5px; border-radius: 99px; background: var(--bg-muted); margin-top: 4px; overflow: hidden;">
               <span style="display: block; height: 100%; border-radius: 99px;" [style.width.%]="s.pct"
                 [style.background]="s.color"></span>
             </div>

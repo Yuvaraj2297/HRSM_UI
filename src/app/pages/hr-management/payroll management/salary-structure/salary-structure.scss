@@ -57,9 +57,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 18px;
-  padding: 14px 18px;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
   border: 1px solid rgba(var(--green-400-rgb), 0.2);
   border-radius: var(--card-radius);
   background: linear-gradient(135deg, var(--green-50), var(--neutral-50));
@@ -197,7 +197,7 @@
   flex: none;
   min-width: 72px;
   margin-left: 8px;
-  padding: 3px 8px;
+  padding: 2px 8px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 700;

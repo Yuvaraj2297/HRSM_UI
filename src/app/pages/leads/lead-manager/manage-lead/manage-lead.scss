@@ -3,7 +3,7 @@
 ========================================================= */
 
 .ml-page {
-  padding: 18px 22px 28px;
+  padding: 16px 20px 28px;
   max-width: 1560px;
   margin: 0 auto;
 }
@@ -38,7 +38,7 @@
 }
 
 .card-custom {
-  padding: 16px 18px;
+  padding: 16px 16px;
 }
 
 .filters-toggle-row {
@@ -58,7 +58,7 @@
   }
 
   .form-label {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 
 }
@@ -72,7 +72,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 10px 14px;
+  padding: 10px 12px;
   margin-bottom: 12px;
   border: 1px solid var(--bg-muted);
   border-radius: var(--card-radius);
@@ -88,8 +88,8 @@
 .mlf-chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 8px 6px 11px;
+  gap: 6px;
+  padding: 6px 8px 6px 10px;
   border-radius: 999px;
   background: var(--primary-light, var(--green-50-2));
   color: var(--primary-dark, var(--primary-darker));
@@ -202,10 +202,10 @@
   color: var(--green-400);
   border: 1px solid var(--green-150);
   background: var(--green-50);
-  padding: 3px 12px;
+  padding: 2px 12px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   transition: 0.15s;
 
   &:hover,
@@ -403,7 +403,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--neutral-50-3);
-  padding: 14px 20px;
+  padding: 12px 20px;
 
   h5 {
     font-size: 14.5px;
@@ -414,7 +414,7 @@
 }
 
 .ml-modal-body {
-  padding: 18px 20px;
+  padding: 16px 20px;
   overflow-y: auto;
   flex: 1;
 
@@ -441,20 +441,20 @@
   justify-content: flex-end;
   gap: 10px;
   border-top: 1px solid var(--neutral-50-3);
-  padding: 14px 20px;
+  padding: 12px 20px;
 
 }
 
 /* Compose email fields */
 .mce-field {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 
   label {
     display: block;
     font-size: 12px;
     font-weight: 700;
     color: var(--neutral-750);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 }
 
@@ -497,7 +497,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 7px 9px;
+  padding: 6px 8px;
   border: 1px solid var(--border);
   border-radius: 7px;
   background: var(--bg-soft);
@@ -529,7 +529,7 @@
 
 .mrv-timeline {
   position: relative;
-  padding-left: 34px;
+  padding-left: 32px;
 
   &::before {
     content: '';
@@ -547,9 +547,9 @@
   background: var(--white);
   border: 1px solid var(--neutral-50-3);
   border-radius: var(--radius-sm);
-  padding: 14px 18px 12px;
+  padding: 12px 16px 12px;
   position: relative;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   box-shadow: 0 1px 2px rgba(var(--neutral-900-rgb), 0.04);
   transition: box-shadow 0.15s, transform 0.15s;
 
@@ -578,7 +578,7 @@
 
 .mrv-row {
   display: flex;
-  gap: 26px;
+  gap: 24px;
   flex-wrap: wrap;
   align-items: baseline;
 }
@@ -623,7 +623,7 @@
 .mrv-by {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 
   .ml-avatar {
     width: 24px;
@@ -641,7 +641,7 @@
 
 .mrv-empty {
   text-align: center;
-  padding: 40px 14px;
+  padding: 40px 12px;
   color: var(--text-muted);
 
   i {
@@ -673,7 +673,7 @@
 
 .mlv-tab-count {
   display: inline-block;
-  margin-left: 5px;
+  margin-left: 4px;
 }
 
 /* =========================================================
@@ -682,7 +682,7 @@
 
 .mlv-timeline {
   position: relative;
-  padding-left: 34px;
+  padding-left: 32px;
 
   &::before {
     content: '';
@@ -700,8 +700,8 @@
   background: var(--white);
   border: 1px solid var(--neutral-50-3);
   border-radius: var(--card-radius);
-  padding: 14px 18px 13px;
-  margin-bottom: 14px;
+  padding: 12px 16px 12px;
+  margin-bottom: 12px;
   position: relative;
   box-shadow: 0 1px 2px rgba(var(--neutral-900-rgb), 0.04);
   transition: box-shadow 0.15s, transform 0.15s;
@@ -732,7 +732,7 @@
 .mlv-act-top {
   display: flex;
   align-items: baseline;
-  gap: 26px;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -766,17 +766,17 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 5px;
+  gap: 4px;
 }
 
 .mlv-chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-size: 11px;
   font-weight: 700;
   border-radius: 999px;
-  padding: 3px 11px;
+  padding: 2px 10px;
   white-space: nowrap;
 
   i {
@@ -834,7 +834,7 @@
 
 .mlv-empty {
   text-align: center;
-  padding: 46px 16px;
+  padding: 48px 16px;
   color: var(--text-muted);
 
   i {

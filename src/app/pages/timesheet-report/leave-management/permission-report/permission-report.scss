@@ -12,7 +12,7 @@
 }
 
 .permission-report-page {
-  padding-bottom: 30px;
+  padding-bottom: 28px;
 }
 
 .cursor-pointer {
@@ -94,7 +94,7 @@
 .perm-status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 11.5px;
@@ -232,7 +232,7 @@
   background: var(--bg-soft);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
-  padding: 10px 14px;
+  padding: 10px 12px;
   font-size: 13px;
 
   span {
@@ -340,7 +340,7 @@
   .emp-perm-body {
     flex: 1 1 auto;
     overflow-y: auto;
-    padding: 20px 28px 30px;
+    padding: 20px 28px 28px;
   }
 
   .emp-perm-card {
@@ -361,7 +361,7 @@
 .ep-approve {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap;
 
 }
@@ -369,7 +369,7 @@
 .ep-reject {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap;
 
 }

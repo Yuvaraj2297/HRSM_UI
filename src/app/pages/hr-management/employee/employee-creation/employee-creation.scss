@@ -79,7 +79,7 @@
 .ne-tab {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   user-select: none;
   white-space: nowrap;
 
@@ -92,7 +92,7 @@
   /* ===== Section heading ===== */
   /* look is global (.form-section-title); only the gap between sections here */
   .ne-section-title:not(:first-child) {
-    margin-top: 36px;
+    margin-top: 32px;
   }
 
   .form-label { margin-bottom: 6px; }
@@ -135,7 +135,7 @@
   .ne-wk-row {
     display: grid;
     grid-template-columns: 1fr 1fr auto;
-    gap: 14px;
+    gap: 12px;
     align-items: end;
     padding-bottom: 12px;
     margin-bottom: 12px;
@@ -148,7 +148,7 @@
   .ne-dept-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 8px 14px;
+    gap: 8px 12px;
   }
   .ne-check {
     display: inline-flex; align-items: center; gap: 8px;
@@ -169,7 +169,7 @@
   }
 
   .ne-perm-group-label {
-    display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+    display: flex; align-items: center; gap: 10px; padding: 10px 20px;
     background: linear-gradient(135deg, var(--blue-50-7) 0%, var(--blue-50-2) 100%);
     border-bottom: 1px solid var(--border-light, var(--bg-muted));
     font-size: 12.5px; font-weight: 700; color: var(--primary-dark);
@@ -195,9 +195,9 @@
   .ne-perm-col-caps { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
 
   .ne-perm-check {
-    display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px;
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px;
     color: var(--ink-700, var(--neutral-750)); cursor: pointer; white-space: nowrap;
-    padding: 3px 8px; border-radius: 4px; transition: background .15s ease;
+    padding: 2px 8px; border-radius: 4px; transition: background .15s ease;
     &:hover { background: var(--blue-50-9); }
     input { accent-color: var(--primary); }
   }
@@ -235,14 +235,14 @@
     }
     tbody tr { border-bottom: 1px solid var(--bg-muted); transition: background .15s ease;
       &:hover { background: var(--bg-soft); } &:last-child { border-bottom: 0; } }
-    td { padding: 14px 16px; vertical-align: middle; }
+    td { padding: 12px 16px; vertical-align: middle; }
   }
 
   .ne-kyc-doc-name { font-weight: 600; color: var(--ink-900, var(--neutral-950)); font-size: 13px; margin-bottom: 2px; }
   .ne-kyc-doc-desc { font-size: 11.5px; color: var(--ink-500, var(--neutral-450)); }
 
   .ne-kyc-upload-btn {
-    display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
     border: 1px solid var(--border-light, var(--bg-muted)); border-radius: 6px; background: var(--white);
     font-size: 12px; font-weight: 600; color: var(--ink-700, var(--neutral-750)); cursor: pointer;
     transition: all .2s ease;
@@ -253,7 +253,7 @@
   .ne-kyc-file-name { font-size: 11.5px; color: var(--ink-500, var(--neutral-450)); margin-left: 8px; }
 
   .ne-kyc-badge {
-    display: inline-block; padding: 3px 10px; border-radius: 4px;
+    display: inline-block; padding: 2px 10px; border-radius: 4px;
     font-size: 11px; font-weight: 600; text-transform: uppercase;
     &.yes { background: var(--danger-soft); color: var(--danger); }
     &.no { background: var(--bg-muted); color: var(--ink-500, var(--neutral-450)); }
@@ -270,7 +270,7 @@
 
   /* ===== Relieving ===== */
   .ne-rel-emp-card {
-    display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
     background: linear-gradient(135deg, var(--bg-soft) 0%, var(--white) 100%);
     border: 1px solid var(--border-light, var(--bg-muted)); border-radius: 10px; margin-bottom: 20px;
   }
@@ -279,14 +279,14 @@
   .ne-rel-emp-dept { font-size: 12px; color: var(--ink-500, var(--neutral-450)); }
 
   .ne-rel-check {
-    display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--white);
+    display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--white);
     border: 1px solid var(--border-light, var(--bg-muted)); border-radius: 8px; cursor: pointer;
     transition: border-color .2s, background .2s;
     font-size: 13px; font-weight: 600; color: var(--ink-700, var(--neutral-750));
     &:hover { border-color: var(--primary); background: var(--primary-light); }
   }
 
-  .ne-rel-progress-wrap { margin-top: 20px; padding: 14px 18px; background: var(--bg-soft); border-radius: 10px; }
+  .ne-rel-progress-wrap { margin-top: 20px; padding: 12px 16px; background: var(--bg-soft); border-radius: 10px; }
   .ne-rel-progress-label { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 700;
     color: var(--ink-700, var(--neutral-750)); margin-bottom: 8px; }
   .ne-rel-progress-bar { height: 8px; background: var(--neutral-50-3); border-radius: 4px; overflow: hidden; }
@@ -295,9 +295,9 @@
 
   /* ===== Approval rows (leave + OT) ===== */
   .ne-approval-wrapper, .ne-otapp-wrapper {
-    border: 1px solid var(--border-light, var(--bg-muted)); border-radius: 14px; padding: 20px 22px;
+    border: 1px solid var(--border-light, var(--bg-muted)); border-radius: 14px; padding: 20px 20px;
   }
-  .ne-approval-row, .ne-otapp-row { display: flex; align-items: flex-end; gap: 14px; }
+  .ne-approval-row, .ne-otapp-row { display: flex; align-items: flex-end; gap: 12px; }
   .ne-approval-col, .ne-otapp-col {
     flex: 1; min-width: 0;
     label { font-size: 12.5px; font-weight: 600; color: var(--ink-900, var(--neutral-950)); margin-bottom: 6px; display: block; }
@@ -313,7 +313,7 @@
   .ne-approval-btn-remove, .ne-otapp-btn-remove { background: var(--accent-red, var(--danger)); }
 
   /* ===== Review ===== */
-  .ne-review-section { border: 1px solid var(--border-light, var(--bg-muted)); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+  .ne-review-section { border: 1px solid var(--border-light, var(--bg-muted)); border-radius: 12px; padding: 16px 16px; margin-bottom: 12px;
     h6 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 12px;
       display: flex; align-items: center; gap: 6px; } }
   .ne-review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px 16px; }
@@ -326,25 +326,25 @@
 /* ===== Footer nav ===== */
 .ne-footer-nav {
   display: flex; align-items: center; justify-content: flex-end; gap: 10px;
-  margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--aw-border);
+  margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--aw-border);
 
   .ne-spacer { margin-right: auto; }
 }
 
 /* ===== Verification & Approval widget ===== */
-.ne-va-card { margin-top: 18px; }
+.ne-va-card { margin-top: 16px; }
 
 .ne-va-head {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
-  padding-bottom: 16px; margin-bottom: 18px; border-bottom: 1px solid var(--aw-border);
+  padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--aw-border);
 
   h5 { font-size: 16px; font-weight: 800; color: var(--aw-ink-900); margin: 0;
-    display: flex; align-items: center; gap: 9px; i { color: var(--primary); font-size: 18px; } }
-  p { margin: 3px 0 0 27px; font-size: 12px; color: var(--aw-ink-500); }
+    display: flex; align-items: center; gap: 8px; i { color: var(--primary); font-size: 18px; } }
+  p { margin: 2px 0 0 28px; font-size: 12px; color: var(--aw-ink-500); }
 }
 
 .ne-va-badge {
-  display: inline-flex; align-items: center; gap: 7px; padding: 7px 16px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 999px;
   font-size: 12px; font-weight: 800; letter-spacing: .3px; text-transform: uppercase;
   border: 1px solid transparent;
 
@@ -364,7 +364,7 @@
 
 .ne-va-info {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 18px 22px; margin-bottom: 30px;
+  gap: 16px 20px; margin-bottom: 28px;
 }
 
 .ne-va-info-item {
@@ -374,7 +374,7 @@
   .v { font-size: 13.5px; font-weight: 700; color: var(--aw-ink-900);
     &.muted { font-weight: 500; color: var(--aw-ink-300); font-style: italic; }
     &.link { color: var(--primary); font-weight: 700; } }
-  .r { margin-top: 3px; font-size: 11.5px; color: var(--aw-ink-500); }
+  .r { margin-top: 2px; font-size: 11.5px; color: var(--aw-ink-500); }
 }
 
 .ne-va-stepper {
@@ -424,7 +424,7 @@
 }
 
  .card-custom {
-            padding: 20px 22px;
+            padding: 20px 20px;
             /* height: 100%; */
         }
 
@@ -435,7 +435,7 @@
         justify-content: flex-end;
         gap: 10px;
         margin-top: 24px;
-        padding-top: 18px;
+        padding-top: 16px;
         border-top: 1px solid var(--aw-border);
     }
 
@@ -461,20 +461,20 @@
     }
 
     .employee-bulk-dropzone h6 {
-        margin-bottom: 5px;
+        margin-bottom: 4px;
         color: var(--ink-900);
         font-size: 14px;
         font-weight: 800;
     }
 
     .employee-bulk-dropzone p {
-        margin-bottom: 14px;
+        margin-bottom: 12px;
         color: var(--ink-500);
         font-size: 12px;
     }
 
     .employee-bulk-dropzone {
-        padding: 32px 18px;
+        padding: 32px 16px;
         border: 2px dashed var(--border-strong);
         border-radius: var(--card-radius);
         background: var(--bg-soft);

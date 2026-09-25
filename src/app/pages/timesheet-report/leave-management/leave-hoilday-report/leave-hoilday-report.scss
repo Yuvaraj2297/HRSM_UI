@@ -92,7 +92,7 @@
 
 .leave-balance-scroll {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   overflow-x: auto;
   padding-bottom: 8px;
   scroll-behavior: smooth;
@@ -115,7 +115,7 @@
   background: var(--white);
   border: 1px solid var(--border-soft);
   border-radius: var(--card-radius);
-  padding: 20px 18px;
+  padding: 20px 16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   position: relative;
   cursor: pointer;
@@ -131,7 +131,7 @@
     font-weight: 700;
     color: var(--ink-900);
     text-align: center;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -202,8 +202,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 18px 22px 16px;
+  gap: 16px;
+  padding: 16px 20px 16px;
   background: var(--white);
   border-bottom: 1px solid var(--border-soft);
 }
@@ -211,7 +211,7 @@
 .leave-holidays-heading {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
 }
 
 .tab-switch {
@@ -222,7 +222,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-left: 5px;
+    margin-left: 4px;
   }
 }
 
@@ -230,7 +230,7 @@
    ITEMS LIST
 ========================================================= */
 .leave-holidays-list {
-  padding: 14px 18px 20px;
+  padding: 12px 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -241,8 +241,8 @@
   display: grid;
   grid-template-columns: 188px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
-  padding: 13px 16px;
+  gap: 16px;
+  padding: 12px 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--white);
@@ -324,15 +324,15 @@
 .details-col {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .item-kind {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   width: fit-content;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   color: var(--ink-500);
   font-size: 10px;
   font-weight: 800;
@@ -398,7 +398,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 14px;
+  padding: 6px 12px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
@@ -552,11 +552,11 @@
 .leave-apply-grid {
   display: grid;
   grid-template-columns: 1fr 240px;
-  gap: 22px;
+  gap: 20px;
 }
 
 .leave-apply-row {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .leave-apply-date-row {
@@ -585,7 +585,7 @@
     border-top: 1px solid var(--bg-muted);
     padding-top: 10px;
     margin-top: 6px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 
     span:first-child {
       font-weight: 600;
@@ -609,7 +609,7 @@
   background: var(--bg-soft);
   border: 1px solid var(--bg-muted);
   border-radius: var(--card-radius);
-  padding: 14px;
+  padding: 12px;
   font-size: 13px;
 
   .leave-balance-box-head {
@@ -683,7 +683,7 @@
 
   .offcanvas-header {
     flex-shrink: 0;
-    padding: 18px 24px;
+    padding: 16px 24px;
     background: var(--white);
     border-bottom: 1px solid var(--neutral-50-3);
     display: flex;
@@ -717,7 +717,7 @@
   .offcanvas-body {
     flex: 1 1 auto;
     overflow-y: auto;
-    padding: 22px 24px;
+    padding: 20px 24px;
     animation: fadeSlideUp 0.4s ease 0.1s backwards;
 
     &::-webkit-scrollbar {
@@ -752,7 +752,7 @@
 }
 
 .assign-form-row, .holiday-form-row {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .assign-days-row {
@@ -816,11 +816,11 @@
 }
 
 .assign-summary-box {
-  margin-top: 18px;
+  margin-top: 16px;
   background: linear-gradient(135deg, var(--green-50) 0%, var(--white) 70%);
   border: 1px solid var(--green-100);
   border-radius: var(--card-radius);
-  padding: 14px 16px;
+  padding: 12px 16px;
 
   .asb-head {
     display: flex;
@@ -917,7 +917,7 @@
 .bulk-dropzone {
   border: 2px dashed var(--border-strong);
   border-radius: var(--card-radius);
-  padding: 36px 20px;
+  padding: 32px 20px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
@@ -971,7 +971,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   background: var(--green-50);
   border: 1px solid var(--green-100);
   border-radius: var(--radius-sm);
@@ -1081,7 +1081,7 @@
 .rejection-box {
   background: var(--bg-soft);
   min-height: 90px;
-  padding: 14px;
+  padding: 12px;
   border-radius: var(--card-radius);
   border: 1px solid var(--border-soft);
   color: var(--ink-700);
@@ -1146,7 +1146,7 @@
   .leave-holiday-item.leave-item {
     grid-template-columns: 1fr;
     gap: 10px;
-    padding: 14px 16px;
+    padding: 12px 16px;
   }
 
   .status-col {
