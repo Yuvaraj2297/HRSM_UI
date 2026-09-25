@@ -1,4 +1,36 @@
 /* =============================================================
+   PAGE HEADER — the one page title + breadcrumb design.
+     <h1 class="page-title">Leave Report</h1>
+     <nav class="page-breadcrumb">…</nav>   (or use <app-breadcrumb>)
+   Pages never set a title's size, weight, font or colour themselves.
+============================================================= */
+:root .page-title {
+  margin: 0 0 4px;
+  color: var(--gh-heading);
+  font-family: var(--font-family-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.page-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-light);
+
+  .icon-breadcrumb { font-size: 14px; }
+  .separator { font-size: 10px; color: var(--text-muted); }
+  .active-crumb { font-weight: 600; color: var(--gh-heading); }
+}
+
+@media (max-width: 767.98px) {
+  :root .page-title { font-size: 1.3rem; }
+}
+
+/* =============================================================
    CARD CUSTOM & CARD STYLES (GLOBAL)
 ============================================================= */
 /* =============================================================
@@ -672,6 +704,85 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   box-shadow: none;
 }
 
+/* ---------- table toolbar buttons (Columns / Export) ----------
+   The tinted buttons above every list table. Same height as a field
+   (40px) so they line up with the search box beside them.
+     <button class="btn-tool btn-columns">  <button class="btn-tool btn-export"> */
+.btn-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: var(--field-h, 40px);
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  font-family: var(--font-family-base);
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  i { font-size: 16px; }
+  .caret-icon { font-size: 11px; }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: var(--focus-ring);
+  }
+
+  &.btn-columns {
+    background: var(--warning-soft);
+    color: var(--orange-400);
+
+    &:hover { background: var(--orange-50-6); }
+  }
+
+  &.btn-export {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+
+    &:hover { background: var(--green-100-2); }
+  }
+}
+
+/* ---------- "Filters ▾" toggle on collapsible filter cards ----------
+     <button class="filters-toggle-btn" [class.open]="open">Filters <i class="bi bi-chevron-down chevron"></i></button> */
+.filters-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-family: var(--font-family-base);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover { background: var(--green-100-2); }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: var(--focus-ring);
+  }
+
+  .chevron {
+    font-size: 12px;
+    transition: transform 0.3s var(--ease, ease);
+  }
+
+  &.open .chevron,
+  .chevron.rotated {
+    transform: rotate(180deg);
+  }
+}
+
 /* ---------- close (x) buttons in modals / panels ---------- */
 :root :is(#{$btn-close}) {
   display: inline-flex;
@@ -993,9 +1104,11 @@ $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
 }
 
 /* Plain text inputs / textareas that carry no field class of their own (search boxes,
-   inline editors...) get the same look. :where() keeps this at zero specificity, so any
-   layout rule a component adds (icon padding, width, flex) still wins. */
-:where(
+   inline editors...) get the same look. `:root :where()` gives this rule the weight of one
+   class: enough to beat Bootstrap's reboot (`input { font-size: inherit }`, loaded after this
+   file), still below any component rule (element + scoping attribute), so layout a component
+   adds (icon padding, width, flex) still wins. */
+:root :where(
   :is(
     input:not([type]),
     input[type='text'],
@@ -1039,8 +1152,8 @@ select:not([class]) {
   }
 }
 
-/* sizes */
-:is(.form-control-sm, .form-select-sm) {
+/* sizes (p-select: add .p-select-sm via styleClass; .ct-p-select-sm is a legacy alias) */
+:is(.form-control-sm, .form-select-sm, .p-select-sm, .ct-p-select-sm) {
   --field-h: 34px;
   --field-px: 10px;
   --field-py: 6px;
@@ -1237,6 +1350,72 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   }
 }
 
+/* Bootstrap-structured modals (.modal-content > .modal-header/-body/-footer)
+   get the SAME look as .modal-custom above — whether they sit inside a
+   Bootstrap .modal or a page's own overlay wrapper. Pages set only the
+   dialog width (.modal-sm/-lg/-xl or max-width on their wrapper).
+   (.modal-content-custom / -header-custom / -body-custom / -footer-custom
+   are legacy aliases and render identically.) */
+:root .modal {
+  --bs-modal-border-width: 0;
+  --bs-modal-border-radius: 20px;
+  --bs-modal-inner-border-radius: 20px;
+  --bs-modal-box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
+}
+
+:root :is(.modal-content, .modal-content-custom) {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: 0;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
+  overflow: hidden;
+
+  > :is(.modal-header, .modal-header-custom) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+    padding: 16px 24px;
+    background: var(--white);
+    border-bottom: 1px solid var(--bg-muted);
+  }
+
+  .modal-title {
+    margin: 0;
+    color: var(--gh-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  > :is(.modal-body, .modal-body-custom) {
+    padding: 22px 24px;
+  }
+
+  > :is(.modal-footer, .modal-footer-custom) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+    padding: 14px 24px;
+    background: var(--white);
+    border-top: 1px solid var(--bg-muted);
+
+    > * { margin: 0; }
+  }
+}
+
+:root .modal-backdrop.show {
+  opacity: 0.48;
+  background-color: var(--neutral-900);
+  backdrop-filter: blur(3px);
+}
+
 /* Modal Summary Banner (Employee Banner Card) */
 .emp-banner-card,
 .modal-summary-banner {
@@ -1321,39 +1500,12 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
 /* Modal Form Textarea */
 .modal-textarea {
-  resize: none;
-  border-radius: 10px;
-  border: 1px solid var(--text-faint);
-  font-size: 13px;
-  color: var(--neutral-850);
-  padding: 10px 12px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-
-  &:focus {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12) !important;
-    outline: none;
-  }
+  resize: none; /* look comes from FORM FIELDS */
 }
 
 /* Modal p-select Standard Styling */
 .modal-p-select.p-select {
-  width: 100%;
-  height: 42px;
-  border-radius: 10px;
-  border: 1px solid var(--text-faint);
-  background: var(--white);
-
-  .p-select-label {
-    padding: 9px 12px;
-    font-size: 13.5px;
-    color: var(--neutral-850);
-  }
-
-  &:focus-within {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12) !important;
-  }
+  width: 100%; /* look comes from GLOBAL P-SELECT */
 }
 
 /* Approver Card (Dashed Border Card) */
@@ -1694,6 +1846,271 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     font-weight: 400;
   }
 }
+
+/* =============================================================
+   TABLES — the one table design for the whole app.
+   Use these classes; components set layout only (column widths,
+   text-align, min-width), never a table's colours, padding, font
+   or borders.
+
+     Table          <table class="data-table">            (or Bootstrap .table)
+     Compact        add .data-table-sm                     (or .table-sm)
+     Cell borders   add .data-table-bordered               (or .table-bordered)
+     Zebra rows     add .data-table-striped                (or .table-striped)
+     Sticky header  add .data-table-sticky (inside a scrolling wrapper)
+     Scroll wrapper <div class="data-table-wrap"> … </div> (horizontal scroll
+                    on small screens, rounded border around the table)
+     Empty row      <td class="data-table-empty" colspan="…">No records</td>
+     Numbers        .text-end on th/td; .cell-strong / .cell-muted for text
+
+   PrimeNG <p-table> (and <app-primedatatable>) render with the same
+   look automatically — .p-datatable-table is part of the list below.
+   The other names in the list are legacy page-specific aliases; they
+   render identically so older templates stay consistent.
+
+   Bootstrap's CSS loads after this file, so these rules are prefixed
+   with :root to outrank it while still feeding Bootstrap's own
+   --bs-table-* variables.
+============================================================= */
+
+/* Specialised grids keep their own page styles and are NOT in this list:
+   .adj-table (attendance grid, sticky columns), .ne-kyc-table (form rows),
+   .ps-table (printable payslip), .lead-stats-table, .tr-mini-table. */
+$table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
+
+:root {
+  --table-head-bg: var(--bg-muted);
+  --table-head-text: var(--text-light);
+  --table-text: var(--text);
+  --table-border: var(--border);
+  --table-row-border: var(--bg-muted);
+  --table-row-hover: rgba(var(--primary-rgb), 0.035);
+  --table-row-stripe: var(--bg-soft);
+  --table-row-selected: var(--primary-soft);
+}
+
+:root :is(#{$table}) {
+  --table-cell-px: 16px;
+  --table-cell-py: 12px;
+  --table-font: 13.5px;
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--table-text);
+  --bs-table-border-color: var(--table-row-border);
+  --bs-table-striped-bg: var(--table-row-stripe);
+  --bs-table-striped-color: var(--table-text);
+  --bs-table-hover-bg: var(--table-row-hover);
+  --bs-table-hover-color: var(--table-text);
+  --bs-table-active-bg: var(--table-row-selected);
+
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--table-text);
+  font-family: var(--font-family-base);
+  font-size: var(--table-font);
+
+  > thead > tr > :is(th, td) {
+    padding: calc(var(--table-cell-py) - 2px) var(--table-cell-px);
+    background: var(--table-head-bg);
+    color: var(--table-head-text);
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 0;
+    border-bottom: 1px solid var(--table-border);
+    box-shadow: none;
+  }
+
+  > tbody > tr > :is(td, th) {
+    padding: var(--table-cell-py) var(--table-cell-px);
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1.45;
+    vertical-align: middle;
+    border: 0;
+    border-bottom: 1px solid var(--table-row-border);
+    box-shadow: none;
+    transition: background-color var(--duration-fast, 0.18s) ease;
+  }
+
+  > tbody > tr:last-child > :is(td, th) {
+    border-bottom: 0;
+  }
+
+  > tbody > tr:hover > :is(td, th) {
+    background: var(--table-row-hover);
+  }
+
+  > tbody > tr:is(.selected, .active, .p-datatable-row-selected) > :is(td, th) {
+    background: var(--table-row-selected);
+  }
+
+  > tfoot > tr > :is(td, th) {
+    padding: var(--table-cell-py) var(--table-cell-px);
+    background: var(--table-head-bg);
+    color: var(--gh-heading);
+    font-weight: 700;
+    vertical-align: middle;
+    border: 0;
+    border-top: 1px solid var(--table-border);
+  }
+
+  /* sortable header icon (PrimeNG) */
+  .p-sortable-column-icon,
+  .p-datatable-sort-icon {
+    color: var(--text-muted);
+    width: 11px;
+    height: 11px;
+  }
+  .p-datatable-sortable-column:hover .p-sortable-column-icon,
+  .p-datatable-column-sorted .p-datatable-sort-icon {
+    color: var(--primary);
+  }
+}
+
+/* PrimeNG sets cell padding through its own variables (and its size
+   classes carry high specificity), so feed those variables from the
+   table tokens instead of fighting its selectors. */
+:root .p-datatable {
+  --p-datatable-header-cell-padding: 10px 16px;
+  --p-datatable-header-cell-sm-padding: 10px 16px;
+  --p-datatable-header-cell-lg-padding: 12px 18px;
+  --p-datatable-body-cell-padding: 10px 16px;
+  --p-datatable-body-cell-sm-padding: 10px 16px;
+  --p-datatable-body-cell-lg-padding: 14px 18px;
+  --p-datatable-footer-cell-padding: 12px 16px;
+  --p-datatable-header-cell-background: var(--table-head-bg);
+  --p-datatable-header-cell-color: var(--table-head-text);
+  --p-datatable-header-cell-border-color: var(--table-border);
+  --p-datatable-body-cell-border-color: var(--table-row-border);
+  --p-datatable-row-background: transparent;
+  --p-datatable-row-hover-background: var(--table-row-hover);
+  --p-datatable-row-color: var(--table-text);
+  --p-datatable-row-hover-color: var(--table-text);
+}
+
+/* compact */
+:root :is(.data-table-sm, .table-sm) {
+  --table-cell-px: 12px;
+  --table-cell-py: 8px;
+  --table-font: 12.5px;
+}
+
+/* cell borders */
+:root :is(.data-table-bordered, .table-bordered) {
+  border: 1px solid var(--table-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+
+  > :is(thead, tbody, tfoot) > tr > :is(th, td):not(:last-child) {
+    border-right: 1px solid var(--table-row-border);
+  }
+}
+
+/* zebra */
+:root :is(.data-table-striped, .table-striped) > tbody > tr:nth-child(even) > :is(td, th) {
+  background: var(--table-row-stripe);
+}
+
+/* sticky header inside a scrolling wrapper */
+:root .data-table-sticky > thead > tr > :is(th, td) {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* scroll wrapper — rounded frame, horizontal scroll on small screens */
+:is(.data-table-wrap, .table-modern-wrap) {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--table-border);
+  border-radius: var(--radius-md, 12px);
+  background: var(--white);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+
+  > :is(#{$table}) {
+    margin-bottom: 0;
+  }
+}
+
+/* empty state row */
+.data-table-empty {
+  padding: 40px 16px !important;
+  text-align: center;
+  color: var(--text-muted) !important;
+  font-size: 13px;
+
+  i {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 28px;
+    opacity: 0.6;
+  }
+}
+
+/* cell text helpers */
+.cell-strong { color: var(--gh-heading); font-weight: 600; }
+.cell-muted  { color: var(--text-light); font-size: 0.92em; }
+
+/* PrimeNG paginator — same look everywhere */
+:root .p-paginator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0 0;
+  background: transparent;
+  border: 0;
+
+  .p-paginator-content-start {
+    margin-right: auto;
+  }
+
+  :is(.p-paginator-page, .p-paginator-first, .p-paginator-prev, .p-paginator-next, .p-paginator-last) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 6px;
+    border: 0;
+    border-radius: var(--radius-xs, 8px);
+    background: transparent;
+    color: var(--text-light);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:not(:disabled):hover {
+      background: var(--bg-muted);
+      color: var(--gh-heading);
+    }
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: var(--focus-ring);
+    }
+
+    &.p-paginator-page-selected {
+      background: var(--primary);
+      color: var(--white);
+      font-weight: 600;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  :root :is(#{$table}) {
+    --table-cell-px: 12px;
+  }
+}
+
 
 /* =============================================================
    GLOBAL PRIMETABLE & REUSABLE TABLE STYLES

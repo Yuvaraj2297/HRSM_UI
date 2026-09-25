@@ -70,7 +70,7 @@
               <p-select [options]="subCategoryOptions" [(ngModel)]="selectedSubCategory" name="subCategory"
                 optionLabel="label" optionValue="value" placeholder="Select Sub Category..."
                 [disabled]="!selectedCategory" appendTo="body" styleClass="w-100 ct-p-select-field"
-                class="w-100 d-block" (onChange)="subCategoryError = false"></p-select>
+                class="w-100" (onChange)="subCategoryError = false"></p-select>
 
               @if (isSubmitted && subCategoryError) {
               <div class="tkt-field-err">Please select a sub category</div>
@@ -261,7 +261,7 @@
         </div>
       </div>
       <div class="table-responsive">
-        <table class="table table-sm align-middle mb-0" style="font-size: 12.5px;">
+        <table class="table table-sm align-middle mb-0">
           <thead>
             <tr class="text-muted">
               <th class="ps-3" style="font-size: 11px;">Priority</th>

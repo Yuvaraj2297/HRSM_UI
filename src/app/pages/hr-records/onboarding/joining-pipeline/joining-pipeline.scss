@@ -142,15 +142,6 @@
     letter-spacing: -0.2px;
 }
 
-.candidate-modal-content .modal-body {
-    padding: 24px 32px 28px !important;
-}
-
-.candidate-modal-content .modal-footer {
-    padding: 16px 28px;
-    background: var(--bg-soft);
-}
-
 @keyframes candidate-modal-backdrop-in {
     from {
         opacity: 0;

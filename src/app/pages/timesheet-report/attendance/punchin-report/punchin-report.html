@@ -4,7 +4,7 @@
   ========================================================== -->
   <!-- <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
     <div>
-      <h1 class="font-display  mb-1 page-title">Punch In Reports</h1>
+      <h1 class="page-title mb-1">Punch In Reports</h1>
       <nav class="d-flex align-items-center gap-2 text-neutral text-nowrap breadcrumb-text">
         <i class="bi bi-clock-history"></i>
         <span>Attendance Management</span>
@@ -93,13 +93,13 @@
         </div>
 
         <!-- Columns Button -->
-        <button type="button" class="btn columns-btn" (click)="triggerToast('Column settings panel')">
+        <button type="button" class="btn-tool btn-columns" (click)="triggerToast('Column settings panel')">
           <i class="bi bi-eye"></i>Columns
         </button>
 
         <!-- Export Dropdown -->
         <div class="position-relative">
-          <button type="button" class="btn export-btn-pdf"
+          <button type="button" class="btn-tool btn-export"
             (click)="$event.stopPropagation(); exportDropdownOpen = !exportDropdownOpen">
             <i class="bi bi-download"></i>Export
             <i class="bi bi-chevron-down" style="font-size: 10px;"></i>
@@ -122,7 +122,7 @@
 
     <!-- Wide Matrix Table Responsive Wrap -->
     <div class="table-responsive table-modern-wrap overflow-auto column-border">
-      <table class="table table-modern punch-table w-100 mb-0">
+      <table class="punch-table w-100 mb-0">
         <thead>
           <tr>
             <th class="text-nowrap sticky-col col-sno" style="width: 50px;">S.No</th>

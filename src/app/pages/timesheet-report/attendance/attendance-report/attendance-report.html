@@ -4,7 +4,7 @@
   ========================================================== -->
   <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
     <div>
-      <h1 class="font-display  mb-1 page-title">Attendance Report</h1>
+      <h1 class="page-title mb-1">Attendance Report</h1>
       <nav class="d-flex align-items-center gap-2 text-neutral text-nowrap breadcrumb-text">
         <i class="bi bi-clock-history"></i>
         <span>Attendance Management</span>
@@ -304,14 +304,14 @@
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom">
       <!-- Left Controls: Columns & Export -->
       <div class="d-flex align-items-center gap-2 flex-wrap">
-        <button type="button" class="btn columns-btn" (click)="triggerToast('Column selection panel')">
+        <button type="button" class="btn-tool btn-columns" (click)="triggerToast('Column selection panel')">
           <i class="bi bi-eye"></i>Columns
         </button>
 
         <div class="mt-export-menu position-relative">
           <button
             type="button"
-            class="btn export-btn-pdf"
+            class="btn-tool btn-export"
             (click)="$event.stopPropagation(); exportDropdownOpen = !exportDropdownOpen">
             <i class="bi bi-download"></i>Export
             <i class="bi bi-chevron-down" style="font-size: 10px;"></i>

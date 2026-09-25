@@ -259,13 +259,6 @@
 }
 
 /* ---------- Shared modal chrome ---------- */
-.modal-content-rounded {
-    border-radius: 16px;
-}
-
-.modal-header-soft {
-    background: var(--bg-soft);
-}
 
 .modal-subtitle {
     font-size: 13px;
@@ -286,14 +279,6 @@
     width: 44px;
     height: 44px;
     font-size: 18px;
-}
-
-.btn-brand {
-
-    &:hover,
-    &:focus {
-        filter: brightness(.94);
-    }
 }
 
 /* ---------- Certificate Modal ---------- */
@@ -700,92 +685,4 @@
     background: #25D366;
     border-color: #25D366;
     color: var(--white);
-}
-
-/* =========================================================
-   PrimeNG p-select overrides to match Bootstrap form-control look
-========================================================= */
-::ng-deep app-induction-orientation {
-    .p-select {
-        width: 100%;
-        align-items: center;
-
-    }
-
-    .p-select-label {
-        padding: 8px 12px;
-        font-size: 14px;
-        color: var(--neutral-850-2);
-    }
-
-    .p-select-label.p-placeholder {
-        color: var(--neutral-500-2);
-    }
-
-    .p-select-dropdown {
-        width: 2.5rem;
-        color: var(--neutral-500-2);
-    }
-
-    .p-select-overlay {
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(var(--neutral-900-rgb), .12);
-        border: 1px solid var(--border);
-    }
-
-    .p-select-option {
-        font-size: 13.5px;
-        padding: 8px 12px;
-
-        &.p-select-option-selected {
-            background: var(--neutral-50);
-            color: var(--primary, var(--green-550));
-        }
-
-        &:not(.p-select-option-selected):not(.p-disabled).p-focus {
-            background: var(--bg-soft);
-        }
-    }
-
-    .p-select-filter {
-        border-radius: 6px;
-    }
-}
-
-/* =========================================================
-   Pill-style action buttons (actions column: type 'pill-actions')
-========================================================= */
-.pill-action-group {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.pill-action-seg {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid currentColor;
-    background: var(--white);
-    cursor: pointer;
-    transition: all .15s ease;
-
-    i {
-        font-size: 13px;
-    }
-
-    &:hover {
-        filter: brightness(.95);
-        transform: translateY(-1px);
-    }
-
-    &:disabled {
-        opacity: .5;
-        cursor: not-allowed;
-        transform: none;
-    }
 }

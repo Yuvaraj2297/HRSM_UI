@@ -42,31 +42,8 @@
 /* =========================================================
    P-SELECT FILTER STYLING
 ========================================================= */
-::ng-deep {
-  .team-cal-select.p-select {
-    width: 160px;
-
-    .p-select-label {
-      padding: 0.45rem 0.8rem;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-900);
-    }
-
-  }
-
-  .member-cal-select.p-select {
-    width: 250px;
-
-    .p-select-label {
-      padding: 0.45rem 0.8rem;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-900);
-    }
-
-  }
-}
+:host ::ng-deep .team-cal-select.p-select { width: 160px; }
+:host ::ng-deep .member-cal-select.p-select { width: 250px; }
 
 /* =========================================================
    MONTH NAVIGATOR

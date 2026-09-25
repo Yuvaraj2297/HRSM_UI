@@ -80,31 +80,16 @@
   padding: 26px 28px;
 }
 
+/* field look is global (classes.scss); only the icon offset and error state here */
 .ct-input {
-  border: 1.5px solid var(--bg-muted);
-  background: var(--bg-soft);
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 9px 13px;
-  transition: all 0.15s ease;
   width: 100%;
-  color: var(--neutral-850);
-
-  &:focus {
-    background: var(--white);
-    border-color: var(--blue-450);
-    box-shadow: 0 0 0 3px rgba(var(--blue-450-rgb), 0.12);
-    outline: none;
-  }
-
-  &.err {
-    border-color: var(--red-550) !important;
-    background: var(--red-50) !important;
-  }
 
   &.has-icon-left {
     padding-left: 36px;
+  }
+
+  &.err {
+    border-color: var(--danger) !important;
   }
 }
 

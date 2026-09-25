@@ -6,10 +6,6 @@
   width: 100%;
 }
 
-.page-title {
-  font-size: 1.7rem;
-}
-
 /* =========================================================
    MILESTONE BADGES
 ========================================================= */
@@ -106,45 +102,8 @@
 .custom-task-modal {
   width: 100%;
   max-width: 650px;
-
-  background: var(--white);
-
-  border-radius: 10px;
-
-  box-shadow:
-    0 20px 50px rgba(var(--black-rgb), 0.18);
-
-  overflow: hidden;
-
   pointer-events: auto;
-
   animation: modalOpen 0.2s ease-out;
-}
-
-/* =========================================================
-   MODAL HEADER
-========================================================= */
-
-.custom-task-modal .modal-header {
-  padding: 16px 20px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  border-bottom: 1px solid var(--border);
-}
-
-.custom-task-modal .modal-title {
-  font-size: 16px;
-}
-
-.modal-close {
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
 }
 
 /* =========================================================
@@ -154,20 +113,6 @@
 .custom-task-modal .modal-body {
   max-height: 70vh;
   overflow-y: auto;
-}
-
-/* =========================================================
-   MODAL FOOTER
-========================================================= */
-
-.custom-task-modal .modal-footer {
-  padding: 14px 20px;
-
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-
-  border-top: 1px solid var(--border);
 }
 
 /* =========================================================

@@ -11,12 +11,6 @@
 }
 
 /* ===== Page header ===== */
-.page-title {
-  font-size: 1.7rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
 .breadcrumb-nav {
   display: flex;
   align-items: center;
@@ -70,19 +64,6 @@
 }
 
 .filter-title-text { font-size: 14.5px; color: var(--ink-900); font-weight: 600; }
-
-.filters-toggle-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--primary-light); color: var(--primary-dark);
-  border: none; font-weight: 600; font-size: 13.5px;
-  padding: 9px 16px; border-radius: 10px; cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:hover { background: var(--green-100-2); }
-
-  .chevron { transition: transform 0.35s cubic-bezier(.4, 0, .2, 1); font-size: 12px; }
-  &.open .chevron { transform: rotate(180deg); }
-}
 
 .filters-collapse {
   max-height: 0; opacity: 0; overflow: hidden;
@@ -164,24 +145,6 @@
 }
 
 /* ===== Table ===== */
-.table-modern {
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 13px;
-
-  th, td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--ink-100);
-    white-space: nowrap;
-  }
-
-  thead th {
-    background: var(--bg-soft);
-    color: var(--ink-500);
-    font-weight: 700;
-    text-align: left;
-  }
-}
 
 .earning-col-th { border-bottom: 1px solid var(--white) !important; font-weight: 700 !important; }
 .deduction-col-th { border-bottom: 1px solid var(--white) !important; font-weight: 700 !important; }
@@ -203,15 +166,7 @@
   &.draft { color: var(--neutral-500-2); background: var(--bg-muted); }
 }
 
-/* ===== Buttons (framework-agnostic minimal styling) ===== */
-
-.btn-primary:disabled { opacity: 0.55; }
-
 /* ===== Form controls ===== */
-.form-label { margin-bottom: 6px; display: block; }
-.form-control, .form-select {
-  width: 100%;
-}
 .input-group { 
   display: flex; 
   align-items: stretch; // Ensures both the prefix and input take the full height of the container
