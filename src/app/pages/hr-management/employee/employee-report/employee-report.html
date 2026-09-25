@@ -1,106 +1,28 @@
 <!-- =========================================================
-     PAGE HEADER
+     PAGE HEADER — title + view tabs on one row
 ========================================================= -->
-<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+<div class="er-head">
 
-  <div class="overflow-auto">
-
-    <h1 class="font-display  mb-1 page-title">
-      Employees
-    </h1>
-
-    <nav class="d-flex align-items-center gap-2 text-neutral text-nowrap breadcrumb-text" aria-label="Breadcrumb">
-
-      <i class="bi bi-people-fill fs-6"></i>
-
-      <span>Employee Management</span>
-
-      <i class="bi bi-chevron-right"></i>
-
-      <span class=" text-dark">
-        Employees Reports
-      </span>
-
-    </nav>
-
-  </div>
-
-
-  <!-- New Employee -->
-  <button type="button" class="btn btn-primary px-3" (click)="openCreateModal()">
-
-    <i class="bi bi-plus-lg"></i>
-
-    New Employee
-
-  </button>
-
-</div>
-
-
-<!-- =========================================================
-     VIEW TABS
-========================================================= -->
-<div class="d-flex gap-2 mb-3 flex-wrap text-nowrap">
-
-  <button *ngFor="let view of views" type="button" class="btn" [ngClass]="
-      activeView === view.key
-        ? 'btn-primary'
-        : 'btn-outline-primary'
-    " (click)="setView(view.key)">
-
-    <i class="" [ngClass]="
-        view.key === 'all'
-          ? 'bi bi-people'
-          : 'bi bi-diagram-3'
-      ">
-    </i>
-
-    {{ view.label }}
-
-  </button>
-
+  <nav class="page-tabs page-tabs-sm er-tabs" role="tablist" aria-label="Employee views">
+    @for (view of views; track view.key) {
+    <button type="button" role="tab" class="page-tab" [class.active]="activeView === view.key"
+      [attr.aria-selected]="activeView === view.key" (click)="setView(view.key)">
+      <i [class]="view.key === 'all' ? 'bi bi-people' : 'bi bi-diagram-3'"></i>
+      {{ view.label }}
+      <span class="page-tab-count">{{ view.key === 'all' ? tableData.length : teamGroups.length }}</span>
+    </button>
+    }
+  </nav>
 </div>
 
 
 <!-- =========================================================
      ALL EMPLOYEES - STAT CARDS
 ========================================================= -->
-<div *ngIf="activeView === 'all'" class="row g-3 mb-3">
-
-  <div class="col-sm-6 col-md-4 col-xl text-nowrap" *ngFor="let card of statCards">
-
-    <div class="stat-card d-flex align-items-center gap-3" [ngClass]="'stat-theme-' + card.theme">
-
-      <!-- Icon -->
-      <div class="stat-icon stat-icon-lg">
-        <i [class]="card.icon"></i>
-      </div>
-
-
-      <!-- Content -->
-      <div>
-
-        <div class="label stat-label">
-          {{ card.label }}
-        </div>
-
-        <div class="value">
-          {{ card.value }}
-        </div>
-
-        <div class="delta" [ngClass]="card.deltaClass">
-
-          {{ card.delta }}
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
+<div *ngIf="activeView === 'all'" class="stat-grid">
+  <app-stat-card *ngFor="let card of statCards"
+    [label]="card.label" [value]="card.value" [icon]="card.icon"
+    [tone]="card.theme" [sub]="card.delta" [subTone]="card.deltaClass" />
 </div>
 
 
@@ -111,7 +33,7 @@
 
   <app-primedatatable [modalHeader]="header" [columns]="columns" [data]="tableData"
     [searchPlaceholder]="searchPlaceholder" [rowActions]="rowActions"
-    (addClicked)="openCreateModal()" (actionClick)="onTableAction($event)">
+    [Accessactions]="employeeActions" (addClicked)="openCreateModal()" (actionClick)="onTableAction($event)">
 
   </app-primedatatable>
 

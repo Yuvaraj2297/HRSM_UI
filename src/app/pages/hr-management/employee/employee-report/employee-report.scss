@@ -1,186 +1,29 @@
-/* Stat cards — keep these here if your global stylesheet
-   doesn't already define .stat-card / .stat-theme-* */
-
-:host {
-  display: block;
-}
-
-.stat-card {
-  background: var(--white, var(--white));
-  border: 1px solid var(--border-soft, var(--orange-100-2));
-  border-radius: 16px;
-  padding: 18px 20px;
-  box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.03);
-  height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 22px rgba(var(--neutral-950-rgb), 0.08);
-  }
-
-  .stat-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink-500, var(--neutral-450));
-  }
-
-  .value {
-    font-size: 24px;
-    font-weight: 800;
-    line-height: 1.2;
-    color: var(--ink-900, var(--neutral-900-2));
-  }
-
-  .delta {
-    font-size: 11.5px;
-    font-weight: 600;
-    margin-top: 2px;
-  }
-}
-
-.stat-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
+/* ===== Page header: title + view tabs in one row ===== */
+.er-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-
-  &.stat-icon-lg {
-    width: 52px;
-    height: 52px;
-    font-size: 22px;
-  }
+  gap: 8px 16px;
+  margin-bottom: 12px;
 }
 
-.stat-theme-violet .stat-icon {
-  background: rgba(var(--purple-500-rgb), 0.12);
-  color: var(--purple-500);
+:host .er-head .er-title {
+  margin: 0;
 }
 
-.stat-theme-primary .stat-icon {
-  background: rgba(var(--green-400-2-rgb), 0.12);
-  color: var(--green-400-2);
-}
-
-.stat-theme-amber .stat-icon {
-  background: rgba(var(--warning-rgb), 0.14);
-  color: var(--orange-400);
-}
-
-.stat-theme-blue .stat-icon {
-  background: rgba(var(--blue-450-rgb), 0.12);
-  color: var(--blue-450);
-}
-
-.text-up {
-  color: var(--green-450-2);
-}
-
-.text-down {
-  color: var(--red-500-2);
-}
-
-.text-neutral {
-  color: var(--ink-500, var(--neutral-450));
+.er-tabs {
+  margin: 0;
 }
 
 :host {
   display: block;
-}
-
-/* ================= Stat cards ================= */
-.stat-card {
-  background: var(--white, var(--white));
-  border: 1px solid var(--border-soft, var(--orange-100-2));
-  border-radius: 16px;
-  padding: 18px 20px;
-  box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.03);
-  height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 22px rgba(var(--neutral-950-rgb), 0.08);
-  }
-
-  .stat-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink-500, var(--neutral-450));
-  }
-
-  .value {
-    font-size: 24px;
-    font-weight: 800;
-    line-height: 1.2;
-    color: var(--ink-900, var(--neutral-900-2));
-  }
-
-  .delta {
-    font-size: 11.5px;
-    font-weight: 600;
-    margin-top: 2px;
-  }
-}
-
-.stat-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-
-  &.stat-icon-lg {
-    width: 52px;
-    height: 52px;
-    font-size: 22px;
-  }
-}
-
-.stat-theme-violet .stat-icon {
-  background: rgba(var(--purple-500-rgb), 0.12);
-  color: var(--purple-500);
-}
-
-.stat-theme-primary .stat-icon {
-  background: rgba(var(--green-400-2-rgb), 0.12);
-  color: var(--green-400-2);
-}
-
-.stat-theme-amber .stat-icon {
-  background: rgba(var(--warning-rgb), 0.14);
-  color: var(--orange-400);
-}
-
-.stat-theme-blue .stat-icon {
-  background: rgba(var(--blue-450-rgb), 0.12);
-  color: var(--blue-450);
-}
-
-.text-up {
-  color: var(--green-450-2);
-}
-
-.text-down {
-  color: var(--red-500-2);
-}
-
-.text-neutral {
-  color: var(--ink-500, var(--neutral-450));
 }
 
 /* ================= Team cards ================= */
 .team-card {
   background: var(--white, var(--white));
   border: 1px solid var(--border-soft, var(--orange-100-2));
-  border-radius: 16px;
+  border-radius: var(--card-radius);
   padding: 24px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -202,7 +45,7 @@
 .team-card-icon {
   width: 52px;
   height: 52px;
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -273,7 +116,7 @@
 
 .employee-modal {
   background: var(--white);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   width: min(1200px, 95vw);
   max-height: 90vh;
   display: flex;
@@ -315,7 +158,7 @@
 .employee-modal-avatar {
   width: 96px;
   height: 96px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   object-fit: cover;
   border: 2px solid var(--green-400);
 }
@@ -358,7 +201,7 @@
 
   i {
     color: var(--green-400);
-    margin-top: 3px;
+    margin-top: 2px;
   }
 }
 
@@ -396,7 +239,7 @@
 .info-card {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 16px;
   height: 100%;
 }
@@ -428,7 +271,7 @@
 }
 
 .employee-modal-footer {
-  padding: 14px 24px;
+  padding: 12px 24px;
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: flex-end;

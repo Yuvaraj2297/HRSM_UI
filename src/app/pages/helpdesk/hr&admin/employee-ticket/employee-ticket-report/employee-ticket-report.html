@@ -13,75 +13,27 @@
 <!-- Summary KPIs -->
 <div class="row g-3 mb-3">
   <div class="col-6 col-xl-2">
-    <div class="tr-kpi d-flex align-items-center gap-3">
-      <div class="k-ico" style="background: var(--accent-blue-soft); color: var(--blue-550);">
-        <i class="bi bi-ticket-perforated"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpi.total }}</div>
-        <div class="k-label">Total Tickets</div>
-      </div>
-    </div>
+    <app-stat-card label="Total Tickets" value="{{ kpi.total }}" icon="bi bi-ticket-perforated" tone="blue" />
   </div>
 
   <div class="col-6 col-xl-2">
-    <div class="tr-kpi d-flex align-items-center gap-3">
-      <div class="k-ico" style="background: var(--orange-50); color: var(--orange-550);">
-        <i class="bi bi-inbox"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpi.pending }}</div>
-        <div class="k-label">Pending Tickets</div>
-      </div>
-    </div>
+    <app-stat-card label="Pending Tickets" value="{{ kpi.pending }}" icon="bi bi-inbox" tone="amber" />
   </div>
 
   <div class="col-6 col-xl-2">
-    <div class="tr-kpi d-flex align-items-center gap-3">
-      <div class="k-ico" style="background: var(--primary-soft); color: var(--green-550);">
-        <i class="bi bi-check-circle"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpi.resolved }}</div>
-        <div class="k-label">Resolved Tickets</div>
-      </div>
-    </div>
+    <app-stat-card label="Resolved Tickets" value="{{ kpi.resolved }}" icon="bi bi-check-circle" tone="primary" />
   </div>
 
   <div class="col-6 col-xl-2">
-    <div class="tr-kpi d-flex align-items-center gap-3">
-      <div class="k-ico" style="background: var(--orange-50-2); color: var(--orange-550-3);">
-        <i class="bi bi-arrow-counterclockwise"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpi.reopened }}</div>
-        <div class="k-label">Reopened Tickets</div>
-      </div>
-    </div>
+    <app-stat-card label="Reopened Tickets" value="{{ kpi.reopened }}" icon="bi bi-arrow-counterclockwise" tone="amber" />
   </div>
 
   <div class="col-6 col-xl-2">
-    <div class="tr-kpi d-flex align-items-center gap-3">
-      <div class="k-ico" style="background: var(--danger-soft); color: var(--red-550);">
-        <i class="bi bi-exclamation-triangle"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpi.breached }}</div>
-        <div class="k-label">SLA Breached</div>
-      </div>
-    </div>
+    <app-stat-card label="SLA Breached" value="{{ kpi.breached }}" icon="bi bi-exclamation-triangle" tone="red" />
   </div>
 
   <div class="col-6 col-xl-2">
-    <div class="tr-kpi d-flex align-items-center gap-3">
-      <div class="k-ico" style="background: var(--blue-50-3); color: var(--purple-550);">
-        <i class="bi bi-stopwatch"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpi.avgResolution }}</div>
-        <div class="k-label">Avg. Resolution Time</div>
-      </div>
-    </div>
+    <app-stat-card label="Avg. Resolution Time" value="{{ kpi.avgResolution }}" icon="bi bi-stopwatch" tone="violet" />
   </div>
 </div>
 

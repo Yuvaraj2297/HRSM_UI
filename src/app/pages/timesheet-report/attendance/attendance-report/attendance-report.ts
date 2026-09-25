@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -61,7 +62,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-attendance-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable, Calendar],
+  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable, Calendar, AppStatCard],
   templateUrl: './attendance-report.html',
   styleUrl: './attendance-report.scss',
 })

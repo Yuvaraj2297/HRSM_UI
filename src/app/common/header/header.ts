@@ -47,6 +47,11 @@ export class Header {
   }
 
   /** Close dropdown when clicking outside */
+  @HostListener('document:keydown.escape')
+  closeProfileMenu(): void {
+    this.isProfileMenuOpen = false;
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;

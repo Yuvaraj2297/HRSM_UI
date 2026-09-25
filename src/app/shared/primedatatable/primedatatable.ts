@@ -189,8 +189,9 @@ export class PrimeDataTable {
   @Input() searchPlaceholder = 'Search...';
   @Input() exportFileName = 'export';
 
-  /** true = title, Columns/Export and Search share one row (wraps on small screens) */
-  @Input() inlineToolbar = false;
+  /** @deprecated the head is always one row now (title | Columns · Export · Search · buttons);
+      kept so existing [inlineToolbar] bindings still compile */
+  @Input() inlineToolbar = true;
 
   /** 'menu' = kebab dropdown, 'inline' = icon buttons in the cell (only affects type:'actions' columns) */
   @Input() actionsMode: 'inline' | 'menu' = 'menu';
@@ -503,7 +504,7 @@ export class PrimeDataTable {
         <head>
           <title>${this.exportFileName}</title>
           <style>
-            table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }
+            table { border-collapse: collapse; width: 100%; font-family: 'Inter', Arial, sans-serif; }
             th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; font-size: 13px; }
             th { background: #f4f7f7; }
           </style>

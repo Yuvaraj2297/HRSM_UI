@@ -1,40 +1,39 @@
-:host {
-  --green: var(--primary);
-  --green-deep: var(--primary-dark);
-  --green-soft: var(--primary-soft);
+/* =============================================================
+   APP HEADER
+   Sizes and colors come from the layout / chrome tokens in
+   variable.scss — no hex values or palette shades here, so the
+   header re-themes (incl. .header-dark / .dark-theme) by tokens.
+============================================================= */
 
+:host {
   display: block;
 }
 
-/* =============================================================
-   APP HEADER
-============================================================= */
-
 .app-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0 0 auto 0;
   z-index: 1000;
-  height: 64px;
-  min-height: 64px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 0 20px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
+  padding: 0 var(--content-gutter) 0 16px;
+  background: var(--chrome-bg);
+  border-bottom: 1px solid var(--chrome-border);
+  box-shadow: var(--chrome-shadow);
   box-sizing: border-box;
+  color: var(--chrome-text);
 }
 
+
 /* =============================================================
-   HEADER LEFT
+   LEFT — logo + burger
 ============================================================= */
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
 }
 
@@ -45,155 +44,144 @@
 }
 
 .header-logo {
+  display: block;
   height: 32px;
   width: auto;
   object-fit: contain;
-  display: block;
+}
+
+
+/* =============================================================
+   SHARED ICON-BUTTON LOOK — burger, actions, search clear
+============================================================= */
+
+%icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--chrome-icon);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease),
+    color var(--duration-fast) var(--ease);
+
+  &:hover {
+    background: var(--chrome-hover-bg);
+    color: var(--chrome-active-text);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
 }
 
 .header-toggle {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--text-light);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  @extend %icon-button;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  font-size: 20px;
 }
 
-.header-toggle:hover {
-  background: var(--green-soft);
-  border-color: rgba(var(--primary-rgb), 0.3);
-  color: var(--green-deep);
-}
 
 /* =============================================================
-   SEARCH BAR (Reduced width, pushed right)
+   SEARCH
 ============================================================= */
 
 .header-search {
   position: relative;
-  flex: 1;
-  max-width: 400px; 
-  
-  /* Pushes the search bar to the right side */
-  margin-left: auto; 
-  margin-right: 40px; 
-  
+  flex: 1 1 auto;
+  max-width: 420px;
+  margin-left: auto;
   display: flex;
   align-items: center;
 }
 
 .header-search-icon {
   position: absolute;
-  left: 16px;
-  color: var(--neutral-350);
+  left: 14px;
+  color: var(--chrome-text-faint);
   font-size: 16px;
   pointer-events: none;
 }
 
 .header-search-input {
   width: 100%;
-  height: 42px;
-  padding: 0 38px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--bg-muted);
+  height: 40px;
+  padding: 0 40px 0 40px;
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--radius-pill);
+  background: var(--chrome-bg-muted);
   outline: none;
-  color: var(--text);
+  color: var(--chrome-text);
   font-size: 13.5px;
   box-sizing: border-box;
-  transition: all 0.2s ease;
-}
+  transition:
+    background-color var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease),
+    box-shadow var(--duration-fast) var(--ease);
 
-.header-search-input:focus {
-  background: var(--white);
-  border-color: var(--green);
-  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.12);
-}
+  &::placeholder {
+    color: var(--chrome-text-faint);
+  }
 
-.header-search-input::placeholder {
-  color: var(--text-muted);
+  &:focus {
+    background: var(--chrome-bg);
+    border-color: var(--chrome-accent);
+    box-shadow: var(--focus-ring);
+  }
 }
 
 .header-search-clear {
+  @extend %icon-button;
   position: absolute;
-  right: 10px;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 0;
+  right: 8px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: transparent;
-  color: var(--neutral-350);
-  cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
-.header-search-clear:hover {
-  background: var(--border);
-  color: var(--text);
-}
 
 /* =============================================================
-   ACTIONS
+   ACTIONS — every icon button has the same size, shape and states
 ============================================================= */
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .header-icon-button {
+  @extend %icon-button;
   position: relative;
   width: 40px;
   height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
   border-radius: 50%;
-  background: var(--green-soft);
-  color: var(--green-deep);
-  font-size: 17px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.header-icon-button:nth-of-type(2) {
-  background: var(--bg-muted);
-  color: var(--text-light);
-}
-
-.header-icon-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.18);
+  border-color: var(--chrome-border);
+  font-size: 19px;
 }
 
 .header-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: -3px;
+  right: -3px;
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
-  border: 2px solid var(--white);
+  border: 2px solid var(--chrome-bg);
+  border-radius: var(--radius-pill);
   background: var(--danger);
   color: var(--white);
   font-size: 10px;
@@ -202,15 +190,20 @@
   box-sizing: border-box;
 }
 
+
 /* =============================================================
-   PROFILE DROPDOWN (COMPACT VERSION)
+   PROFILE + DROPDOWN
 ============================================================= */
 
 .profile-wrapper {
   position: relative;
+  margin-left: 4px;
+  padding-left: 12px;
+  border-left: 1px solid var(--chrome-border);
 }
 
 .header-avatar-button {
+  display: block;
   width: 40px;
   height: 40px;
   padding: 0;
@@ -219,138 +212,175 @@
   background: transparent;
   cursor: pointer;
   overflow: hidden;
-  transition: box-shadow 0.2s ease;
-}
+  transition: box-shadow var(--duration-fast) var(--ease);
 
-.header-avatar-button.active {
-  box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--green);
+  &:hover,
+  &.active {
+    box-shadow: 0 0 0 2px var(--chrome-bg), 0 0 0 4px var(--chrome-accent);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
 }
 
 .header-avatar {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  display: block;
 }
 
-/* The Dropdown Card */
 .profile-dropdown-card {
   position: absolute;
   top: calc(100% + 12px);
-  right: 0; 
-  width: 220px; 
-  background: var(--white);
-  border-radius: 12px; 
-  box-shadow: 0 10px 40px rgba(var(--black-rgb), 0.08);
-  border: 1px solid var(--border);
-  padding: 12px 16px; /* Compact padding */
+  right: 0;
+  z-index: 1001;
+  width: 232px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  animation: fadeInDown 0.2s ease-out;
-  z-index: 1001;
+  background: var(--chrome-bg);
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--chrome-popover-shadow);
+  animation: headerDropdownIn var(--duration-fast) var(--ease);
 }
 
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes headerDropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .dropdown-header {
   display: flex;
   align-items: center;
-  gap: 10px; /* Tighter gap */
+  gap: 10px;
+  padding: 6px 8px;
 }
 
 .dropdown-avatar {
-  width: 40px; /* Compact avatar */
-  height: 40px; 
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .dropdown-info {
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .dropdown-name {
-  font-size: 14px; 
+  color: var(--chrome-text-strong);
+  font-size: 14px;
   font-weight: 700;
-  color: var(--text);
   line-height: 1.2;
 }
 
 .dropdown-role {
-  font-size: 12px; 
-  color: var(--text-light);
-  margin-top: 2px;
+  color: var(--chrome-text-muted);
+  font-size: 12px;
 }
 
 .dropdown-divider {
   height: 1px;
-  background: var(--border);
-  margin: 10px 0; /* Reduced margin */
-  width: 100%;
+  margin: 6px 0;
+  background: var(--chrome-border);
 }
 
-.dropdown-logout-btn {
+.dropdown-item-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  padding: 4px 0; /* Reduced padding */
+  padding: 8px 10px;
   border: none;
+  border-radius: var(--radius-xs);
   background: transparent;
-  color: var(--danger);
-  font-size: 14px;
+  color: var(--chrome-text);
+  font-size: 13.5px;
   font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s ease;
   text-align: left;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+
+  i {
+    font-size: 17px;
+  }
+
+  &:hover {
+    background: var(--chrome-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  &--danger {
+    color: var(--danger);
+
+    &:hover {
+      background: rgba(var(--danger-rgb), 0.08);
+    }
+  }
 }
 
-.dropdown-logout-btn i {
-  font-size: 16px; 
-}
-
-.dropdown-logout-btn:hover {
-  color: var(--red-500);
-}
 
 /* =============================================================
-   FOCUS & RESPONSIVE
+   RESPONSIVE
 ============================================================= */
 
-.header-toggle:focus-visible,
-.header-icon-button:focus-visible,
-.header-avatar-button:focus-visible,
-.header-search-clear:focus-visible {
-  outline: 2px solid rgba(var(--primary-rgb), 0.7);
-  outline-offset: 2px;
-}
-
-@media (max-width: 700px) {
+@media (max-width: 767.98px) {
   .app-header {
     gap: 10px;
-    padding: 0 12px;
+    padding: 0 var(--content-gutter);
+  }
+
+  .header-left {
+    gap: 6px;
   }
 
   .header-search {
     max-width: none;
-    margin-left: 10px; 
-    margin-right: 10px;
+    margin-left: 0;
   }
 
-  .header-logo {
-    height: 32px;
+  .header-actions {
+    gap: 6px;
+  }
+
+  /* keep the bar on one line: secondary shortcuts live in the sidebar */
+  .header-icon-button--secondary {
+    display: none;
+  }
+
+  .profile-wrapper {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo--text {
+    display: none;
+  }
+
+  .header-icon-button,
+  .header-avatar-button {
+    width: 36px;
+    height: 36px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .header-toggle,
-  .header-icon-button,
-  .header-search-clear,
+  .app-header *,
   .profile-dropdown-card {
     transition: none !important;
     animation: none !important;

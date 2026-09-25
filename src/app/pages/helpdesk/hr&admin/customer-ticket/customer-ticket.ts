@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -57,7 +58,7 @@ interface IssueSplitData {
 @Component({
   selector: 'app-customer-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule, Breadcrumb],
+  imports: [CommonModule, FormsModule, RouterLink, SelectModule, Breadcrumb, AppStatCard],
   templateUrl: './customer-ticket.html',
   styleUrl: './customer-ticket.scss',
 })

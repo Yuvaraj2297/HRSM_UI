@@ -3,7 +3,7 @@
 }
 
 .field {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 
   > label:not(.file-drop) {
     display: block;
@@ -20,13 +20,13 @@
 :host ::ng-deep .p-editor {
   .p-editor-toolbar,
   .ql-toolbar {
-    border-radius: 10px 10px 0 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     background: var(--bg-soft);
   }
 
   .p-editor-content,
   .ql-container {
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
     font-size: 13.5px;
   }
 }
@@ -35,9 +35,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
+  padding: 12px 12px;
   border: 1.5px dashed var(--border-strong);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   color: var(--text-light);
@@ -61,9 +61,9 @@
 .file {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   padding: 4px 4px 4px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   background: var(--bg-muted);
@@ -86,6 +86,6 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  padding-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
 }

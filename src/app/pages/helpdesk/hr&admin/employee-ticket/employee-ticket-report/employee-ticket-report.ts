@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../../shared/stat-card/stat-card';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -45,7 +46,7 @@ interface MonthlyRow {
 @Component({
   selector: 'app-employee-ticket-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, Breadcrumb],
+  imports: [CommonModule, FormsModule, RouterLink, Breadcrumb, AppStatCard],
   templateUrl: './employee-ticket-report.html',
   styleUrl: './employee-ticket-report.scss',
 })

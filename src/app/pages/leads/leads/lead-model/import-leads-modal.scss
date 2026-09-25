@@ -1,9 +1,5 @@
-.modal-body {
-  padding: 20px 24px;
-}
-
 .im-field {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 
   > label {
     display: block;
@@ -12,7 +8,7 @@
     color: var(--neutral-750);
     margin-bottom: 6px;
 
-    .req { color: var(--red-500); margin-right: 3px; }
+    .req { color: var(--red-500); margin-right: 2px; }
   }
 
 }
@@ -22,7 +18,7 @@
   height: 38px;
   flex-shrink: 0;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--white);
   color: var(--neutral-650-3);
   display: inline-flex;

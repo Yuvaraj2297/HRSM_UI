@@ -37,71 +37,16 @@
   <!-- =========================================================
        STATUS KPI BLOCKS (MY PERMISSION REQUESTS)
   ========================================================== -->
-  <div class="row g-3 mb-3" id="permStatBlocks">
-      <!-- Total Requests -->
-      <div class="col-lg-3 col-md-6">
-        <div
-          class="perm-stat-card total cursor-pointer"
-          [class.active]="activeStatusFilter === ''"
-          (click)="onKpiClick('')"
-          title="Click to show all requests">
-          <div class="perm-stat-icon"><i class="bi bi-stack"></i></div>
-          <div class="perm-stat-info">
-            <div class="perm-stat-count">{{ totalCount }}</div>
-            <div class="perm-stat-label">Total Requests</div>
-          </div>
-          <i class="bi bi-chevron-right perm-stat-arrow"></i>
-        </div>
-      </div>
-
-      <!-- Pending Requests -->
-      <div class="col-lg-3 col-md-6">
-        <div
-          class="perm-stat-card pending cursor-pointer"
-          [class.active]="activeStatusFilter === 'Pending'"
-          (click)="onKpiClick('Pending')"
-          title="Click to filter. Click again to show all">
-          <div class="perm-stat-icon"><i class="bi bi-hourglass-split"></i></div>
-          <div class="perm-stat-info">
-            <div class="perm-stat-count">{{ pendingCount }}</div>
-            <div class="perm-stat-label">Pending Requests</div>
-          </div>
-          <i class="bi bi-chevron-right perm-stat-arrow"></i>
-        </div>
-      </div>
-
-      <!-- Approved Requests -->
-      <div class="col-lg-3 col-md-6">
-        <div
-          class="perm-stat-card approved cursor-pointer"
-          [class.active]="activeStatusFilter === 'Approved'"
-          (click)="onKpiClick('Approved')"
-          title="Click to filter. Click again to show all">
-          <div class="perm-stat-icon"><i class="bi bi-check-circle-fill"></i></div>
-          <div class="perm-stat-info">
-            <div class="perm-stat-count">{{ approvedCount }}</div>
-            <div class="perm-stat-label">Approved Requests</div>
-          </div>
-          <i class="bi bi-chevron-right perm-stat-arrow"></i>
-        </div>
-      </div>
-
-      <!-- Rejected Requests -->
-      <div class="col-lg-3 col-md-6">
-        <div
-          class="perm-stat-card rejected cursor-pointer"
-          [class.active]="activeStatusFilter === 'Rejected'"
-          (click)="onKpiClick('Rejected')"
-          title="Click to filter. Click again to show all">
-          <div class="perm-stat-icon"><i class="bi bi-x-circle-fill"></i></div>
-          <div class="perm-stat-info">
-            <div class="perm-stat-count">{{ rejectedCount }}</div>
-            <div class="perm-stat-label">Rejected Requests</div>
-          </div>
-          <i class="bi bi-chevron-right perm-stat-arrow"></i>
-        </div>
-      </div>
-    </div>
+  <div class="stat-grid" id="permStatBlocks">
+    <app-stat-card label="Total Requests" [value]="totalCount" icon="bi bi-stack" tone="blue"
+      [clickable]="true" [active]="activeStatusFilter === ''" (click)="onKpiClick('')" />
+    <app-stat-card label="Pending Requests" [value]="pendingCount" icon="bi bi-hourglass-split" tone="amber"
+      [clickable]="true" [active]="activeStatusFilter === 'Pending'" (click)="onKpiClick('Pending')" />
+    <app-stat-card label="Approved Requests" [value]="approvedCount" icon="bi bi-check-circle-fill" tone="primary"
+      [clickable]="true" [active]="activeStatusFilter === 'Approved'" (click)="onKpiClick('Approved')" />
+    <app-stat-card label="Rejected Requests" [value]="rejectedCount" icon="bi bi-x-circle-fill" tone="red"
+      [clickable]="true" [active]="activeStatusFilter === 'Rejected'" (click)="onKpiClick('Rejected')" />
+  </div>
 
     <!-- Month & Year Filter Bar (with PrimeNG p-select) -->
     <div class="d-flex align-items-center flex-wrap gap-2 mb-3 p-3 card-custom">
@@ -234,7 +179,7 @@
       <div class="modal-body emp-perm-body">
         <div class="emp-perm-card">
           <div class="table-responsive w-100 overflow-x-auto">
-            <table class="table-modern w-100 ep-table">
+            <table class="table-modern data-table-sticky w-100 ep-table">
               <thead>
                 <tr>
                   <th class="text-center" style="width: 50px;">S.NO</th>

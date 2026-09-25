@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -43,7 +44,7 @@ type RunType = 'bulk' | 'department' | 'individual' | '';
 @Component({
   selector: 'app-payroll-processing',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AppStatCard],
   templateUrl: './payroll-processing.html',
   styleUrl: './payroll-processing.scss',
 })

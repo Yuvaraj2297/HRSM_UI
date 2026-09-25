@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SelectModule } from 'primeng/select';
-import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import {
   EmployeeTicketService,
   TicketCategory,
@@ -18,7 +17,7 @@ interface SelectOption {
 @Component({
   selector: 'app-employee-create-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule, Breadcrumb],
+  imports: [CommonModule, FormsModule, RouterLink, SelectModule],
   templateUrl: './employee-create-ticket.html',
   styleUrl: './employee-create-ticket.scss',
 })

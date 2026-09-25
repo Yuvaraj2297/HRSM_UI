@@ -23,14 +23,6 @@ $primary-dark: var(--green-600);
   gap: 12px;
 }
 
-.page-title {
-  margin: 0 0 4px;
-  font-size: 28px;
-  font-weight: 800;
-  color: $ink-900;
-  letter-spacing: -0.5px;
-}
-
 .breadcrumb-text {
   display: flex;
   align-items: center;
@@ -71,7 +63,7 @@ $primary-dark: var(--green-600);
   grid-template-columns: minmax(240px, 1.35fr) minmax(160px, 1fr) minmax(160px, 1fr) auto;
   gap: 24px;
   align-items: end;
-  padding: 24px 30px;
+  padding: 24px 28px;
 }
 
 .filter-field {
@@ -106,7 +98,6 @@ $primary-dark: var(--green-600);
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 38px;
     white-space: nowrap;
 
     &:active {

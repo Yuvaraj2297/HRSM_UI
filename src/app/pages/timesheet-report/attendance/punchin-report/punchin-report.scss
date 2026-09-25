@@ -21,21 +21,7 @@
 }
 
 .punchin-report-page {
-  padding-bottom: 30px;
-}
-
-/* =========================================================
-
-.icon-chip {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--att-present-bg);
-  color: var(--att-present-fg);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+  padding-bottom: 28px;
 }
 
 /* =========================================================
@@ -48,20 +34,6 @@
   }
 }
 
-::ng-deep {
-  .punch-branch-pselect.p-select {
-    width: 100%;
-
-    .p-select-label {
-      padding: 0.5rem 0.85rem;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ink-900);
-    }
-
-  }
-}
-
 /* =========================================================
    ACTIVE FILTERS BAR
 ========================================================= */
@@ -71,8 +43,8 @@
   gap: 8px;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  padding: 10px 14px;
+  border-radius: var(--card-radius);
+  padding: 10px 12px;
   box-shadow: 0 2px 8px rgba(var(--neutral-900-rgb), 0.03);
 
   &.show {
@@ -144,26 +116,6 @@
   min-width: 190px;
 }
 
-.columns-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
-.export-btn-pdf {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
 .mt-export-dropdown {
   position: absolute;
   top: calc(100% + 4px);
@@ -171,7 +123,7 @@
   z-index: 1050;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 6px;
   min-width: 140px;
   box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.1);
@@ -180,7 +132,7 @@
     width: 100%;
     border: none;
     background: transparent;
-    padding: 7px 12px;
+    padding: 6px 12px;
     font-size: 12.5px;
     font-weight: 500;
     color: var(--ink-700);
@@ -201,28 +153,21 @@
 /* =========================================================
    PUNCH MATRIX TABLE
 ========================================================= */
-.table-modern-wrap {
-  position: relative;
-  overflow-x: auto;
-  max-width: 100%;
-}
 
 .punch-table {
   border-collapse: separate;
   border-spacing: 0;
 
   thead {
-    background: var(--bg-soft);
-
     th {
       font-size: 11.5px;
       font-weight: 700;
-      color: var(--ink-600);
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border-soft);
+      color: var(--table-head-text);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--table-border);
       border-top: none;
       vertical-align: middle;
-      background: var(--bg-soft);
+      background: var(--table-head-bg);
     }
   }
 
@@ -249,19 +194,15 @@
   tbody tr.punch-table-row {
     transition: background-color 0.15s ease;
 
-    &:hover {
+    &:hover td {
       background-color: var(--bg-soft);
-
-      td.sticky-col {
-        background-color: var(--bg-soft);
-      }
     }
 
     td {
-      padding: 10px 14px;
+      padding: 10px 12px;
       vertical-align: middle;
-      border-bottom: 1px solid var(--border-soft);
-      border-left: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--table-row-border);
+      border-left: 1px solid var(--table-row-border);
       background-color: var(--white);
 
       &:first-child {
@@ -295,7 +236,7 @@
   }
 
   thead th.sticky-col {
-    background-color: var(--bg-soft) !important;
+    background-color: var(--table-head-bg) !important;
     z-index: 3;
   }
 
@@ -358,7 +299,7 @@
       background: var(--warning-soft);
       color: var(--orange-450);
       font-size: 9.5px;
-      margin-left: 3px;
+      margin-left: 2px;
       vertical-align: middle;
     }
   }
@@ -392,7 +333,7 @@
   animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
   .offcanvas-header {
-    padding: 18px 24px;
+    padding: 16px 24px;
     background: var(--white);
     border-bottom: 1px solid var(--border-soft);
     flex-shrink: 0;
@@ -429,8 +370,8 @@
 /* Day summary hero card */
 .al-hero {
   margin: 16px 20px 4px;
-  padding: 16px 18px;
-  border-radius: 16px;
+  padding: 16px 16px;
+  border-radius: var(--card-radius);
   background: var(--white);
   border: 1px solid var(--bg-muted);
   box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.05);
@@ -467,7 +408,7 @@
       font-weight: 700;
       color: var(--ink-400);
       letter-spacing: 0.3px;
-      margin-top: 3px;
+      margin-top: 2px;
       text-transform: uppercase;
     }
   }
@@ -477,13 +418,13 @@
 .al-status-badge {
   font-size: 11.5px;
   font-weight: 700;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 999px;
   white-space: nowrap;
   letter-spacing: 0.3px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 
   &.full-day {
     background: var(--green-50-2);
@@ -513,12 +454,12 @@
   color: var(--ink-400);
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  padding: 18px 20px 8px;
+  padding: 16px 20px 8px;
 }
 
 .al-timeline {
   position: relative;
-  padding: 4px 20px 6px 50px;
+  padding: 4px 20px 6px 48px;
   max-width: 100%;
   box-sizing: border-box;
 
@@ -576,11 +517,11 @@
   align-items: center;
   gap: 12px;
   margin: 0 0 20px 0;
-  padding: 12px 14px;
+  padding: 12px 12px;
   background: var(--white);
   border: 1px solid var(--bg-muted);
   border-left: 4px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   box-shadow: 0 1px 4px rgba(var(--neutral-950-rgb), 0.04);
   position: relative;
   width: fit-content;
@@ -642,24 +583,17 @@
   }
 
   .al-punch-time-input {
-    border: 1px solid transparent;
-    border-radius: 9px;
-    padding: 8px 12px;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--neutral-850);
-    background: var(--bg-soft);
-    outline: none;
+    width: 105px;
+    font-weight: 700;
     text-align: center;
     letter-spacing: 0.5px;
-    width: 105px;
   }
 
   .al-punch-more {
     flex-shrink: 0;
     width: 32px;
     height: 32px;
-    border-radius: 9px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--bg-muted);
     background: var(--white);
     display: flex;
@@ -685,7 +619,7 @@
   min-width: 130px;
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.12);
   padding: 4px;
   z-index: 100;
@@ -694,7 +628,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 7px 12px;
+    padding: 6px 12px;
     border: none;
     background: none;
     font-size: 12px;
@@ -720,9 +654,9 @@
 .al-break-badge {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 14px;
-  border-radius: 8px;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
   background: var(--yellow-50-2);
   border: 1px dashed var(--orange-200);
   font-size: 11.5px;
@@ -739,7 +673,7 @@
   gap: 8px;
   width: fit-content;
   height: 38px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   background: var(--white);
   color: var(--primary-dark);
   border: 1.5px dashed var(--green-150);
@@ -761,10 +695,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 20px 18px;
+  padding: 20px 16px;
   background: var(--white);
   border: 1px dashed var(--border);
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   color: var(--ink-400);
   font-size: 13px;
   font-weight: 600;
@@ -772,10 +706,10 @@
 
 /* Offcanvas Sections (Quick Actions & Insight) */
 .al-section {
-  margin: 14px 20px;
+  margin: 12px 20px;
   background: var(--white);
   border: 1px solid var(--bg-muted);
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   overflow: hidden;
 
   .al-section-toggle {
@@ -783,7 +717,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 13px 18px;
+    padding: 12px 16px;
     border: none;
     background: var(--bg-soft);
     font-size: 13.5px;
@@ -816,7 +750,7 @@
     }
 
     .al-section-body-inner {
-      padding: 14px 18px 16px;
+      padding: 12px 16px 16px;
       border-top: 1px solid var(--bg-muted);
     }
   }
@@ -826,8 +760,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 15px;
-  border-radius: 8px;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
   background: var(--white);
   font-size: 12px;
@@ -853,8 +787,8 @@
 
 .al-stat-card {
   text-align: center;
-  padding: 14px 6px;
-  border-radius: 14px;
+  padding: 12px 6px;
+  border-radius: var(--card-radius);
   background: var(--bg-soft);
   border: 1px solid var(--bg-muted);
 
@@ -876,7 +810,7 @@
     font-weight: 700;
     color: var(--ink-400);
     letter-spacing: 0.3px;
-    margin-top: 3px;
+    margin-top: 2px;
     text-transform: uppercase;
   }
 }
@@ -900,7 +834,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  padding: 20px;
   pointer-events: none;
   overflow-y: auto;
 
@@ -912,18 +846,10 @@
   }
 }
 
-.modal-content {
-  border: 0;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(var(--black-rgb), 0.25);
-  background: var(--white);
-}
-
 .ap-header {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 20px 24px;
   background: linear-gradient(135deg, var(--green-400) 0%, var(--primary-dark) 100%);
   color: var(--white);
@@ -932,7 +858,7 @@
   .avatar {
     width: 46px;
     height: 46px;
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     object-fit: cover;
     border: 2px solid rgba(var(--white-rgb), 0.6);
   }
@@ -965,7 +891,7 @@
 .ap-close {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: none;
   background: rgba(var(--white-rgb), 0.18);
   color: var(--white);
@@ -982,7 +908,7 @@
 }
 
 .ap-body {
-  padding: 22px 24px 8px;
+  padding: 20px 24px 8px;
 }
 
 .ap-toggle-wrap {
@@ -991,9 +917,9 @@
   justify-content: space-between;
   gap: 12px;
   background: var(--neutral-50-2);
-  border-radius: 14px;
-  padding: 10px 14px;
-  margin-bottom: 18px;
+  border-radius: var(--card-radius);
+  padding: 10px 12px;
+  margin-bottom: 16px;
 
   .ap-toggle-label {
     font-size: 13px;
@@ -1012,14 +938,14 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 4px;
 
     }
   }
 }
 
 .ap-time-row {
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   padding: 16px 16px 20px;
   margin-bottom: 16px;
 
@@ -1047,20 +973,11 @@
   }
 
   .ap-time-input {
-    border: 2px solid var(--border-soft);
-    background: var(--white);
-    color: var(--ink-900);
-    font-size: 18px;
+    --field-h: 48px;
+    --field-font: 18px;
     font-weight: 800;
-    padding: 10px 14px;
-    border-radius: 12px;
     text-align: center;
     letter-spacing: 0.5px;
-
-    &:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(var(--green-400-rgb), 0.15);
-    }
   }
 
   .ap-preset-times {
@@ -1073,10 +990,10 @@
       background: var(--white);
       border: 1px solid var(--neutral-50-3);
       color: var(--ink-600);
-      padding: 7px 4px;
+      padding: 6px 4px;
       font-size: 11.5px;
       font-weight: 700;
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       transition: all 0.15s ease;
 
@@ -1097,8 +1014,8 @@
   color: var(--primary-dark);
   font-size: 12px;
   font-weight: 600;
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 10px 12px;
+  border-radius: var(--card-radius);
   margin: 0 0 8px;
   line-height: 1.45;
 }
@@ -1107,7 +1024,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 14px 24px 20px;
+  padding: 12px 24px 20px;
 
   .ap-save-btn {
     min-width: 140px;
@@ -1153,7 +1070,7 @@
   background: var(--neutral-900);
   color: var(--white);
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   font-size: 13.5px;
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.25);

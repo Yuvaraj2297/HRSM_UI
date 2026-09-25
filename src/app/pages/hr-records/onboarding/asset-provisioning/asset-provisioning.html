@@ -4,7 +4,7 @@
 
 <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
     <div>
-        <h1 class="font-display  mb-1 page-title">
+        <h1 class="page-title mb-1">
             Asset Provisioning &
             Lifecycle Management
         </h1>
@@ -33,55 +33,19 @@
 <div class="row g-3 mb-3">
 
     <div class="col-sm-6 col-xl-3">
-        <div class="asset-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-total">
-                <i class="bi bi-laptop"></i>
-            </div>
-            <div>
-                <div class="label">Total Provisioned Assets</div>
-                <div class="value">{{ kpis.totalProvisioned }} Devices</div>
-                <div class="sub">Laptops, Mobile &amp; Access Cards</div>
-            </div>
-        </div>
+        <app-stat-card label="Total Provisioned Assets" value="{{ kpis.totalProvisioned }} Devices" icon="bi bi-laptop" tone="primary" sub="Laptops, Mobile &amp; Access Cards" />
     </div>
 
     <div class="col-sm-6 col-xl-3">
-        <div class="asset-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-pending">
-                <i class="bi bi-hourglass-split"></i>
-            </div>
-            <div>
-                <div class="label">Pending Approval &amp; Request</div>
-                <div class="value">{{ kpis.pendingApproval }} Requests</div>
-                <div class="sub">Awaiting HR / IT allocation</div>
-            </div>
-        </div>
+        <app-stat-card label="Pending Approval &amp; Request" value="{{ kpis.pendingApproval }} Requests" icon="bi bi-hourglass-split" tone="primary" sub="Awaiting HR / IT allocation" />
     </div>
 
     <div class="col-sm-6 col-xl-3">
-        <div class="asset-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-active">
-                <i class="bi bi-check2-square"></i>
-            </div>
-            <div>
-                <div class="label">Active In-Use Assets</div>
-                <div class="value">{{ kpis.activeInUse }} Assigned</div>
-                <div class="sub">Assigned to active employees</div>
-            </div>
-        </div>
+        <app-stat-card label="Active In-Use Assets" value="{{ kpis.activeInUse }} Assigned" icon="bi bi-check2-square" tone="primary" sub="Assigned to active employees" />
     </div>
 
     <div class="col-sm-6 col-xl-3">
-        <div class="asset-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-returned">
-                <i class="bi bi-box-arrow-in-left"></i>
-            </div>
-            <div>
-                <div class="label">Returned &amp; Maintenance</div>
-                <div class="value">{{ kpis.returnedOrDamaged }} Returned / Damaged</div>
-                <div class="sub">Exit clearance &amp; repair</div>
-            </div>
-        </div>
+        <app-stat-card label="Returned &amp; Maintenance" value="{{ kpis.returnedOrDamaged }} Returned / Damaged" icon="bi bi-box-arrow-in-left" tone="primary" sub="Exit clearance &amp; repair" />
     </div>
 
 </div>

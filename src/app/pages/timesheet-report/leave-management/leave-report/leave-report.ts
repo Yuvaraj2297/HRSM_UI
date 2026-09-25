@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -53,7 +54,7 @@ import { Calendar } from '../../../../shared/calendar/calendar';
 @Component({
   selector: 'app-leave-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable, Calendar],
+  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable, Calendar, AppStatCard],
   templateUrl: './leave-report.html',
   styleUrl: './leave-report.scss',
 })

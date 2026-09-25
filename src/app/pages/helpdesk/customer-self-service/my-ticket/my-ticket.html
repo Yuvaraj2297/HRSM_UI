@@ -1,76 +1,44 @@
-<!-- Hero -->
-<div class="ct-hero d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
-  <div>
-    <div class="hero-crumb">
-      <i class="bi bi-headset"></i>
-      <span>Customer Self Service</span>
-      <i class="bi bi-chevron-right" style="font-size: 10px;"></i>
-      <span class=" text-white">My Tickets</span>
-    </div>
-    <h1>My Tickets</h1>
-  </div>
-  <div class="d-flex gap-2">
-    <a routerLink="/helpdesk/create-ticket" class="btn btn-hero-solid">
-      <i class="bi bi-plus-lg me-1"></i> New Ticket
-    </a>
-  </div>
+<!-- Page header -->
+<div class="mt-head">
+  <h1 class="page-title">My Tickets</h1>
+  <p class="mt-head-sub">Track your support tickets and reply to the team.</p>
 </div>
 
 <!-- Table Card -->
-<div class="card-custom p-0 overflow-hidden">
-  <!-- Filters Toolbar -->
-  <div class="row g-2 align-items-center p-3">
-    <!-- Title (2 cols) -->
-    <div class="col-12 col-lg-2">
-      <div class=" d-flex align-items-center text-nowrap" style="font-size: 14px;">
-        <i class="bi bi-ticket-detailed me-2 text-primary"></i> All My Tickets
-        <span class="badge rounded-pill ms-2 ct-count-badge">
-          {{ filteredTickets.length }}
-        </span>
-      </div>
-    </div>
-
-    <!-- Filter Project (2 cols) -->
-    <div class="col-6 col-md-3 col-lg-2">
-      <p-select [options]="projectOptions" [(ngModel)]="filterProject" (onChange)="applyFilters()" optionLabel="label"
-        optionValue="value" placeholder="All Projects" appendTo="body" styleClass="ct-p-select w-100"
-        class="w-100"></p-select>
-    </div>
-
-    <!-- Filter Issue Type (2 cols) -->
-    <div class="col-6 col-md-3 col-lg-2">
-      <p-select [options]="issueOptions" [(ngModel)]="filterIssue" (onChange)="applyFilters()" optionLabel="label"
-        optionValue="value" placeholder="All Issue Types" appendTo="body" styleClass="ct-p-select w-100"
-        class="w-100"></p-select>
-    </div>
-
-    <!-- Filter Priority (2 cols) -->
-    <div class="col-6 col-md-3 col-lg-2">
-      <p-select [options]="priorityOptions" [(ngModel)]="filterPriority" (onChange)="applyFilters()" optionLabel="label"
-        optionValue="value" placeholder="All Priorities" appendTo="body" styleClass="ct-p-select w-100"
-        class="w-100"></p-select>
-    </div>
-
-    <!-- Filter Status (2 cols) -->
-    <div class="col-6 col-md-3 col-lg-2">
-      <p-select [options]="statusOptions" [(ngModel)]="filterStatus" (onChange)="applyFilters()" optionLabel="label"
-        optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="ct-p-select w-100"
-        class="w-100"></p-select>
-    </div>
-
-    <!-- Search (2 cols) -->
-    <div class="col-12 col-lg-2">
+<section class="card-custom mt-card">
+  <header class="card-custom-header">
+    <span class="card-header-icon"><i class="bi bi-ticket-detailed"></i></span>
+    <h3 class="card-custom-title">
+      All My Tickets
+      <span class="mt-count">{{ filteredTickets.length }}</span>
+    </h3>
+    <div class="card-header-actions mt-head-actions">
       <div class="mt-search-wrap">
         <i class="bi bi-search mt-search-icon"></i>
         <input type="text" class="mt-search-input" placeholder="Search ticket / subject..." [(ngModel)]="searchQuery"
-          (input)="applyFilters()" />
+          (input)="applyFilters()" aria-label="Search tickets" />
       </div>
+      <a routerLink="/helpdesk/create-ticket" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> New Ticket
+      </a>
     </div>
+  </header>
+
+  <!-- Filters -->
+  <div class="mt-filters">
+    <p-select [options]="projectOptions" [(ngModel)]="filterProject" (onChange)="applyFilters()" optionLabel="label"
+      optionValue="value" placeholder="All Projects" appendTo="body" styleClass="w-100" class="w-100"></p-select>
+    <p-select [options]="issueOptions" [(ngModel)]="filterIssue" (onChange)="applyFilters()" optionLabel="label"
+      optionValue="value" placeholder="All Issue Types" appendTo="body" styleClass="w-100" class="w-100"></p-select>
+    <p-select [options]="priorityOptions" [(ngModel)]="filterPriority" (onChange)="applyFilters()" optionLabel="label"
+      optionValue="value" placeholder="All Priorities" appendTo="body" styleClass="w-100" class="w-100"></p-select>
+    <p-select [options]="statusOptions" [(ngModel)]="filterStatus" (onChange)="applyFilters()" optionLabel="label"
+      optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="w-100" class="w-100"></p-select>
   </div>
 
   <!-- Table View -->
-  <div class="table-responsive table-modern-wrap overflow-auto column-border" style="max-height: 560px;">
-    <table class="table-modern w-100 mb-0" id="ctMyTable">
+  <div class="table-responsive table-modern-wrap column-border mt-table-wrap">
+    <table class="table-modern data-table-sticky w-100 mb-0 mt-table" id="ctMyTable">
       <thead>
         <tr>
           <th class="text-nowrap">Ticket</th>
@@ -86,25 +54,25 @@
         @for (ticket of filteredTickets; track ticket.id) {
         <tr class="ctv-row" (click)="openTicket(ticket)">
           <!-- Ticket ID & Date -->
-          <td>
-            <span class=" text-primary">{{ ticket.id }}</span>
+          <td data-label="Ticket" class="mt-cell-id">
+            <span class="ticket-id">{{ ticket.id }}</span>
             <div class="ticket-date-sub">{{ ticket.createdDate }}</div>
           </td>
 
           <!-- Project -->
-          <td>
-            <span class="me-1" style="font-size: 13px;">{{ ticket.projectIcon }}</span>
-            <span class="fw-semibold" style="font-size: 12.5px;">{{ ticket.projectName }}</span>
+          <td data-label="Project">
+            <span class="mt-ico">{{ ticket.projectIcon }}</span>
+            <span class="fw-semibold">{{ ticket.projectName }}</span>
           </td>
 
           <!-- Issue Type -->
-          <td>
-            <span class="me-1" style="font-size: 13px;">{{ ticket.issueIcon }}</span>
-            <span style="font-size: 12px;">{{ ticket.issueType }}</span>
+          <td data-label="Issue Type">
+            <span class="mt-ico">{{ ticket.issueIcon }}</span>
+            <span>{{ ticket.issueType }}</span>
           </td>
 
           <!-- Priority -->
-          <td>
+          <td data-label="Priority">
             <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(ticket.priority).bg"
               [style.color]="ticketService.priorityMeta(ticket.priority).color">
               {{ ticket.priority }}
@@ -112,19 +80,17 @@
           </td>
 
           <!-- Assigned To -->
-          <td style="font-size: 12px;">
+          <td data-label="Assigned To">
             @if (ticket.assignedTo) {
             <div class="fw-semibold">{{ ticket.assignedTo }}</div>
             <div class="assigned-team-sub">{{ ticket.assignedTeam }}</div>
             } @else {
-            <span class="badge rounded-pill unassigned-badge">
-              Unassigned
-            </span>
+            <span class="unassigned-badge">Unassigned</span>
             }
           </td>
 
           <!-- Status -->
-          <td>
+          <td data-label="Status">
             <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(ticket.status).bg"
               [style.color]="ticketService.statusMeta(ticket.status).color">
               <i class="bi {{ ticketService.statusMeta(ticket.status).icon }}"></i>
@@ -133,7 +99,7 @@
           </td>
 
           <!-- Action -->
-          <td class="text-center" (click)="$event.stopPropagation()">
+          <td class="text-center mt-cell-action" (click)="$event.stopPropagation()">
             <button type="button" class="btn btn-action-icon btn-view-details" (click)="openTicket(ticket)"
               title="View Ticket">
               <i class="bi bi-eye"></i>
@@ -145,15 +111,13 @@
         <!-- Empty State -->
         @if (!filteredTickets.length) {
         <tr>
-          <td colspan="7">
+          <td colspan="7" class="mt-cell-empty">
             <div class="ct-empty">
               <div class="e-ico">
                 <i class="bi bi-inbox"></i>
               </div>
-              <div class="" style="font-size: 14px;">No tickets found</div>
-              <div class="text-muted" style="font-size: 12px; margin-top: 3px;">
-                Try clearing filters or raise a new ticket
-              </div>
+              <div class="e-title">No tickets found</div>
+              <div class="e-sub">Try clearing filters or raise a new ticket</div>
             </div>
           </td>
         </tr>
@@ -163,15 +127,11 @@
   </div>
 
   <!-- Table Footer -->
-  <div class="d-flex justify-content-between align-items-center p-3 table-footer-bar">
-    <span class="text-muted" style="font-size: 12px;">
-      Showing <strong>{{ filteredTickets.length }}</strong> tickets
-    </span>
-    <span class="text-muted" style="font-size: 12px;">
-      Click a row to view conversation
-    </span>
-  </div>
-</div>
+  <footer class="card-custom-footer mt-footer">
+    <span class="card-footer-note">Showing <strong>{{ filteredTickets.length }}</strong> tickets</span>
+    <span class="mt-footer-hint"><i class="bi bi-hand-index"></i> Click a row to view the conversation</span>
+  </footer>
+</section>
 
 <!-- =========================================================================
      FULLSCREEN TICKET VIEW MODAL
@@ -182,9 +142,9 @@
 <div class="cv-fs-modal" role="dialog" aria-modal="true">
   <div class="cv-fs-content d-flex flex-column h-100">
     <!-- Modal Header -->
-    <div class="modal-header cv-fs-header py-3 px-4 d-flex align-items-center justify-content-between">
+    <div class="modal-header cv-fs-header d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center gap-2 flex-wrap min-w-0">
-        <h5 class="modal-title  mb-0 me-1 cv-modal-title">
+        <h5 class="modal-title mb-0 me-1 cv-modal-title">
           {{ currentTicket.id }}
         </h5>
 
@@ -199,7 +159,7 @@
           {{ currentTicket.priority }}
         </span>
 
-        <span class=" ms-2 text-truncate d-none d-md-block cv-subject-sub">
+        <span class="ms-2 text-truncate d-none d-md-block cv-subject-sub">
           {{ currentTicket.subject }}
         </span>
       </div>
@@ -217,8 +177,8 @@
       <div class="cv-fs-left">
         <!-- Ticket Information -->
         <div class="cv-card">
-          <div class=" mb-2 card-section-title">
-            <i class="bi bi-info-circle me-1 text-primary"></i> Ticket Information
+          <div class="card-section-title">
+            <i class="bi bi-info-circle"></i> Ticket Information
           </div>
           <div class="cv-info-row">
             <span class="text-muted">Project</span>
@@ -280,16 +240,16 @@
 
         <!-- Description -->
         <div class="cv-card">
-          <div class=" mb-2 card-section-title">
-            <i class="bi bi-file-text me-1 text-primary"></i> Description
+          <div class="card-section-title">
+            <i class="bi bi-file-text"></i> Description
           </div>
           <div class="cv-desc">{{ currentTicket.description }}</div>
         </div>
 
         <!-- Progress / Stepper -->
         <div class="cv-card">
-          <div class=" mb-2 card-section-title">
-            <i class="bi bi-diagram-2 me-1 text-primary"></i> Progress
+          <div class="card-section-title">
+            <i class="bi bi-diagram-2"></i> Progress
           </div>
 
           @if (currentTicket.status === 'Reopened') {
@@ -335,8 +295,8 @@
       <div class="cv-fs-right">
         <!-- Chat Head -->
         <div class="cv-chat-head">
-          <i class="bi bi-chat-dots text-primary"></i> Conversation
-          <span class="badge rounded-pill ms-1 msg-count-pill">
+          <i class="bi bi-chat-dots"></i> Conversation
+          <span class="msg-count-pill">
             {{ currentTicket.conversation.length }} messages
           </span>
         </div>
@@ -375,7 +335,7 @@
         <div class="cv-composer-wrap">
           <div class="cv-actions mb-2">
             @if (ticketService.customerAllowedActions(currentTicket).includes('Reply')) {
-            <span class="badge rounded-pill waiting-reply-pill">
+            <span class="waiting-reply-pill">
               <i class="bi bi-reply me-1"></i> Support is waiting for your reply
             </span>
             }

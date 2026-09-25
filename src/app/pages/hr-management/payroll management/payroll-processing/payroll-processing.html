@@ -22,44 +22,16 @@
 <!-- KPI cards -->
 <div class="row g-3 mb-3">
   <div class="col-sm-6 col-xl-3">
-    <div class="payroll-kpi d-flex align-items-center gap-3">
-      <div class="icon kpi-icon kpi-icon-green"><i class="bi bi-people"></i></div>
-      <div>
-        <div class="label">Employees Processed</div>
-        <div class="value">{{ kpis.employeesProcessed }}</div>
-        <div class="sub">of {{ kpis.activeEmployees }} active employees</div>
-      </div>
-    </div>
+    <app-stat-card label="Employees Processed" value="{{ kpis.employeesProcessed }}" icon="bi bi-people" tone="primary" sub="of {{ kpis.activeEmployees }} active employees" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="payroll-kpi d-flex align-items-center gap-3">
-      <div class="icon kpi-icon kpi-icon-blue"><i class="bi bi-wallet2"></i></div>
-      <div>
-        <div class="label">Gross Payroll</div>
-        <div class="value">{{ formatINR(kpis.grossPayroll) }}</div>
-        <div class="sub">{{ kpis.grossCycle }}</div>
-      </div>
-    </div>
+    <app-stat-card label="Gross Payroll" value="{{ formatINR(kpis.grossPayroll) }}" icon="bi bi-wallet2" tone="blue" sub="{{ kpis.grossCycle }}" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="payroll-kpi d-flex align-items-center gap-3">
-      <div class="icon kpi-icon kpi-icon-amber"><i class="bi bi-receipt"></i></div>
-      <div>
-        <div class="label">Total Deductions</div>
-        <div class="value">{{ formatINR(kpis.totalDeductions) }}</div>
-        <div class="sub">PF, ESI, TDS &amp; loans</div>
-      </div>
-    </div>
+    <app-stat-card label="Total Deductions" value="{{ formatINR(kpis.totalDeductions) }}" icon="bi bi-receipt" tone="amber" sub="PF, ESI, TDS &amp; loans" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="payroll-kpi d-flex align-items-center gap-3">
-      <div class="icon kpi-icon kpi-icon-red"><i class="bi bi-hourglass-split"></i></div>
-      <div>
-        <div class="label">Pending Review</div>
-        <div class="value">{{ kpis.pendingReview }}</div>
-        <div class="sub">Require approval</div>
-      </div>
-    </div>
+    <app-stat-card label="Pending Review" value="{{ kpis.pendingReview }}" icon="bi bi-hourglass-split" tone="red" sub="Require approval" />
   </div>
 </div>
 

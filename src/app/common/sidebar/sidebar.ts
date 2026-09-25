@@ -42,10 +42,6 @@ export class Sidebar implements OnInit, OnDestroy {
   isToggled = false;
   private routerSub?: Subscription;
 
-  get hostStyle(): string {
-    return `width:${this.isToggled ? 70 : 300}px !important;`;
-  }
-
   activeMenu = 'DAS'; // Default, will be overwritten by route detection
   searchText = '';
   showSearch = false;
@@ -106,8 +102,10 @@ export class Sidebar implements OnInit, OnDestroy {
 
     for (const [menuKey, menuData] of Object.entries(this.sidebarMenus)) {
       for (const item of menuData.items) {
-        // Check parent route
-        if (item.route && this.routeMatches(cleanUrl, item.route)) {
+        // Check parent route (only for leaf items — a parent's route is a
+        // prefix of its children's, so it would match before them and the
+        // accordion would never open)
+        if (item.route && !item.children?.length && this.routeMatches(cleanUrl, item.route)) {
           this.activeMenu = menuKey;
           return;
         }

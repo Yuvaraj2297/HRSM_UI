@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, DestroyRef, EnvironmentInjector, HostListener, Injector, WritableSignal, afterNextRender, computed, createComponent, inject, signal } from '@angular/core';
 import { BiIcon } from './bi-icon';
 import {
@@ -79,7 +80,7 @@ const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), select:not([di
 
 @Component({
   selector: 'app-payslip',
-  imports: [BiIcon, PayslipSheet, PrimeDataTable],
+  imports: [BiIcon, PayslipSheet, PrimeDataTable, AppStatCard],
   templateUrl: './payslip.html',
   styleUrl: './payslip.scss',
 })
@@ -311,7 +312,7 @@ payslipColumns(): PrimeTableColumn[] {
   }
 
   private focusFirstField(): void {
-    afterNextRender(() => document.querySelector<HTMLElement>('.modal-dialog [data-autofocus]')?.focus(), { injector: this.injector });
+    afterNextRender(() => document.querySelector<HTMLElement>('.ps-modal [data-autofocus]')?.focus(), { injector: this.injector });
   }
 
   /** Remembers what to refocus when a dialog closes. Menu items vanish on click, so use the menu's trigger instead. */

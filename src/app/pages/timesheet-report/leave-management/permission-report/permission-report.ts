@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -57,7 +58,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-permission-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable],
+  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable, AppStatCard],
   templateUrl: './permission-report.html',
   styleUrl: './permission-report.scss',
 })

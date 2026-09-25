@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -58,7 +59,7 @@ interface DocRow {
 
 @Component({
   selector: 'app-document-verification',
-  imports: [PrimeDataTable, CommonModule],
+  imports: [PrimeDataTable, CommonModule, AppStatCard],
   templateUrl: './document-verification.html',
 
   styleUrls: ['./document-verification.scss'],

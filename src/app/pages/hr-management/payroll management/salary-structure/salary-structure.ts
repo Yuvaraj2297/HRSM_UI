@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, ElementRef, HostListener, Injector, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
 import { BiIcon, BiName } from '../bi-icon';
 
@@ -67,7 +68,7 @@ const SEED: SalaryComponent[] = [
 
 @Component({
   selector: 'app-salary-structure',
-  imports: [BiIcon],
+  imports: [BiIcon, AppStatCard],
   templateUrl: './salary-structure.html',
   styleUrl: './salary-structure.scss',
 })

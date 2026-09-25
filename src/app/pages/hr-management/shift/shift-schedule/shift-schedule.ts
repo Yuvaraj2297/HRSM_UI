@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -68,7 +69,7 @@ export interface ShiftChangeRequest {
 @Component({
   selector: 'app-shift-schedule',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SelectModule, Breadcrumb, PrimeDataTable],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SelectModule, Breadcrumb, PrimeDataTable, AppStatCard],
   templateUrl: './shift-schedule.html',
   styleUrl: './shift-schedule.scss'
 })

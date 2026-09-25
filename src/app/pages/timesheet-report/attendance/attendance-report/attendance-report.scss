@@ -26,7 +26,7 @@
 }
 
 .attendance-report-page {
-  padding-bottom: 30px;
+  padding-bottom: 28px;
 }
 
 /* =========================================================
@@ -38,8 +38,8 @@
   border: 1.5px solid var(--green-400);
   font-weight: 600;
   font-size: 13.5px;
-  border-radius: 8px;
-  padding: 7px 18px;
+  border-radius: var(--radius-sm);
+  padding: 6px 16px;
   display: inline-flex;
   align-items: center;
   transition: all 0.15s ease;
@@ -56,147 +56,7 @@
   }
 }
 
-/* =========================================================
-   STAT KPI CARDS
-========================================================= */
-.stat-card {
-  position: relative;
-  background: var(--white);
-  border: 1px solid var(--border-soft);
-  border-radius: 16px;
-  padding: 16px 18px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 6px rgba(var(--neutral-900-rgb), 0.03);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(var(--neutral-900-rgb), 0.06);
-  }
-
-  .stat-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink-500);
-    margin-bottom: 2px;
-  }
-
-  .value {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--ink-900);
-    line-height: 1.1;
-  }
-
-  .delta {
-    font-size: 11.5px;
-    font-weight: 600;
-    margin-top: 3px;
-
-    &.text-up {
-      color: var(--green-400);
-    }
-
-    &.text-down {
-      color: var(--warning);
-    }
-
-    &.text-neutral {
-      color: var(--ink-500);
-    }
-  }
-}
-
-.stat-theme-violet {
-  .stat-icon {
-    background: var(--blue-50-5);
-    color: var(--purple-500);
-  }
-}
-
-.stat-theme-primary {
-  .stat-icon {
-    background: var(--neutral-50);
-    color: var(--green-400-2);
-  }
-}
-
-.stat-theme-amber {
-  .stat-icon {
-    background: var(--warning-soft);
-    color: var(--orange-450);
-  }
-}
-
-.stat-theme-blue {
-  .stat-icon {
-    background: var(--blue-50-2);
-    color: var(--blue-450);
-  }
-}
-
-/* Live Pulse on Present Today */
-.stat-pulse {
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    border: 2px solid currentColor;
-    opacity: 0.55;
-    animation: statPulseAnim 2.2s ease-out infinite;
-  }
-}
-
-@keyframes statPulseAnim {
-  0% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  80% {
-    transform: scale(1.55);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1.55);
-    opacity: 0;
-  }
-}
-
-/* Att summary card active state */
-.att-summary-card {
-  cursor: pointer;
-
-  &.active {
-    position: relative;
-    border-color: var(--green-150) !important;
-    background: var(--white);
-    box-shadow: 0 4px 16px rgba(var(--green-400-rgb), 0.12), 0 0 0 1.5px rgba(var(--green-300-rgb), 0.25);
-    border-left: 4px solid var(--green-400) !important;
-
-    .stat-label {
-      color: var(--green-400) !important;
-      font-weight: 700;
-    }
-
-    .stat-icon {
-      background: var(--green-400) !important;
-      color: var(--white) !important;
-    }
-  }
-}
+/* stat cards: <app-stat-card> (global) */
 
 /* =========================================================
    FILTERS CARD & ACTIVE CHIPS
@@ -211,43 +71,11 @@
   justify-content: space-between;
   cursor: pointer;
   user-select: none;
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   transition: background-color 0.15s ease;
 
   &:hover {
     background-color: var(--bg-soft);
-  }
-}
-
-.filters-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--att-present-bg);
-  color: var(--att-present-fg);
-  border: none;
-  font-weight: 600;
-  font-size: 13.5px;
-  padding: 8px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: var(--green-100-2);
-  }
-
-  .chevron {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 12px;
-
-    &.rotated {
-      transform: rotate(180deg);
-    }
-  }
-
-  &.open .chevron {
-    transform: rotate(180deg);
   }
 }
 
@@ -278,8 +106,8 @@
   gap: 8px;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  padding: 10px 14px;
+  border-radius: var(--card-radius);
+  padding: 10px 12px;
   box-shadow: 0 2px 8px rgba(var(--neutral-900-rgb), 0.03);
 
   &.show {
@@ -380,7 +208,7 @@
   gap: 6px;
   font-size: 11.5px;
   font-weight: 700;
-  padding: 5px 12px;
+  padding: 4px 12px;
   border-radius: 999px;
   white-space: nowrap;
 
@@ -421,25 +249,6 @@
 /* =========================================================
    TOOLBAR BUTTONS: COLUMNS, EXPORT & DATE NAVIGATION
 ========================================================= */
-.columns-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
-.export-btn-pdf {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
 
 .mt-export-dropdown {
   position: absolute;
@@ -448,7 +257,7 @@
   z-index: 1050;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 6px;
   min-width: 140px;
   box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.1);
@@ -457,7 +266,7 @@
     width: 100%;
     border: none;
     background: transparent;
-    padding: 7px 12px;
+    padding: 6px 12px;
     font-size: 12.5px;
     font-weight: 500;
     color: var(--ink-700);
@@ -481,7 +290,7 @@
   align-items: center;
   background: var(--bg-soft);
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 2px 6px;
   gap: 4px;
 
@@ -521,66 +330,11 @@
 /* =========================================================
    TABLE STYLING
 ========================================================= */
-.table-modern-wrap {
-  overflow-x: auto;
-}
 
+/* table look is global (classes.scss) */
 .table-modern {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-
-  thead {
-    background-color: var(--bg-soft);
-
-    th {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--ink-600);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      padding: 12px 14px;
-      border-top: none;
-      border-bottom: 1px solid var(--border-soft);
-      background-color: var(--bg-soft);
-      vertical-align: middle;
-
-      .form-check-input {
-        cursor: pointer;
-      }
-    }
-  }
-
-  tbody {
-    tr.att-row {
-      transition: background-color 0.15s ease;
-
-      &:hover {
-        background-color: var(--bg-soft);
-      }
-
-      &.selected {
-        background-color: var(--green-50);
-      }
-
-      td {
-        padding: 12px 14px;
-        font-size: 13px;
-        color: var(--ink-700);
-        border-bottom: 1px solid var(--border-soft);
-        vertical-align: middle;
-
-        .form-check-input {
-          cursor: pointer;
-        }
-
-        .sno-value {
-          font-weight: 600;
-          color: var(--ink-600);
-        }
-      }
-    }
-  }
+  .form-check-input { cursor: pointer; }
+  .sno-value { font-weight: 600; color: var(--text-light); }
 }
 
 /* Employee ID Link */
@@ -617,12 +371,6 @@
 }
 
 /* Actions 3-dots and Dropdown */
-.btn-action-dots {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-}
 
 .action-dropdown-menu {
   position: absolute;
@@ -631,7 +379,7 @@
   z-index: 1050;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   padding: 6px;
   min-width: 170px;
   box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.08), 0 2px 6px rgba(var(--black-rgb), 0.04);
@@ -645,7 +393,7 @@
     font-size: 12.5px;
     font-weight: 600;
     color: var(--ink-700);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -680,16 +428,6 @@
   flex-direction: column;
   max-height: calc(100vh - 40px);
   width: 100%;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(var(--black-rgb), 0.25);
-
-  .modal-header {
-    flex-shrink: 0;
-    padding: 16px 22px;
-    background: var(--white);
-    border-bottom: 1px solid var(--border-soft);
-  }
 
   .calendar-modal-body {
     flex: 1 1 auto;
@@ -745,7 +483,7 @@
 .atl-header {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 20px 24px;
   background: linear-gradient(135deg, var(--green-400) 0%, var(--primary-dark) 100%);
   color: var(--white);
@@ -754,7 +492,7 @@
   img {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     object-fit: cover;
     border: 2px solid rgba(var(--white-rgb), 0.6);
   }
@@ -786,7 +524,7 @@
   .atl-close {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border: none;
     background: rgba(var(--white-rgb), 0.18);
     color: var(--white);
@@ -857,8 +595,8 @@
 .atl-item {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  padding-bottom: 18px;
+  gap: 12px;
+  padding-bottom: 16px;
 
   &:last-child {
     padding-bottom: 0;
@@ -901,8 +639,8 @@
     gap: 8px;
     background: var(--white);
     border: 1px solid var(--border-soft);
-    border-radius: 12px;
-    padding: 10px 14px;
+    border-radius: var(--card-radius);
+    padding: 10px 12px;
 
     .label {
       font-size: 13px;
@@ -930,7 +668,7 @@
   border-radius: 999px;
   background: var(--bg-muted);
   color: var(--neutral-500);
-  margin: -10px 0 14px 54px;
+  margin: -10px 0 12px 56px;
   width: fit-content;
 
   &.long {
@@ -958,7 +696,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  padding: 20px;
   pointer-events: none;
   overflow-y: auto;
 
@@ -967,24 +705,6 @@
     width: 100%;
     margin: auto;
     animation: modalEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-}
-
-.modal-content {
-  border: 1px solid rgba(var(--white-rgb), 0.1);
-  border-radius: 20px;
-  box-shadow: 0 25px 60px rgba(var(--black-rgb), 0.25);
-  background: var(--white);
-  overflow: hidden;
-}
-
-.btn-close-custom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    transform: scale(1.05);
   }
 }
 
@@ -1016,7 +736,7 @@
   background: var(--neutral-900);
   color: var(--white);
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   font-size: 13.5px;
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.25);

@@ -42,31 +42,8 @@
 /* =========================================================
    P-SELECT FILTER STYLING
 ========================================================= */
-::ng-deep {
-  .team-cal-select.p-select {
-    width: 160px;
-
-    .p-select-label {
-      padding: 0.45rem 0.8rem;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-900);
-    }
-
-  }
-
-  .member-cal-select.p-select {
-    width: 250px;
-
-    .p-select-label {
-      padding: 0.45rem 0.8rem;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-900);
-    }
-
-  }
-}
+:host ::ng-deep .team-cal-select.p-select { width: 160px; }
+:host ::ng-deep .member-cal-select.p-select { width: 250px; }
 
 /* =========================================================
    MONTH NAVIGATOR
@@ -88,7 +65,7 @@
   .acm-nav-btn {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-soft);
     background: var(--white);
     cursor: pointer;
@@ -128,7 +105,7 @@
   .summary-card {
     background: var(--white);
     border: 1px solid var(--border-soft);
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     padding: 12px 10px;
     text-align: center;
     box-shadow: 0 2px 8px rgba(var(--neutral-900-rgb), 0.03);
@@ -172,7 +149,7 @@
       color: var(--ink-400);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-top: 3px;
+      margin-top: 2px;
     }
   }
 }
@@ -199,13 +176,13 @@
 .acm-day {
   height: 82px;
   min-height: 82px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(var(--black-rgb), 0.04);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 7px 9px;
+  padding: 6px 8px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   user-select: none;
 
@@ -231,7 +208,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    padding: 1.5px 6px;
+    padding: 2px 6px;
     border-radius: 999px;
     background: rgba(var(--white-rgb), 0.7);
   }
@@ -318,7 +295,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
-  margin-top: 14px;
+  margin-top: 12px;
   padding-top: 12px;
   border-top: 1px dashed var(--border-soft);
 

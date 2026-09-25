@@ -10,13 +10,6 @@
   margin-bottom: 16px;
 }
 
-.ld-page-title {
-  margin: 0 0 4px;
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--gh-heading);
-}
-
 .ld-crumbs {
   display: flex;
   align-items: center;
@@ -32,8 +25,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 6px 5px 12px;
-  border-radius: 14px;
+  padding: 4px 6px 4px 12px;
+  border-radius: var(--card-radius);
   background: var(--white);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
@@ -79,14 +72,14 @@
 .ld-seg {
   display: inline-flex;
   gap: 2px;
-  padding: 3px;
-  border-radius: 10px;
+  padding: 2px;
+  border-radius: var(--radius-sm);
   background: var(--bg-muted);
 
   button {
-    padding: 5px 13px;
+    padding: 4px 12px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     font-size: 12px;
     font-weight: 700;
     color: var(--text-light);
@@ -107,7 +100,7 @@
   flex: 0 0 auto;
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -139,13 +132,13 @@
   strong { font-size: 15px; font-weight: 800; color: var(--gh-heading); }
 }
 
-.ld-legend { margin-top: 14px; }
+.ld-legend { margin-top: 12px; }
 
 .ld-legend-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 0;
+  padding: 6px 0;
   font-size: 12.5px;
 
   & + & { border-top: 1px dashed var(--border); }
@@ -160,12 +153,12 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .ld-metric {
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-soft);
   border-left: 3px solid var(--c);
 }
@@ -177,14 +170,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   overflow-x: auto;
 }
 
 .ld-step {
   flex: 1 0 140px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-soft);
   border: 1px solid var(--border);
 }
@@ -217,7 +210,7 @@
 
 .ld-mini {
   padding: 12px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   background: var(--bg-soft);
   border: 1px solid var(--border);
 }

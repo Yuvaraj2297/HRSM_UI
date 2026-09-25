@@ -1,7 +1,7 @@
 <!-- Title & Action Bar -->
 <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
   <div>
-    <h1 class=" mb-1" style="font-size:1.7rem;">Job Openings & Requisitions</h1>
+    <h1 class="page-title mb-1">Job Openings & Requisitions</h1>
     <nav class="d-flex align-items-center gap-2 text-muted" style="font-size:13px;">
       <i class="bi bi-briefcase fs-6"></i>
       <span>Recruitment</span>
@@ -25,44 +25,16 @@
 <!-- KPI Cards -->
 <div class="row g-3 mb-3">
   <div class="col-sm-6 col-xl-3">
-    <div class="job-kpi d-flex align-items-center gap-3">
-      <div class="icon" style="background:var(--neutral-50);color:var(--green-500);"><i class="bi bi-briefcase"></i></div>
-      <div>
-        <div class="label">Active Open Positions</div>
-        <div class="value">{{ activeOpenPositions }}</div>
-        <div class="sub">Across {{ activeDepartmentCount }} departments</div>
-      </div>
-    </div>
+    <app-stat-card label="Active Open Positions" value="{{ activeOpenPositions }}" icon="bi bi-briefcase" tone="primary" sub="Across {{ activeDepartmentCount }} departments" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="job-kpi d-flex align-items-center gap-3">
-      <div class="icon" style="background:var(--accent-blue-soft);color:var(--blue-550);"><i class="bi bi-person-lines-fill"></i></div>
-      <div>
-        <div class="label">Total Applicants</div>
-        <div class="value">{{ totalApplicants }}</div>
-        <div class="sub">28 this week</div>
-      </div>
-    </div>
+    <app-stat-card label="Total Applicants" value="{{ totalApplicants }}" icon="bi bi-person-lines-fill" tone="blue" sub="28 this week" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="job-kpi d-flex align-items-center gap-3">
-      <div class="icon" style="background:var(--warning-soft);color:var(--orange-500);"><i class="bi bi-calendar-event"></i></div>
-      <div>
-        <div class="label">Interviews Scheduled</div>
-        <div class="value">{{ interviewsScheduled }}</div>
-        <div class="sub">Next 7 days</div>
-      </div>
-    </div>
+    <app-stat-card label="Interviews Scheduled" value="{{ interviewsScheduled }}" icon="bi bi-calendar-event" tone="amber" sub="Next 7 days" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="job-kpi d-flex align-items-center gap-3">
-      <div class="icon" style="background:var(--purple-50);color:var(--purple-550-2);"><i class="bi bi-file-earmark-check"></i></div>
-      <div>
-        <div class="label">Offers Released</div>
-        <div class="value">{{ offersReleased }}</div>
-        <div class="sub">{{ offersAccepted }} accepted, {{ offersPending }} pending</div>
-      </div>
-    </div>
+    <app-stat-card label="Offers Released" value="{{ offersReleased }}" icon="bi bi-file-earmark-check" tone="violet" sub="{{ offersAccepted }} accepted, {{ offersPending }} pending" />
   </div>
 </div>
 

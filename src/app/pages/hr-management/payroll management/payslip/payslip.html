@@ -67,7 +67,7 @@
               <textarea id="reqNote" class="form-control" rows="3" placeholder="e.g. Loan application, visa processing..." [value]="note()" (input)="note.set(value($event))"></textarea>
             </div>
 
-            <button type="button" class="btn-primary block" [class.ok]="submitted()" (click)="submitRequest()">
+            <button type="button" class="btn btn-primary w-100" [class.ok]="submitted()" (click)="submitRequest()">
               @if (submitted()) {
                 <bi-icon name="check-circle" /> Request Submitted!
               } @else {
@@ -193,23 +193,11 @@
 <!-- ===================== HR / ADMIN VIEW ===================== -->
 @if (tab() === 'admin') {
   <div id="panelAdmin" role="tabpanel" aria-labelledby="tabAdmin">
-    <section class="kpis" aria-label="Request summary">
-      <article class="kpi">
-        <span class="kpi-icon amber-bg"><bi-icon name="hourglass-split" /></span>
-        <div><div class="kpi-label">Pending</div><div class="kpi-value">{{ counts().pending }}</div></div>
-      </article>
-      <article class="kpi">
-        <span class="kpi-icon green-bg"><bi-icon name="check-circle" /></span>
-        <div><div class="kpi-label">Approved</div><div class="kpi-value">{{ counts().approved }}</div></div>
-      </article>
-      <article class="kpi">
-        <span class="kpi-icon blue-bg"><bi-icon name="file-earmark-pdf" /></span>
-        <div><div class="kpi-label">Generated</div><div class="kpi-value">{{ counts().generated }}</div></div>
-      </article>
-      <article class="kpi">
-        <span class="kpi-icon red-bg"><bi-icon name="x-circle" /></span>
-        <div><div class="kpi-label">Rejected</div><div class="kpi-value">{{ counts().rejected }}</div></div>
-      </article>
+    <section class="stat-grid" aria-label="Request summary">
+      <app-stat-card label="Pending" [value]="counts().pending" icon="bi bi-hourglass-split" tone="amber" />
+      <app-stat-card label="Approved" [value]="counts().approved" icon="bi bi-check-circle" tone="primary" />
+      <app-stat-card label="Generated" [value]="counts().generated" icon="bi bi-file-earmark-pdf" tone="blue" />
+      <app-stat-card label="Rejected" [value]="counts().rejected" icon="bi bi-x-circle" tone="red" />
     </section>
 
     <!-- Pending requests -->
@@ -418,7 +406,7 @@
 <!-- ============================ Reject modal ============================ -->
 @if (reject(); as r) {
   <div class="modal-backdrop">
-    <div class="modal-dialog narrow" role="dialog" aria-modal="true" aria-labelledby="rejectTitle" (keydown)="trapFocus($event)">
+    <div class="ps-modal narrow" role="dialog" aria-modal="true" aria-labelledby="rejectTitle" (keydown)="trapFocus($event)">
       <div class="modal-head danger">
         <h2 id="rejectTitle"><bi-icon name="x-circle" /> Reject Payslip Request</h2>
         <button type="button" class="modal-close" aria-label="Close" (click)="closeReject()"><bi-icon name="x-lg" /></button>
@@ -439,7 +427,7 @@
         </div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn-cancel" (click)="closeReject()">Cancel</button>
+        <button type="button" class="btn btn-secondary" (click)="closeReject()">Cancel</button>
         <button type="button" class="btn btn-danger" (click)="confirmReject()"><bi-icon name="x-circle" /> Confirm Reject</button>
       </div>
     </div>
@@ -449,7 +437,7 @@
 <!-- ============================ Manual payslip modal ============================ -->
 @if (manual(); as m) {
   <div class="modal-backdrop">
-    <form class="modal-dialog wide" role="dialog" aria-modal="true" aria-labelledby="manualTitle" novalidate (submit)="onManualSubmit($event)" (keydown)="trapFocus($event)">
+    <form class="ps-modal wide" role="dialog" aria-modal="true" aria-labelledby="manualTitle" novalidate (submit)="onManualSubmit($event)" (keydown)="trapFocus($event)">
       <div class="modal-head brand">
         <div>
           <h2 id="manualTitle"><bi-icon name="pencil-square" /> Manual Pay Slip</h2>
@@ -517,8 +505,8 @@
       </div>
 
       <div class="modal-foot">
-        <button type="button" class="btn-cancel" (click)="closeManual()">Cancel</button>
-        <button type="submit" class="btn-primary"><bi-icon name="file-earmark-check" /> Generate Payslip</button>
+        <button type="button" class="btn btn-secondary" (click)="closeManual()">Cancel</button>
+        <button type="submit" class="btn btn-primary"><bi-icon name="file-earmark-check" /> Generate Payslip</button>
       </div>
     </form>
   </div>
@@ -527,7 +515,7 @@
 <!-- ============================ Preview modal ============================ -->
 @if (previewSlip(); as slip) {
   <div class="modal-backdrop">
-    <div class="modal-dialog wide flush" role="dialog" aria-modal="true" aria-labelledby="previewTitle" (keydown)="trapFocus($event)">
+    <div class="ps-modal wide flush" role="dialog" aria-modal="true" aria-labelledby="previewTitle" (keydown)="trapFocus($event)">
       <div class="modal-head solid">
         <h2 id="previewTitle"><bi-icon name="file-earmark-text" /> Payslip Preview</h2>
         <button type="button" class="modal-close light" aria-label="Close" (click)="closePreview()"><bi-icon name="x-lg" /></button>
@@ -536,9 +524,9 @@
         <app-payslip-sheet [slip]="slip" />
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn-cancel" data-autofocus (click)="closePreview()">Close</button>
-        <button type="button" class="btn-cancel" (click)="printSlip(previewId()!)"><bi-icon name="printer" /> Print</button>
-        <button type="button" class="btn-primary" (click)="downloadPdf(previewId()!)"><bi-icon name="download" /> Download PDF</button>
+        <button type="button" class="btn btn-secondary" data-autofocus (click)="closePreview()">Close</button>
+        <button type="button" class="btn btn-secondary" (click)="printSlip(previewId()!)"><bi-icon name="printer" /> Print</button>
+        <button type="button" class="btn btn-primary" (click)="downloadPdf(previewId()!)"><bi-icon name="download" /> Download PDF</button>
       </div>
     </div>
   </div>

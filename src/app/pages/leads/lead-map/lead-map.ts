@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../shared/stat-card/stat-card';
 import {
   Component,
   DestroyRef,
@@ -31,7 +32,7 @@ import {
 @Component({
   selector: 'app-lead-map',
   standalone: true,
-  imports: [CommonModule, PrimeDataTable, LeadRouteMap, LeadTimeline],
+  imports: [CommonModule, PrimeDataTable, LeadRouteMap, LeadTimeline, AppStatCard],
   templateUrl: './lead-map.html',
   styleUrl: './lead-map.scss',
 })

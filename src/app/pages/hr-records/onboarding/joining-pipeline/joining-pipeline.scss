@@ -1,45 +1,4 @@
-.onb-kpi {
-    min-height: 96px;
-    padding: 16px;
-    border: 1px solid var(--border-soft, var(--border));
-    border-radius: 14px;
-    background: var(--white, var(--white));
-    box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);
-    transition: transform 0.2s ease;
-}
 
-.onb-kpi:hover {
-    transform: translateY(-2px);
-}
-
-.onb-kpi .icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.onb-kpi .label {
-    color: var(--ink-500, var(--neutral-500));
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 2px;
-}
-
-.onb-kpi .value {
-    color: var(--ink-900, var(--neutral-900));
-    font-size: 22px;
-    font-weight: 800;
-}
-
-.onb-kpi .sub {
-    color: var(--ink-500, var(--neutral-500));
-    font-size: 11px;
-    margin-top: 2px;
-}
 
 .pan-badge {
     font-family: var(--font-family-mono);
@@ -47,14 +6,14 @@
     letter-spacing: 0.5px;
     background: var(--bg-muted);
     color: var(--text);
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 4px;
     font-size: 11.5px;
 }
 
 .dropzone-box {
     border: 2px dashed var(--text-faint);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     padding: 20px;
     text-align: center;
     background: var(--bg-soft);
@@ -108,7 +67,7 @@
     width: 100%;
     max-height: calc(100vh - 48px);
     overflow-y: auto;
-    border-radius: 16px !important;
+    border-radius: var(--card-radius) !important;
     background: var(--white);
     animation: candidate-modal-slide-up 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
     transform-origin: center bottom;
@@ -122,8 +81,8 @@
 
 .candidate-info-card {
     margin-bottom: 20px;
-    padding: 20px 22px;
-    border-radius: 16px;
+    padding: 20px 20px;
+    border-radius: var(--card-radius);
     box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.05);
 }
 
@@ -140,15 +99,6 @@
 .candidate-info-card h6 {
     font-size: 18px;
     letter-spacing: -0.2px;
-}
-
-.candidate-modal-content .modal-body {
-    padding: 24px 32px 28px !important;
-}
-
-.candidate-modal-content .modal-footer {
-    padding: 16px 28px;
-    background: var(--bg-soft);
 }
 
 @keyframes candidate-modal-backdrop-in {

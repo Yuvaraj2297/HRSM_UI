@@ -13,68 +13,23 @@
 <!-- KPI Row -->
 <div class="row g-3 mb-3">
   <div class="col-6 col-xl">
-    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'all'"
-      (click)="toggleQuickFilter('all')" style="--wash: rgba(var(--blue-550-rgb), 0.07);" role="button" tabindex="0">
-      <div class="k-ico" style="background: var(--accent-blue-soft); color: var(--blue-550);">
-        <i class="bi bi-ticket-perforated"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiData.total }}</div>
-        <div class="k-label">Total Tickets</div>
-      </div>
-    </div>
+    <app-stat-card label="Total Tickets" value="{{ kpiData.total }}" icon="bi bi-ticket-perforated" tone="blue" [clickable]="true" (click)="toggleQuickFilter('all')" [active]="quickFilter === 'all'" />
   </div>
 
   <div class="col-6 col-xl">
-    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'new'"
-      (click)="toggleQuickFilter('new')" style="--wash: rgba(var(--purple-550-rgb), 0.07);" role="button" tabindex="0">
-      <div class="k-ico" style="background: var(--blue-50-3); color: var(--purple-550);">
-        <i class="bi bi-inbox"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiData.newT }}</div>
-        <div class="k-label">New</div>
-      </div>
-    </div>
+    <app-stat-card label="New" value="{{ kpiData.newT }}" icon="bi bi-inbox" tone="violet" [clickable]="true" (click)="toggleQuickFilter('new')" [active]="quickFilter === 'new'" />
   </div>
 
   <div class="col-6 col-xl">
-    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'progress'"
-      (click)="toggleQuickFilter('progress')" style="--wash: rgba(var(--orange-400-rgb), 0.08);" role="button" tabindex="0">
-      <div class="k-ico" style="background: var(--orange-50); color: var(--orange-550);">
-        <i class="bi bi-hourglass-split"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiData.progress }}</div>
-        <div class="k-label">In Progress</div>
-      </div>
-    </div>
+    <app-stat-card label="In Progress" value="{{ kpiData.progress }}" icon="bi bi-hourglass-split" tone="amber" [clickable]="true" (click)="toggleQuickFilter('progress')" [active]="quickFilter === 'progress'" />
   </div>
 
   <div class="col-6 col-xl">
-    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'resolved'"
-      (click)="toggleQuickFilter('resolved')" style="--wash: rgba(var(--green-400-2-rgb), 0.07);" role="button" tabindex="0">
-      <div class="k-ico" style="background: var(--primary-soft); color: var(--green-550);">
-        <i class="bi bi-check-circle"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiData.resolved }}</div>
-        <div class="k-label">Resolved</div>
-      </div>
-    </div>
+    <app-stat-card label="Resolved" value="{{ kpiData.resolved }}" icon="bi bi-check-circle" tone="primary" [clickable]="true" (click)="toggleQuickFilter('resolved')" [active]="quickFilter === 'resolved'" />
   </div>
 
   <div class="col-6 col-xl">
-    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'high'"
-      (click)="toggleQuickFilter('high')" style="--wash: rgba(var(--danger-rgb), 0.08);" role="button" tabindex="0">
-      <div class="k-ico" style="background: var(--danger-soft); color: var(--red-550);">
-        <i class="bi bi-exclamation-triangle"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiData.highCritical }}</div>
-        <div class="k-label">High / Critical</div>
-      </div>
-    </div>
+    <app-stat-card label="High / Critical" value="{{ kpiData.highCritical }}" icon="bi bi-exclamation-triangle" tone="red" [clickable]="true" (click)="toggleQuickFilter('high')" [active]="quickFilter === 'high'" />
   </div>
 </div>
 
@@ -131,7 +86,7 @@
   </div>
 
   <div class="table-responsive table-modern-wrap overflow-auto column-border" style="max-height: 520px;">
-    <table class="table-modern w-100 mb-0" id="ctAllTable">
+    <table class="table-modern data-table-sticky w-100 mb-0" id="ctAllTable">
       <thead>
         <tr>
           <th class="text-nowrap">Ticket</th>
@@ -219,7 +174,7 @@
           <td class="text-center" (click)="$event.stopPropagation()">
             @if (t.status.toLowerCase() === 'new') {
             <button type="button" class="btn btn-sm btn-primary text-nowrap" (click)="openQuickAssign(t, $event)"
-              style="font-size: 11px; padding: 3px 8px;">
+              style="font-size: 11px; padding: 2px 8px;">
               <i class="bi bi-person-plus"></i>Assign
             </button>
             } @else {
@@ -298,7 +253,7 @@
           <div class="min-w-0 flex-grow-1">
             <div class=" text-truncate" style="font-size: 12px;">{{ s.person }}</div>
             <div class="text-muted" style="font-size: 10.5px;">{{ s.team }}</div>
-            <div style="height: 5px; border-radius: 99px; background: var(--bg-muted); margin-top: 5px; overflow: hidden;">
+            <div style="height: 5px; border-radius: 99px; background: var(--bg-muted); margin-top: 4px; overflow: hidden;">
               <span style="display: block; height: 100%; border-radius: 99px;" [style.width.%]="s.pct"
                 [style.background]="s.color"></span>
             </div>

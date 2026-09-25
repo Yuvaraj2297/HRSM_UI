@@ -15,7 +15,7 @@
         }
       </span>
     </div>
-    <h1 class="font-display  mb-0" style="font-size:1.6rem;">{{ headerTitle }}</h1>
+    <h1 class="page-title mb-0">{{ headerTitle }}</h1>
   </div>
   <div class="d-flex gap-2 flex-wrap">
     <button class="btn btn-outline-danger" type="button" (click)="exportDeptReport('PDF')">
@@ -30,74 +30,13 @@
 <!-- =========================================================
      KPI SUMMARY CARDS
 ========================================================== -->
-<div class="row g-3 mb-4">
-  <!-- Card 1 -->
-  <div class="col-sm-6 col-md-3">
-    <div class="card h-100 p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--blue-50); color:var(--blue-450-2); font-size: 1.25rem;">
-          <i class="bi bi-people-fill"></i>
-        </div>
-        <div>
-          <div class="text-muted " style="font-size:12px;">Total Headcount</div>
-          <div class="fs-4  text-dark lh-1 my-1">{{ deptStat.headcount }}</div>
-          <div class="text-muted" style="font-size:11px;">Active Employees</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 2 -->
-  <div class="col-sm-6 col-md-3">
-    <div class="card h-100 p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--green-50-2); color:var(--primary-dark); font-size: 1.25rem;">
-          <i class="bi bi-star-fill text-warning"></i>
-        </div>
-        <div>
-          <div class="text-muted " style="font-size:12px;">Avg Department Score</div>
-          <div class="fs-4  text-dark lh-1 my-1">
-            {{ deptStat.avgRating }} <span style="font-size:12px;" class="text-muted">/ 5.0</span>
-          </div>
-          <div class="text-success " style="font-size:11px;">
-            <i class="bi bi-award me-1"></i>High Performance
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 3 -->
-  <div class="col-sm-6 col-md-3">
-    <div class="card h-100 p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--purple-50); color:var(--purple-600); font-size: 1.25rem;">
-          <i class="bi bi-trophy-fill"></i>
-        </div>
-        <div>
-          <div class="text-muted " style="font-size:12px;">Avg KPI Achievement</div>
-          <div class="fs-4  lh-1 my-1" style="color:var(--purple-600);">{{ deptStat.kpiAvg }}</div>
-          <div class="text-muted" style="font-size:11px;">Targets Completed</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 4 -->
-  <div class="col-sm-6 col-md-3">
-    <div class="card h-100 p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--primary-soft); color:var(--green-550-2); font-size: 1.25rem;">
-          <i class="bi bi-person-badge-fill"></i>
-        </div>
-        <div>
-          <div class="text-muted " style="font-size:12px;">Top Performer</div>
-          <div class="fs-6  text-dark text-truncate lh-1 my-1" style="max-width:140px;">{{ deptStat.topEmp }}</div>
-          <div class="text-success " style="font-size:11px;">{{ deptStat.topScore }}</div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="stat-grid">
+  <app-stat-card label="Total Headcount" [value]="deptStat.headcount" icon="bi bi-people-fill" tone="blue" sub="Active Employees" />
+  <app-stat-card label="Avg Department Score" [value]="deptStat.avgRating + ' / 5.0'" icon="bi bi-star-fill" tone="amber"
+    sub="High Performance" subTone="success" />
+  <app-stat-card label="Avg KPI Achievement" [value]="deptStat.kpiAvg" icon="bi bi-trophy-fill" tone="violet" sub="Targets Completed" />
+  <app-stat-card label="Top Performer" [value]="deptStat.topEmp" icon="bi bi-person-badge-fill" tone="primary"
+    [sub]="deptStat.topScore" subTone="success" />
 </div>
 
 <!-- =========================================================

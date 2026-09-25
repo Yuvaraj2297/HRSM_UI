@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -47,7 +48,7 @@ interface AttentionItem {
 @Component({
   selector: 'app-employee-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule, Breadcrumb],
+  imports: [CommonModule, FormsModule, RouterLink, SelectModule, Breadcrumb, AppStatCard],
   templateUrl: './employee-ticket.html',
   styleUrl: './employee-ticket.scss',
 })

@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -50,7 +51,7 @@ export interface ActiveFilterChip {
 @Component({
   selector: 'app-salary-deduction',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SelectModule, PrimeDataTable],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SelectModule, PrimeDataTable, AppStatCard],
   templateUrl: './salary-deduction.html',
   styleUrl: './salary-deduction.scss',
 })

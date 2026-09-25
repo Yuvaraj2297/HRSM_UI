@@ -24,7 +24,7 @@
     font-size: 11.5px;
     font-weight: 700;
     padding: 4px 12px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
   .rec-strong { background: var(--green-50-2); color: var(--primary-dark); }
   .rec-hire   { background: var(--blue-50); color: var(--blue-450-2); }

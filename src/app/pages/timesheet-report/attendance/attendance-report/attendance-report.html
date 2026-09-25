@@ -4,7 +4,7 @@
   ========================================================== -->
   <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
     <div>
-      <h1 class="font-display  mb-1 page-title">Attendance Report</h1>
+      <h1 class="page-title mb-1">Attendance Report</h1>
       <nav class="d-flex align-items-center gap-2 text-neutral text-nowrap breadcrumb-text">
         <i class="bi bi-clock-history"></i>
         <span>Attendance Management</span>
@@ -17,128 +17,19 @@
   <!-- =========================================================
        STATUS KPI CARDS (6 CARDS ROW)
   ========================================================== -->
-  <div class="row g-3 mb-3">
-    <!-- 1. Total Employees -->
-    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-      <div
-        class="stat-card stat-theme-violet d-flex align-items-center gap-3 att-summary-card"
-        [class.active]="activeKpiStatus === 'all'"
-        (click)="toggleKpiFilter('all')"
-        role="button"
-        tabindex="0"
-        title="Click to view all employees">
-        <div class="stat-icon stat-icon-lg"><i class="bi bi-people"></i></div>
-        <div>
-          <div class="label stat-label">Total Employees</div>
-          <div class="value">{{ totalEmployeesCount }}</div>
-          <div class="delta text-neutral">Active workforce</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. Present Today -->
-    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-      <div
-        class="stat-card stat-theme-primary d-flex align-items-center gap-3 att-summary-card"
-        [class.active]="activeKpiStatus === 'present'"
-        (click)="toggleKpiFilter('present')"
-        role="button"
-        tabindex="0"
-        title="Click to filter present today">
-        <div class="stat-icon stat-icon-lg stat-pulse" style="color: var(--green-400-2);">
-          <i class="bi bi-person-check"></i>
-        </div>
-        <div>
-          <div class="label stat-label">Present Today</div>
-          <div class="value">{{ presentTodayCount }}</div>
-          <div class="delta text-up">{{ presentPercentage }}% present</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. Late Arrivals (Active in screenshot) -->
-    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-      <div
-        class="stat-card stat-theme-amber d-flex align-items-center gap-3 att-summary-card"
-        [class.active]="activeKpiStatus === 'late'"
-        (click)="toggleKpiFilter('late')"
-        role="button"
-        tabindex="0"
-        title="Click to filter late arrivals">
-        <div class="stat-icon stat-icon-lg"><i class="bi bi-alarm"></i></div>
-        <div>
-          <div class="label stat-label">Late Arrivals</div>
-          <div class="value">{{ lateArrivalsCount }}</div>
-          <div class="delta text-down" style="color: var(--danger);">{{ latePercentage }}% of total</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. On Leave -->
-    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-      <div
-        class="stat-card stat-theme-blue d-flex align-items-center gap-3 att-summary-card"
-        [class.active]="activeKpiStatus === 'leave'"
-        (click)="toggleKpiFilter('leave')"
-        role="button"
-        tabindex="0"
-        title="Click to filter on leave">
-        <div class="stat-icon stat-icon-lg"><i class="bi bi-calendar-x"></i></div>
-        <div>
-          <div class="label stat-label">On Leave</div>
-          <div class="value">{{ onLeaveCount }}</div>
-          <div class="delta text-neutral">Approved leaves</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. Absent Today -->
-    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-      <div
-        class="stat-card att-summary-card"
-        [class.active]="activeKpiStatus === 'absent'"
-        (click)="toggleKpiFilter('absent')"
-        style="background: var(--accent-red-soft, var(--danger-soft));"
-        role="button"
-        tabindex="0"
-        title="Click to filter absent today">
-        <div class="d-flex align-items-center gap-3">
-          <div class="stat-icon stat-icon-lg" style="background: var(--white); color: var(--accent-red, var(--danger));">
-            <i class="bi bi-person-x"></i>
-          </div>
-          <div>
-            <div class="label stat-label" style="color: var(--accent-red, var(--danger));">Absent Today</div>
-            <div class="value" style="color: var(--accent-red, var(--danger));">{{ absentTodayCount }}</div>
-            <div class="delta" style="color: var(--accent-red, var(--danger));">{{ absentPercentage }}% absent</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. Overtime (OT) -->
-    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-      <div
-        class="stat-card att-summary-card"
-        [class.active]="activeKpiStatus === 'overtime'"
-        (click)="toggleKpiFilter('overtime')"
-        style="background: var(--accent-violet-soft, var(--purple-50-2));"
-        role="button"
-        tabindex="0"
-        title="Click to filter overtime records">
-        <div class="d-flex align-items-center gap-3">
-          <div class="stat-icon stat-icon-lg" style="background: var(--white); color: var(--purple-600);">
-            <i class="bi bi-clock"></i>
-          </div>
-          <div>
-            <div class="label stat-label" style="color: var(--purple-600);">Overtime (OT)</div>
-            <div class="value" style="color: var(--purple-600);">{{ overtimeHoursTotal }} hrs</div>
-            <div class="delta" style="color: var(--ink-700, var(--text));">
-              <i class="bi bi-clock me-1"></i> {{ overtimeEmployeesCount }} OT Employees
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="stat-grid">
+    <app-stat-card label="Total Employees" [value]="totalEmployeesCount" icon="bi bi-people" tone="violet" sub="Active workforce"
+      [clickable]="true" [active]="activeKpiStatus === 'all'" (click)="toggleKpiFilter('all')" />
+    <app-stat-card label="Present Today" [value]="presentTodayCount" icon="bi bi-person-check" tone="primary" [sub]="presentPercentage + '% present'" subTone="success"
+      [clickable]="true" [active]="activeKpiStatus === 'present'" (click)="toggleKpiFilter('present')" />
+    <app-stat-card label="Late Arrivals" [value]="lateArrivalsCount" icon="bi bi-alarm" tone="amber" [sub]="latePercentage + '% of total'" subTone="danger"
+      [clickable]="true" [active]="activeKpiStatus === 'late'" (click)="toggleKpiFilter('late')" />
+    <app-stat-card label="On Leave" [value]="onLeaveCount" icon="bi bi-calendar-x" tone="blue" sub="Approved leaves"
+      [clickable]="true" [active]="activeKpiStatus === 'leave'" (click)="toggleKpiFilter('leave')" />
+    <app-stat-card label="Absent Today" [value]="absentTodayCount" icon="bi bi-person-x" tone="red" [sub]="absentPercentage + '% absent'" subTone="danger"
+      [clickable]="true" [active]="activeKpiStatus === 'absent'" (click)="toggleKpiFilter('absent')" />
+    <app-stat-card label="Overtime (OT)" [value]="overtimeHoursTotal + ' hrs'" icon="bi bi-clock" tone="violet" [sub]="overtimeEmployeesCount + ' OT employees'"
+      [clickable]="true" [active]="activeKpiStatus === 'overtime'" (click)="toggleKpiFilter('overtime')" />
   </div>
 
   <!-- =========================================================
@@ -304,14 +195,14 @@
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom">
       <!-- Left Controls: Columns & Export -->
       <div class="d-flex align-items-center gap-2 flex-wrap">
-        <button type="button" class="btn columns-btn" (click)="triggerToast('Column selection panel')">
+        <button type="button" class="btn-tool btn-columns" (click)="triggerToast('Column selection panel')">
           <i class="bi bi-eye"></i>Columns
         </button>
 
         <div class="mt-export-menu position-relative">
           <button
             type="button"
-            class="btn export-btn-pdf"
+            class="btn-tool btn-export"
             (click)="$event.stopPropagation(); exportDropdownOpen = !exportDropdownOpen">
             <i class="bi bi-download"></i>Export
             <i class="bi bi-chevron-down" style="font-size: 10px;"></i>

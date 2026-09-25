@@ -1,7 +1,7 @@
 <!-- Title & Action Bar -->
 <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
     <div>
-        <h1 class="font-display  mb-1" style="font-size:1.7rem;">Induction &amp; Orientation Management</h1>
+        <h1 class="page-title mb-1">Induction &amp; Orientation Management</h1>
         <nav class="d-flex align-items-center gap-2 text-neutral" style="font-size:13px;">
             <i class="bi bi-person-check fs-6 text-success"></i>
             <span>Onboarding</span>
@@ -75,44 +75,20 @@
 <!-- KPI Metric Cards -->
 <div class="row g-3 mb-4">
     <div class="col-sm-6 col-xl-3">
-        <div class="ori-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-joiners"><i class="bi bi-people-fill"></i></div>
-            <div>
-                <div class="label">Total Joiners in Induction</div>
-                <div class="value">{{ kpis.totalJoiners }} Joiners</div>
-                <div class="sub">Across Engineering, Design &amp; Sales</div>
-            </div>
-        </div>
+        <app-stat-card label="Total Joiners in Induction" value="{{ kpis.totalJoiners }} Joiners" icon="bi bi-people-fill" tone="primary" sub="Across Engineering, Design &amp; Sales" />
     </div>
     <div class="col-sm-6 col-xl-3">
-        <div class="ori-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-scheduled"><i class="bi bi-calendar-range"></i></div>
-            <div>
-                <div class="label">Scheduled / In Progress</div>
-                <div class="value">{{ kpis.scheduled }} Sessions</div>
-                <div class="sub">Upcoming sessions notified</div>
-            </div>
-        </div>
+        <app-stat-card label="Scheduled / In Progress" value="{{ kpis.scheduled }} Sessions" icon="bi bi-calendar-range" tone="primary" sub="Upcoming sessions notified" />
     </div>
     <div class="col-sm-6 col-xl-3">
-        <div class="ori-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-pending"><i class="bi bi-hourglass-split"></i></div>
-            <div>
-                <div class="label">Pending Mandatory Sessions</div>
-                <div class="value text-warning-emphasis">{{ kpis.pendingBranch }} Employees</div>
-                <div class="sub"><strong class="text-warning-emphasis">Branch: No</strong> &bull; Need completion</div>
-            </div>
-        </div>
+        <app-stat-card label="Pending Mandatory Sessions" value="{{ kpis.pendingBranch }} Employees" icon="bi bi-hourglass-split" tone="primary">
+  <span sub class="stat-card-sub"><strong class="text-warning-emphasis">Branch: No</strong> &bull; Need completion</span>
+</app-stat-card>
     </div>
     <div class="col-sm-6 col-xl-3">
-        <div class="ori-kpi d-flex align-items-center gap-3">
-            <div class="icon kpi-icon-certified"><i class="bi bi-patch-check-fill"></i></div>
-            <div>
-                <div class="label">Induction Fully Certified</div>
-                <div class="value text-success">{{ kpis.certifiedBranch }} Employees</div>
-                <div class="sub"><strong class="text-success">Branch: Yes</strong> &bull; 100% Cleared</div>
-            </div>
-        </div>
+        <app-stat-card label="Induction Fully Certified" value="{{ kpis.certifiedBranch }} Employees" icon="bi bi-patch-check-fill" tone="primary">
+  <span sub class="stat-card-sub"><strong class="text-success">Branch: Yes</strong> &bull; 100% Cleared</span>
+</app-stat-card>
     </div>
 </div>
 

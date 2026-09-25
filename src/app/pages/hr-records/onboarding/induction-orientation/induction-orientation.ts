@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
@@ -57,7 +58,7 @@ interface ClearanceRow {
 @Component({
   selector: 'app-induction-orientation',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PrimeDataTable, SelectModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, PrimeDataTable, SelectModule, FormsModule, AppStatCard],
   templateUrl: './induction-orientation.html',
   styleUrl: './induction-orientation.scss',
 })

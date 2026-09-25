@@ -43,7 +43,7 @@
 .sum-wrap {
   overflow-x: auto;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
 }
 
 .sum {
@@ -167,7 +167,7 @@
 }
 
 .sum-empty {
-  padding: 18px;
+  padding: 16px;
   text-align: center;
   font-size: 13px;
   color: var(--text-muted);

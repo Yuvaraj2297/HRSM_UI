@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -61,7 +62,7 @@ interface SelectOption {
   selector: 'app-asset-provisioning',
   standalone: true,
 
-  imports: [CommonModule, ReactiveFormsModule, SelectModule, PrimeDataTable, CalendarDatepickerDirective],
+  imports: [CommonModule, ReactiveFormsModule, SelectModule, PrimeDataTable, CalendarDatepickerDirective, AppStatCard],
 
   templateUrl: './asset-provisioning.html',
   styleUrl: './asset-provisioning.scss',

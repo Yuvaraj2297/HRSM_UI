@@ -1,0 +1,997 @@
+/* =============================================================
+   APP-PRIMEDATATABLE — the shared list-page table component.
+   Global (not component-scoped) so the 35 pages that use it load
+   these rules once; everything is nested under the component tag,
+   so no class name here can leak into other pages.
+============================================================= */
+
+app-primedatatable {
+  display: block;
+
+  /* =============================================================
+     TABLE CARD CONTAINER & HEADER
+  ============================================================= */
+  .table-card-container {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  /* =============================================================
+     HEAD ROW — title | Columns · Export · Search · buttons · Add
+     One line; the actions wrap under the title only when narrow.
+  ============================================================= */
+  /* head row sits in its own bordered box (design reference) */
+  .table-head-area {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: var(--white);
+    border: 1px solid var(--table-border);
+    border-radius: var(--card-radius);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+
+    /* same icon tile + title as .card-header-icon / .card-custom-title */
+    .header-icon-box {
+      display: inline-grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      font-size: 18px;
+      box-shadow: 0 6px 14px rgba(var(--primary-rgb), 0.28);
+    }
+
+    .header-text {
+      min-width: 0;
+    }
+
+    .header-title {
+      margin: 0;
+      color: var(--primary-dark);
+      font-family: var(--font-family-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+
+      .header-count {
+        margin-left: 6px;
+        color: var(--text-light);
+        font-family: var(--font-family-base);
+        font-size: 15px;
+        font-weight: 600;
+      }
+    }
+
+    .header-subtitle {
+      margin-top: 2px;
+      color: var(--text-light);
+      font-size: 12px;
+    }
+  }
+
+  .table-head-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1 1 auto;
+    margin-left: auto;
+
+    .search-input-box {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        color: var(--neutral-350);
+        font-size: 16px;
+        pointer-events: none;
+      }
+
+      input {
+        width: 240px;
+        padding-left: 32px;
+      }
+    }
+
+    .btn-header-custom {
+      text-decoration: none;
+
+      i {
+        font-size: 13px;
+      }
+    }
+
+    .btn-add-primary {
+      text-decoration: none;
+
+      &:active {
+        transform: scale(0.96);
+      }
+
+      &.has-label {
+        width: auto;
+        gap: 6px;
+
+        i {
+          font-size: 13px;
+        }
+
+        .btn-add-text {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  /* phones: actions start on their own line, search takes the full width */
+  @media (max-width: 575.98px) {
+    .table-head-actions {
+      justify-content: flex-start;
+
+      .search-input-box,
+      .search-input-box input {
+        order: -1;
+        width: 100%;
+      }
+    }
+  }
+
+  /* =============================================================
+     TABLE — the look (header, rows, hover, borders) comes from the
+     global TABLES system in classes.scss; only the scroll wrapper and
+     checkbox sizing live here.
+  ============================================================= */
+  .hrms-custom-table {
+    width: 100%;
+
+    .p-datatable-table-container {
+      overflow-x: auto;
+      border: 1px solid var(--table-border);
+      border-radius: var(--radius-md);
+      scrollbar-width: thin;
+    }
+
+    .p-datatable-thead > tr > th .th-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .p-datatable-tbody > tr > td {
+      white-space: nowrap;
+    }
+
+    .p-checkbox,
+    .p-checkbox .p-checkbox-box {
+      width: 18px;
+      height: 18px;
+    }
+
+    .p-checkbox .p-checkbox-box {
+      border-radius: 4px;
+    }
+  }
+
+  /* =============================================================
+     CELL STYLES
+  ============================================================= */
+  .sno-text {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .cell-text {
+    color: var(--text);
+  }
+
+  /* Shift Name Cell */
+  .shift-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .shift-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .shift-name-text {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--neutral-900);
+    }
+
+    .shift-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: var(--radius-xs);
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid;
+      margin-left: 6px;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+  }
+
+  /* Day Timing */
+  .day-timing-cell {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--neutral-850);
+    white-space: nowrap;
+
+    &.flexible {
+      color: var(--neutral-350);
+      font-style: italic;
+      font-weight: 500;
+    }
+  }
+
+  .day-col {
+    text-align: center;
+    min-width: 140px;
+  }
+
+  /* Header action button styles for projected actions */
+  .btn-shift-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    line-height: 1.4;
+
+    &.btn-primary-action {
+      color: var(--white);
+      background: var(--blue-550);
+      border: 1px solid var(--blue-550);
+
+      &:hover {
+        background: var(--blue-600);
+        border-color: var(--blue-600);
+      }
+    }
+  }
+
+  .emp-id-text {
+    color: var(--green-450);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .employee-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    background: var(--bg-muted);
+    flex-shrink: 0;
+  }
+
+  .employee-name {
+    color: var(--neutral-900);
+    font-size: 13.5px;
+  }
+
+  /* Master Status Badge (Enable / Disable) */
+  .badge-master-status {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: var(--radius-lg);
+    font-size: 12.5px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+
+    &.status-enable {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    &.status-disable {
+      background: var(--red-100);
+      color: var(--danger);
+    }
+  }
+
+  /* Attendance Status Pill (with dot) */
+  .att-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px 4px 10px;
+    border-radius: 9999px;
+    line-height: 1.2;
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    &.status-present {
+      background: var(--green-50-2);
+      color: var(--primary-dark);
+
+      .dot {
+        background: var(--primary);
+      }
+    }
+
+    &.status-absent {
+      background: var(--red-100);
+      color: var(--red-600);
+
+      .dot {
+        background: var(--danger);
+      }
+    }
+
+    &.status-late {
+      background: var(--yellow-50);
+      color: var(--orange-550-2);
+
+      .dot {
+        background: var(--warning);
+      }
+    }
+
+    &.status-half {
+      background: var(--purple-50);
+      color: var(--purple-600);
+
+      .dot {
+        background: var(--purple-550-2);
+      }
+    }
+
+    &.status-leave {
+      background: var(--blue-100);
+      color: var(--blue-600);
+
+      .dot {
+        background: var(--blue-550);
+      }
+    }
+
+    &.status-default {
+      background: var(--bg-muted);
+      color: var(--neutral-650);
+
+      .dot {
+        background: var(--neutral-500);
+      }
+    }
+  }
+
+  /* Working Hours Progress */
+  .whrs-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 100px;
+
+    .whrs-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--neutral-850);
+      line-height: 1;
+    }
+
+    .whrs-track {
+      height: 5px;
+      border-radius: 999px;
+      background: var(--border);
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .whrs-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--green-350);
+      transition: width 0.4s ease;
+    }
+  }
+
+  /* =============================================================
+     ACTION BUTTONS
+  ============================================================= */
+  /* Dual Action Pill (Edit + Delete) */
+  .action-pill-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--border);
+    padding: 2px 4px;
+    border-radius: var(--radius-lg);
+
+    /* compact row actions so they don't set the row height */
+    .btn-action-icon,
+    .btn-kebab {
+      --btn-h: 28px;
+      width: 28px;
+      height: 28px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+  }
+
+  /* 3-Dots Action button */
+  .btn-action-dots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+  }
+
+  /* =============================================================
+     PAGINATION
+  ============================================================= */
+  .paginator-left-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--neutral-500);
+
+    .show-label {
+      color: var(--neutral-500);
+    }
+
+    /* look comes from the global field system (.form-select) */
+    .show-select {
+      --field-h: var(--control-h-sm, 32px);
+      --field-font: 13px;
+      --field-py: 4px;
+      width: auto;
+      min-width: 72px;
+    }
+
+    .show-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 12px;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--neutral-850);
+      font-weight: 500;
+      font-size: 12.5px;
+    }
+
+    .showing-range {
+      color: var(--neutral-500);
+      margin-left: 4px;
+    }
+  }
+
+  /* =========================================================
+     COLUMNS VISIBILITY OFFCANVAS
+  ========================================================= */
+
+  .columns-offcanvas-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(var(--black-rgb), 0.35);
+    z-index: 2040;
+    animation: fadeInBackdrop 0.2s ease;
+  }
+
+  @keyframes fadeInBackdrop {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* =========================================================
+     OFFCANVAS PANEL
+  ========================================================= */
+
+  .columns-offcanvas-panel {
+    position: fixed;
+
+    top: 10px !important;
+    right: 10px !important;
+
+    width: 400px;
+    max-width: 92vw;
+
+    height: calc(100vh - 20px);
+
+    background: var(--white);
+
+    z-index: 2050;
+
+    border-radius: 25px;
+
+    box-shadow: -20px 0 60px rgba(var(--black-rgb), 0.18);
+
+    display: flex;
+    flex-direction: column;
+
+    /* Panel itself should not scroll */
+    overflow: hidden;
+
+    animation: slideInPanel 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes slideInPanel {
+    from {
+      transform: translateX(100%);
+    }
+
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  /* =========================================================
+     HEADER - FIXED
+  ========================================================= */
+
+  .columns-offcanvas-header {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px 24px;
+
+    background: var(--white);
+
+    border-bottom: 1px solid var(--neutral-100-2);
+
+    z-index: 2;
+  }
+
+  .columns-offcanvas-title {
+    margin: 0;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: var(--neutral-950);
+  }
+
+  .columns-offcanvas-close {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    border-radius: 50%;
+
+    border: 1px solid var(--border);
+
+    background: var(--white);
+
+    color: var(--neutral-800);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .columns-offcanvas-close:hover {
+    background: var(--neutral-50-2);
+    transform: rotate(90deg);
+  }
+
+  /* =========================================================
+     BODY - ONLY BODY SCROLLS
+  ========================================================= */
+
+  .columns-offcanvas-body {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    padding: 16px 24px 24px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    /* Scroll only here */
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scroll-behavior: smooth;
+  }
+
+  /* =========================================================
+     SCROLLBAR
+  ========================================================= */
+
+  .columns-offcanvas-body::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .columns-offcanvas-body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .columns-offcanvas-body::-webkit-scrollbar-thumb {
+    background: var(--neutral-150);
+    border-radius: var(--radius-sm);
+  }
+
+  .columns-offcanvas-body::-webkit-scrollbar-thumb:hover {
+    background: var(--neutral-250-2);
+  }
+
+  /* =========================================================
+     COLUMN ROW
+  ========================================================= */
+
+  .column-visibility-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 16px;
+
+    border: 1px solid var(--neutral-50-3);
+
+    border-radius: var(--radius-md);
+
+    background: var(--white);
+
+    flex-shrink: 0;
+  }
+
+  .column-visibility-label {
+    font-size: 16px;
+    font-weight: 500;
+
+    color: var(--neutral-800);
+  }
+
+  /* =========================================================
+     TOGGLE SWITCH
+  ========================================================= */
+
+  .column-toggle-switch {
+    width: 46px;
+    height: 26px;
+
+    border-radius: 999px;
+
+    border: none;
+
+    background: var(--border-strong);
+
+    position: relative;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+
+    flex-shrink: 0;
+
+    padding: 0;
+  }
+
+  .column-toggle-switch.on {
+    background: var(--green-400-2);
+  }
+
+  .column-toggle-knob {
+    position: absolute;
+
+    top: 3px;
+    left: 3px;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: var(--white);
+
+    box-shadow: 0 2px 5px rgba(var(--black-rgb), 0.15);
+
+    transition: transform 0.2s ease;
+  }
+
+  .column-toggle-switch.on .column-toggle-knob {
+    transform: translateX(20px);
+  }
+
+  /* =========================================================
+     RESTORE ALL
+  ========================================================= */
+
+  .btn-restore-all {
+    align-self: flex-start;
+
+    margin-top: 4px;
+
+    padding: 10px 16px;
+
+    border-radius: var(--radius-md);
+
+    border: 1px solid var(--green-400-2);
+
+    background: var(--white);
+
+    color: var(--green-400-2);
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+
+    flex-shrink: 0;
+  }
+
+  .btn-restore-all:hover {
+    background: var(--green-50);
+  }
+
+  /* =========================================================
+     MOBILE
+  ========================================================= */
+
+  @media (max-width: 768px) {
+
+    .columns-offcanvas-panel {
+      width: calc(100vw - 20px);
+      max-width: none;
+
+      height: calc(100vh - 20px);
+
+      top: 10px !important;
+      right: 10px !important;
+    }
+
+    .columns-offcanvas-header {
+      padding: 16px 20px;
+    }
+
+    .columns-offcanvas-body {
+      padding: 16px 20px 20px;
+    }
+  }
+
+  /* =========================================================
+     EXPORT DROPDOWN
+  ========================================================= */
+
+  .export-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .caret-icon {
+    transition: transform 0.2s ease;
+  }
+
+  .caret-icon.rotated {
+    transform: rotate(180deg);
+  }
+
+  .export-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+  }
+
+  .export-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 190px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 15px 40px rgba(var(--black-rgb), 0.15);
+    padding: 8px;
+    z-index: 950;
+    animation: exportMenuFadeIn 0.15s ease;
+  }
+
+  @keyframes exportMenuFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .export-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    color: var(--neutral-800);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease;
+  }
+
+  .export-menu-item i {
+    font-size: 17px;
+    color: var(--neutral-550);
+    width: 20px;
+  }
+
+  .export-menu-item:hover {
+    background: var(--neutral-50-5);
+  }
+
+
+  .cell-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .btn-kebab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+  }
+
+  .row-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1999;
+  }
+
+  .row-menu {
+    position: fixed;
+    z-index: 2000;
+    width: 180px;
+    padding: 8px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 30px rgba(var(--neutral-900-rgb), 0.15);
+    border: 1px solid var(--border);
+  }
+
+  .row-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 0;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: var(--bg-muted);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  .row-menu-divider {
+    height: 1px;
+    margin: 6px 4px;
+    background: var(--border);
+  }
+
+
+  // =========================================================
+  // PILL ACTIONS — column.type === 'pill-actions'
+  // A row of buttons fused into one rounded capsule, each
+  // segment colored per its own `variant`/`color`.
+  // =========================================================
+  .pill-action-group {
+    display: inline-flex;
+    align-items: stretch;
+    border-radius: 999px;
+    overflow: hidden;
+    height: 30px;
+  }
+
+  .pill-action-seg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: none;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.15s ease;
+
+    &.icon-only {
+      width: 34px;
+      padding: 0;
+      font-size: 13px;
+    }
+
+    // outline segments sit next to a solid segment, so give them a
+    // right border in the solid segment's own color to read as one pill
+    &.is-outline {
+      box-shadow: inset -1px 0 0 rgba(var(--black-rgb), 0.08);
+    }
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.94);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

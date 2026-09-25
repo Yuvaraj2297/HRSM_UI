@@ -83,17 +83,16 @@
 
   /* =====================================================
      FONT FAMILY — single source of truth for the whole app.
-     Loaded via @fontsource/inter + @fontsource/sora (see
-     angular.json "styles": inter 400/500/600/700/800/900,
-     sora 700/800). Change a font here only; components should
+     Loaded via @fontsource/inter (see angular.json "styles":
+     400/500/600/700/800/900). Inter is the ONLY font in the app. Change a font here only; components should
      use these variables instead of hardcoding a font name.
        --font-family-base    body copy (everything inherits this)
        --font-family-display headings / titles / emphasis (bold only)
        --font-family-mono    codes, IDs, tokens
   ===================================================== */
   --font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-family-display: 'Sora', var(--font-family-base);
-  --font-family-mono: 'Consolas', 'SFMono-Regular', Menlo, Monaco, 'Courier New', monospace;
+  --font-family-display: var(--font-family-base); /* one font app-wide: titles use Inter too */
+  --font-family-mono: var(--font-family-base); /* codes / IDs use Inter too (one font app-wide) */
 
   /* back-compat alias: some components already reference --font-display */
   --font-display: var(--font-family-display);
@@ -102,16 +101,105 @@
   font-family: var(--font-family-base);
 
   /* ===== RADIUS / SHADOW ===== */
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-sm: 10px;
+  /* corner radius scale — every card, control and panel reads these */
+  --radius-xs: 4px;   /* chips, tiny badges */
+  --radius-sm: 6px;   /* inputs, dropdowns, buttons, tabs */
+  --radius-md: 8px;   /* cards, dropdown panels, tables */
+  --radius-lg: 10px;  /* modals, drawers */
+  --radius-xl: 12px;
   --shadow-card: 0 1px 2px rgba(16, 24, 40, .04), 0 1px 3px rgba(16, 24, 40, .06);
-  --gh-radius-lg: 22px;
+  --gh-radius-lg: var(--radius-lg);
   --gh-shadow-lg: 0 22px 50px rgba(26, 29, 53, 0.14);
 
-  /* ===== LAYOUT ===== */
+  --radius-pill: 999px;
+
+  /* ===== MOTION ===== */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 0.18s;
+  --duration: 0.28s;
+  --transition: all 0.25s var(--ease);
+
+  /* ===== LAYOUT — the one place the app shell is sized =====
+     header.scss, sidebar.scss and layout.scss all read these, so the
+     header, the sidebar and the content offset can never drift apart.
+     --sidebar-width shrinks at smaller breakpoints (see bottom of file). */
   --header-height: 64px;
   --sidebar-width: 300px;
-  --sidebar-collapsed-width: 60px;
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-collapsed-width: 64px;   /* = icon rail width */
+  --content-gutter: 24px;            /* space between chrome and page content */
+
+  /* ===== CONTROL SIZES — every field, dropdown and button reads these =====
+     One place to make the whole app denser or roomier. */
+  --control-h: 38px;
+  --control-h-sm: 32px;
+  --control-h-lg: 44px;
+  --control-font: 14px;
+  --control-radius: var(--radius-sm);
+  --label-font: 13.5px;
+  --card-radius: var(--radius-md);
+
+  /* ===== CHROME — semantic colors for header / sidebar / page shell =====
+     Components use ONLY these (never a palette shade or a hex), so
+     re-theming the shell means changing this block, nothing else.
+     A dark variant is defined below (.dark-theme / .header-dark / .sidebar-dark). */
+  --page-bg: var(--neutral-50-2);
+  --chrome-bg: var(--white);
+  --chrome-bg-muted: var(--bg-muted);
+  --chrome-border: var(--border);
+  --chrome-text: var(--text);
+  --chrome-text-strong: var(--gh-heading);
+  --chrome-text-muted: var(--text-light);
+  --chrome-text-faint: var(--text-muted);
+  --chrome-icon: var(--neutral-350-3);
+  --chrome-hover-bg: rgba(var(--primary-rgb), 0.07);
+  --chrome-active-bg: var(--primary-soft);
+  --chrome-active-text: var(--primary-dark);
+  --chrome-accent: var(--primary);
+  --chrome-shadow: 0 1px 2px rgba(var(--secondary-rgb), 0.04), 0 4px 16px rgba(var(--secondary-rgb), 0.04);
+  --chrome-popover-shadow: 0 12px 36px rgba(var(--secondary-rgb), 0.14);
+  --chrome-overlay: rgba(var(--secondary-rgb), 0.38);
+  --chrome-scrollbar: rgba(var(--primary-rgb), 0.28);
+  --focus-ring: 0 0 0 3px rgba(var(--primary-rgb), 0.28);
+}
+
+@media (max-width: 1100px) {
+  :root { --sidebar-width: 270px; --content-gutter: 20px; }
+}
+
+@media (max-width: 800px) {
+  :root { --sidebar-width: 250px; --sidebar-collapsed-width: 58px; }
+}
+
+@media (max-width: 767.98px) {
+  :root { --content-gutter: 16px; --header-height: 60px; }
+}
+
+/* =====================================================
+   DARK CHROME — toggled by CustomizerSettingsService:
+   .dark-theme (body, whole shell), .header-dark / .sidebar-dark
+   (layout wrapper, only that part). Only tokens change here.
+===================================================== */
+%chrome-dark {
+  --chrome-bg: var(--secondary);
+  --chrome-bg-muted: var(--secondary-mid);
+  --chrome-border: rgba(var(--white-rgb), 0.08);
+  --chrome-text: rgba(var(--white-rgb), 0.86);
+  --chrome-text-strong: var(--white);
+  --chrome-text-muted: rgba(var(--white-rgb), 0.62);
+  --chrome-text-faint: rgba(var(--white-rgb), 0.42);
+  --chrome-icon: rgba(var(--white-rgb), 0.55);
+  --chrome-hover-bg: rgba(var(--white-rgb), 0.06);
+  --chrome-active-bg: rgba(var(--primary-rgb), 0.18);
+  --chrome-active-text: var(--primary-light);
+  --chrome-accent: var(--primary-light);
+  --chrome-shadow: 0 1px 2px rgba(var(--black-rgb), 0.3);
+  --chrome-popover-shadow: 0 12px 36px rgba(var(--black-rgb), 0.45);
+  --chrome-scrollbar: rgba(var(--white-rgb), 0.18);
+}
+
+.dark-theme app-header,
+.dark-theme app-sidebar,
+.header-dark app-header,
+.sidebar-dark app-sidebar {
+  @extend %chrome-dark;
 }

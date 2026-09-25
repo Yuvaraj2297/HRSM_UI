@@ -1,23 +1,19 @@
 <div class="table-card-container">
 
-  <!-- header + toolbar: stacked (default) or one row when inlineToolbar = true -->
-  <div class="table-head-area" [class.is-inline]="inlineToolbar">
-
   <!-- =========================================================
-       CARD HEADER
+       HEAD ROW — one line: title on the left; Columns · Export ·
+       Search · page buttons · Add on the right. Wraps under the
+       title only when the card is too narrow.
   ========================================================== -->
+  @if (modalHeader.title || showColumnsButton || showExportButton || showGlobalFilter || Accessactions.add || headerButtons.length) {
+  <div class="table-head-area">
 
-  @if (modalHeader.title) {
-
-  <div class="table-top-header">
-
+    @if (modalHeader.title) {
     <div class="header-left">
-
       <div class="header-icon-box">
         <i [class]="modalHeader.icon"></i>
       </div>
-
-      <div>
+      <div class="header-text">
         <h2 class="header-title mb-0">
           {{ modalHeader.title }}
           @if (modalHeader.count !== undefined) {
@@ -25,14 +21,61 @@
           }
         </h2>
         @if (modalHeader.subtitle) {
-        <div class="header-subtitle text-muted" style="font-size: 12px; margin-top: 2px;">{{ modalHeader.subtitle }}
+        <div class="header-subtitle">{{ modalHeader.subtitle }}</div>
+        }
+      </div>
+    </div>
+    }
+
+    <div class="table-head-actions">
+
+      @if (showColumnsButton) {
+      <button type="button" class="btn-tool btn-columns" (click)="onColumns()" title="Manage Columns">
+        <i class="ti ti-eye"></i>
+        <span>Columns</span>
+      </button>
+      }
+
+      @if (showExportButton) {
+      <div class="export-wrapper">
+        <button type="button" class="btn-tool btn-export" (click)="onExport()" title="Export">
+          <i class="ti ti-download"></i>
+          <span>Export</span>
+          <i class="ti ti-chevron-down caret-icon" [class.rotated]="exportMenuOpen"></i>
+        </button>
+
+        @if (exportMenuOpen) {
+        <div class="export-menu-backdrop" (click)="closeExportMenu()"></div>
+        <div class="export-menu">
+          <button type="button" class="export-menu-item" (click)="onExportCopy()">
+            <i class="ti ti-copy"></i><span>Copy</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportCSV()">
+            <i class="ti ti-file-type-csv"></i><span>CSV</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportExcel()">
+            <i class="ti ti-file-spreadsheet"></i><span>Excel</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportPDF()">
+            <i class="ti ti-file-type-pdf"></i><span>PDF</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportPrint()">
+            <i class="ti ti-printer"></i><span>Print</span>
+          </button>
         </div>
         }
       </div>
+      }
 
-    </div>
+      <ng-content select="[table-toolbar-left], [table-toolbar-actions]"></ng-content>
 
-    <div class="header-right">
+      @if (showGlobalFilter) {
+      <div class="search-input-box">
+        <i class="ti ti-search search-icon"></i>
+        <input pInputText type="text" [placeholder]="searchPlaceholder"
+          (input)="onGlobalFilter($any($event.target).value)" />
+      </div>
+      }
 
       <ng-content select="[table-header-actions]"></ng-content>
 
@@ -79,94 +122,7 @@
     </div>
 
   </div>
-
   }
-
-
-
-  <!-- =========================================================
-       ACTION TOOLBAR
-  ========================================================== -->
-
-  @if (showColumnsButton || showExportButton || showGlobalFilter) {
-
-  <div class="table-toolbar-row">
-
-    <div class="toolbar-left">
-
-      @if (showColumnsButton) {
-      <button type="button" class="btn-tool btn-columns" (click)="onColumns()" title="Manage Columns">
-        <i class="ti ti-eye"></i>
-        <span>Columns</span>
-      </button>
-      }
-
-      @if (showExportButton) {
-      <div class="export-wrapper">
-
-        <button type="button" class="btn-tool btn-export" (click)="onExport()" title="Export">
-          <i class="ti ti-download"></i>
-          <span>Export</span>
-          <i class="ti ti-chevron-down caret-icon" [class.rotated]="exportMenuOpen"></i>
-        </button>
-
-        @if (exportMenuOpen) {
-
-        <div class="export-menu-backdrop" (click)="closeExportMenu()"></div>
-
-        <div class="export-menu">
-
-          <button type="button" class="export-menu-item" (click)="onExportCopy()">
-            <i class="ti ti-copy"></i>
-            <span>Copy</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportCSV()">
-            <i class="ti ti-file-type-csv"></i>
-            <span>CSV</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportExcel()">
-            <i class="ti ti-file-spreadsheet"></i>
-            <span>Excel</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportPDF()">
-            <i class="ti ti-file-type-pdf"></i>
-            <span>PDF</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportPrint()">
-            <i class="ti ti-printer"></i>
-            <span>Print</span>
-          </button>
-
-        </div>
-
-        }
-
-      </div>
-      }
-
-      <ng-content select="[table-toolbar-left], [table-toolbar-actions]"></ng-content>
-
-    </div>
-
-    @if (showGlobalFilter) {
-    <div class="toolbar-right">
-      <div class="search-input-box">
-        <i class="ti ti-search search-icon"></i>
-        <input pInputText type="text" [placeholder]="searchPlaceholder"
-          (input)="onGlobalFilter($any($event.target).value)" />
-      </div>
-    </div>
-    }
-
-  </div>
-
-  }
-
-  </div>
 
   <!-- =========================================================
        PRIMENG TABLE
@@ -405,7 +361,7 @@
 
         <span class="show-label">Show:</span>
 
-        <select class="show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)">
+        <select class="form-select show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)">
           @for (opt of rowsPerPageOptions; track opt) {
           <option [value]="opt">{{ opt }}</option>
           }
