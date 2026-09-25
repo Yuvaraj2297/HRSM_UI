@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -54,7 +55,7 @@ const STORAGE_KEY = 'candidate_evaluations_v1';
 @Component({
   selector: 'app-tl-evaluation-scores',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeDataTable, ReuseModal],
+  imports: [CommonModule, FormsModule, PrimeDataTable, ReuseModal, AppStatCard],
   templateUrl: './tl-evaluation-scores.html',
   styleUrl: './tl-evaluation-scores.scss',
 })

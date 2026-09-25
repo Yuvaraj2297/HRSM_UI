@@ -3,35 +3,8 @@
 }
 
 /* =============================================================
-   STATS ROW CARDS
+   DEPARTMENT BREAKDOWN ICON (stat cards are <app-stat-card>)
 ============================================================= */
-.stat-gender-card {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid transparent;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.08);
-  }
-
-  &.active-all {
-    border-color: var(--blue-600-3) !important;
-    background: var(--accent-blue-soft) !important;
-    transform: scale(1.02);
-  }
-
-  &.active-male {
-    border-color: var(--blue-450) !important;
-    background: var(--blue-50-2) !important;
-    transform: scale(1.02);
-  }
-
-  &.active-female {
-    border-color: var(--pink-450) !important;
-    background: var(--pink-50-2) !important;
-    transform: scale(1.02);
-  }
-}
 
 .stat-icon-wrap {
   width: 48px;
@@ -49,18 +22,6 @@
     font-size: 17px;
     border-radius: 10px;
   }
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--neutral-500);
-  font-weight: 600;
-}
-
-.stat-value {
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.2;
 }
 
 /* =============================================================

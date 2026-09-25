@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -70,7 +71,7 @@ interface Filters {
 
 @Component({
   selector: 'app-performance-report',
-  imports: [CommonModule, FormsModule, PerformanceDepartmentReport],
+  imports: [CommonModule, FormsModule, PerformanceDepartmentReport, AppStatCard],
   templateUrl: './performance-report.html',
   styleUrl: './performance-report.scss',
 })

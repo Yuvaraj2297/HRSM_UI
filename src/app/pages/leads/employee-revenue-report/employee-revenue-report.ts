@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../shared/stat-card/stat-card';
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from 'primeng/datepicker'; // PrimeNG v18+. On v17 use CalendarModule / <p-calendar>.
@@ -95,7 +96,7 @@ const formatMoney = (v: number): string =>
 
 @Component({
   selector: 'app-employee-revenue-report',
-  imports: [FormsModule, DatePicker,CalendarDatepickerDirective],
+  imports: [FormsModule, DatePicker, CalendarDatepickerDirective, AppStatCard],
   templateUrl: './employee-revenue-report.html',
   styleUrl: './employee-revenue-report.scss',
 })

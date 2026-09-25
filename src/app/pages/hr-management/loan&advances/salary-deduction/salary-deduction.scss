@@ -3,51 +3,6 @@
 }
 
 /* =========================================================
-   PAGE HEADER
-========================================================= */
-/* =========================================================
-   KPI CARDS
-========================================================= */
-.kpi-card {
-  min-height: 104px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.07) !important;
-  }
-}
-
-.kpi-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.kpi-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--neutral-500);
-  margin-bottom: 2px;
-}
-
-.kpi-value {
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: var(--neutral-900);
-  line-height: 1.2;
-}
-
-.kpi-sub {
-  font-size: 11px;
-  margin-top: 4px;
-}
-
-/* =========================================================
    ADVANCED QUERY & FILTERS CARD
 ========================================================= */
 .filter-header-icon-box {

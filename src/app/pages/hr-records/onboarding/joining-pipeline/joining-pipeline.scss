@@ -1,45 +1,4 @@
-.onb-kpi {
-    min-height: 96px;
-    padding: 16px;
-    border: 1px solid var(--border-soft, var(--border));
-    border-radius: 14px;
-    background: var(--white, var(--white));
-    box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);
-    transition: transform 0.2s ease;
-}
 
-.onb-kpi:hover {
-    transform: translateY(-2px);
-}
-
-.onb-kpi .icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.onb-kpi .label {
-    color: var(--ink-500, var(--neutral-500));
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 2px;
-}
-
-.onb-kpi .value {
-    color: var(--ink-900, var(--neutral-900));
-    font-size: 22px;
-    font-weight: 800;
-}
-
-.onb-kpi .sub {
-    color: var(--ink-500, var(--neutral-500));
-    font-size: 11px;
-    margin-top: 2px;
-}
 
 .pan-badge {
     font-family: var(--font-family-mono);

@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -32,7 +33,7 @@ export interface JobOpeningRow {
 @Component({
   selector: 'app-job-opening',
   standalone: true,
-  imports: [CommonModule, RouterLink, PrimeDataTable, ReuseModal],
+  imports: [CommonModule, RouterLink, PrimeDataTable, ReuseModal, AppStatCard],
   templateUrl: './job-opening.html',
   styleUrl: './job-opening.scss',
 })

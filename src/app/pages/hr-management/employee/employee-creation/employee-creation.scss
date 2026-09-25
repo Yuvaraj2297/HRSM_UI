@@ -90,19 +90,9 @@
 
 ::ng-deep {
   /* ===== Section heading ===== */
-  .ne-section-title {
-    font-size: 14.5px;
-    font-weight: 800;
-    color: var(--ink-900, var(--neutral-950));
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    margin: 6px 0 16px;
-
-    &:not(:first-child) {
-      margin-top: 26px;
-      padding-top: 22px;
-      border-top: 1px solid var(--border-light, var(--bg-muted));
-    }
+  /* look is global (.form-section-title); only the gap between sections here */
+  .ne-section-title:not(:first-child) {
+    margin-top: 36px;
   }
 
   .form-label { margin-bottom: 6px; }

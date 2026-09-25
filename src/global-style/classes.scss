@@ -77,14 +77,24 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.08) !important;
 }
 
-/* ---------- header / body / footer ---------- */
+/* ---------- header / body / footer ----------
+     <header class="card-custom-header">
+       <span class="card-header-icon"><i class="bi bi-people"></i></span>
+       <h3 class="card-custom-title">Employee Reports</h3>
+       <div class="card-header-actions">…buttons…</div>
+     </header>
+     <div class="card-custom-body">…</div>
+     <footer class="card-custom-footer">
+       <span class="card-footer-note">Step 1 of 4 · Basic Details</span>
+       …buttons…
+     </footer> */
 :root :is(.card-custom-header, .card-header) {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
-  padding: 14px 20px;
+  gap: 12px 16px;
+  padding: 16px 24px;
   color: var(--gh-heading);
   background: transparent !important;
   border: 0 !important;
@@ -92,16 +102,47 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   border-radius: 16px 16px 0 0 !important;
 }
 
-.card-custom-title {
+/* icon tile before a card / section title — filled brand gradient */
+:root :is(.card-header-icon, .icon-chip) {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--white);
+  font-size: 20px;
+  box-shadow: 0 6px 14px rgba(var(--primary-rgb), 0.28);
+}
+
+/* title + actions: title grows, actions sit at the end */
+.card-custom-header > :is(.card-custom-title, .card-title):not(:last-child) {
+  margin-right: auto;
+}
+.card-custom-header > .card-header-icon + :is(.card-custom-title, .card-title) {
+  margin-left: -4px;
+}
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
+:root :is(.card-custom-title, .card-title) {
   margin: 0;
-  font-size: 15px;
+  color: var(--primary-dark);
+  font-family: var(--font-family-display);
+  font-size: 1.2rem;
   font-weight: 700;
-  color: var(--gh-heading);
+  line-height: 1.3;
   letter-spacing: -0.01em;
 }
 
 :root :is(.card-custom-body, .card-body) {
-  padding: 20px;
+  padding: 24px;
 }
 
 :root :is(.card-custom-footer, .card-footer) {
@@ -109,21 +150,48 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 14px 20px;
-  background: var(--bg-soft) !important;
+  gap: 12px;
+  padding: 16px 24px;
+  background: var(--white) !important;
   border: 0 !important;
   border-top: 1px solid var(--border) !important;
   border-radius: 0 0 16px 16px !important;
 }
 
+/* muted text at the start of a footer ("Step 1 of 4 · Basic Details") */
+.card-footer-note {
+  margin-right: auto;
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 500;
+}
 
-.card-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--gh-heading, var(--neutral-900));
-  letter-spacing: -0.01em;
-  margin: 0;
+/* ---------- form section title inside a card ----------
+     <div class="form-section-title"><span class="form-section-icon"><i class="bi bi-person"></i></span> Personal Details</div> */
+:root :is(.form-section-title, .ne-section-title) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--gh-heading);
+  font-family: var(--font-family-base);
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.form-section-icon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 16px;
 }
 
 .card-head {
@@ -132,17 +200,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   justify-content: space-between;
 }
 
-.icon-chip {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: var(--primary-soft);
-  color: var(--green-350);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
+
 
 /* =============================================================
    COLOR PICKER COMPONENT (GLOBAL)
@@ -439,10 +497,10 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 /* ---------- base: size, shape, type (also for aliases used without .btn) ---------- */
 :root :is(.btn, #{$btn-standalone}) {
-  --bs-btn-padding-x: 18px;
+  --bs-btn-padding-x: 20px;
   --bs-btn-padding-y: 9px;
   --bs-btn-font-family: var(--font-family-base);
-  --bs-btn-font-size: 13.5px;
+  --bs-btn-font-size: 14.5px;
   --bs-btn-font-weight: 600;
   --bs-btn-line-height: 1.25;
   --bs-btn-border-width: 1px;
@@ -454,7 +512,8 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  min-height: var(--btn-h, var(--control-h, 46px));
   padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
   font-family: var(--bs-btn-font-family);
   font-size: var(--bs-btn-font-size);
@@ -527,21 +586,24 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 /* ---------- sizes ---------- */
 :root :is(.btn-sm, .btn-group-sm > .btn) {
-  --bs-btn-padding-x: 12px;
+  --btn-h: var(--control-h-sm, 36px);
+  --bs-btn-padding-x: 14px;
   --bs-btn-padding-y: 6px;
-  --bs-btn-font-size: 12.5px;
+  --bs-btn-font-size: 13px;
   --bs-btn-border-radius: 8px;
 }
 :root .btn-xs {
-  --bs-btn-padding-x: 9px;
+  --btn-h: 30px;
+  --bs-btn-padding-x: 10px;
   --bs-btn-padding-y: 4px;
-  --bs-btn-font-size: 11.5px;
+  --bs-btn-font-size: 12px;
   --bs-btn-border-radius: 7px;
 }
 :root :is(.btn-lg, .btn-group-lg > .btn) {
-  --bs-btn-padding-x: 24px;
+  --btn-h: var(--control-h-lg, 52px);
+  --bs-btn-padding-x: 26px;
   --bs-btn-padding-y: 11px;
-  --bs-btn-font-size: 15px;
+  --bs-btn-font-size: 16px;
   --bs-btn-border-radius: 12px;
 }
 
@@ -561,13 +623,15 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-disabled-color: var(--text-muted);
   --bs-btn-disabled-bg: var(--white);
   --bs-btn-disabled-border-color: var(--border);
-  width: 34px;
-  height: 34px;
+  --btn-h: 36px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
   font-size: 15px;
 
   &.btn-sm,
   &.btn-icon-sm {
+    --btn-h: 30px;
     --bs-btn-border-radius: 8px;
     width: 30px;
     height: 30px;
@@ -712,7 +776,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  height: var(--field-h, 40px);
+  height: var(--field-h, var(--control-h, 46px));
   padding: 0 16px;
   border: 0;
   border-radius: 10px;
@@ -858,8 +922,8 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 ============================================================= */
 .p-select {
   width: 100%;
-  min-height: var(--field-h, 40px) !important;
-  border-radius: var(--field-radius, 10px) !important;
+  min-height: var(--field-h, var(--control-h, 46px)) !important;
+  border-radius: var(--field-radius, var(--control-radius, 10px)) !important;
   border: 1px solid var(--border-strong) !important;
   background-color: var(--white) !important;
   display: flex;
@@ -882,10 +946,10 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   }
 
   .p-select-label {
-    font-size: var(--field-font, 13.5px) !important;
+    font-size: var(--field-font, var(--control-font, 15px)) !important;
     font-weight: 500;
     color: var(--gh-heading) !important;
-    padding: 0 var(--field-px, 12px) !important;
+    padding: 0 var(--field-px, 14px) !important;
     display: flex;
     align-items: center;
 
@@ -1041,11 +1105,11 @@ $field: '.form-control, .form-select, select:not([class]), .p-inputtext, .p-inpu
 $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
 
 @mixin field-look {
-  --field-h: 40px;
-  --field-px: 12px;
-  --field-py: 8px;
-  --field-radius: 10px;
-  --field-font: 13.5px;
+  --field-h: var(--control-h, 46px);
+  --field-px: 14px;
+  --field-py: 10px;
+  --field-radius: var(--control-radius, 10px);
+  --field-font: var(--control-font, 15px);
 
   display: block;
   width: 100%;
@@ -1152,13 +1216,40 @@ select:not([class]) {
   }
 }
 
+/* file input: brand "Choose" button fused to the left edge of the field */
+input[type='file']:is(.form-control, :not([class])) {
+  padding: 0;
+  overflow: hidden;
+  line-height: calc(var(--field-h) - 2px);
+  cursor: pointer;
+
+  &::file-selector-button {
+    height: calc(var(--field-h) - 2px);
+    margin: 0 14px 0 0;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 0;
+    background: var(--primary);
+    color: var(--white);
+    font-family: var(--font-family-base);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  &:hover:not(:disabled)::file-selector-button {
+    background: var(--primary-dark);
+  }
+}
+
 /* sizes (p-select: add .p-select-sm via styleClass; .ct-p-select-sm is a legacy alias) */
 :is(.form-control-sm, .form-select-sm, .p-select-sm, .ct-p-select-sm) {
-  --field-h: 34px;
+  --field-h: var(--control-h-sm, 36px);
   --field-px: 10px;
   --field-py: 6px;
   --field-radius: 8px;
-  --field-font: 12.5px;
+  --field-font: 13px;
 }
 :is(.form-control-lg, .form-select-lg) {
   --field-h: 46px;
@@ -1182,9 +1273,9 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
    loaded after this file) can never change a label's size/weight/colour. */
 :root :is(#{$label}) {
   display: inline-block;
-  margin-bottom: 6px;
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
+  margin-bottom: 8px;
+  font-size: var(--label-font, 14px) !important;
+  font-weight: 500 !important;
   color: var(--gh-heading) !important;
 
   .text-danger,
@@ -1880,7 +1971,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
 
 :root {
   --table-head-bg: var(--bg-muted);
-  --table-head-text: var(--text-light);
+  --table-head-text: var(--gh-heading);
   --table-text: var(--text);
   --table-border: var(--border);
   --table-row-border: var(--bg-muted);
@@ -1890,9 +1981,10 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
 }
 
 :root :is(#{$table}) {
-  --table-cell-px: 16px;
-  --table-cell-py: 12px;
-  --table-font: 13.5px;
+  --table-cell-px: 18px;
+  --table-cell-py: 16px;
+  --table-font: 14.5px;
+  --table-align: center;
   --bs-table-bg: transparent;
   --bs-table-color: var(--table-text);
   --bs-table-border-color: var(--table-row-border);
@@ -1913,11 +2005,10 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
     padding: calc(var(--table-cell-py) - 2px) var(--table-cell-px);
     background: var(--table-head-bg);
     color: var(--table-head-text);
-    font-size: 11.5px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
     line-height: 1.3;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    text-align: var(--table-align);
     white-space: nowrap;
     vertical-align: middle;
     border: 0;
@@ -1927,6 +2018,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
 
   > tbody > tr > :is(td, th) {
     padding: var(--table-cell-py) var(--table-cell-px);
+    text-align: var(--table-align);
     background: transparent;
     color: inherit;
     font-size: inherit;
@@ -1977,13 +2069,13 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
    classes carry high specificity), so feed those variables from the
    table tokens instead of fighting its selectors. */
 :root .p-datatable {
-  --p-datatable-header-cell-padding: 10px 16px;
-  --p-datatable-header-cell-sm-padding: 10px 16px;
-  --p-datatable-header-cell-lg-padding: 12px 18px;
-  --p-datatable-body-cell-padding: 10px 16px;
-  --p-datatable-body-cell-sm-padding: 10px 16px;
-  --p-datatable-body-cell-lg-padding: 14px 18px;
-  --p-datatable-footer-cell-padding: 12px 16px;
+  --p-datatable-header-cell-padding: 14px 18px;
+  --p-datatable-header-cell-sm-padding: 14px 18px;
+  --p-datatable-header-cell-lg-padding: 16px 20px;
+  --p-datatable-body-cell-padding: 14px 18px;
+  --p-datatable-body-cell-sm-padding: 14px 18px;
+  --p-datatable-body-cell-lg-padding: 16px 20px;
+  --p-datatable-footer-cell-padding: 14px 18px;
   --p-datatable-header-cell-background: var(--table-head-bg);
   --p-datatable-header-cell-color: var(--table-head-text);
   --p-datatable-header-cell-border-color: var(--table-border);
@@ -1997,8 +2089,13 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
 /* compact */
 :root :is(.data-table-sm, .table-sm) {
   --table-cell-px: 12px;
-  --table-cell-py: 8px;
-  --table-font: 12.5px;
+  --table-cell-py: 9px;
+  --table-font: 13px;
+}
+
+/* left-aligned text columns (the default is centred, as in the design) */
+:root :is(.data-table-left, .text-start-cells) {
+  --table-align: left;
 }
 
 /* cell borders */
@@ -2076,14 +2173,14 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
-    height: 32px;
-    padding: 0 6px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 8px;
     border: 0;
-    border-radius: var(--radius-xs, 8px);
+    border-radius: 10px;
     background: transparent;
     color: var(--text-light);
-    font-size: 13px;
+    font-size: 15px;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
 
@@ -2387,6 +2484,162 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   gap: 8px;
 }
 
+/* muted text helper used across pages */
+.text-neutral { color: var(--text-light) !important; }
+
+/* =============================================================
+   STAT CARDS — the one KPI tile for the whole app.
+   Prefer the component:  <app-stat-card label="…" [value]="…" icon="bi bi-…" tone="blue" sub="…" />
+   Same look in plain markup:
+     <div class="stat-card stat-tone-blue"><div class="stat-card-body">
+       <span class="stat-card-icon"><i class="bi bi-…"></i></span>
+       <div class="stat-card-text"><div class="stat-card-label">…</div><div class="stat-card-sub">…</div></div>
+       <div class="stat-card-value">…</div>
+     </div></div>
+   The card switches itself to value-under-label when it is narrow.
+   Tones: primary · blue · violet · amber · red · teal · pink · neutral
+   Row of tiles: wrap them in .stat-grid (auto-fits 1–5 per row).
+============================================================= */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  --tone: var(--primary);
+  --tone-soft: var(--primary-soft);
+
+  container-type: inline-size;
+  display: block;
+  height: 100%;
+  padding: 16px 20px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &.is-clickable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--tone) 45%, var(--border));
+    }
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone) 25%, transparent);
+    }
+  }
+
+  &.active {
+    border-color: var(--tone);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone) 16%, transparent);
+  }
+}
+
+/* icon · label (+sub) · value on the right — as in the design */
+.stat-card-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'icon text value';
+  align-items: center;
+  column-gap: 14px;
+  row-gap: 4px;
+  min-height: 44px;
+}
+
+.stat-card-icon {
+  grid-area: icon;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--tone);
+  border-radius: 50%;
+  background: var(--tone-soft);
+  color: var(--tone);
+  font-size: 17px;
+}
+
+.stat-card-text {
+  grid-area: text;
+  min-width: 0;
+}
+
+.stat-card-label {
+  color: var(--text-light);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stat-card-sub {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+
+  &.tone-primary, &.tone-success { color: var(--primary-dark); }
+  &.tone-red, &.tone-danger { color: var(--danger); }
+  &.tone-amber { color: var(--orange-400); }
+  &.tone-blue { color: var(--accent-blue); }
+}
+
+.stat-card-value {
+  grid-area: value;
+  color: var(--gh-heading);
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* narrow card (5–6 per row, phones) or [stacked]: label, value, sub stacked beside the icon */
+@mixin stat-card-stacked {
+  .stat-card-body {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'icon label' 'icon value' 'icon sub';
+    align-items: start;
+    row-gap: 2px;
+  }
+  .stat-card-icon { grid-row: 1 / span 3; }
+  .stat-card-text { display: contents; }
+  .stat-card-label { grid-area: label; }
+  .stat-card-sub { grid-area: sub; margin-top: 2px; }
+  .stat-card-value {
+    margin-top: 2px;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+@container (max-width: 250px) {
+  @include stat-card-stacked;
+}
+
+.stat-card-stacked {
+  @include stat-card-stacked;
+}
+
+.stat-tone-blue    { --tone: var(--accent-blue); --tone-soft: var(--accent-blue-soft); }
+.stat-tone-violet  { --tone: var(--purple-550);  --tone-soft: var(--purple-50); }
+.stat-tone-amber   { --tone: var(--orange-400);  --tone-soft: var(--warning-soft); }
+.stat-tone-red     { --tone: var(--danger);      --tone-soft: var(--danger-soft); }
+.stat-tone-teal    { --tone: var(--teal-450);    --tone-soft: var(--teal-50); }
+.stat-tone-pink    { --tone: var(--pink-500);    --tone-soft: var(--pink-50); }
+.stat-tone-neutral { --tone: var(--text-light);  --tone-soft: var(--bg-muted); }
+
+app-stat-card {
+  display: block;
+}
+
 /* =============================================================
    REPORT FILTER CARD (GLOBAL)
    <form class="card-custom report-filter-card">
@@ -2506,32 +2759,6 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   input {
     padding-left: 34px;
   }
-}
-
-.stat-tile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  height: 100%;
-}
-
-.stat-tile-value {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--gh-heading);
-
-  small {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-}
-
-.stat-tile-label {
-  font-size: 12px;
-  color: var(--text-muted);
 }
 
 /* =============================================================
@@ -2671,11 +2898,11 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 
 /* ---------- tab: shared base (both families) ---------- */
 :is(#{$tab}) {
-  --tab-px: 16px;
-  --tab-py: 8px;
-  --tab-font: 13.5px;
+  --tab-px: 18px;
+  --tab-py: 10px;
+  --tab-font: 15px;
   --tab-radius: 10px;
-  --tab-height: 40px;
+  --tab-height: 48px;
 
   position: relative;
   display: inline-flex;

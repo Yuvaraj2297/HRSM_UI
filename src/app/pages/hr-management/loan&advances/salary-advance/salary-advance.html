@@ -54,62 +54,15 @@
 <!-- =========================================================
      KPI SUMMARY CARDS
 ========================================================== -->
-<div class="row g-3 mb-4">
-  <!-- Total Disbursed (FY) -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
-      <div class="kpi-icon-box" style="background:var(--accent-blue-soft);color:var(--blue-550);">
-        <i class="bi bi-bank"></i>
-      </div>
-      <div>
-        <div class="kpi-label">Total Disbursed (FY)</div>
-        <div class="kpi-value text-dark">{{ totalDisbursed }}</div>
-        <div class="kpi-sub text-muted">Across {{ loans.length }} loan accounts</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Monthly EMI Recovery -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
-      <div class="kpi-icon-box" style="background:var(--neutral-50);color:var(--green-500);">
-        <i class="bi bi-arrow-repeat"></i>
-      </div>
-      <div>
-        <div class="kpi-label">Monthly EMI Recovery</div>
-        <div class="kpi-value text-dark">{{ monthlyRecovery }}</div>
-        <div class="kpi-sub text-muted">Auto-deducted via Payroll</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Pending Review -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
-      <div class="kpi-icon-box" style="background:var(--warning-soft);color:var(--orange-500);">
-        <i class="bi bi-hourglass-split"></i>
-      </div>
-      <div>
-        <div class="kpi-label">Pending Review</div>
-        <div class="kpi-value text-dark">{{ pendingCount }}</div>
-        <div class="kpi-sub text-muted">Awaiting HR/Finance approval</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Outstanding Principal -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
-      <div class="kpi-icon-box" style="background:var(--danger-soft);color:var(--red-500-2);">
-        <i class="bi bi-wallet2"></i>
-      </div>
-      <div>
-        <div class="kpi-label">Outstanding Principal</div>
-        <div class="kpi-value text-dark">{{ outstandingBalance }}</div>
-        <div class="kpi-sub text-muted">Current active loan balance</div>
-      </div>
-    </div>
-  </div>
+<div class="stat-grid">
+  <app-stat-card [stacked]="true" label="Total Disbursed (FY)" [value]="totalDisbursed"
+    icon="bi bi-bank" tone="blue" [sub]="'Across ' + loans.length + ' loan accounts'" />
+  <app-stat-card [stacked]="true" label="Monthly EMI Recovery" [value]="monthlyRecovery"
+    icon="bi bi-arrow-repeat" tone="primary" sub="Auto-deducted via Payroll" />
+  <app-stat-card [stacked]="true" label="Pending Review" [value]="pendingCount"
+    icon="bi bi-hourglass-split" tone="amber" sub="Awaiting HR/Finance approval" />
+  <app-stat-card [stacked]="true" label="Outstanding Principal" [value]="outstandingBalance"
+    icon="bi bi-wallet2" tone="red" sub="Current active loan balance" />
 </div>
 
 <!-- =========================================================

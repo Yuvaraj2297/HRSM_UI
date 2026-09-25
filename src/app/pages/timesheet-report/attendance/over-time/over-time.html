@@ -37,66 +37,13 @@
   <!-- =========================================================
        TOP 6 KPI STATUS CARDS GRID
   ========================================================== -->
-  <div class="row g-3 mb-4">
-    <!-- 1. Total OT Employees -->
-    <div class="col-xl-2 col-md-4 col-sm-6">
-      <div class="ot-kpi-card">
-        <div class="ot-kpi-icon emp"><i class="bi bi-people-fill"></i></div>
-        <div class="text-muted small ">Total OT Employees</div>
-        <div class="fs-4 fw-extrabold text-dark">{{ kpiTotalEmployees }}</div>
-        <div class="small text-muted">Employees with OT</div>
-      </div>
-    </div>
-
-    <!-- 2. Total OT Hours -->
-    <div class="col-xl-2 col-md-4 col-sm-6">
-      <div class="ot-kpi-card">
-        <div class="ot-kpi-icon hours"><i class="bi bi-hourglass-split"></i></div>
-        <div class="text-muted small ">Total OT Hours</div>
-        <div class="fs-4 fw-extrabold text-warning">{{ kpiTotalHours }} hrs</div>
-        <div class="small text-muted">Logged this month</div>
-      </div>
-    </div>
-
-    <!-- 3. Approved OT -->
-    <div class="col-xl-2 col-md-4 col-sm-6">
-      <div class="ot-kpi-card">
-        <div class="ot-kpi-icon approved"><i class="bi bi-check-circle-fill"></i></div>
-        <div class="text-muted small ">Approved OT</div>
-        <div class="fs-4 fw-extrabold text-success">{{ kpiApprovedHours }} hrs</div>
-        <div class="small text-success ">Ready for Payroll</div>
-      </div>
-    </div>
-
-    <!-- 4. Rejected OT -->
-    <div class="col-xl-2 col-md-4 col-sm-6">
-      <div class="ot-kpi-card">
-        <div class="ot-kpi-icon rejected"><i class="bi bi-x-circle-fill"></i></div>
-        <div class="text-muted small ">Rejected OT</div>
-        <div class="fs-4 fw-extrabold text-danger">{{ kpiRejectedHours }} hrs</div>
-        <div class="small text-danger ">Not Payable</div>
-      </div>
-    </div>
-
-    <!-- 5. Pending Review -->
-    <div class="col-xl-2 col-md-4 col-sm-6">
-      <div class="ot-kpi-card">
-        <div class="ot-kpi-icon pending"><i class="bi bi-clock"></i></div>
-        <div class="text-muted small ">Pending Review</div>
-        <div class="fs-4 fw-extrabold text-info">{{ kpiPendingCount }}</div>
-        <div class="small text-info ">Awaiting Manager</div>
-      </div>
-    </div>
-
-    <!-- 6. Total OT Amount -->
-    <div class="col-xl-2 col-md-4 col-sm-6">
-      <div class="ot-kpi-card border-purple-subtle bg-purple-subtle">
-        <div class="ot-kpi-icon amount"><i class="bi bi-wallet2"></i></div>
-        <div class="text-muted small  text-purple">Total OT Amount</div>
-        <div class="fs-4 fw-extrabold text-purple">{{ kpiTotalAmount }}</div>
-        <div class="small text-purple ">Calculated Payout</div>
-      </div>
-    </div>
+  <div class="stat-grid">
+    <app-stat-card label="Total OT Employees" [value]="kpiTotalEmployees" icon="bi bi-people-fill" tone="blue" sub="Employees with OT" />
+    <app-stat-card label="Total OT Hours" [value]="kpiTotalHours + ' hrs'" icon="bi bi-hourglass-split" tone="amber" sub="Logged this month" />
+    <app-stat-card label="Approved OT" [value]="kpiApprovedHours + ' hrs'" icon="bi bi-check-circle-fill" tone="primary" sub="Ready for Payroll" subTone="success" />
+    <app-stat-card label="Rejected OT" [value]="kpiRejectedHours + ' hrs'" icon="bi bi-x-circle-fill" tone="red" sub="Not Payable" subTone="danger" />
+    <app-stat-card label="Pending Review" [value]="kpiPendingCount" icon="bi bi-clock" tone="teal" sub="Awaiting Manager" />
+    <app-stat-card label="Total OT Amount" [value]="kpiTotalAmount" icon="bi bi-wallet2" tone="violet" sub="Calculated Payout" />
   </div>
 
   <!-- =========================================================

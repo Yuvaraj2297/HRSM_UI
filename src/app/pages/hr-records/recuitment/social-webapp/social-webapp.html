@@ -37,44 +37,18 @@
 ========================================================== -->
 <div class="row g-3 mb-3">
   <div class="col-sm-6 col-xl-3">
-    <div class="ln-card-kpi d-flex align-items-center gap-3">
-      <div class="ln-kpi-icon kpi-blue"><i class="ti ti-share"></i></div>
-      <div>
-        <div class="kpi-label">Total Social &amp; Web Applicants</div>
-        <div class="kpi-value">{{ totalCount }}</div>
-        <div class="kpi-sub text-success"><i class="ti ti-arrow-up"></i> Live count</div>
-      </div>
-    </div>
+    <app-stat-card label="Total Social &amp; Web Applicants" value="{{ totalCount }}" icon="ti ti-share" tone="primary">
+  <span sub class="stat-card-sub"><i class="ti ti-arrow-up"></i> Live count</span>
+</app-stat-card>
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="ln-card-kpi d-flex align-items-center gap-3">
-      <div class="ln-kpi-icon kpi-amber"><i class="ti ti-bolt"></i></div>
-      <div>
-        <div class="kpi-label">LinkedIn Easy Apply</div>
-        <div class="kpi-value">{{ easyApplyCount }}</div>
-        <div class="kpi-sub">Direct Profile Imports</div>
-      </div>
-    </div>
+    <app-stat-card label="LinkedIn Easy Apply" value="{{ easyApplyCount }}" icon="ti ti-bolt" tone="primary" sub="Direct Profile Imports" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="ln-card-kpi d-flex align-items-center gap-3">
-      <div class="ln-kpi-icon kpi-purple"><i class="ti ti-id-badge-2"></i></div>
-      <div>
-        <div class="kpi-label">Shortlisted / Interviewing</div>
-        <div class="kpi-value">{{ shortlistedCount }}</div>
-        <div class="kpi-sub">Across all pipeline stages</div>
-      </div>
-    </div>
+    <app-stat-card label="Shortlisted / Interviewing" value="{{ shortlistedCount }}" icon="ti ti-id-badge-2" tone="primary" sub="Across all pipeline stages" />
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="ln-card-kpi d-flex align-items-center gap-3">
-      <div class="ln-kpi-icon kpi-green"><i class="ti ti-circle-check-filled"></i></div>
-      <div>
-        <div class="kpi-label">Hired &amp; Offered</div>
-        <div class="kpi-value">{{ hiredCount }}</div>
-        <div class="kpi-sub text-success">Conversion tracked live</div>
-      </div>
-    </div>
+    <app-stat-card label="Hired &amp; Offered" value="{{ hiredCount }}" icon="ti ti-circle-check-filled" tone="primary" sub="Conversion tracked live" />
   </div>
 </div>
 

@@ -21,63 +21,15 @@
 <!-- =========================================================
      STATS SUMMARY CARDS
 ========================================================== -->
-<div class="row g-3 mb-3" id="shiftStatsRow">
-  <!-- Total Employees -->
-  <div class="col-xl-3 col-md-6">
-    <div class="card-custom p-3 d-flex align-items-center gap-3 stat-gender-card"
-      [class.active-all]="activeGenderFilter === 'all'" (click)="setGenderFilter('all')" style="cursor: pointer;">
-      <div class="stat-icon-wrap" style="background:var(--accent-blue-soft); color:var(--blue-600-3);">
-        <i class="bi bi-people-fill"></i>
-      </div>
-      <div>
-        <div class="stat-label">Total Employees</div>
-        <div class="stat-value text-dark">{{ statTotal }}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Boys -->
-  <div class="col-xl-3 col-md-6">
-    <div class="card-custom p-3 d-flex align-items-center gap-3 stat-gender-card"
-      [class.active-male]="activeGenderFilter === 'Male'" (click)="setGenderFilter('Male')" style="cursor: pointer;">
-      <div class="stat-icon-wrap" style="background:var(--blue-50-2); color:var(--blue-450);">
-        <i class="bi bi-person-standing"></i>
-      </div>
-      <div>
-        <div class="stat-label">Boys</div>
-        <div class="stat-value text-primary">{{ statBoys }}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Girls -->
-  <div class="col-xl-3 col-md-6">
-    <div class="card-custom p-3 d-flex align-items-center gap-3 stat-gender-card"
-      [class.active-female]="activeGenderFilter === 'Female'" (click)="setGenderFilter('Female')"
-      style="cursor: pointer;">
-      <div class="stat-icon-wrap" style="background:var(--pink-50-2); color:var(--pink-450);">
-        <i class="bi bi-person-standing-dress"></i>
-      </div>
-      <div>
-        <div class="stat-label">Girls</div>
-        <div class="stat-value" style="color: var(--pink-450);">{{ statGirls }}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Departments Breakdown -->
-  <div class="col-xl-3 col-md-6">
-    <div class="card-custom p-3 d-flex align-items-center gap-3" (click)="toggleDeptBreakdown()"
-      style="cursor: pointer;">
-      <div class="stat-icon-wrap" style="background:var(--blue-50-5); color:var(--purple-500);">
-        <i class="bi bi-building"></i>
-      </div>
-      <div>
-        <div class="stat-label">Departments</div>
-        <div class="stat-value" style="color: var(--purple-500);">{{ statDeptCount }}</div>
-      </div>
-    </div>
-  </div>
+<div class="stat-grid" id="shiftStatsRow">
+  <app-stat-card label="Total Employees" [value]="statTotal" icon="bi bi-people-fill" tone="blue"
+    [clickable]="true" [active]="activeGenderFilter === 'all'" (click)="setGenderFilter('all')" />
+  <app-stat-card label="Boys" [value]="statBoys" icon="bi bi-person-standing" tone="teal"
+    [clickable]="true" [active]="activeGenderFilter === 'Male'" (click)="setGenderFilter('Male')" />
+  <app-stat-card label="Girls" [value]="statGirls" icon="bi bi-person-standing-dress" tone="pink"
+    [clickable]="true" [active]="activeGenderFilter === 'Female'" (click)="setGenderFilter('Female')" />
+  <app-stat-card label="Departments" [value]="statDeptCount" icon="bi bi-building" tone="violet"
+    [clickable]="true" (click)="toggleDeptBreakdown()" />
 </div>
 
 <!-- =========================================================

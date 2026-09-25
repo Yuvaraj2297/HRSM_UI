@@ -13,55 +13,19 @@
 <!-- KPI filter strip -->
 <div class="row g-3 mb-3">
   <div class="col-sm-6 col-xl-3">
-    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'all'"
-      (click)="setKpiFilter('all')" role="button" tabindex="0">
-      <div class="k-ico kpi-all-ico">
-        <i class="bi bi-ticket-perforated"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiCounts.all }}</div>
-        <div class="k-label">All Tickets</div>
-      </div>
-    </div>
+    <app-stat-card label="All Tickets" value="{{ kpiCounts.all }}" icon="bi bi-ticket-perforated" tone="primary" [clickable]="true" (click)="setKpiFilter('all')" [active]="activeKpiFilter === 'all'" />
   </div>
 
   <div class="col-sm-6 col-xl-3">
-    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'open'"
-      (click)="setKpiFilter('open')" role="button" tabindex="0">
-      <div class="k-ico kpi-open-ico">
-        <i class="bi bi-inbox"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiCounts.open }}</div>
-        <div class="k-label">Open / Pending</div>
-      </div>
-    </div>
+    <app-stat-card label="Open / Pending" value="{{ kpiCounts.open }}" icon="bi bi-inbox" tone="primary" [clickable]="true" (click)="setKpiFilter('open')" [active]="activeKpiFilter === 'open'" />
   </div>
 
   <div class="col-sm-6 col-xl-3">
-    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'progress'"
-      (click)="setKpiFilter('progress')" role="button" tabindex="0">
-      <div class="k-ico kpi-prog-ico">
-        <i class="bi bi-hourglass-split"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiCounts.progress }}</div>
-        <div class="k-label">In Progress / Waiting</div>
-      </div>
-    </div>
+    <app-stat-card label="In Progress / Waiting" value="{{ kpiCounts.progress }}" icon="bi bi-hourglass-split" tone="primary" [clickable]="true" (click)="setKpiFilter('progress')" [active]="activeKpiFilter === 'progress'" />
   </div>
 
   <div class="col-sm-6 col-xl-3">
-    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'resolved'"
-      (click)="setKpiFilter('resolved')" role="button" tabindex="0">
-      <div class="k-ico kpi-res-ico">
-        <i class="bi bi-check-circle"></i>
-      </div>
-      <div>
-        <div class="k-val">{{ kpiCounts.resolved }}</div>
-        <div class="k-label">Resolved / Closed</div>
-      </div>
-    </div>
+    <app-stat-card label="Resolved / Closed" value="{{ kpiCounts.resolved }}" icon="bi bi-check-circle" tone="primary" [clickable]="true" (click)="setKpiFilter('resolved')" [active]="activeKpiFilter === 'resolved'" />
   </div>
 </div>
 

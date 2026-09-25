@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -32,7 +33,7 @@ interface DeptStat {
 @Component({
   selector: 'app-performance-dept',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeDataTable],
+  imports: [CommonModule, FormsModule, PrimeDataTable, AppStatCard],
   templateUrl: './performance-dept.html',
   styleUrl: './performance-dept.scss',
 })

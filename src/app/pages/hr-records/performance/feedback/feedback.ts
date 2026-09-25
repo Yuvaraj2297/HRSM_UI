@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +35,7 @@ export interface FeedbackCycleRow {
 @Component({
   selector: 'app-feedback',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReuseModal, PrimeDataTable],
+  imports: [CommonModule, FormsModule, ReuseModal, PrimeDataTable, AppStatCard],
   templateUrl: './feedback.html',
   styleUrl: './feedback.scss',
 })

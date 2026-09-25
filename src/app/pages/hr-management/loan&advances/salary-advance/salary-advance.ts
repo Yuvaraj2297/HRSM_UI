@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -76,7 +77,7 @@ export interface ActiveFilterChip {
 @Component({
   selector: 'app-salary-advance',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,  SelectModule, PrimeDataTable, CalendarDatepickerDirective],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,  SelectModule, PrimeDataTable, CalendarDatepickerDirective, AppStatCard],
   templateUrl: './salary-advance.html',
   styleUrl: './salary-advance.scss'
 })

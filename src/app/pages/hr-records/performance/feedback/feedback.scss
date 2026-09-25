@@ -1,28 +1,4 @@
-/* KPI cards */
-.fb-kpi {
-  min-height: 96px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--white);
-  box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);
-  transition: transform 0.2s ease;
 
-  &:hover { transform: translateY(-2px); }
-
-  .icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-  .label { color: var(--neutral-500); font-size: 12px; font-weight: 700; margin-bottom: 2px; }
-  .value { color: var(--neutral-900); font-size: 22px; font-weight: 700; }
-  .sub { color: var(--neutral-500); font-size: 11px; margin-top: 2px; }
-}
 
 /* Hub tabs */
 .ln-stage-tab {

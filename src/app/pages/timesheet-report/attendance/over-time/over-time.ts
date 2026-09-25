@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -115,7 +116,7 @@ export interface ToastMessage {
 @Component({
   selector: 'app-over-time',
   standalone: true,
-  imports: [CommonModule, FormsModule, SelectModule, Breadcrumb],
+  imports: [CommonModule, FormsModule, SelectModule, Breadcrumb, AppStatCard],
   templateUrl: './over-time.html',
   styleUrl: './over-time.scss',
 })

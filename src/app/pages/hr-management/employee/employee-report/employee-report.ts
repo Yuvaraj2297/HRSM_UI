@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -36,7 +37,7 @@ interface TeamGroup {
 
   standalone: true,
 
-  imports: [CommonModule, PrimeDataTable],
+  imports: [CommonModule, PrimeDataTable, AppStatCard],
 
   templateUrl:'./employee-report.html',
 

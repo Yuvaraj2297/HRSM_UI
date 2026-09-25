@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, DestroyRef, EnvironmentInjector, HostListener, Injector, WritableSignal, afterNextRender, computed, createComponent, inject, signal } from '@angular/core';
 import { BiIcon } from './bi-icon';
 import {
@@ -79,7 +80,7 @@ const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), select:not([di
 
 @Component({
   selector: 'app-payslip',
-  imports: [BiIcon, PayslipSheet, PrimeDataTable],
+  imports: [BiIcon, PayslipSheet, PrimeDataTable, AppStatCard],
   templateUrl: './payslip.html',
   styleUrl: './payslip.scss',
 })

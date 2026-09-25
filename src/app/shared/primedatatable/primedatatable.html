@@ -405,7 +405,7 @@
 
         <span class="show-label">Show:</span>
 
-        <select class="show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)">
+        <select class="form-select show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)">
           @for (opt of rowsPerPageOptions; track opt) {
           <option [value]="opt">{{ opt }}</option>
           }

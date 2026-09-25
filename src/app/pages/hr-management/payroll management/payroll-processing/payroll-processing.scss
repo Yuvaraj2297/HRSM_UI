@@ -24,29 +24,6 @@
   }
 }
 
-/* ===== KPI cards ===== */
-.payroll-kpi {
-  min-height: 112px;
-  padding: 18px;
-  border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  background: var(--white);
-  box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);
-
-  .label { color: var(--ink-500); font-size: 12px; font-weight: 700; margin-bottom: 3px; }
-  .value { color: var(--ink-900); font-size: 20px; font-weight: 800; }
-  .sub { color: var(--ink-500); font-size: 11px; margin-top: 3px; }
-}
-
-.kpi-icon {
-  width: 42px; height: 42px; border-radius: 12px;
-  display: grid; place-items: center; font-size: 18px;
-}
-.kpi-icon-green { background: var(--neutral-50); color: var(--green-500); }
-.kpi-icon-blue  { background: var(--accent-blue-soft); color: var(--blue-550); }
-.kpi-icon-amber { background: var(--warning-soft); color: var(--orange-500); }
-.kpi-icon-red   { background: var(--danger-soft); color: var(--red-500-2); }
-
 /* ===== Generic card ===== */
 .card-custom {
   padding: 16px;

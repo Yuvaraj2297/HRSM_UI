@@ -10,42 +10,11 @@
 </header>
 
 <!-- KPI cards -->
-<section class="kpis" aria-label="Salary structure summary">
-  <article class="kpi">
-    <span class="kpi-icon kpi-green"><bi-icon name="plus-circle" /></span>
-    <div class="kpi-text">
-      <div class="kpi-label">Earnings</div>
-      <div class="kpi-value">{{ earningRows().length }}</div>
-      <div class="kpi-sub">Active components</div>
-    </div>
-  </article>
-
-  <article class="kpi">
-    <span class="kpi-icon kpi-red"><bi-icon name="dash-circle" /></span>
-    <div class="kpi-text">
-      <div class="kpi-label">Deductions</div>
-      <div class="kpi-value">{{ deductionRows().length }}</div>
-      <div class="kpi-sub">Active components</div>
-    </div>
-  </article>
-
-  <article class="kpi">
-    <span class="kpi-icon kpi-blue"><bi-icon name="percent" /></span>
-    <div class="kpi-text">
-      <div class="kpi-label">Total Deduction %</div>
-      <div class="kpi-value">{{ deductionPct() }}</div>
-      <div class="kpi-sub">Of gross salary</div>
-    </div>
-  </article>
-
-  <article class="kpi">
-    <span class="kpi-icon kpi-amber"><bi-icon name="shield-check" /></span>
-    <div class="kpi-text">
-      <div class="kpi-label">Statutory</div>
-      <div class="kpi-value">{{ statutoryCount() }}</div>
-      <div class="kpi-sub" [title]="statutoryNames()">{{ statutoryNames() }}</div>
-    </div>
-  </article>
+<section class="stat-grid" aria-label="Salary structure summary">
+  <app-stat-card label="Earnings" [value]="earningRows().length" icon="bi bi-plus-circle" tone="primary" sub="Active components" />
+  <app-stat-card label="Deductions" [value]="deductionRows().length" icon="bi bi-dash-circle" tone="red" sub="Active components" />
+  <app-stat-card label="Total Deduction %" [value]="deductionPct()" icon="bi bi-percent" tone="blue" sub="Of gross salary" />
+  <app-stat-card label="Statutory" [value]="statutoryCount()" icon="bi bi-shield-check" tone="amber" [sub]="statutoryNames()" />
 </section>
 
 <!-- Base CTC -->

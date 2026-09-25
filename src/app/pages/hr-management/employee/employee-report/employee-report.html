@@ -66,41 +66,10 @@
 <!-- =========================================================
      ALL EMPLOYEES - STAT CARDS
 ========================================================= -->
-<div *ngIf="activeView === 'all'" class="row g-3 mb-3">
-
-  <div class="col-sm-6 col-md-4 col-xl text-nowrap" *ngFor="let card of statCards">
-
-    <div class="stat-card d-flex align-items-center gap-3" [ngClass]="'stat-theme-' + card.theme">
-
-      <!-- Icon -->
-      <div class="stat-icon stat-icon-lg">
-        <i [class]="card.icon"></i>
-      </div>
-
-
-      <!-- Content -->
-      <div>
-
-        <div class="label stat-label">
-          {{ card.label }}
-        </div>
-
-        <div class="value">
-          {{ card.value }}
-        </div>
-
-        <div class="delta" [ngClass]="card.deltaClass">
-
-          {{ card.delta }}
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
+<div *ngIf="activeView === 'all'" class="stat-grid">
+  <app-stat-card *ngFor="let card of statCards"
+    [label]="card.label" [value]="card.value" [icon]="card.icon"
+    [tone]="card.theme" [sub]="card.delta" [subTone]="card.deltaClass" />
 </div>
 
 

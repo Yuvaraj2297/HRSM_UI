@@ -17,19 +17,8 @@
 </div>
 
 <!-- ===== KPI Metric Cards ===== -->
-<div class="row g-3 mb-3">
-  <div class="col-sm-6 col-xl-3" *ngFor="let k of kpiCards">
-    <div class="onb-kpi d-flex align-items-center gap-3">
-      <div class="icon" [style.background]="k.bg" [style.color]="k.color">
-        <i [class]="k.icon"></i>
-      </div>
-      <div>
-        <div class="label">{{ k.label }}</div>
-        <div class="value">{{ k.value }}</div>
-        <div class="sub">{{ k.sub }}</div>
-      </div>
-    </div>
-  </div>
+<div class="stat-grid">
+  <app-stat-card *ngFor="let k of kpiCards" [label]="k.label" [value]="k.value" [icon]="k.icon" [tone]="k.color" [sub]="k.sub" />
 </div>
 
 <!-- ===== Filter Tabs ===== -->

@@ -129,6 +129,15 @@
   --sidebar-collapsed-width: 64px;   /* = icon rail width */
   --content-gutter: 24px;            /* space between chrome and page content */
 
+  /* ===== CONTROL SIZES — every field, dropdown and button reads these =====
+     One place to make the whole app denser or roomier. */
+  --control-h: 46px;
+  --control-h-sm: 36px;
+  --control-h-lg: 52px;
+  --control-font: 15px;
+  --control-radius: 10px;
+  --label-font: 14px;
+
   /* ===== CHROME — semantic colors for header / sidebar / page shell =====
      Components use ONLY these (never a palette shade or a hex), so
      re-theming the shell means changing this block, nothing else.

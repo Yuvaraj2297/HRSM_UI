@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -50,7 +51,7 @@ type SourceFilter = 'all' | 'easy_apply' | 'job_share' | 'portal';
 @Component({
   selector: 'app-social-webapp',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeDataTable, ReuseModal],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeDataTable, ReuseModal, AppStatCard],
   templateUrl: './social-webapp.html',
   styleUrl: './social-webapp.scss',
 })

@@ -25,76 +25,11 @@
 </div>
 
 <!-- KPI Cards -->
-
-<!-- KPI Cards -->
-<div class="row g-3 mb-3">
-
-  <!-- Card 1: Total Resumes to TLs -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
-         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
-      <div class="d-grid flex-shrink-0"
-           style="width:52px;height:52px;border-radius:14px;background:var(--neutral-50);color:var(--green-550);place-items:center;font-size:22px;line-height:1;">
-        <i class="bi bi-send-check"></i>
-      </div>
-      <div style="line-height:1.25;">
-        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Total Resumes to TLs</div>
-        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ totalAssigned }}</div>
-        <div class="text-success " style="font-size:11.5px;">
-          <i class="bi bi-arrow-up"></i> Active Shortlisting
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 2: Evaluations Completed -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
-         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
-      <div class="d-grid flex-shrink-0"
-           style="width:52px;height:52px;border-radius:14px;background:var(--blue-50);color:var(--blue-450-2);place-items:center;font-size:22px;line-height:1;">
-        <i class="bi bi-file-earmark-bar-graph"></i>
-      </div>
-      <div style="line-height:1.25;">
-        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Evaluations Completed</div>
-        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ totalEvaluated }}</div>
-        <div class="text-muted" style="font-size:11.5px;">Scorecards Submitted</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 3: Strong Hire Recommended -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
-         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
-      <div class="d-grid flex-shrink-0"
-           style="width:52px;height:52px;border-radius:14px;background:var(--green-50-2);color:var(--primary-dark);place-items:center;font-size:22px;line-height:1;">
-        <i class="bi bi-star-fill"></i>
-      </div>
-      <div style="line-height:1.25;">
-        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Strong Hire Recommended</div>
-        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ strongHires }}</div>
-        <div class="text-success " style="font-size:11.5px;">Score &gt; 8.5 / 10</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 4: Pending HR Action -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
-         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
-      <div class="d-grid flex-shrink-0"
-           style="width:52px;height:52px;border-radius:14px;background:var(--yellow-50);color:var(--orange-400);place-items:center;font-size:22px;line-height:1;">
-        <i class="bi bi-hourglass-split"></i>
-      </div>
-      <div style="line-height:1.25;">
-        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Pending HR Action</div>
-        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ pendingHrAction }}</div>
-        <div class="text-muted" style="font-size:11.5px;">Awaiting Offer Release</div>
-      </div>
-    </div>
-  </div>
-
+<div class="stat-grid">
+  <app-stat-card label="Total Resumes to TLs" [value]="totalAssigned" icon="bi bi-send-check" tone="primary" sub="Active Shortlisting" subTone="success" />
+  <app-stat-card label="Evaluations Completed" [value]="totalEvaluated" icon="bi bi-file-earmark-bar-graph" tone="blue" sub="Scorecards Submitted" />
+  <app-stat-card label="Strong Hire Recommended" [value]="strongHires" icon="bi bi-star-fill" tone="amber" sub="Score > 8.5 / 10" subTone="success" />
+  <app-stat-card label="Pending HR Action" [value]="pendingHrAction" icon="bi bi-hourglass-split" tone="red" sub="Awaiting Offer Release" />
 </div>
 
 
