@@ -141,7 +141,7 @@
 
   <!-- Table Body -->
   <div class="table-responsive table-modern-wrap overflow-auto column-border flex-grow-1" style="max-height: 560px;">
-    <table class="table-modern w-100 mb-0">
+    <table class="table-modern data-table-sticky w-100 mb-0">
       <thead>
         <tr>
           <th class="text-nowrap">Ticket</th>
@@ -444,7 +444,7 @@
               <label class="form-label  mb-1" style="font-size: 11px;">Department</label>
               <p-select [options]="deptOptions" [(ngModel)]="modalDept" (onChange)="onDeptChange($event.value)"
                 optionLabel="label" optionValue="value" placeholder="Select..." appendTo="body"
-                styleClass="ct-p-select-sm w-100" class="w-100 d-block"></p-select>
+                styleClass="ct-p-select-sm w-100" class="w-100"></p-select>
             </div>
 
             <!-- Assign To -->
@@ -452,21 +452,21 @@
               <label class="form-label  mb-1" style="font-size: 11px;">Assign To</label>
               <p-select [options]="assigneeOptions" [(ngModel)]="modalAssignee" optionLabel="label" optionValue="value"
                 [disabled]="!modalDept" placeholder="Select person..." appendTo="body" styleClass="ct-p-select-sm w-100"
-                class="w-100 d-block"></p-select>
+                class="w-100"></p-select>
             </div>
 
             <!-- Priority -->
             <div class="col-6">
               <label class="form-label  mb-1" style="font-size: 11px;">Priority</label>
               <p-select [options]="priorityOptions.slice(1)" [(ngModel)]="modalPriority" optionLabel="label"
-                optionValue="value" appendTo="body" styleClass="ct-p-select-sm w-100" class="w-100 d-block"></p-select>
+                optionValue="value" appendTo="body" styleClass="ct-p-select-sm w-100" class="w-100"></p-select>
             </div>
 
             <!-- Status -->
             <div class="col-6">
               <label class="form-label  mb-1" style="font-size: 11px;">Status</label>
               <p-select [options]="modalStatusOptions" [(ngModel)]="modalStatus" optionLabel="label" optionValue="value"
-                appendTo="body" styleClass="ct-p-select-sm w-100" class="w-100 d-block"></p-select>
+                appendTo="body" styleClass="ct-p-select-sm w-100" class="w-100"></p-select>
             </div>
 
             <div class="col-12 form-text" style="font-size: 10.5px;">

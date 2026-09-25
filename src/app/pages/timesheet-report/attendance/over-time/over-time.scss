@@ -164,48 +164,6 @@
   background: var(--bg-soft);
 }
 
-.table-modern-wrap {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.table-modern {
-  border-collapse: collapse;
-  font-size: 13px;
-
-  thead {
-    background: var(--bg-soft);
-    border-bottom: 2px solid var(--border);
-
-    th {
-      padding: 12px 16px;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      color: var(--neutral-650);
-      vertical-align: middle;
-    }
-  }
-
-  tbody {
-    tr {
-      border-bottom: 1px solid var(--bg-muted);
-      transition: background-color 0.15s ease;
-
-      &:hover {
-        background-color: var(--bg-soft);
-      }
-
-      td {
-        padding: 14px 16px;
-        vertical-align: middle;
-        color: var(--neutral-850);
-      }
-    }
-  }
-}
-
 .dept-badge {
   background: var(--bg-muted);
   color: var(--text);
@@ -273,76 +231,9 @@
     max-width: 820px;
   }
 
-  .modal-content {
-    background: var(--white) !important;
-    background-color: var(--white) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 25px 70px rgba(var(--neutral-900-rgb), 0.35) !important;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .modal-header {
-    background: var(--white) !important;
-    background-color: var(--white) !important;
-    border-bottom: 1px solid var(--bg-muted);
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &.bg-slate-header {
-      background: var(--bg-soft) !important;
-      background-color: var(--bg-soft) !important;
-    }
-  }
-
   .modal-body {
-    background: var(--white) !important;
-    background-color: var(--white) !important;
-    padding: 24px;
     max-height: calc(90vh - 140px);
     overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: var(--text-faint);
-      border-radius: 4px;
-    }
-  }
-
-  .modal-footer {
-    background: var(--bg-soft) !important;
-    background-color: var(--bg-soft) !important;
-    border-top: 1px solid var(--bg-muted);
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-  }
-
-  .form-label {
-    margin-bottom: 5px;
-  }
-}
-
-.btn-close-custom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-
-  &:focus {
-    outline: none;
   }
 }
 

@@ -152,10 +152,6 @@
 // Utility classes replacing inline styles removed from the HTML
 // =========================================================
 
-.page-title {
-    font-size: 1.7rem;
-}
-
 .breadcrumb-sm {
     font-size: 13px;
 }
@@ -170,14 +166,6 @@
 
 .accessory-pill {
     font-size: 11px;
-}
-
-.btn-brand {
-
-    &:hover,
-    &:focus {
-        filter: brightness(0.94);
-    }
 }
 
 .kpi-icon-total {
@@ -198,14 +186,6 @@
 .kpi-icon-returned {
     background: var(--purple-50);
     color: var(--purple-600);
-}
-
-.modal-content-rounded {
-    border-radius: 16px;
-}
-
-.modal-header-soft {
-    background: var(--bg-soft);
 }
 
 .modal-icon-circle {
@@ -245,61 +225,4 @@
 
 .view-detail-grid {
     font-size: 13px;
-}
-
-// =========================================================
-// PrimeNG p-select overrides to match Bootstrap form-control look
-// =========================================================
-
-::ng-deep app-asset-provisioning {
-
-    .p-select {
-        width: 100%;
-        align-items: center;
-
-    }
-
-    .p-select-label {
-        padding: 8px 12px;
-        font-size: 14px;
-        color: var(--neutral-850-2);
-    }
-
-    .p-select-label.p-placeholder {
-        color: var(--neutral-500-2);
-    }
-
-    .p-select-dropdown {
-        width: 2.5rem;
-        color: var(--neutral-500-2);
-    }
-
-    .p-select-overlay {
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(var(--neutral-900-rgb), .12);
-        border: 1px solid var(--border);
-    }
-
-    .p-select-option {
-        font-size: 13.5px;
-        padding: 8px 12px;
-
-        &.p-select-option-selected {
-            background: var(--neutral-50);
-            color: var(--primary, var(--green-550));
-        }
-
-        &:not(.p-select-option-selected):not(.p-disabled).p-focus {
-            background: var(--bg-soft);
-        }
-    }
-
-    .p-select-clear-icon {
-        color: var(--neutral-350);
-    }
-
-    .p-select-filter {
-        border-radius: 6px;
-    }
-
 }

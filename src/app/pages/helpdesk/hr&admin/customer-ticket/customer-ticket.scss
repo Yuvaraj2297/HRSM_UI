@@ -123,44 +123,6 @@
   position: relative;
 }
 
-.table-modern {
-  border-collapse: separate;
-  border-spacing: 0;
-
-  thead th {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    background: var(--bg-soft);
-    padding: 12px 14px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--neutral-650);
-    border-bottom: 1px solid var(--bg-muted);
-  }
-
-  tbody tr {
-    transition: background 0.15s ease;
-
-    &:hover {
-      background: var(--bg-soft);
-    }
-
-    td {
-      padding: 12px 14px;
-      vertical-align: middle;
-      border-bottom: 1px solid var(--bg-muted);
-      font-size: 13px;
-    }
-  }
-}
-
-.btn-action-icon {
-  display: inline-grid;
-  place-items: center;
-
-}
-
 .sla-due {
   font-size: 10px;
   color: var(--ink-500, var(--neutral-500-2));
@@ -276,24 +238,6 @@
   &.modal-sm-custom {
     max-width: 420px;
   }
-
-  .modal-content-custom {
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: 0 20px 25px -5px rgba(var(--black-rgb), 0.1), 0 10px 10px -5px rgba(var(--black-rgb), 0.04);
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-
-  .modal-header-custom {
-    border-bottom: 1px solid var(--bg-muted);
-  }
-
-  .modal-footer-custom {
-    border-top: 1px solid var(--bg-muted);
-    background: var(--bg-soft);
-  }
-
 }
 
 /* ===== Fullscreen Manage Modal ===== */

@@ -205,17 +205,7 @@ button {
 }
 
 .btn-save {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   margin-left: auto;
-
-  &:hover {
-    filter: brightness(1.08);
-  }
-  &:active {
-    transform: translateY(1px);
-  }
 }
 
 .btn-count {
@@ -241,34 +231,6 @@ button {
 
 .tb-menu {
   position: relative;
-}
-
-.btn-tool {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 34px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: filter 0.15s ease;
-
-  &:hover {
-    filter: brightness(0.97);
-  }
-}
-
-.btn-columns {
-  background: var(--orange-50-3);
-  color: var(--warning);
-}
-
-.btn-export {
-  background: var(--primary-soft);
-  color: var(--green-400);
 }
 
 .tb-panel {

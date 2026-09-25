@@ -48,20 +48,6 @@
   }
 }
 
-::ng-deep {
-  .punch-branch-pselect.p-select {
-    width: 100%;
-
-    .p-select-label {
-      padding: 0.5rem 0.85rem;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ink-900);
-    }
-
-  }
-}
-
 /* =========================================================
    ACTIVE FILTERS BAR
 ========================================================= */
@@ -144,26 +130,6 @@
   min-width: 190px;
 }
 
-.columns-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
-.export-btn-pdf {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
 .mt-export-dropdown {
   position: absolute;
   top: calc(100% + 4px);
@@ -201,28 +167,21 @@
 /* =========================================================
    PUNCH MATRIX TABLE
 ========================================================= */
-.table-modern-wrap {
-  position: relative;
-  overflow-x: auto;
-  max-width: 100%;
-}
 
 .punch-table {
   border-collapse: separate;
   border-spacing: 0;
 
   thead {
-    background: var(--bg-soft);
-
     th {
       font-size: 11.5px;
       font-weight: 700;
-      color: var(--ink-600);
+      color: var(--table-head-text);
       padding: 10px 14px;
-      border-bottom: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--table-border);
       border-top: none;
       vertical-align: middle;
-      background: var(--bg-soft);
+      background: var(--table-head-bg);
     }
   }
 
@@ -249,19 +208,15 @@
   tbody tr.punch-table-row {
     transition: background-color 0.15s ease;
 
-    &:hover {
+    &:hover td {
       background-color: var(--bg-soft);
-
-      td.sticky-col {
-        background-color: var(--bg-soft);
-      }
     }
 
     td {
       padding: 10px 14px;
       vertical-align: middle;
-      border-bottom: 1px solid var(--border-soft);
-      border-left: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--table-row-border);
+      border-left: 1px solid var(--table-row-border);
       background-color: var(--white);
 
       &:first-child {
@@ -295,7 +250,7 @@
   }
 
   thead th.sticky-col {
-    background-color: var(--bg-soft) !important;
+    background-color: var(--table-head-bg) !important;
     z-index: 3;
   }
 
@@ -642,17 +597,10 @@
   }
 
   .al-punch-time-input {
-    border: 1px solid transparent;
-    border-radius: 9px;
-    padding: 8px 12px;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--neutral-850);
-    background: var(--bg-soft);
-    outline: none;
+    width: 105px;
+    font-weight: 700;
     text-align: center;
     letter-spacing: 0.5px;
-    width: 105px;
   }
 
   .al-punch-more {
@@ -912,14 +860,6 @@
   }
 }
 
-.modal-content {
-  border: 0;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(var(--black-rgb), 0.25);
-  background: var(--white);
-}
-
 .ap-header {
   display: flex;
   align-items: center;
@@ -1047,20 +987,11 @@
   }
 
   .ap-time-input {
-    border: 2px solid var(--border-soft);
-    background: var(--white);
-    color: var(--ink-900);
-    font-size: 18px;
+    --field-h: 48px;
+    --field-font: 18px;
     font-weight: 800;
-    padding: 10px 14px;
-    border-radius: 12px;
     text-align: center;
     letter-spacing: 0.5px;
-
-    &:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(var(--green-400-rgb), 0.15);
-    }
   }
 
   .ap-preset-times {

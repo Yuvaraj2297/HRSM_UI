@@ -311,7 +311,7 @@ payslipColumns(): PrimeTableColumn[] {
   }
 
   private focusFirstField(): void {
-    afterNextRender(() => document.querySelector<HTMLElement>('.modal-dialog [data-autofocus]')?.focus(), { injector: this.injector });
+    afterNextRender(() => document.querySelector<HTMLElement>('.ps-modal [data-autofocus]')?.focus(), { injector: this.injector });
   }
 
   /** Remembers what to refocus when a dialog closes. Menu items vanish on click, so use the menu's trigger instead. */

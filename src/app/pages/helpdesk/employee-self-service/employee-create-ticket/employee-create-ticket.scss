@@ -1,8 +1,3 @@
-/* =========================================================
-   EMPLOYEE TICKETING / CREATE TICKET STYLES
-   Ported directly from HRMS_PHP/ticketing.php with PrimeNG p-select
-========================================================= */
-
 /* ===== Create Ticket Layout ===== */
 .ticket-form-card {
   overflow: hidden;
@@ -63,42 +58,6 @@
 }
 
 /* ===== PrimeNG p-select Integration (Sub Category & Preferred Contact) ===== */
-:host ::ng-deep .ct-p-select-field.p-select {
-  display: flex;
-  align-items: center;
-  width: 100%;
-
-  .p-select-label {
-    color: var(--neutral-900-2);
-    font-size: 13.5px;
-    font-weight: 600;
-    padding: 0 14px;
-    line-height: 40px;
-    display: flex;
-    align-items: center;
-
-    &.p-placeholder {
-      color: var(--neutral-250);
-      font-weight: 500;
-    }
-  }
-
-  .p-select-dropdown {
-    height: 40px;
-    color: var(--neutral-500-2);
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &.p-disabled {
-
-    .p-select-label {
-      color: var(--neutral-350);
-    }
-  }
-}
 
 /* Error state on PrimeNG select */
 
@@ -204,15 +163,6 @@
 }
 
 /* Custom Category button */
-.btn-add-category {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-}
 
 /* Priority selector */
 .priority-grid {
@@ -553,52 +503,22 @@
   z-index: 1055;
 }
 
-.modal-content-custom {
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 10px 32px rgba(var(--neutral-900-rgb), 0.16);
-  overflow: hidden;
-  border: 1px solid var(--bg-muted);
+.modal-head-icon {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
 }
 
-.modal-header-custom {
-  border-bottom: 1px solid var(--bg-muted);
-  background: linear-gradient(135deg, var(--bg-soft) 0%, var(--white) 100%);
-
-  .modal-head-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-    background: var(--neutral-50);
-    color: var(--green-500);
-  }
-
-  .modal-title {
-    font: 700 15px var(--font-family-display);
-    color: var(--neutral-900-2);
-  }
-
-  .modal-sub {
-    font-size: 11.5px;
-    color: var(--neutral-500-2);
-  }
-
-  .btn-close-custom {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-  }
+.modal-sub {
+  font-size: 11.5px;
+  color: var(--text-light);
 }
 
 .modal-body-custom {
   max-height: 75vh;
   overflow-y: auto;
-}
-
-.modal-footer-custom {
-  border-top: 1px solid var(--bg-muted);
-  background: var(--bg-soft);
 }
 
 /* Icon picker — profile-style dropdown */
