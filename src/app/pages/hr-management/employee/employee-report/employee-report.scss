@@ -1,3 +1,20 @@
+/* ===== Page header: title + view tabs in one row ===== */
+.er-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+:host .er-head .er-title {
+  margin: 0;
+}
+
+.er-tabs {
+  margin: 0;
+}
+
 :host {
   display: block;
 }

@@ -179,6 +179,15 @@ export class EmployeeReport implements OnInit {
      TEAM TABLE ACTIONS
   ======================================================== */
 
+  /** "New Employee" lives in the table toolbar */
+  employeeActions = {
+    add: true,
+    addLabel: 'New Employee',
+    addIcon: 'bi bi-plus-lg',
+    edit: false,
+    delete: false,
+  };
+
   teamActions = {
     add: false,
     edit: true,
