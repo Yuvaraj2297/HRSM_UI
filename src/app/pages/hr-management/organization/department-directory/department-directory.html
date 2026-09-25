@@ -1,0 +1,105 @@
+<div class="d-flex align-items-start gap-3 org-wrap">
+
+  <!-- LEFT: Department List -->
+  <aside class="card flex-shrink-0 org-dept-panel">
+
+    <!-- Search Box (Reactive Form) -->
+    <form [formGroup]="searchForm" class="position-relative org-dept-search">
+      <input
+        type="text"
+        placeholder="Search Department"
+        formControlName="searchText"
+        autocomplete="off"
+      />
+      <i class="bi bi-search"></i>
+
+      @if (searchForm.get('searchText')?.value) {
+        <button aria-label="Clear search" type="button" class="org-dept-clear" (click)="clearSearch()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      }
+    </form>
+
+    <!-- Department List Items -->
+    <div class="d-flex flex-column org-dept-list">
+      @if (filteredDepartments.length === 0) {
+        <div class="org-dept-empty">No departments found</div>
+      } @else {
+        @for (dept of filteredDepartments; track dept.id) {
+          <div
+            class="d-flex align-items-center justify-content-between org-dept-item"
+            [class.active]="dept.id === activeDeptId"
+            (click)="selectDept(dept.id)"
+          >
+            <span>{{ dept.name }}</span>
+            <span class="org-dept-count">{{ countFor(dept.id) }}</span>
+          </div>
+        }
+      }
+    </div>
+  </aside>
+
+  <!-- RIGHT: Employee Cards -->
+  <section class="flex-grow-1 org-content">
+
+    <!-- Header -->
+    <div class="card d-flex flex-row align-items-center justify-content-between org-content-head">
+      <h3>{{ activeDeptName }}</h3>
+      <div class="org-member-count">
+        <strong>{{ members.length }}</strong> Members
+      </div>
+    </div>
+
+    <!-- Cards Grid (Bootstrap Grid) -->
+    <div class="row g-3 org-card-grid">
+      @if (members.length === 0) {
+        <div class="col-12">
+          <div class="org-empty-state">No members in this department yet.</div>
+        </div>
+      } @else {
+        @for (emp of members; track emp.empCode) {
+
+          <!-- Bootstrap Column Wrapper -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            
+            <div class="card position-relative d-flex flex-column org-emp-card" [class]="'is-' + emp.status">
+
+              <!-- Top Section (Photo & Actions) -->
+              <div class="position-relative org-emp-card-top">
+                <div class="position-absolute d-flex flex-column align-items-center org-emp-actions">
+                  <button [attr.aria-label]="emp.favorite ? 'Remove from favourites' : 'Add to favourites'" type="button" class="d-flex align-items-center justify-content-center org-fav-btn" [class.active]="emp.favorite" (click)="toggleFavorite(emp.empCode, $event)">
+                    <i class="bi" [class.bi-star-fill]="emp.favorite" [class.bi-star]="!emp.favorite"></i>
+                  </button>
+                  <button aria-label="Call" type="button" class="d-flex align-items-center justify-content-center org-call-btn">
+                    <i class="bi bi-telephone-outbound"></i>
+                  </button>
+                </div>
+
+                <div class="position-relative mx-auto org-emp-photo-wrap">
+                  <img class="org-emp-photo" [src]="emp.photo" [alt]="emp.name" />
+                  <span class="position-absolute org-emp-status-dot" [title]="getStatusLabel(emp.status)"></span>
+                </div>
+              </div>
+
+              <!-- Bottom Section (Details) -->
+              <div class="d-flex flex-column org-emp-card-body">
+                <span class="org-emp-id">{{ emp.empCode }}</span>
+                <div class="org-emp-name">{{ emp.name }}</div>
+                <div class="org-emp-role">{{ emp.role }}</div>
+                <div class="org-emp-dept">{{ activeDeptName }}</div>
+                <div class="org-emp-email" [title]="emp.email">{{ emp.email }}</div>
+
+                <div class="org-emp-divider"></div>
+                <span class="d-inline-flex align-items-center org-emp-status">{{ getStatusLabel(emp.status) }}</span>
+              </div>
+
+            </div>
+          </div>
+          <!-- End Column Wrapper -->
+
+        }
+      }
+    </div>
+  </section>
+
+</div>

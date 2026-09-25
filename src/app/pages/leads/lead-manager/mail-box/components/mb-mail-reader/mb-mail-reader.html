@@ -1,0 +1,49 @@
+@let m = mail();
+
+<div class="read-head">
+  <span class="av" [style.background]="m.color">{{ initials(m.from.name) }}</span>
+  <div class="head-main">
+    <h2 class="subj">{{ m.subject }}</h2>
+    <div class="meta">
+      <b>{{ m.from.name }}</b> &lt;{{ m.from.email }}&gt; · {{ stamp(m.at) }}
+    </div>
+    @if (m.to?.length) {
+    <div class="meta">To: {{ m.to!.join(', ') }}@if (m.cc?.length) { · CC: {{ m.cc!.join(', ') }} }</div>
+    }
+  </div>
+  @if (folder() !== 'trash') {
+  <button type="button" class="star" [class.on]="m.starred" [attr.aria-pressed]="m.starred"
+    [title]="m.starred ? 'Unstar' : 'Star'" (click)="star.emit(m)">
+    <i class="bi" [class.bi-star-fill]="m.starred" [class.bi-star]="!m.starred"></i>
+  </button>
+  }
+</div>
+
+<!-- rich mails: [innerHTML] is sanitised by Angular; plain mails keep line breaks -->
+@if (m.html) {
+<div class="body rich" [innerHTML]="m.html"></div>
+} @else {
+<div class="body">{{ m.body }}</div>
+}
+
+@if (m.attachments?.length) {
+<div class="attachments">
+  @for (a of m.attachments; track a) {
+  <span class="file"><i class="bi bi-paperclip"></i>{{ a }}</span>
+  }
+</div>
+}
+
+<div class="actions">
+  @if (folder() !== 'trash') {
+  @if (folder() !== 'draft') {
+  <button type="button" class="btn btn-primary" (click)="reply.emit(m)"><i class="bi bi-reply"></i>Reply</button>
+  }
+  <button type="button" class="btn btn-cancel" (click)="trash.emit(m)"><i class="bi bi-trash"></i>Delete</button>
+  } @else {
+  <button type="button" class="btn btn-primary" (click)="restore.emit(m)">
+    <i class="bi bi-arrow-counterclockwise"></i>Restore
+  </button>
+  <button type="button" class="btn btn-cancel" (click)="purge.emit(m)"><i class="bi bi-x-circle"></i>Delete forever</button>
+  }
+</div>

@@ -1,0 +1,233 @@
+:host {
+  display: inline-block;
+  width: auto;
+}
+
+.time-picker-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.time-input {
+  min-width: 120px;
+
+}
+
+/* =============================================================
+   DROPDOWN POPUP (Matching Screenshot)
+============================================================= */
+.time-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 290px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(var(--neutral-900-rgb), 0.12);
+  padding: 16px 14px 12px 14px;
+  z-index: 1070;
+  animation: fadeInDown 0.15s ease;
+}
+
+.time-header {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--neutral-850);
+  margin-bottom: 14px;
+}
+
+.time-select-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+
+.time-unit-box {
+  position: relative;
+  flex: 0 0 auto;
+
+  &.ampm-box {
+    .time-unit-trigger {
+      width: 78px;
+    }
+  }
+
+  &.is-open {
+    .time-unit-trigger {
+      border-color: var(--green-400);
+      box-shadow: 0 0 0 2px rgba(var(--green-400-rgb), 0.18);
+
+      .unit-caret {
+        color: var(--green-400);
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+.time-unit-trigger {
+  width: 68px;
+  height: 38px;
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--white);
+  border: 1px solid var(--text-faint);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--neutral-350);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  .unit-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    line-height: 1;
+    margin-left: 4px;
+  }
+
+  .unit-caret {
+    font-size: 9px;
+    color: var(--neutral-500);
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+}
+
+.unit-dropdown-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  max-height: 175px;
+  overflow-y: auto;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 0;
+  z-index: 1085;
+  box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.14);
+
+  /* Slim scrollbar matching screenshot */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-soft);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--text-faint);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--neutral-350);
+    }
+  }
+}
+
+.unit-option {
+  padding: 6px 8px;
+  margin: 1px 4px;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--neutral-850);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+  user-select: none;
+
+  &:hover {
+    background-color: var(--border);
+    color: var(--neutral-900);
+  }
+
+  &.selected {
+    background-color: var(--green-400) !important;
+    color: var(--white) !important;
+    font-weight: 600;
+  }
+}
+
+.time-colon {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--neutral-650);
+  line-height: 1;
+  user-select: none;
+}
+
+.time-divider {
+  margin: 14px 0 10px 0;
+  border: none;
+  border-top: 1px solid var(--bg-muted);
+}
+
+.time-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+}
+
+.footer-btn {
+  background: transparent;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+
+  &.now-btn {
+    color: var(--green-400);
+
+    &:hover {
+      background: var(--green-50);
+    }
+  }
+
+  &.clear-btn {
+    color: var(--neutral-500);
+
+    &:hover {
+      background: var(--bg-muted);
+      color: var(--text);
+    }
+  }
+
+  &.apply-btn {
+    color: var(--neutral-900);
+
+    &:hover {
+      background: var(--bg-muted);
+    }
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

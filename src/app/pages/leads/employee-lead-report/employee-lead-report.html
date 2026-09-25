@@ -1,0 +1,71 @@
+<main class="lead-report-page">
+
+  <!-- Page header -->
+  <header class="page-head">
+    <div>
+      <h1 class="page-title">Employee Lead Report</h1>
+      <nav class="breadcrumb-text" aria-label="Breadcrumb">
+        <i class="bi bi-bar-chart-line"></i>
+        <span class="crumb-muted">Reports</span>
+        <i class="bi bi-chevron-right"></i>
+        <span class="crumb-current">Employee Lead Report</span>
+      </nav>
+    </div>
+
+    <div class="lead-date-range">
+      <i class="bi bi-calendar3"></i>Date: {{ dateRangeLabel() }}
+    </div>
+  </header>
+
+  <!-- Filters -->
+  <section class="filters-card">
+    <div class="filter-field filter-search">
+      <label for="leadSearch">Name / Mobile / Employee Id</label>
+      <input
+        id="leadSearch"
+        class="lead-input"
+        type="text"
+        autocomplete="off"
+        placeholder="Enter Name / Mobile / Employee Id"
+        [(ngModel)]="search"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="filter-field">
+      <label for="leadFrom">From Date</label>
+<input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+    </div>
+
+    <div class="filter-field">
+      <label for="leadTo">To Date</label>
+<input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="btn-clear" (click)="onClear()">Clear</button>
+      <button type="button" class="btn-search" (click)="onSearch()">
+        <i class="bi bi-search"></i>Search
+      </button>
+    </div>
+  </section>
+
+  <!-- Table (paging, Columns and Export all come from the shared table) -->
+  <app-primedatatable
+    [columns]="columns"
+    [data]="rows()"
+    [rows]="10"
+    dataKey="id"
+    [showGlobalFilter]="false"
+    exportFileName="employee-lead-report"
+  >
+    <ng-template #cellTemplate let-row let-col="col">
+      @if (col.field === 'name') {
+        <span class="person-name">{{ row.name }}</span>
+      } @else {
+        <span class="lead-count" [class.zero]="!row[col.field]">{{ row[col.field] }}</span>
+      }
+    </ng-template>
+  </app-primedatatable>
+
+</main>

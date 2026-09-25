@@ -1,0 +1,194 @@
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class=" mb-1" style="font-size:1.7rem;">360° Continuous Feedback &amp; Peer Reviews</h1>
+    <nav class="d-flex align-items-center gap-2 text-muted" style="font-size:13px;">
+      <i class="bi bi-chat-square-quote fs-6"></i>
+      <span>Performance Management</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class=" text-dark">360° Feedback</span>
+    </nav>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="btn btn-outline-success" type="button">
+      <i class="bi bi-arrow-repeat"></i> New 360° Cycle
+    </button>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-xl-3">
+    <div class="fb-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--neutral-50);color:var(--green-550);"><i class="bi bi-arrow-repeat"></i></div>
+      <div>
+        <div class="label">Active Feedback Cycles</div>
+        <div class="value">3 Cycles</div>
+        <div class="sub">FY25-26 Annual Review Live</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="fb-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--warning-soft);color:var(--orange-500);"><i class="bi bi-hourglass-split"></i></div>
+      <div>
+        <div class="label">Pending Feedback Requests</div>
+        <div class="value">8 Requests</div>
+        <div class="sub">3 Due this week</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="fb-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--blue-50);color:var(--blue-600-2);"><i class="bi bi-star-fill"></i></div>
+      <div>
+        <div class="label">Avg 360° Feedback Rating</div>
+        <div class="value">4.2 <span style="font-size:13px;font-weight:600;color:var(--neutral-500);">/ 5.0</span></div>
+        <div class="sub">+0.3 vs last quarter</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="fb-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--green-50-2);color:var(--primary-dark);"><i class="bi bi-journal-check"></i></div>
+      <div>
+        <div class="label">Development Plans Created</div>
+        <div class="value">12 Plans</div>
+        <div class="sub">Connected to Goals &amp; OKRs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hub Tabs -->
+<div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+  <button role="tab" type="button" class="ln-stage-tab" [class.active]="activeTab === 'cycles'" (click)="setTab('cycles')" [attr.aria-selected]="activeTab === 'cycles'">
+    <i class="bi bi-arrow-repeat"></i> 1. Feedback Cycles
+  </button>
+  <button role="tab" type="button" class="ln-stage-tab" [class.active]="activeTab === 'give'" (click)="setTab('give')" [attr.aria-selected]="activeTab === 'give'">
+    <i class="bi bi-pencil-square"></i> 2. Give Feedback
+    <span class="page-tab-count" style="font-size:10px;font-weight:700;">
+      <i class="bi bi-shield-lock-fill"></i>HR / Manager / TL
+    </span>
+  </button>
+  <button role="tab" type="button" class="ln-stage-tab" [class.active]="activeTab === 'report'" (click)="setTab('report')" [attr.aria-selected]="activeTab === 'report'">
+    <i class="bi bi-person-badge"></i> 3. My Feedback Report
+  </button>
+</div>
+
+<!-- =========================================================
+     TAB 1: FEEDBACK CYCLES
+========================================================== -->
+<div *ngIf="activeTab === 'cycles'">
+  <div class="p-3 bg-light border rounded-3 mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <span class=" text-dark small"><i class="bi bi-funnel-fill text-success me-1"></i> Review Status Filter:</span>
+      <button type="button" class="btn btn-sm" [ngClass]="reviewStatusFilter === 'all' ? 'btn-dark' : 'btn-outline-dark'" (click)="setReviewStatusFilter('all')">
+        All Reviews ({{ statusCounts['all'] }})
+      </button>
+      <button type="button" class="btn btn-sm" [ngClass]="reviewStatusFilter === 'completed' ? 'btn-success' : 'btn-outline-success'" (click)="setReviewStatusFilter('completed')">
+        🟢 Finished / Completed ({{ statusCounts['completed'] }})
+      </button>
+      <button type="button" class="btn btn-sm" [ngClass]="reviewStatusFilter === 'in_progress' ? 'btn-warning' : 'btn-outline-warning'" (click)="setReviewStatusFilter('in_progress')">
+        🟡 Active / In-Progress ({{ statusCounts['in_progress'] }})
+      </button>
+      <button type="button" class="btn btn-sm" [ngClass]="reviewStatusFilter === 'pending' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="setReviewStatusFilter('pending')">
+        ⚪ Pending ({{ statusCounts['pending'] }})
+      </button>
+    </div>
+    <select class="form-select form-select-sm" style="width:160px;" [(ngModel)]="deptFilter">
+      <option value="all">All Departments</option>
+      <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+    </select>
+  </div>
+
+  <app-primedatatable
+    [columns]="columns"
+    [data]="filteredCycleRows"
+    [rows]="10"
+    [paginator]="true"
+    [dataKey]="'id'"
+    [searchPlaceholder]="'Search employee...'"
+    [exportFileName]="'360-feedback-cycles-report'"
+    [rowActions]="rowActions"
+    (actionClick)="onTableAction($event)"
+  >
+    <ng-template #cellTemplate let-row let-col="col">
+      <ng-container [ngSwitch]="col.field">
+
+        <ng-container *ngSwitchCase="'employee'">
+          <div class="d-flex align-items-center gap-2">
+            <img *ngIf="row.avatar" [src]="'./assets/img/' + row.avatar + '.jpg'" class="fb-avatar" [alt]="row.employeeName" />
+            <div *ngIf="!row.avatar" class="fb-avatar-initials" [style.background]="row.initialsBg" [style.color]="row.initialsColor">{{ row.initials }}</div>
+            <div>
+              <div class=" text-dark">{{ row.employeeName }}</div>
+              <div class="text-muted" style="font-size:11px;">{{ row.employeeRole }}</div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'dept'">
+          <span class="badge bg-light text-dark border">{{ row.dept }}</span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'mgrScore'">
+          <span class="" [class.text-success]="row.mgrScore !== null" [class.text-secondary]="row.mgrScore === null">{{ row.mgrScore ?? '--' }}</span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'tlScore'">
+          <span class="" [class.text-primary]="row.tlScore !== null" [class.text-secondary]="row.tlScore === null">{{ row.tlScore ?? '--' }}</span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'hrScore'">
+          <span class="" [class.text-dark]="row.hrScore !== null" [class.text-secondary]="row.hrScore === null">{{ row.hrScore ?? '--' }}</span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'overall'">
+          <span class="score-chip" [ngClass]="row.chipClass">
+            <i class="bi bi-star-fill text-warning me-1"></i>{{ row.overall ?? 'Pending' }}
+            <span *ngIf="row.overall !== null" class="text-muted fw-normal ms-1" style="font-size:10.5px;">/ 5.0</span>
+          </span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'status'">
+          <span class="status-capsule" [ngClass]="row.statusClass">{{ row.statusLabel }}</span>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>{{ row[col.field] }}</ng-container>
+      </ng-container>
+    </ng-template>
+  </app-primedatatable>
+</div>
+
+<!-- =========================================================
+     TAB 2: GIVE FEEDBACK
+     (Simplified — the source PHP has a large inline reviewer form here;
+     this reuses the shared modal used elsewhere in the app instead.)
+========================================================== -->
+<div *ngIf="activeTab === 'give'" class="card-custom p-4 text-center">
+  <i class="bi bi-pencil-square" style="font-size:32px;color:var(--green-400);"></i>
+  <h5 class=" mt-2 mb-1">Submit Peer Feedback & Recognition</h5>
+  <p class="text-muted mb-3" style="font-size:13px;">Restricted to HR, Manager, and Team Lead roles.</p>
+  <button class="btn btn-success mx-auto" type="button" style="width:fit-content;" (click)="openGiveModal()">
+    <i class="bi bi-star"></i> Give Feedback / Kudos
+  </button>
+</div>
+
+<!-- =========================================================
+     TAB 3: MY FEEDBACK REPORT
+     (Simplified placeholder — the source PHP tab is a large,
+     separate report view; not yet ported.)
+========================================================== -->
+<div *ngIf="activeTab === 'report'" class="card-custom p-4 text-center text-muted">
+  <i class="bi bi-person-badge" style="font-size:32px;"></i>
+  <h5 class=" mt-2 mb-1 text-dark">My Feedback Report</h5>
+  <p style="font-size:13px;">This section (score breakdown, development plan, manager/TL/HR commentary) hasn't been converted yet — let me know if you want it built out next.</p>
+</div>
+
+<app-reuse-modal
+  #giveModal
+  [fields]="giveFields"
+  title="Submit Peer Feedback & Recognition"
+  saveLabel="Submit Feedback"
+  submitIcon="bi bi-check2-circle"
+  (saved)="onGiveSaved($event)"
+></app-reuse-modal>

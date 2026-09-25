@@ -1,0 +1,178 @@
+<div class="modal fade master-modal" tabindex="-1" #masterModal aria-hidden="true">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <!-- =====================================================
+           HEADER
+      ====================================================== -->
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          {{ getTitle() }}
+        </h5>
+
+
+        <button type="button" class="btn-close-custom" (click)="close()" aria-label="Close">
+
+          <i class="ti ti-x"></i>
+
+        </button>
+
+      </div>
+
+
+      <!-- =====================================================
+           BODY
+      ====================================================== -->
+
+      <div class="modal-body">
+
+        <form [formGroup]="masterForm">
+
+
+          <!-- =================================================
+               DYNAMIC FIELDS
+          ================================================== -->
+
+          @for (
+          field of currentFields;
+          track field.name;
+          let i = $index
+          ) {
+
+          <div class="form-field" [style.--field-index]="i">
+
+
+            <!-- LABEL -->
+
+            <label class="form-label" [for]="field.name">
+
+              {{ field.label }}
+
+            </label>
+
+
+            <!-- =================================================
+                   FIELD TYPE
+              ================================================== -->
+
+            @switch (field.type) {
+
+
+            <!-- =================================================
+                     TEXT
+                ================================================== -->
+
+            @case ('text') {
+
+            <input class="form-control master-input" [id]="field.name" type="text" [formControlName]="field.name"
+              [placeholder]="field.placeholder || ''" [attr.maxlength]="field.maxlength || null" autocomplete="off">
+
+            }
+
+
+            <!-- =================================================
+                     NUMBER
+                ================================================== -->
+
+            @case ('number') {
+
+            <input class="form-control master-input" [id]="field.name" type="number" [formControlName]="field.name"
+              [placeholder]="field.placeholder || ''" [attr.min]="field.min ?? null" autocomplete="off">
+
+            }
+
+
+            <!-- =================================================
+                     PRIME SELECT
+                ================================================== -->
+
+            @case ('select') {
+
+            <p-select [formControlName]="field.name" [options]="field.options || []" optionLabel="label"
+              optionValue="value" [filter]="field.filter ?? false" filterBy="label" [showClear]="true"
+              [resetFilterOnHide]="true" appendTo="body" styleClass="master-select w-100"
+              [placeholder]="field.placeholder || 'Select'">
+
+            </p-select>
+
+            }
+
+            }
+
+          </div>
+
+          }
+
+
+          <!-- =================================================
+               STATUS
+          ================================================== -->
+
+          <div class="form-field status-field" [style.--field-index]="currentFields.length">
+
+            <label class="form-label" for="status">
+
+              Status
+
+            </label>
+
+
+            <p-select inputId="status" formControlName="status" [options]="statusOptions" optionLabel="label"
+              optionValue="value" appendTo="body" styleClass="master-select w-100" placeholder="Select status"
+              [filter]="true" filterBy="label" [showClear]="true" [resetFilterOnHide]="true">
+
+            </p-select>
+
+          </div>
+
+
+        </form>
+
+      </div>
+
+
+      <!-- =====================================================
+           FOOTER
+      ====================================================== -->
+
+      <div class="modal-footer">
+
+
+        <!-- CANCEL -->
+
+        <button type="button" class="btn btn-cancel" (click)="close()">
+
+          <i class="ti ti-refresh"></i>
+
+          <span>
+            Cancel
+          </span>
+
+        </button>
+
+
+        <!-- SAVE / UPDATE -->
+
+        <button type="button" class="btn btn-save" (click)="save()">
+
+          <i class="ti ti-device-floppy"></i>
+
+          <span>
+            {{ modalType === 'add' ? 'Save' : 'Update' }}
+          </span>
+
+        </button>
+
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>

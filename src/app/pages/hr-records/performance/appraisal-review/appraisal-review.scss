@@ -1,0 +1,265 @@
+/* ==========================================================================
+   Two-Tier Portal Architecture (Employee Portal vs Admin/Reviewer Portal)
+   ========================================================================== */
+
+.portal-switcher-wrapper {
+  margin-bottom: 24px;
+  display: flex;
+}
+
+.portal-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+}
+
+.portal-pill-badge {
+
+  .portal-tab-btn.active & {
+    background: rgba(var(--white-rgb), 0.25);
+    color: var(--white);
+  }
+}
+
+/* 5-Step Pipeline Card */
+.journey-stepper-card {
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+}
+
+.journey-stepper-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--bg-muted);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.journey-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow-x: auto;
+  padding: 8px 4px 10px 4px;
+  gap: 8px;
+}
+
+.journey-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 135px;
+  position: relative;
+  z-index: 1;
+  padding: 8px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+
+  &:hover {
+    background: var(--green-50-3);
+    transform: translateY(-2px);
+  }
+
+  &.selected-step {
+    background: var(--green-50);
+    border-color: var(--green-150);
+    box-shadow: 0 4px 12px rgba(var(--green-550-rgb), 0.12);
+
+    .journey-step-title {
+      color: var(--green-550) !important;
+      font-weight: 800 !important;
+    }
+  }
+
+  &.active .journey-step-bubble {
+    background: var(--green-550) !important;
+    color: var(--white) !important;
+    border-color: var(--green-550) !important;
+    box-shadow: 0 0 0 5px rgba(var(--green-550-rgb), 0.25) !important;
+  }
+
+  &.completed-pass .journey-step-bubble {
+    background: var(--primary-soft) !important;
+    color: var(--green-550) !important;
+    border-color: var(--green-150) !important;
+  }
+}
+
+.journey-step-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-muted);
+  color: var(--neutral-650);
+  border: 2px solid var(--text-faint);
+  margin-bottom: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.06);
+
+  svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+}
+
+.journey-step-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+  white-space: normal;
+  max-width: 125px;
+}
+
+.journey-step-subtitle {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--neutral-500);
+  margin-top: 2px;
+}
+
+.journey-connector {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  margin-top: -28px;
+  min-width: 16px;
+  position: relative;
+
+  &.active {
+    background: var(--green-150);
+  }
+}
+
+/* Content Cards */
+.content-hub-card {
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.content-hub-header {
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.form-section-head {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--neutral-850);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--bg-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Admin Sub-Tabs Navigation */
+.admin-subnav-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.admin-subtab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+
+}
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 11.5px;
+}
+
+.score-high {
+  background: var(--primary-soft);
+  color: var(--green-650-2);
+  border: 1px solid var(--green-100-3);
+}
+
+.score-mid {
+  background: var(--yellow-50-6);
+  color: var(--orange-600);
+  border: 1px solid var(--yellow-50-3);
+}
+
+/* =========================================================
+   Custom modal shell — used for the Scorecard modal, which is
+   toggled by component state (`scorecardModalOpen`) rather than
+   the Bootstrap JS modal API, since its content is fully data-driven.
+========================================================= */
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(var(--black-rgb), 0.5);
+  z-index: 1050;
+}
+
+.modal-shell-custom {
+  position: fixed;
+  inset: 0;
+  z-index: 1055;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+
+  .modal-content {
+    background: var(--white);
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}

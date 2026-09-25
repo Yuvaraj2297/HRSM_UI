@@ -1,0 +1,105 @@
+<!-- ===== Title & Action Bar ===== -->
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class="font-display  mb-1" style="font-size:1.7rem;">{{ header.title }}</h1>
+    <nav class="d-flex align-items-center gap-2 text-neutral" style="font-size:13px;">
+      <i class="bi bi-person-check fs-6 text-success"></i>
+      <span>Onboarding</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class=" text-dark">Joining Pipeline</span>
+    </nav>
+  </div>
+  <div class="d-flex gap-2">
+    <a routerLink="/onboarding/tasks" class="btn btn-outline-success">
+      <i class="bi bi-check2-square me-1"></i> Task Checklists
+    </a>
+  </div>
+</div>
+
+<!-- ===== KPI Metric Cards ===== -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-xl-3" *ngFor="let k of kpiCards">
+    <div class="onb-kpi d-flex align-items-center gap-3">
+      <div class="icon" [style.background]="k.bg" [style.color]="k.color">
+        <i [class]="k.icon"></i>
+      </div>
+      <div>
+        <div class="label">{{ k.label }}</div>
+        <div class="value">{{ k.value }}</div>
+        <div class="sub">{{ k.sub }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Filter Tabs ===== -->
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <button role="tab" *ngFor="let t of tabs" type="button" class="ln-stage-tab" [class.active]="activeTab === t.key"
+      (click)="setTab(t.key)" [attr.aria-selected]="activeTab === t.key">
+      {{ t.label }} <span class="page-tab-count">{{ tabCount(t.key) }}</span>
+    </button>
+  </div>
+</div>
+
+<!-- ===== PrimeDataTable: candidates for the active tab ===== -->
+<app-primedatatable [modalHeader]="header" [columns]="columns" [data]="tableData"
+  [searchPlaceholder]="searchPlaceholder"
+ (addClicked)="openAddModal()"
+  (actionClick)="onTableAction($event)">
+</app-primedatatable>
+
+
+<!-- =========================================================
+     MODAL 2: View Candidate Details
+========================================================== -->
+<ng-container *ngIf="showViewModal && selectedCandidate as c">
+  <div class="modal-backdrop-custom" (click)="closeViewModal()"></div>
+
+  <div class="modal-shell-custom">
+    <div class="modal-dialog modal-lg modal-dialog-centered m-0 candidate-modal-dialog">
+      <div class="modal-content border-0 shadow-lg candidate-modal-content">
+
+        <div class="modal-header border-0 pb-0 candidate-modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0 text-white  onb-primary-bg"
+              style="width:48px;height:48px;font-size:20px;">
+              {{ initials(c) }}
+            </div>
+            <div>
+              <h4 class="modal-title  text-dark mb-0">{{ c.firstName }} {{ c.lastName }}</h4>
+              <div class="text-muted" style="font-size:13px;">{{ c.dept }} • {{ c.source }}</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeViewModal()"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <div class="candidate-info-card candidate-contact-card">
+            <h6 class=" text-dark mb-2"><i class="bi bi-person-lines-fill text-success me-1"></i> Contact &amp; Email Information</h6>
+            <div class="row g-2 text-dark" style="font-size:13px;">
+              <div class="col-md-6"><strong>Personal Email:</strong> {{ c.email }}</div>
+              <div class="col-md-6"><strong>Official Email:</strong> <span class="text-success ">{{ c.officialEmail || '-' }}</span></div>
+              <div class="col-md-6"><strong>Phone Number:</strong> {{ c.phone }}</div>
+              <div class="col-md-6"><strong>Source of Hire:</strong> <span class="badge bg-light text-dark border">{{ c.source }}</span></div>
+            </div>
+          </div>
+
+          <div class="candidate-info-card candidate-id-card">
+            <h6 class=" text-dark mb-2"><i class="bi bi-card-heading text-primary me-1"></i> Statutory &amp; Government Identification Numbers</h6>
+            <div class="row g-2 text-dark" style="font-size:13px;">
+              <div class="col-md-4"><strong>PAN Card Number:</strong><br><span class="pan-badge">{{ c.pan }}</span></div>
+              <div class="col-md-4"><strong>Aadhaar Card Number:</strong><br><span class="" style="font-family:var(--font-family-mono);">{{ c.aadhaar }}</span></div>
+              <div class="col-md-4"><strong>UAN Number:</strong><br><span class="" style="font-family:var(--font-family-mono);">{{ c.uan }}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-light" (click)="closeViewModal()">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-container>

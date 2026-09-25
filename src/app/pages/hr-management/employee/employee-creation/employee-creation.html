@@ -1,0 +1,165 @@
+<!-- ===== Page header ===== -->
+
+
+<div class="d-flex  justify-content-between w-100">
+
+  <!-- Left: Breadcrumb -->
+  <div>
+    <app-breadcrumb></app-breadcrumb>
+  </div>
+
+  <!-- Right: Buttons -->
+  <div class="d-flex align-items-start gap-2">
+
+    <a href="assets/excel/HRMS Title Data.xlsx" download class="btn btn-outline-primary  btn-sm px-3">
+      <i class="bi bi-download me-1"></i>
+      Sample Excel
+    </a>
+
+    <button type="button" class="btn btn-primary  btn-sm px-3" (click)="add()">
+      <i class="bi bi-upload"></i>
+      Bulk Upload
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ===== Tab bar ===== -->
+<div role="tablist" class="ne-tabs">
+  <button role="tab" type="button"
+    *ngFor="let t of tabs"
+    class="ne-tab"
+    [class.active]="current === t.step"
+    [class.completed]="t.step < current"
+    (click)="goToStep(t.step)" [attr.aria-selected]="current === t.step">
+    <i [class]="t.icon"></i> {{ t.label }}
+  </button>
+</div>
+
+<!-- ===== Wizard card ===== -->
+<div class="card-custom">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+    @switch (current) {
+      @case (1) { <app-profile-tab /> }
+     @case (2) { <app-permission-tab /> }
+     @case (3) { <app-family-tab /> }
+       @case (4) { <app-education-tab /> }
+      @case (5) { <app-experience-tab /> }
+      @case (6) { <app-bank-tab /> }
+    @case (7) { <app-kyc-tab /> }
+       @case (8) { <app-relieving-tab /> }
+       @case (9) { <app-ctc-report-tab /> }
+     @case (10) { <app-document-tab /> }
+      @case (11) { <app-leave-tab /> }
+      @case (12) { <app-ot-approval-tab /> }
+       @case (13) { <app-leave-rules-tab /> }
+      @case (14) { <app-review-tab /> } 
+    }
+
+    <!-- ===== Footer navigation ===== -->
+    <div class="ne-footer-nav">
+      <a routerLink="/employees" class="btn btn-reject ne-spacer">Cancel</a>
+
+      <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="current === 1" (click)="prev()">
+        <i class="bi bi-arrow-left"></i> Back
+      </button>
+
+      <button *ngIf="!isLast" type="button" class="btn btn-primary btn-sm" (click)="next()">
+        Save &amp; Continue <i class="bi bi-arrow-right"></i>
+      </button>
+
+      <button *ngIf="isLast" type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg"></i> Create Employee
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- ===== Verification & Approval Status ===== -->
+<div class="card-custom ne-va-card">
+  <div class="ne-va-head">
+    <div>
+      <h5><i class="bi bi-patch-check"></i> Verification &amp; Approval Status</h5>
+      <p>Track this employee record through verification and approval before it goes live.</p>
+    </div>
+    <span class="ne-va-badge" [ngClass]="'status-' + vaStatus">
+      <span class="dot"></span>
+      <span>{{ vaStatus | titlecase }}</span>
+    </span>
+  </div>
+
+  <div class="ne-va-info">
+    <div class="ne-va-info-item">
+      <div class="k"><i class="bi bi-person-badge"></i> Assigned Verifier</div>
+      <div class="v">Gharuda Tester</div>
+    </div>
+    <div class="ne-va-info-item">
+      <div class="k"><i class="bi bi-check2-circle"></i> Verified By</div>
+      <div class="v muted">Not yet verified</div>
+      <div class="r">Remarks: —</div>
+    </div>
+    <div class="ne-va-info-item">
+      <div class="k"><i class="bi bi-person-check"></i> Assigned Approver</div>
+      <div class="v link">Gharuda Software</div>
+    </div>
+    <div class="ne-va-info-item">
+      <div class="k"><i class="bi bi-patch-check-fill"></i> Approved By</div>
+      <div class="v muted">Not yet approved</div>
+      <div class="r">Remarks: —</div>
+    </div>
+    <div class="ne-va-info-item">
+      <div class="k"><i class="bi bi-x-octagon"></i> Rejected By</div>
+      <div class="v muted">Not yet rejected</div>
+      <div class="r">Remarks: —</div>
+    </div>
+  </div>
+
+  <div class="ne-va-stepper">
+    <div class="ne-va-track" [class.is-rejected]="vaStatus === 'rejected'" [style.--ne-va-progress]="vaProgress"></div>
+
+    <div class="ne-va-step" [ngClass]="vaStepClass('pending')">
+      <div class="ne-va-step-circle">1</div>
+      <div class="ne-va-step-label">Pending</div>
+    </div>
+    <div class="ne-va-step" [ngClass]="vaStepClass('verified')">
+      <div class="ne-va-step-circle">2</div>
+      <div class="ne-va-step-label">Verified</div>
+    </div>
+    <div class="ne-va-step" [ngClass]="vaStepClass('approved')">
+      <div class="ne-va-step-circle">3</div>
+      <div class="ne-va-step-label">Approved</div>
+    </div>
+    <div class="ne-va-step" [ngClass]="vaStepClass('rejected')">
+      <div class="ne-va-step-circle"><i class="bi bi-x-lg"></i></div>
+      <div class="ne-va-step-label">Rejected</div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" #Offcanvas>
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title"><i class="bi bi-people me-2" style="color:var(--primary);"></i> Add Employees</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="employee-bulk-panel show">
+            <div class="employee-bulk-dropzone">
+                <div class="mode-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+                <h6>Upload employee spreadsheet</h6>
+                <p>Drop your Excel or CSV file here, or <span class="browse-link">browse</span>.</p>
+                <div class="text-muted" style="font-size:11px;">Supports .xlsx, .xls, .csv</div>
+            </div>
+            <div class="employee-upload-file"><i class="bi bi-file-earmark-excel"></i><span id="employeeUploadFileName"></span></div>
+            <div class="employee-upload-count"><span><i class="bi bi-people me-1"></i> Employees found</span><strong>24</strong></div>
+        </div>
+        <input type="file"  accept=".xlsx,.xls,.csv" hidden>
+    </div>
+    <div class="offcanvas-footer p-3 border-top d-flex justify-content-end">
+        <button type="button" class="btn btn-reject">Cancel</button>
+        <button type="button" class="btn btn-primary ms-2" disabled><i class="bi bi-check-lg"></i> Confirm Upload</button>
+    </div>
+</div>

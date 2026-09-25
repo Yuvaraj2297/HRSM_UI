@@ -1,0 +1,63 @@
+<div class="side">
+
+  <div class="side-head">
+    <span class="logo" [class.is-text]="!brand().logoIcon">
+      @if (brand().logoIcon) { <i [class]="brand().logoIcon"></i> } @else { {{ brand().logoText }} }
+    </span>
+    <span>
+      <span class="org">{{ brand().name }}</span>
+      @if (brand().subtitle) { <span class="org-sub">{{ brand().subtitle }}</span> }
+    </span>
+  </div>
+
+  <div class="search-row">
+    <div class="search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search contacts..." aria-label="Search contacts" [value]="search()"
+        (input)="onSearch($event)">
+    </div>
+    <p-select [options]="replyFilters" [ngModel]="replyFilter()" (ngModelChange)="replyFilter.set($event)"
+      optionLabel="label" optionValue="value" ariaLabel="Reply status" appendTo="body" styleClass="reply-select" />
+  </div>
+
+  <div class="page-tabs page-tabs-sm" role="tablist" aria-label="Contact type">
+    @for (t of tabs(); track t.key) {
+    <button type="button" role="tab" class="page-tab" [class.active]="tab() === t.key" [attr.aria-selected]="tab() === t.key"
+      (click)="tab.set(t.key)">
+      <i [class]="t.icon"></i>{{ t.label }}
+      <span class="page-tab-count" [class.has-unread]="unreadTabs()[t.key]">{{ counts()[t.key] }}</span>
+    </button>
+    }
+  </div>
+
+  <div class="list" role="listbox" aria-label="Contacts">
+    @if (loading() && !contacts().length) {
+    <div class="empty"><span class="spinner-border spinner-border-sm"></span> Loading chats...</div>
+    }
+
+    @for (c of visible(); track c.id) {
+    <button type="button" role="option" class="contact" [class.active]="activeId() === c.id"
+      [attr.aria-selected]="activeId() === c.id" (click)="select.emit(c.id)">
+      <span class="avatar" [class.off]="!c.online" [style.background]="c.color">{{ initials(c.name) }}</span>
+
+      <span class="info">
+        <span class="name">{{ c.name }} <span class="chip {{ chip[c.type].cls }}">{{ chip[c.type].label }}</span></span>
+        <span class="phone">{{ c.phone }}</span>
+      </span>
+
+      <span class="meta">
+        <span class="time" [class.unread]="c.unread">{{ when(c) }}</span>
+        @if (c.unread) { <span class="badge">{{ c.unread }}</span> }
+      </span>
+    </button>
+    } @empty {
+    @if (!loading()) {
+    <div class="empty">
+      <i class="bi bi-person-x"></i>
+      <div>No contacts found.</div>
+    </div>
+    }
+    }
+  </div>
+
+</div>

@@ -1,0 +1,265 @@
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+
+    <!-- =======================================================
+       TITLE
+  ======================================================== -->
+
+    <div>
+
+        <h1 class="font-display  mb-1" style="font-size: 1.7rem;">
+            Document Verification &amp; KYC Portal
+        </h1>
+
+
+        <!-- Breadcrumb -->
+
+        <nav class="d-flex align-items-center gap-2 text-neutral" style="font-size: 13px;" aria-label="Breadcrumb">
+
+            <i class="bi bi-person-check fs-6"></i>
+
+            <span>
+                Onboarding
+            </span>
+
+            <i class="bi bi-chevron-right"></i>
+
+            <span class=" text-dark">
+                Document Verification
+            </span>
+
+        </nav>
+
+    </div>
+
+
+    <!-- =======================================================
+       HEADER ACTIONS
+  ======================================================== -->
+
+    <div class="d-flex gap-2">
+
+        <!-- Send Reminders -->
+
+        <button type="button" class="btn btn-outline-secondary" (click)="sendReminders()">
+
+            <i class="bi bi-envelope-arrow-up"></i>
+
+            Send Reminders
+
+        </button>
+
+
+        <!-- Upload Documents -->
+
+        <button type="button" class="btn btn-primary" (click)="openCreateModal()" style="
+        background: var(--primary, var(--green-550));
+        border-color: var(--primary, var(--green-550));
+      ">
+
+            <i class="bi bi-file-earmark-plus"></i>
+
+            Upload &amp; Submit Documents
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     STATS BAR
+========================================================= -->
+
+<div class="row g-3 mb-3">
+
+
+    <!-- =======================================================
+       TOTAL UPLOADED
+  ======================================================== -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card card-custom p-3">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <div>
+
+                    <span class="text-muted fw-semibold small">
+                        Total Uploaded
+                    </span>
+
+                    <h3 class=" mb-0 mt-1 text-dark">
+                        {{ stats.totalUploaded }}
+                    </h3>
+
+                </div>
+
+
+                <div class="rounded-3 p-3" style="
+            background: var(--primary-soft);
+            color: var(--primary, var(--green-550)) !important;
+          ">
+
+                    <i class="bi bi-folder-check fs-4"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =======================================================
+       VERIFIED
+  ======================================================== -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card card-custom p-3">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <div>
+
+                    <span class="text-muted fw-semibold small">
+                        Verified &amp; Approved
+                    </span>
+
+                    <h3 class=" mb-0 mt-1 text-success">
+                        {{ stats.verified }}
+                    </h3>
+
+                </div>
+
+
+                <div class="rounded-3 p-3 bg-success bg-opacity-10 text-success">
+
+                    <i class="bi bi-shield-check fs-4"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =======================================================
+       PENDING
+  ======================================================== -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card card-custom p-3">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <div>
+
+                    <span class="text-muted fw-semibold small">
+                        Pending HR Review
+                    </span>
+
+                    <h3 class=" mb-0 mt-1 text-warning">
+                        {{ stats.pendingReview }}
+                    </h3>
+
+                </div>
+
+
+                <div class="rounded-3 p-3 bg-warning bg-opacity-10 text-warning">
+
+                    <i class="bi bi-hourglass-split fs-4"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =======================================================
+       RESUBMISSION
+  ======================================================== -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card card-custom p-3">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <div>
+
+                    <span class="text-muted fw-semibold small">
+                        Resubmission Needed
+                    </span>
+
+                    <h3 class=" mb-0 mt-1 text-danger">
+                        {{ stats.resubmissionNeeded }}
+                    </h3>
+
+                </div>
+
+
+                <div class="rounded-3 p-3 bg-danger bg-opacity-10 text-danger">
+
+                    <i class="bi bi-exclamation-triangle fs-4"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     CATEGORY QUICK FILTER BAR
+========================================================= -->
+
+<div class="d-flex align-items-center gap-2 overflow-auto pb-2 mb-3">
+
+    <span *ngFor="let cat of categories" class="category-pill" [class.active]="activeCategory === cat.value"
+        (click)="selectCategory(cat.value)">
+
+        <i class="bi me-1" [ngClass]="cat.icon"></i>
+
+        {{ cat.label }}
+
+        <ng-container *ngIf="cat.count">
+            ({{ cat.count }})
+        </ng-container>
+
+    </span>
+
+</div>
+
+
+
+<!-- =========================================================
+     DOCUMENT TABLE
+========================================================= -->
+
+<app-primedatatable  [columns]="columns" [data]="tableData"
+    [searchPlaceholder]="searchPlaceholder" [Accessactions]="tableActions" (addClicked)="openCreateModal()"
+    (actionClick)="onTableAction($event)">
+</app-primedatatable>

@@ -1,0 +1,150 @@
+<div class="lead-map-page">
+
+  <!-- =========================================================
+       TOP BAR — title + date filter
+  ========================================================== -->
+  <div class="card-custom topbar-card mb-3">
+
+    <div class="topbar-heading">
+      <div class="icon-chip"><i class="bi bi-pin-map-fill"></i></div>
+      <div>
+        <h1 class="topbar-title">Lead Map</h1>
+        <div class="topbar-sub">Details For : <strong>{{ displayDate() }}</strong></div>
+      </div>
+    </div>
+
+    <form class="topbar-filter" (submit)="$event.preventDefault(); search()">
+      <div class="topbar-date">
+        <label for="filter_date" class="visually-hidden">Map View date</label>
+        <i class="bi bi-calendar3"></i>
+       <input type="text" class="form-control form-control-sm" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-sm px-3" [disabled]="loading()">
+        <i class="bi bi-search"></i> Search
+      </button>
+      <button type="button" class="btn btn-cancel btn-sm px-3" [disabled]="loading()" (click)="reset()">
+        <i class="bi bi-arrow-counterclockwise"></i> Reset
+      </button>
+    </form>
+
+  </div>
+
+  <!-- =========================================================
+       ERROR
+  ========================================================== -->
+  @if (error()) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+    <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Retry</button>
+  </div>
+  }
+
+  <!-- =========================================================
+       SUMMARY
+  ========================================================== -->
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="stat-tile card-custom">
+        <div class="icon-chip"><i class="bi bi-people-fill"></i></div>
+        <div>
+          <div class="stat-tile-value">{{ summary().total }}</div>
+          <div class="stat-tile-label">Field Users</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-tile card-custom">
+        <div class="icon-chip"><i class="bi bi-broadcast"></i></div>
+        <div>
+          <div class="stat-tile-value">{{ summary().online }}</div>
+          <div class="stat-tile-label">Online Now</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-tile card-custom">
+        <div class="icon-chip"><i class="bi bi-geo-alt-fill"></i></div>
+        <div>
+          <div class="stat-tile-value">{{ summary().visits }}</div>
+          <div class="stat-tile-label">Total Visits</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-tile card-custom">
+        <div class="icon-chip"><i class="bi bi-signpost-2-fill"></i></div>
+        <div>
+          <div class="stat-tile-value">{{ summary().kms }} <small>km</small></div>
+          <div class="stat-tile-label">Distance Travelled</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       USERS TABLE
+  ========================================================== -->
+  <app-primedatatable [modalHeader]="header()" [columns]="columns" [data]="rows()" [loading]="loading()"
+    [inlineToolbar]="true" searchPlaceholder="Search users..." exportFileName="lead-map"
+    (actionClick)="onTableAction($event)">
+
+    <ng-template #cellTemplate let-row let-col="col">
+      @switch (col.field) {
+
+      @case ('visits') {
+      <button type="button" class="btn btn-primary btn-sm lm-visit-btn" title="View route"
+        (click)="$event.stopPropagation(); viewOnMap(row.id)">
+        {{ row.visits }}
+      </button>
+      }
+
+      @case ('battery') {
+      <span class="lm-battery" [ngClass]="'is-' + batteryLevel(row.battery)">
+        <i class="bi" [ngClass]="batteryIcon(row.battery)"></i> {{ row.battery }} %
+      </span>
+      }
+
+      @case ('online') {
+      <span class="lm-status">
+        <span class="status-dot" [class.online]="row.online"></span>
+        {{ row.online ? 'Online' : 'Offline' }}
+      </span>
+      }
+
+      }
+    </ng-template>
+
+  </app-primedatatable>
+
+  <!-- =========================================================
+       MAP + TIMELINE
+  ========================================================== -->
+  <div #mapSection class="card-custom p-3 mt-3 lm-map-section">
+
+    <div class="lm-map-title">
+      <i class="bi bi-pin-map-fill"></i>
+      Map View For -
+      @if (selectedUser(); as user) {
+      <strong>{{ user.name }}</strong> <span class="sep">|</span> {{ user.id }}
+      } @else {
+      <span>--</span>
+      }
+      <span class="sep">|</span> {{ displayDate() }}
+    </div>
+
+    <div class="row g-3">
+      <div class="col-lg-8 col-12">
+        <app-lead-route-map [activities]="activities()" [activeIndex]="activeIndex()"
+          (activitySelect)="onActivitySelect($event)" />
+      </div>
+
+      <div class="col-lg-4 col-12">
+        <app-lead-timeline [activities]="activities()" [activeIndex]="activeIndex()" [loading]="loading()"
+          (activitySelect)="onActivitySelect($event)" />
+      </div>
+    </div>
+
+  </div>
+
+</div>

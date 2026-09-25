@@ -1,0 +1,664 @@
+<!-- Breadcrumb -->
+<!-- <app-breadcrumb title="View Leave" parent="Leave Management" icon="bi bi-calendar-check">
+  <div breadcrumb-actions class="d-flex align-items-center gap-2">
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="openPermissionModal()">
+      <i class="bi bi-clock-history"></i> Apply Permission
+    </button>
+  </div>
+</app-breadcrumb> -->
+
+<main class="view-leave-page">
+  <!-- View Leave Header -->
+  <div class="view-leave-header">
+    <!-- Month / Year Navigator -->
+    <div class="month-nav">
+      <button type="button" class="month-arrow previews" (click)="prevYear()" aria-label="Previous year">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div>
+        <input type="text" class="date-input form-control" style="min-width: 280px;" [value]="currentYearRange" readonly />
+      </div>
+      <button type="button" class="month-arrow next" (click)="nextYear()" aria-label="Next year">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Actions -->
+    <div class="view-leave-actions">
+      <button type="button" class="btn-add-holiday" (click)="openAssignLeave()">
+        <i class="bi bi-person-plus"></i>
+        Assign Leave
+      </button>
+      <button type="button" class="btn-add-holiday" (click)="openAddHoliday()">
+        <i class="bi bi-calendar-heart"></i>
+        Add Holiday
+      </button>
+      <button type="button" class="btn btn-primary" (click)="openApplyLeaveModal()">
+        <i class="bi bi-plus-lg"></i>
+        Apply Leave
+      </button>
+    </div>
+  </div>
+
+  <!-- Leave Balance Cards -->
+  <section class="leave-balance-section">
+    <div class="leave-balance-scroll">
+      @for (card of leaveBalances; track card.type) {
+      <div class="leave-balance-card" (click)="openApplyLeaveModal(card.type)" [title]="'Click to apply ' + card.type">
+        <div class="card-title">{{ card.type }}</div>
+        <div class="card-icon" [ngClass]="card.iconClass">
+          <i [class]="card.icon"></i>
+        </div>
+        <div class="balance-row">
+          <span class="label">Available</span>
+          <span class="value">: {{ card.available }}</span>
+        </div>
+        <div class="balance-row">
+          <span class="label">Booked</span>
+          <span class="value">: {{ card.booked }}</span>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <!-- Leave & Holidays List Section -->
+  <section class="leave-holidays-section">
+    <div class="leave-holidays-head">
+      <div class="leave-holidays-heading">
+        <div class="leave-holidays-heading-copy" style="min-width: 280px;">
+          <p-select [options]="categoryOptions" [(ngModel)]="selectedCategory" optionLabel="label" optionValue="value"
+            appendTo="body" styleClass="w-100 leave-filter-pselect"></p-select>
+        </div>
+      </div>
+
+      <!-- Tab Switch -->
+      <div role="tablist" class="page-tabs page-tabs-sm">
+        <button role="tab" type="button" class="page-tab" [class.active]="activeTab === 'upcoming'" (click)="activeTab = 'upcoming'" [attr.aria-selected]="activeTab === 'upcoming'">
+          Upcoming <span class="page-tab-count">{{ upcomingCount }}</span>
+        </button>
+        <button role="tab" type="button" class="page-tab" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'" [attr.aria-selected]="activeTab === 'history'">
+          History <span class="page-tab-count">{{ historyCount }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Items List -->
+    <div class="leave-holidays-list">
+      <!-- 1. Assigned Leaves (only in upcoming when not filtering out leaves) -->
+      @if (showAssignments) {
+      @for (item of assignmentItems; track item.id) {
+      <div class="leave-holiday-item leave-item">
+        <div class="date-col text-nowrap">
+          <span class="date-main">{{ item.from }}</span>
+          <span class="date-to">Leave cycle</span>
+        </div>
+        <div class="details-col">
+          <div class="leave-type-indicator" [ngClass]="item.typeClass"></div>
+          <div class="leave-info">
+            <div class="item-kind leave-kind"><i class="bi bi-person-plus"></i> Leave assignment</div>
+            <div class="leave-name">{{ item.type }}</div>
+            <div class="leave-days">{{ item.days }} Day(s) &middot; {{ item.employee }}</div>
+          </div>
+        </div>
+        <div class="status-col">
+          <span class="leave-status-pill status-approved">
+            <i class="bi bi-person-check-fill"></i> Assigned
+          </span>
+        </div>
+      </div>
+      }
+      }
+
+      <!-- 2. Leave Requests (Upcoming or History) -->
+      @if (showLeaves) {
+      @for (item of currentLeaveItems; track item.id) {
+      <div class="leave-holiday-item leave-item">
+        <div class="date-col text-nowrap">
+          <span class="date-main">{{ item.from }}</span>
+          <span class="date-to">to</span>
+          <span class="date-sub">{{ item.to }}</span>
+        </div>
+        <div class="details-col">
+          <div class="leave-type-indicator" [ngClass]="item.typeClass"></div>
+          <div class="leave-info">
+            <div class="item-kind leave-kind"><i class="bi bi-person-walking"></i> Leave request</div>
+            <div class="leave-name">{{ item.type }}</div>
+            <div class="leave-days">{{ item.days }} Day(s)</div>
+          </div>
+        </div>
+        <div class="status-col">
+          @if (item.status === 'Partial') {
+          <span class="leave-status-pill status-approved">
+            <i class="bi bi-check2-circle"></i> Partial ({{ item.approvedDays }}/{{ item.days }}d)
+          </span>
+          } @else if (item.status === 'Rejected') {
+          <span class="leave-status-pill status-rejected">
+            <i class="bi bi-x-circle-fill"></i> Rejected
+            @if (item.rejectionReason) {
+            <i class="bi bi-eye ms-1 cursor-pointer" title="View Rejection Reason" (click)="openRejectionModal(item)"></i>
+            }
+          </span>
+          } @else {
+          <span class="leave-status-pill" [ngClass]="item.statusClass">
+            <i class="bi" [ngClass]="item.statusIcon"></i> {{ item.status }}
+          </span>
+          }
+        </div>
+      </div>
+      }
+      }
+
+      <!-- 3. Holidays (Upcoming only) -->
+      @if (showHolidays) {
+      @for (h of currentHolidayItems; track h.id) {
+      <div class="leave-holiday-item">
+        <div class="date-col holiday-date">
+          <div class="holiday-icon">
+            <i class="bi bi-calendar-heart-fill"></i>
+          </div>
+          <div class="holiday-text">
+            <span class="date-main">{{ h.date }}</span>
+          </div>
+        </div>
+        <div class="details-col">
+          <div>
+            <div class="item-kind holiday-kind"><i class="bi bi-calendar-heart"></i> Public holiday</div>
+            <div class="holiday-name">{{ h.name }}</div>
+          </div>
+        </div>
+        <div class="status-col"></div>
+      </div>
+      }
+      }
+
+      <!-- Empty State -->
+      @if (isCurrentListEmpty) {
+      <div class="text-center py-5 text-muted">
+        <i class="bi bi-calendar-x fs-1 d-block mb-2 text-secondary opacity-50"></i>
+        <h6 class="">No records found</h6>
+        <p class="small text-muted mb-0">No leaves or holidays found for the selected view and tab.</p>
+      </div>
+      }
+    </div>
+  </section>
+</main>
+
+<!-- ========================================================= -->
+<!-- 1. APPLY LEAVE MODAL                                      -->
+<!-- ========================================================= -->
+@if (showApplyLeaveModal) {
+<div class="modal-backdrop-custom" (click)="closeApplyLeaveModal()"></div>
+<div class="modal-custom-wrap">
+  <div class="modal-custom-dialog">
+    <div class="modal-custom-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Leave Application</h5>
+        <button type="button" class="btn-close-custom" (click)="closeApplyLeaveModal()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <div class="leave-apply-grid">
+          <!-- Left: Form -->
+          <div class="leave-apply-form">
+            <div class="leave-apply-row">
+              <label class="form-label required-label">Leave type</label>
+              <p-select [options]="leaveTypeOptions" [(ngModel)]="applyForm.leaveType" optionLabel="label" optionValue="value"
+                placeholder="Select Leave Type" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+            </div>
+
+            <div class="leave-apply-row">
+              <label class="form-label required-label">Reporting Manager</label>
+              <p-select [options]="reportingManagerOptions" [(ngModel)]="applyForm.reportingManager" optionLabel="label" optionValue="value"
+                placeholder="Select Reporting Manager" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+            </div>
+
+            <div class="leave-apply-row">
+              <label class="form-label required-label">Date</label>
+              <div class="leave-apply-date-row flex-sm-row flex-column">
+                <div class="date-picker">
+                  <input type="date" class="date-input form-control" [(ngModel)]="applyForm.fromDate" />
+                </div>
+                <div class="date-picker">
+                  <input type="date" class="date-input form-control" [(ngModel)]="applyForm.toDate" />
+                </div>
+              </div>
+            </div>
+
+            <div class="leave-apply-summary-row">
+              <span class="summary-date w-100">{{ applyDateSummary }}</span>
+              <div style="min-width: 140px;">
+                <p-select [options]="dayTypeOptions" [(ngModel)]="applyForm.dayType" optionLabel="label" optionValue="value"
+                  appendTo="body" styleClass="w-100"></p-select>
+              </div>
+            </div>
+
+            <div class="leave-apply-summary-row total-row">
+              <span>Total</span>
+              <strong>{{ calculatedLeaveDays }} Day(s)</strong>
+            </div>
+
+            <div class="leave-apply-row mb-0">
+              <label class="form-label">Reason for leave</label>
+              <textarea class="form-control" [(ngModel)]="applyForm.reason" rows="3"
+                placeholder="Enter reason for leave"></textarea>
+            </div>
+          </div>
+
+          <!-- Right: Balance Side Info -->
+          <div class="leave-apply-side">
+            <div class="leave-balance-box">
+              <div class="leave-balance-box-head">
+                <span>As of {{ asOfTodayFormatted }}</span>
+                <span>Day(s)</span>
+              </div>
+              <div class="leave-balance-line">
+                <span>Available balance</span>
+                <strong>{{ currentAvailableForApply }}</strong>
+              </div>
+              <div class="leave-balance-line">
+                <span>Currently booked</span>
+                <strong>{{ calculatedLeaveDays }}</strong>
+              </div>
+              <div class="leave-balance-line total">
+                <span>Balance after booked leave</span>
+                <strong>{{ balanceAfterBooking }}</strong>
+              </div>
+            </div>
+
+            <div class="leave-balance-box">
+              <div class="leave-balance-box-head">
+                <span>As of 31-Dec-{{ currentYear }}</span>
+              </div>
+              <div class="leave-balance-line total">
+                <span>Estimated balance</span>
+                <strong>{{ balanceAfterBooking }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" (click)="closeApplyLeaveModal()">Cancel</button>
+        <button type="button" class="btn-save" (click)="submitApplyLeave()">
+          <i class="bi bi-check2"></i> Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ========================================================= -->
+<!-- 2. ASSIGN LEAVE OFFCANVAS / DRAWER                        -->
+<!-- ========================================================= -->
+@if (showAssignLeaveOffcanvas) {
+<div class="offcanvas-backdrop-custom" (click)="closeAssignLeave()"></div>
+<div class="offcanvas-custom-panel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">
+      <span class="offcanvas-icon"><i class="bi bi-person-plus-fill"></i></span>
+      Assign Leave
+    </h5>
+    <button type="button" class="btn-close-custom" (click)="closeAssignLeave()" aria-label="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="offcanvas-body">
+    <!-- Toggle Header -->
+    <div class="holiday-header-actions mb-3">
+      <button type="button" class="btn btn-bulk" [class.active]="assignForm.isBulk"
+        (click)="assignForm.isBulk = !assignForm.isBulk">
+        <i class="bi" [ngClass]="assignForm.isBulk ? 'bi-pencil-square' : 'bi-upload'"></i>
+        {{ assignForm.isBulk ? 'Single' : 'Bulk' }}
+      </button>
+      <button type="button" class="btn btn-sample" (click)="downloadAssignSample()">
+        <i class="bi bi-download"></i> Sample Excel
+      </button>
+    </div>
+
+    <!-- Single Mode Form -->
+    @if (!assignForm.isBulk) {
+    <div class="single-holiday-section">
+      <div class="assign-form-row">
+        <label class="form-label required-label">Select Employee</label>
+        <p-select [options]="employeeOptions" [(ngModel)]="assignForm.employeeId" optionLabel="label" optionValue="value"
+          placeholder="Select Employee" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+      </div>
+
+      <div class="assign-form-row">
+        <label class="form-label required-label">Leave Type</label>
+        <p-select [options]="leaveTypeOptions" [(ngModel)]="assignForm.leaveType" optionLabel="label" optionValue="value"
+          placeholder="Select Leave Type" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+      </div>
+
+      <div class="assign-form-row">
+        <label class="form-label required-label">Days to Assign</label>
+        <div class="assign-days-row">
+          <div class="assign-days-stepper">
+            <button type="button" (click)="decrementAssignDays()" aria-label="Decrease">
+              <i class="bi bi-dash-lg"></i>
+            </button>
+            <input type="number" [(ngModel)]="assignForm.days" min="1" />
+            <button type="button" (click)="incrementAssignDays(1)" aria-label="Increase">
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+          <div class="assign-quick-chips">
+            <button type="button" class="assign-chip" (click)="incrementAssignDays(1)">+1</button>
+            <button type="button" class="assign-chip" (click)="incrementAssignDays(5)">+5</button>
+            <button type="button" class="assign-chip" (click)="incrementAssignDays(10)">+10</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="assign-form-row">
+        <label class="form-label">Leave Year</label>
+        <p-select [options]="yearOptions" [(ngModel)]="assignForm.year" optionLabel="label" optionValue="value"
+          placeholder="Select Year" appendTo="body" styleClass="w-100"></p-select>
+      </div>
+
+      <div class="assign-form-row mb-0">
+        <label class="form-label">Note (Optional)</label>
+        <textarea class="form-control" [(ngModel)]="assignForm.note" rows="2"
+          placeholder="Add a note for this assignment"></textarea>
+      </div>
+
+      <!-- Assignment Summary Card -->
+      <div class="assign-summary-box">
+        <div class="asb-head">
+          <span class="asb-title"><i class="bi bi-calculator"></i> Assignment Summary</span>
+          <span class="asb-year">{{ assignForm.year }}</span>
+        </div>
+        <div class="asb-employee">
+          @if (selectedAssignEmployee) {
+          <img [src]="selectedAssignEmployee.avatar" class="asb-emp-avatar" [alt]="selectedAssignEmployee.name" />
+          <div class="asb-emp-copy">
+            <strong>{{ selectedAssignEmployee.name }}</strong>
+            <span>{{ selectedAssignEmployee.empId }} &middot; {{ selectedAssignEmployee.department }}</span>
+          </div>
+          } @else {
+          <span class="asb-emp-placeholder">Select an employee to preview the assignment</span>
+          }
+        </div>
+        <div class="asb-line">
+          <span>Current balance</span>
+          <strong>{{ currentBalanceForAssign }} Day(s)</strong>
+        </div>
+        <div class="asb-line add">
+          <span>Newly assigned</span>
+          <strong>+ {{ assignForm.days || 0 }} Day(s)</strong>
+        </div>
+        <div class="asb-line total">
+          <span>New total balance</span>
+          <strong>{{ totalBalanceAfterAssign }} Day(s)</strong>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Bulk Mode Form -->
+    @if (assignForm.isBulk) {
+    <div class="bulk-upload-section">
+      @if (!assignForm.bulkFile) {
+      <label class="bulk-dropzone w-100">
+        <div class="dz-icon">
+          <i class="bi bi-cloud-arrow-up"></i>
+        </div>
+        <div class="dz-title">Drop your Excel file here</div>
+        <div class="dz-subtitle">or <span>browse</span> to upload</div>
+        <div class="dz-formats">Supports .xlsx, .xls, .csv (Max 5MB)</div>
+        <input type="file" (change)="onAssignFileSelect($event)" accept=".xlsx,.xls,.csv" style="display:none;" />
+      </label>
+      } @else {
+      <div class="bulk-file-preview show">
+        <div class="fp-icon"><i class="bi bi-file-earmark-excel"></i></div>
+        <div class="fp-info">
+          <div class="fp-name">{{ assignForm.bulkFileName }}</div>
+          <div class="fp-size">{{ assignForm.bulkFileSize }}</div>
+        </div>
+        <button aria-label="Remove file" type="button" class="btn-close-custom" (click)="removeAssignFile()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="holiday-form-foot">
+    <button type="button" class="btn-cancel" (click)="closeAssignLeave()">Cancel</button>
+    <button type="button" class="btn-save" (click)="submitAssignLeave()">
+      @if (assignForm.isBulk) {
+      <i class="bi bi-cloud-arrow-up"></i> Upload
+      } @else {
+      <i class="bi bi-check2"></i> Assign Leave
+      }
+    </button>
+  </div>
+</div>
+}
+
+<!-- ========================================================= -->
+<!-- 3. ADD HOLIDAY OFFCANVAS / DRAWER                         -->
+<!-- ========================================================= -->
+@if (showHolidayOffcanvas) {
+<div class="offcanvas-backdrop-custom" (click)="closeAddHoliday()"></div>
+<div class="offcanvas-custom-panel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">
+      <span class="offcanvas-icon"><i class="bi bi-calendar-heart-fill"></i></span>
+      Add Holiday
+    </h5>
+    <button type="button" class="btn-close-custom" (click)="closeAddHoliday()" aria-label="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="offcanvas-body">
+    <!-- Toggle Header -->
+    <div class="holiday-header-actions mb-3">
+      <button type="button" class="btn btn-bulk" [class.active]="holidayForm.isBulk"
+        (click)="holidayForm.isBulk = !holidayForm.isBulk">
+        <i class="bi" [ngClass]="holidayForm.isBulk ? 'bi-pencil-square' : 'bi-upload'"></i>
+        {{ holidayForm.isBulk ? 'Single' : 'Bulk' }}
+      </button>
+      <button type="button" class="btn btn-sample" (click)="downloadHolidaySample()">
+        <i class="bi bi-download"></i> Sample Excel
+      </button>
+    </div>
+
+    <!-- Single Mode Form -->
+    @if (!holidayForm.isBulk) {
+    <div class="single-holiday-section">
+      <div class="holiday-form-row">
+        <label class="form-label required-label">Holiday Name</label>
+        <input type="text" class="form-control" [(ngModel)]="holidayForm.name" placeholder="Enter holiday name" />
+      </div>
+
+      <div class="holiday-form-row">
+        <label class="form-label required-label">Date</label>
+        <input type="date" class="form-control date-input" [(ngModel)]="holidayForm.date" />
+      </div>
+
+      <div class="holiday-form-row">
+        <label class="form-label required-label">Holiday Type</label>
+        <p-select [options]="holidayTypeOptions" [(ngModel)]="holidayForm.type" optionLabel="label" optionValue="value"
+          placeholder="Select Holiday Type" appendTo="body" styleClass="w-100"></p-select>
+      </div>
+
+      <div class="holiday-form-row mb-0">
+        <label class="form-label">Holiday Year</label>
+        <p-select [options]="yearOptions" [(ngModel)]="holidayForm.year" optionLabel="label" optionValue="value"
+          placeholder="Select Holiday Year" appendTo="body" styleClass="w-100"></p-select>
+      </div>
+    </div>
+    }
+
+    <!-- Bulk Mode Form -->
+    @if (holidayForm.isBulk) {
+    <div class="bulk-upload-section">
+      @if (!holidayForm.bulkFile) {
+      <label class="bulk-dropzone w-100">
+        <div class="dz-icon">
+          <i class="bi bi-cloud-arrow-up"></i>
+        </div>
+        <div class="dz-title">Drop your Excel file here</div>
+        <div class="dz-subtitle">or <span>browse</span> to upload</div>
+        <div class="dz-formats">Supports .xlsx, .xls, .csv (Max 5MB)</div>
+        <input type="file" (change)="onHolidayFileSelect($event)" accept=".xlsx,.xls,.csv" style="display:none;" />
+      </label>
+      } @else {
+      <div class="bulk-file-preview show">
+        <div class="fp-icon"><i class="bi bi-file-earmark-excel"></i></div>
+        <div class="fp-info">
+          <div class="fp-name">{{ holidayForm.bulkFileName }}</div>
+          <div class="fp-size">{{ holidayForm.bulkFileSize }}</div>
+        </div>
+        <button aria-label="Remove file" type="button" class="btn-close-custom" (click)="removeHolidayFile()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="holiday-form-foot">
+    <button type="button" class="btn-cancel" (click)="closeAddHoliday()">Cancel</button>
+    <button type="button" class="btn-save" (click)="submitAddHoliday()">
+      @if (holidayForm.isBulk) {
+      <i class="bi bi-cloud-arrow-up"></i> Upload
+      } @else {
+      <i class="bi bi-check2"></i> Submit
+      }
+    </button>
+  </div>
+</div>
+}
+
+<!-- ========================================================= -->
+<!-- 4. APPLY PERMISSION MODAL                                 -->
+<!-- ========================================================= -->
+@if (showPermissionModal) {
+<div class="modal-backdrop-custom" (click)="closePermissionModal()"></div>
+<div class="modal-custom-wrap">
+  <div class="modal-custom-dialog modal-sm-custom">
+    <div class="modal-custom-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Apply Permission</h5>
+        <button type="button" class="btn-close-custom" (click)="closePermissionModal()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="modal-body permission-apply-body">
+        @if (!permissionForm.isSubmitted) {
+        <!-- Form -->
+        <div>
+          <div class="leave-apply-row">
+            <label class="form-label required-label">Date</label>
+            <input type="date" class="date-input form-control" [(ngModel)]="permissionForm.date" />
+          </div>
+
+          <div class="leave-apply-row">
+            <label class="form-label required-label">Time <span class="permission-time-hint">(max 2
+                hours)</span></label>
+            <div class="permission-time-row">
+              <input type="time" class="form-control" [(ngModel)]="permissionForm.fromTime" />
+              <input type="time" class="form-control" [(ngModel)]="permissionForm.toTime" />
+            </div>
+          </div>
+
+          <div class="leave-apply-summary-row total-row">
+            <span>Total permission time</span>
+            <strong [class.text-danger]="!isPermissionDurationValid"
+              [class.text-success]="isPermissionDurationValid && permissionForm.fromTime && permissionForm.toTime">
+              {{ permissionDurationText }}
+            </strong>
+          </div>
+
+          <div class="leave-apply-row">
+            <label class="form-label required-label">Approve by</label>
+            <p-select [options]="approverOptions" [(ngModel)]="permissionForm.approver" optionLabel="label" optionValue="value"
+              placeholder="Select Approver" appendTo="body" styleClass="w-100"></p-select>
+          </div>
+
+          <div class="leave-apply-row mb-0">
+            <label class="form-label">Reason</label>
+            <textarea class="form-control" [(ngModel)]="permissionForm.reason" rows="3"
+              placeholder="Enter reason for permission"></textarea>
+          </div>
+        </div>
+        } @else {
+        <!-- Result Confirmation -->
+        <div class="permission-result show">
+          <div class="permission-result-icon"><i class="bi bi-hourglass-split"></i></div>
+          <div class="permission-result-title">Request Submitted</div>
+          <div class="permission-result-sub">{{ permissionForm.resultSummary }}</div>
+        </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        @if (!permissionForm.isSubmitted) {
+        <button type="button" class="btn-cancel" (click)="closePermissionModal()">Cancel</button>
+        <button type="button" class="btn-save" (click)="submitPermission()">
+          <i class="bi bi-check2"></i> Submit Request
+        </button>
+        } @else {
+        <button type="button" class="btn-save" (click)="closePermissionModal()">Close</button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ========================================================= -->
+<!-- 5. REJECTION REASON MODAL                                 -->
+<!-- ========================================================= -->
+@if (showRejectionModal) {
+<div class="modal-backdrop-custom" (click)="closeRejectionModal()"></div>
+<div class="modal-custom-wrap">
+  <div class="modal-custom-dialog modal-sm-custom">
+    <div class="modal-custom-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger d-flex align-items-center gap-2">
+          <i class="bi bi-x-circle-fill"></i> Rejection Reason
+        </h5>
+        <button type="button" class="btn-close-custom" (click)="closeRejectionModal()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="small text-muted mb-2">Rejection reason for <strong>{{ selectedRejection.employee }}</strong>:</p>
+        <div class="rejection-box">
+          {{ selectedRejection.reason }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-save" (click)="closeRejectionModal()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ========================================================= -->
+<!-- TOAST NOTIFICATION                                        -->
+<!-- ========================================================= -->
+@if (isToastVisible) {
+<div class="view-leave-toast">
+  <i class="bi bi-check-circle-fill me-2"></i>
+  <span>{{ toastMessage }}</span>
+</div>
+}

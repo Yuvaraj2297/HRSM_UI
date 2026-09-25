@@ -1,0 +1,72 @@
+name: Jailscorp UI — Build & Deploy
+
+on:
+  push:
+    branches:
+      - 'featuredevelopment/deploy/ui-new'
+      
+
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '24.x'
+  BUILD_OUTPUT: 'dist/jailscorp/browser'
+
+jobs:
+
+  build-and-deploy:
+    name: Build & Deploy Angular App
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install --force
+
+      - name: Build Production
+        run: npm run build -- --configuration prod
+
+      - name: Verify Build
+        run: |
+          echo "=== Build output ==="
+          ls -la ${{ env.BUILD_OUTPUT }}
+
+      - name: Verify FTP Server Secret
+        if: github.ref == 'refs/heads/featuredevelopment/deploy/ui-new' || github.event_name == 'workflow_dispatch'
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER }}" ]; then
+            echo "ERROR: FTP_SERVER secret is not set!"
+            exit 1
+          fi
+          echo "FTP_SERVER is set (value masked). Attempting DNS lookup..."
+          nslookup "${{ secrets.FTP_SERVER }}" || echo "DNS lookup failed — check FTP_SERVER value in GitHub Secrets"
+
+      - name: Deploy to FTP Server
+        if: github.ref == 'refs/heads/featuredevelopment/deploy/ui-new' || github.event_name == 'workflow_dispatch'
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: ${{ env.BUILD_OUTPUT }}/
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          dangerous-clean-slate: false
+          log-level: verbose        
+
+      - name: Deployment Complete
+        if: github.ref == 'refs/heads/featuredevelopment/deploy/ui-new' || github.event_name == 'workflow_dispatch'
+        run: echo "Jailscorp UI deployed successfully"
+

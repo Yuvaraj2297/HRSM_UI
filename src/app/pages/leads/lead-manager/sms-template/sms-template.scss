@@ -1,0 +1,13 @@
+/* page layout: global .chat-* (global-style/classes.scss) · sidebar + chat: ../shared/chat */
+
+.sms-sender {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+}

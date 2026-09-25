@@ -1,0 +1,29 @@
+<div class="ne-section-title">Leave Approval :-</div>
+
+<div class="ne-approval-wrapper" [formGroup]="leaveApproval">
+  <div class="row g-3">
+    <ng-container formArrayName="levels">
+      <div class="col-lg-6" *ngFor="let lvl of levels.controls; let i = index">
+        <div class="ne-approval-row">
+          <div class="ne-approval-col">
+            <label>{{ ordinal(i + 1) }} Level Approval</label>
+            <p-select [formControlName]="i" [options]="fs.managers" optionLabel="label" optionValue="value"  [filter]="true"
+    filterBy="value"  [showClear]="true" 
+                      placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body"  />
+          </div>
+
+          <button *ngIf="i === 0" type="button" class="ne-approval-btn-add" title="Add approval level" (click)="addLevel()">+</button>
+          <button *ngIf="i > 0" type="button" class="ne-approval-btn-remove" title="Remove level" (click)="removeLevel(i)">-</button>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="col-lg-6">
+      <div class="ne-approval-col">
+        <label>Follower</label>
+        <p-select formControlName="follower" [options]="fs.managers" optionLabel="label" optionValue="value"
+                  placeholder="None" styleClass="w-100" [showClear]="true" appendTo="body" />
+      </div>
+    </div>
+  </div>
+</div>

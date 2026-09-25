@@ -1,0 +1,38 @@
+<div class="ne-section-title">Documents :-</div>
+
+<div class="row g-4">
+  <div class="col-lg-3 col-md-6" *ngFor="let d of fixedDocs">
+    <label class="form-label">{{ d.label }}</label>
+    <label class="aw-upload-box" style="min-height:100px;">
+      <i class="bi bi-file-earmark-arrow-up"></i>
+      <div class="aw-upload-title">Upload File</div>
+      <div class="aw-upload-hint">{{ d.hint }}</div>
+      <input type="file" [accept]="d.accept" hidden (change)="onFixedFile($event, d.key)">
+    </label>
+  </div>
+</div>
+
+<div class="row g-4 mt-1" [formGroup]="form">
+  <ng-container formArrayName="custom">
+    <div class="col-lg-3 col-md-6" *ngFor="let row of custom.controls; let i = index" [formGroupName]="i">
+      <label class="form-label">Document Name</label>
+      <input pInputText class="form-control mb-2" formControlName="name" placeholder="Enter document name">
+
+      <label class="aw-upload-box" style="min-height:100px;">
+        <i class="bi bi-file-earmark-arrow-up"></i>
+        <div class="aw-upload-title">Upload File</div>
+        <div class="aw-upload-hint">PDF, JPG, PNG (Max 5MB)</div>
+        <input type="file" accept=".pdf,.jpg,.jpeg,.png" hidden (change)="onCustomFile($event, i)">
+      </label>
+
+
+      <button type="button" class="btn btn-danger mt-2" (click)="removeCustom(i)">
+        <i class="bi bi-trash"></i> Delete
+      </button>
+    </div>
+  </ng-container>
+</div>
+
+<div class="mt-4">
+  <button type="button" class="btn btn-primary" (click)="addCustom()">+ Custom Document</button>
+</div>

@@ -1,0 +1,19 @@
+<div class="chart-card">
+  <div class="chart-card-head">
+    <span class="chart-card-title">{{ title() }}</span>
+
+    <div class="chart-card-actions">
+      <ng-content select="[card-actions]" />
+      @if (badge()) {
+      <span class="chart-card-badge">{{ badge() }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="chart-card-body" [style.height]="height()">
+    @if (config(); as cfg) {
+    <p-chart [type]="type()" [data]="cfg.data" [options]="cfg.options" width="100%" [height]="height()" />
+    }
+    <ng-content />
+  </div>
+</div>

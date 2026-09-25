@@ -1,0 +1,18 @@
+<div class="ne-section-title">Review &amp; Confirm :-</div>
+
+<div class="ne-review-section" *ngFor="let s of sections">
+  <h6><i [class]="s.icon"></i> {{ s.title }}</h6>
+  <div class="ne-review-grid">
+    <div class="ne-review-item" *ngFor="let it of s.items">
+      <div class="k">{{ it.k }}</div>
+      <div class="v">{{ display(it.v) }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="form-check mt-2" [formGroup]="fs.form">
+  <label class="d-flex align-items-center gap-2" style="font-size:13px;">
+    <p-checkbox formControlName="confirmAccuracy" [binary]="true" inputId="confirmAccuracy" />
+    <span>I confirm the above details are accurate to the best of my knowledge.</span>
+  </label>
+</div>

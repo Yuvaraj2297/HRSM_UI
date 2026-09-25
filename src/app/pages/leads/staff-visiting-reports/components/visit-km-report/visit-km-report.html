@@ -1,0 +1,74 @@
+<!-- =========================================================
+     FILTER — Staff + From / To  (as staff-visting-report.php)
+========================================================== -->
+<form class="card-custom report-filter-card is-compact mb-3" (submit)="$event.preventDefault(); search()">
+
+  <div class="report-filter-field">
+    <label for="km_staff">Staff</label>
+    <p-select inputId="km_staff" [options]="staffOptions()" [ngModel]="staffId()"
+      (ngModelChange)="staffId.set($event)" name="staff" optionLabel="label" optionValue="value" [filter]="true"
+      filterBy="label" placeholder="Select staff" appendTo="body" styleClass="w-100" />
+  </div>
+
+  <div class="report-filter-field">
+    <label for="km_from">From Date</label>
+   <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+  </div>
+
+  <div class="report-filter-field">
+    <label for="km_to">To Date</label>
+   <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+  </div>
+
+  <div class="report-filter-actions">
+    <button type="button" class="btn btn-cancel px-4" [disabled]="loading()" (click)="reset()">Reset</button>
+    <button type="submit" class="btn btn-primary px-4" [disabled]="loading() || rangeInvalid()">
+      <i class="bi bi-search"></i> Search
+    </button>
+  </div>
+
+  @if (rangeInvalid()) {
+  <div class="report-filter-msg">
+    <i class="bi bi-exclamation-circle me-1"></i> From Date should not be greater than To Date
+  </div>
+  }
+</form>
+
+@if (error()) {
+<div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+  <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+  <button type="button" class="btn btn-sm btn-outline-danger" (click)="retry()">Retry</button>
+</div>
+}
+
+
+
+
+<!-- =========================================================
+     TABLE (shared)
+========================================================== -->
+<app-primedatatable [modalHeader]="header()" [columns]="columns" [data]="rows()" [loading]="loading()"
+  [inlineToolbar]="true" dataKey="date" searchPlaceholder="Search..." exportFileName="staff-visiting-report">
+
+  <ng-template #cellTemplate let-row let-col="col">
+    @switch (col.field) {
+
+    @case ('date') {
+    <span class="date-cell">
+      {{ displayDate(row.date) }}
+      <span class="weekday-chip" [class.is-off]="isSunday(row.date)">{{ weekday(row.date) }}</span>
+    </span>
+    }
+
+    @case ('km') {
+    <span class="km-cell" [class.is-zero]="!row.km">{{ row.km }} km</span>
+    }
+
+    @case ('status') {
+    <span [class]="'status-pill ' + statusClass(row.status)">{{ row.status }}</span>
+    }
+
+    }
+  </ng-template>
+
+</app-primedatatable>

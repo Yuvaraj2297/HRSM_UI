@@ -1,0 +1,136 @@
+<div class="modal fade generate-offer-modal" tabindex="-1" #modalRoot aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:16px;">
+
+      <div class="modal-header border-0 pb-0" style="background:var(--bg-soft);">
+        <div class="d-flex align-items-center gap-3">
+          <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0 text-white "
+               style="width:44px;height:44px;background:var(--primary, var(--green-550));font-size:18px;">
+            <i class="ti ti-file-plus"></i>
+          </div>
+          <div>
+            <h4 class="modal-title  text-dark mb-0">Generate Official Job Offer Letter</h4>
+            <div class="text-muted" style="font-size:13px;">
+              Enter Full Candidate Compensation Structure, Designation & Approval Workflow
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close" (click)="onCancel()" aria-label="Close"></button>
+      </div>
+
+      <form [formGroup]="form">
+        <div class="modal-body p-4">
+
+          <!-- Candidate Selection Section -->
+          <div class="card p-3 bg-light border-0 mb-3" style="border-radius:12px;">
+            <h6 class=" text-dark mb-2">
+              <i class="ti ti-id-badge-2 text-success me-1"></i> Candidate Profile Details
+            </h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:13px;">Select Shortlisted Candidate *</label>
+                <select class="form-select" formControlName="candidate">
+                  <option [ngValue]="null" disabled>Select</option>
+                  @for (c of candidates; track c.name) {
+                    <option [value]="c.name">{{ c.name }} ({{ c.job }}{{ c.tlScore ? ' - TL Score ' + c.tlScore : '' }})</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:13px;">Candidate Email Address *</label>
+                <input type="email" class="form-control" formControlName="email">
+                @if (isInvalid('email')) {
+                  <div class="text-danger" style="font-size:12px;">Enter a valid email address</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Role & Department -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" style="font-size:13px;">Offered Designation / Position *</label>
+              <input type="text" class="form-control" formControlName="jobTitle" placeholder="e.g. Senior UI/UX Designer">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" style="font-size:13px;">Target Department *</label>
+              <select class="form-select" formControlName="department">
+                <option [ngValue]="null" disabled>Select</option>
+                @for (d of departments; track d) {
+                  <option [value]="d">{{ d }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <!-- Salary Breakdown Section -->
+          <div class="card p-3 mb-3" style="border-radius:12px; background:var(--white);">
+            <h6 class=" text-success mb-3">
+              <i class="ti ti-cash me-1"></i> CTC & Compensation Breakdown
+            </h6>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:13px;">Annual Cost to Company (CTC ₹) *</label>
+                <div class="input-group">
+                  <span class="input-group-text">₹</span>
+                  <input type="number" class="form-control  text-success" formControlName="annualCtc" placeholder="e.g. 1800000">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:13px;">Calculated Monthly Gross (₹)</label>
+                <div class="input-group">
+                  <span class="input-group-text">₹</span>
+                  <input type="text" class="form-control bg-light " [value]="inr(monthlyGross) + ' / month'" readonly>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 text-dark p-2 bg-light rounded-3" style="font-size:12.5px;">
+              <div class="col-md-4"><strong>Basic Salary (50%):</strong> <span class="text-success fw-semibold">{{ inr(basic) }} / mo</span></div>
+              <div class="col-md-4"><strong>HRA Allowance (25%):</strong> <span>{{ inr(hra) }} / mo</span></div>
+              <div class="col-md-4"><strong>Special Allowance (25%):</strong> <span>{{ inr(special) }} / mo</span></div>
+            </div>
+          </div>
+
+          <!-- Joining Dates & Validity -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold" style="font-size:13px;">Target Joining Date *</label>
+              <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold" style="font-size:13px;">Offer Letter Expiry Date *</label>
+             <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold" style="font-size:13px;">Approval Workflow *</label>
+              <select class="form-select" formControlName="approver">
+                @for (a of approvers; track a.value) {
+                  <option [value]="a.value">{{ a.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-1">
+            <label class="form-label fw-semibold" style="font-size:13px;">Special Terms, Joining Bonus & Relocation Notes</label>
+            <textarea class="form-control" formControlName="notes" rows="2"
+              placeholder="Enter relocation allowance, joining bonus clause, or probation terms..."></textarea>
+          </div>
+
+        </div>
+
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-light" (click)="onCancel()">Cancel</button>
+          <button type="button" class="btn btn-primary"
+                  style="background:var(--primary, var(--green-550)); border-color:var(--primary, var(--green-550));"
+                  (click)="onSave()">
+            <i class="ti ti-file-check"></i> Generate & Send Offer PDF
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

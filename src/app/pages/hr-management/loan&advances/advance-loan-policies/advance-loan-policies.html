@@ -1,0 +1,261 @@
+<!-- =========================================================
+     LOAN & ADVANCE POLICIES TABLE (Using PrimeDataTable)
+========================================================== -->
+<div class="row">
+  <div class="col-12">
+    <app-primedatatable
+      [modalHeader]="tableHeader"
+      [columns]="columns"
+      [data]="policies"
+      [searchPlaceholder]="searchPlaceholder"
+      [Accessactions]="tableActions"
+      [showColumnsButton]="true"
+      [showExportButton]="true"
+      [exportFileName]="'loan-policies-report'"
+      [rows]="10"
+      (addClicked)="openCreateModal()"
+      (actionClick)="onTableAction($event)"
+    >
+      <!-- Custom Cell Template for Table Columns -->
+      <ng-template #cellTemplate let-row let-col="col">
+        <!-- Policy Scheme Name -->
+        @if (col.field === 'name') {
+          <span class="fw-semibold text-dark">{{ row.name }}</span>
+        }
+
+        <!-- Category Badge -->
+        @else if (col.field === 'category') {
+          @if (row.category === 'Loan') {
+            <span class="cat-pill cat-loan">Loan</span>
+          } @else {
+            <span class="cat-pill cat-advance">Advance</span>
+          }
+        }
+
+        <!-- Interest Rate -->
+        @else if (col.field === 'interestRateFormatted') {
+          <span>{{ row.interestRateFormatted }}</span>
+        }
+
+        <!-- Max Limit -->
+        @else if (col.field === 'maxLimit') {
+          <span class=" text-success">{{ row.maxLimit }}</span>
+        }
+
+        <!-- Max Tenure -->
+        @else if (col.field === 'maxTenureFormatted') {
+          <span>{{ row.maxTenureFormatted }}</span>
+        }
+
+        <!-- Eligibility Criteria -->
+        @else if (col.field === 'eligibility') {
+          <span class="text-secondary" style="font-size: 12.5px;">{{ row.eligibility }}</span>
+        }
+
+        <!-- Status -->
+        @else if (col.field === 'status') {
+          @if (row.status === 'Enable') {
+            <span
+              class="status-pill status-approved"
+              (click)="toggleStatus(row)"
+              title="Click to Toggle Status"
+              style="cursor: pointer;"
+            >
+              Enable
+            </span>
+          } @else {
+            <span
+              class="status-pill status-rejected"
+              (click)="toggleStatus(row)"
+              title="Click to Toggle Status"
+              style="cursor: pointer;"
+            >
+              Disable
+            </span>
+          }
+        }
+      </ng-template>
+    </app-primedatatable>
+  </div>
+</div>
+
+<!-- =========================================================
+     CREATION / EDIT POLICY MODAL
+========================================================== -->
+@if (modalOpen) {
+  <div class="modal-backdrop-custom" (click)="closeModal()"></div>
+  <div class="modal-custom modal-lg shadow-lg" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom">
+      <div class="d-flex align-items-center gap-2">
+        <span class="modal-icon-circle">
+          <i class="bi bi-sliders text-success "></i>
+        </span>
+        <h5 class="modal-title fs-5  text-dark mb-0">
+          {{ isEditMode ? 'Edit Loan Policy Scheme' : 'Create New Loan Policy Scheme' }}
+        </h5>
+      </div>
+      <button type="button" class="btn-modal-close-pink" (click)="closeModal()" title="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body p-4 pt-3" [formGroup]="policyForm">
+      <div class="row g-3">
+        <!-- Scheme Name -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-dark small mb-1">
+            Scheme Name <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="e.g. Festival Salary Advance"
+            formControlName="name"
+            [class.is-invalid]="policyForm.get('name')?.invalid && policyForm.get('name')?.touched"
+          />
+          @if (policyForm.get('name')?.invalid && policyForm.get('name')?.touched) {
+            <div class="invalid-feedback small">Scheme Name is required.</div>
+          }
+        </div>
+
+        <!-- Classification / Category -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-dark small mb-1">
+            Classification <span class="text-danger">*</span>
+          </label>
+          <p-select
+            [options]="categoryOptions"
+            formControlName="category"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select classification"
+            appendTo="body"
+            styleClass="w-100 modal-p-select"
+          />
+        </div>
+
+        <!-- Annual Interest Rate -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold text-dark small mb-1">
+            Annual Interest Rate (%)
+          </label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            class="form-control"
+            placeholder="0.0"
+            formControlName="interestRate"
+          />
+        </div>
+
+        <!-- Maximum Limit -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold text-dark small mb-1">
+            Maximum Limit (₹) <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="e.g. ₹1,50,000 or 50% Salary"
+            formControlName="maxLimit"
+            [class.is-invalid]="policyForm.get('maxLimit')?.invalid && policyForm.get('maxLimit')?.touched"
+          />
+          @if (policyForm.get('maxLimit')?.invalid && policyForm.get('maxLimit')?.touched) {
+            <div class="invalid-feedback small">Maximum Limit is required.</div>
+          }
+        </div>
+
+        <!-- Max Tenure -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold text-dark small mb-1">
+            Max Tenure (Months) <span class="text-danger">*</span>
+          </label>
+          <input
+            type="number"
+            min="1"
+            class="form-control"
+            placeholder="e.g. 12"
+            formControlName="maxTenure"
+            [class.is-invalid]="policyForm.get('maxTenure')?.invalid && policyForm.get('maxTenure')?.touched"
+          />
+        </div>
+
+        <!-- Min Service Required -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-dark small mb-1">
+            Min Service Required
+          </label>
+          <p-select
+            [options]="eligibilityOptions"
+            formControlName="eligibility"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select eligibility criteria"
+            appendTo="body"
+            styleClass="w-100 modal-p-select"
+          />
+        </div>
+
+        <!-- Status -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-dark small mb-1">
+            Status
+          </label>
+          <p-select
+            [options]="statusOptions"
+            formControlName="status"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            styleClass="w-100 modal-p-select"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer p-3 px-4 border-top d-flex justify-content-end gap-2 bg-white">
+      <button type="button" class="btn btn-secondary btn-sm px-3" (click)="closeModal()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-primary btn-sm px-4" (click)="savePolicy()">
+        <i class="mdi mdi-content-save"></i> Save Scheme
+      </button>
+    </div>
+  </div>
+}
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL
+========================================================== -->
+@if (deleteModalOpen) {
+  <div class="modal-backdrop-custom" (click)="closeDeleteModal()"></div>
+  <div class="modal-custom modal-sm shadow-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom">
+      <h6 class="modal-title  text-danger mb-0">
+        <i class="bi bi-exclamation-triangle-fill me-1"></i> Confirm Delete
+      </h6>
+      <button type="button" class="btn-modal-close-pink" (click)="closeDeleteModal()" title="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="modal-body p-4">
+      <p class="text-dark mb-1">
+        Are you sure you want to delete policy scheme:
+      </p>
+      <p class=" text-danger mb-0 fs-6">"{{ deletingPolicy?.name }}"?</p>
+      <small class="text-muted">This action cannot be undone.</small>
+    </div>
+    <div class="modal-footer p-3 px-4 border-top d-flex justify-content-end gap-2 bg-white">
+      <button type="button" class="btn btn-secondary btn-sm px-3" (click)="closeDeleteModal()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-danger btn-sm px-3" (click)="deleteConfirmed()">
+        <i class="mdi mdi-delete"></i> Delete Scheme
+      </button>
+    </div>
+  </div>
+}

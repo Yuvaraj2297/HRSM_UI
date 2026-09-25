@@ -1,0 +1,322 @@
+/* =============================================================
+   MODAL SHELL
+   (::ng-deep because Bootstrap renders .modal-* outside our view)
+============================================================= */
+::ng-deep .reuse-modal {
+  /* field look — change here to restyle every input / select / date */
+  --rm-field-bg: var(--bg-muted);
+  --rm-field-border: var(--border);
+  --rm-select-bg: var(--neutral-50-5);
+  --rm-select-border: var(--gh-input-border);
+  --rm-radius: 12px;
+  --rm-shadow: 0 1px 2px rgba(var(--neutral-900-rgb), 0.06);
+  --rm-focus-border: var(--green-100);
+  --rm-focus-ring: var(--primary-soft);
+  --rm-error: var(--red-350);
+
+  .modal-dialog {
+    max-width: 780px;
+  }
+
+  .modal-content {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(var(--black-rgb), 0.18);
+    overflow: hidden;
+  }
+
+  /* FIX: close button was sitting next to the title */
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--neutral-900);
+    margin: 0;
+  }
+
+  .modal-body {
+    padding: 22px 24px 24px;
+    max-height: 72vh;
+    overflow-y: auto;
+  }
+
+  .modal-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background: var(--white);
+  }
+
+  /* ---------------------------------------------------------
+     PRIMENG SELECT  (scoped to this modal — was global before)
+  --------------------------------------------------------- */
+  .p-select {
+    width: 100%;
+
+    .p-select-label {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.9rem;
+      color: var(--neutral-850);
+
+      &.p-placeholder {
+        color: var(--text-muted);
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------
+     PRIMENG DATEPICKER
+     FIX: the wrapper was styled like a box and the input inside
+     it stayed half width. Now the wrapper is transparent + full
+     width and the INPUT carries the field look.
+  --------------------------------------------------------- */
+  p-datepicker {
+    display: block;
+    width: 100%;
+  }
+
+  .p-datepicker {
+    display: flex;
+    width: 100%;
+  }
+
+  .p-datepicker-input {
+    flex: 1 1 auto;
+    width: 100%;
+
+  }
+
+  /* validation */
+  .field-invalid {
+    .form-control,
+    .p-select,
+    .p-datepicker-input,
+    .upload-dropzone {
+      border-color: var(--rm-error);
+    }
+  }
+}
+
+/* =============================================================
+   CLOSE BUTTON
+============================================================= */
+.btn-close-custom {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* =============================================================
+   LABELS + TEXT CONTROLS
+============================================================= */
+.form-label {
+  margin-bottom: 0.4rem;
+  display: block;
+
+  .label-note {
+    font-weight: 400;
+    color: var(--neutral-350);
+    margin-left: 2px;
+  }
+}
+
+.form-control {
+  width: 100%;
+
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* message returned by the `validate` input */
+.form-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 1rem 0.5rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger, var(--red-500));
+  background: var(--danger-soft, var(--danger-soft));
+}
+
+/* =============================================================
+   UPLOAD DROPZONE
+============================================================= */
+.upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 36px 20px;
+  border: 2px dashed var(--primary);
+  border-radius: 14px;
+  background: var(--green-50);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+
+  &:hover,
+  &.is-dragging {
+    background: var(--green-50-2);
+    border-color: var(--primary-dark);
+  }
+
+  .upload-icon {
+    font-size: 40px;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+
+  .upload-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .upload-sub {
+    font-size: 0.85rem;
+    color: var(--neutral-500);
+
+    .browse-link {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+  }
+
+  .upload-hint {
+    font-size: 0.75rem;
+    color: var(--neutral-350);
+    margin-top: 4px;
+  }
+}
+
+/* =============================================================
+   SELECTED FILE CHIP
+============================================================= */
+.upload-file-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--green-100);
+  background: var(--green-50);
+  border-radius: 12px;
+
+  .chip-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--green-50-2);
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .chip-meta {
+    flex: 1;
+    min-width: 0;
+
+    .chip-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--neutral-900);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chip-size {
+      font-size: 0.75rem;
+      color: var(--neutral-500);
+    }
+  }
+
+  .chip-remove {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: var(--red-100);
+    }
+  }
+}
+
+/* =============================================================
+   STATIC INFO NOTE  (ModalField type: 'info')
+============================================================= */
+.field-info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--neutral-650);
+  line-height: 1.5;
+
+  i {
+    color: var(--primary);
+    font-size: 16px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+}
+
+/* =============================================================
+   FOOTER BUTTONS
+============================================================= */
+.btn-save {
+  display: inline-flex;
+  align-items: center;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* =============================================================
+   PRIMENG PANELS  (select / datepicker are appended to <body>)
+   Bootstrap's modal is z-index 1055, PrimeNG overlays default to 1000,
+   so the panel opens BEHIND the modal.
+   - needs ::ng-deep: the panels live outside this component's view
+   - targets the .p-overlay wrapper: that is the element PrimeNG puts
+     the inline z-index on (not the inner .p-select-overlay)
+============================================================= */
+::ng-deep body.modal-open > .p-overlay,
+::ng-deep body.modal-open > .p-datepicker-panel,
+::ng-deep body.modal-open > .p-datepicker {
+  z-index: 1200 !important;
+}

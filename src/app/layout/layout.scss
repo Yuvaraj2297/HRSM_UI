@@ -1,0 +1,128 @@
+/* =============================================================
+   MAIN CONTENT — offset for fixed header + fixed sidebar
+   Sidebar: 290px expanded, 70px collapsed
+   Header:  64px
+============================================================= */
+
+.main-content {
+  overflow: hidden;
+  min-height: 100vh;
+  transition: var(--transition);
+  padding-top: 88px;          /* 64px header + 24px breathing room */
+  /* Offset tracks the sidebar's actual rendered width (variable.scss)
+     at every breakpoint, so it can never drift out of sync with it. */
+  padding-left: calc(var(--sidebar-width) + 14px);
+  padding-right: 25px;
+  box-sizing: border-box;
+  background-color: var(--neutral-50-2);
+
+  &.active {
+    padding-left: calc(var(--sidebar-collapsed-width) + 34px);
+  }
+
+  &.right-sidebar {
+    padding-left: 25px;
+    padding-right: calc(var(--sidebar-width) + 14px);
+
+    &.active {
+      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
+    }
+  }
+
+  &.hide-sidebar {
+    padding-left: calc(var(--sidebar-collapsed-width) + 34px);
+
+    &.right-sidebar {
+      padding-left: 25px;
+      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
+    }
+  }
+}
+
+
+/* =============================================================
+   PHONES — the sidebar is an overlay drawer (see sidebar.scss),
+   so the page takes the full width in every sidebar mode.
+============================================================= */
+
+@media (max-width: 767.98px) {
+  .main-content,
+  .rtl-enabled .main-content {
+    &,
+    &.active,
+    &.right-sidebar,
+    &.right-sidebar.active,
+    &.hide-sidebar,
+    &.hide-sidebar.right-sidebar {
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-top: 80px;
+    }
+  }
+}
+
+
+/* =============================================================
+   BLANK PAGES (auth, error, coming-soon)
+============================================================= */
+
+.blank-page {
+  app-sidebar,
+  app-footer,
+  app-header {
+    display: none !important;
+  }
+
+  .main-content {
+    padding: 0 !important;
+  }
+}
+
+
+/* =============================================================
+   RTL
+============================================================= */
+
+.rtl-enabled {
+  .main-content {
+    padding-right: calc(var(--sidebar-width) + 14px);
+    padding-left: 25px;
+
+    &.active {
+      padding-left: 25px;
+      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
+    }
+
+    &.right-sidebar {
+      padding-right: 25px;
+      padding-left: calc(var(--sidebar-width) + 14px);
+
+      &.active {
+        padding-right: 25px;
+        padding-left: calc(var(--sidebar-collapsed-width) + 34px);
+      }
+    }
+
+    &.hide-sidebar {
+      padding-left: 25px;
+      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
+
+      &.right-sidebar {
+        padding-right: 25px;
+        padding-left: calc(var(--sidebar-collapsed-width) + 34px);
+      }
+    }
+  }
+}
+
+
+/* =============================================================
+   FIXED HEADER
+============================================================= */
+
+header {
+  position: fixed;
+  margin-top: 0;
+}
+
+

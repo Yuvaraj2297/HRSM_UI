@@ -1,0 +1,161 @@
+{
+  "account": {
+    "name": "GHARUDA SOFTWARE",
+    "email": "info@gharuda-hrms.in"
+  },
+  "mails": [
+    {
+      "id": 1,
+      "folder": "inbox",
+      "from": {
+        "name": "Meena Ramesh",
+        "email": "meena@srlakshmi.in"
+      },
+      "color": "#2563eb",
+      "subject": "Solar package quotation request",
+      "body": "Hi team,\n\nWe are planning a 5kW rooftop solar installation at our Textiles unit. Please share your latest quotation with the GST breakdown and expected delivery timeline.\n\nKind regards,\nMeena Ramesh",
+      "at": "2026-09-24T10:24:00",
+      "unread": true,
+      "starred": true
+    },
+    {
+      "id": 2,
+      "folder": "inbox",
+      "from": {
+        "name": "GHARUDA Support",
+        "email": "support@gharuda-hrms.in"
+      },
+      "color": "#16a34a",
+      "subject": "Your ticket #4582 has been resolved",
+      "body": "Hello,\n\nGood news! Your support ticket #4582 regarding payroll sync has been resolved. The attendance data is now syncing correctly.\n\nPlease reach out if you face any issues again.\n\n— GHARUDA Support",
+      "at": "2026-09-24T09:05:00",
+      "unread": true,
+      "starred": false
+    },
+    {
+      "id": 3,
+      "folder": "inbox",
+      "from": {
+        "name": "Arun Kumar",
+        "email": "arun.kumar@outlook.com"
+      },
+      "color": "#8b5cf6",
+      "subject": "Site visit confirmation — Friday",
+      "body": "Hi,\n\nConfirmed for Friday 11 AM at the Ambattur site. Please bring the proposal document and a copy of the previous electricity bill.\n\nThanks,\nArun",
+      "at": "2026-09-23T16:10:00",
+      "unread": false,
+      "starred": false
+    },
+    {
+      "id": 4,
+      "folder": "inbox",
+      "from": {
+        "name": "Lakshmi Pharma",
+        "email": "info@lakshmipharma.in"
+      },
+      "color": "#d97706",
+      "subject": "AMC renewal for inverter units",
+      "body": "Dear team,\n\nWe would like to renew the annual maintenance contract for our 12 inverter units. Kindly send the renewal invoice at the earliest.\n\nRegards,\nLakshmi Pharma",
+      "at": "2026-09-23T11:30:00",
+      "unread": false,
+      "starred": true
+    },
+    {
+      "id": 5,
+      "folder": "inbox",
+      "from": {
+        "name": "Indiamart Enquiries",
+        "email": "leads@indiamart.com"
+      },
+      "color": "#0d9488",
+      "subject": "New buyer requirement — solar inverter",
+      "body": "New buyer requirement received:\n\nProduct: 10kW solar inverter\nQuantity: 4 units\nLocation: Chennai\n\nContact the buyer quickly to win this lead.\n\n— Indiamart",
+      "at": "2026-09-21T09:45:00",
+      "unread": false,
+      "starred": false
+    },
+    {
+      "id": 101,
+      "folder": "sent",
+      "from": {
+        "name": "GHARUDA SOFTWARE",
+        "email": "info@gharuda-hrms.in"
+      },
+      "color": "#7b1fa2",
+      "subject": "Re: Solar package quotation request",
+      "body": "Dear Meena ma’am,\n\nPlease find attached our revised quotation for the 5kW rooftop package including the GST breakdown and 25-year performance warranty details.\n\nKind regards,\nGHARUDA SOFTWARE",
+      "at": "2026-09-24T10:40:00",
+      "unread": false,
+      "starred": false,
+      "to": [
+        "meena@srlakshmi.in"
+      ]
+    },
+    {
+      "id": 102,
+      "folder": "sent",
+      "from": {
+        "name": "GHARUDA SOFTWARE",
+        "email": "info@gharuda-hrms.in"
+      },
+      "color": "#7b1fa2",
+      "subject": "Payment reminder — Invoice INV-2081",
+      "body": "Dear customer,\n\nGentle reminder that invoice INV-2081 is due in 3 days. Please process the payment at your convenience.\n\nThanks,\nAccounts Team",
+      "at": "2026-09-23T15:00:00",
+      "unread": false,
+      "starred": false,
+      "to": [
+        "accounts@srlakshmi.in"
+      ]
+    },
+    {
+      "id": 201,
+      "folder": "draft",
+      "from": {
+        "name": "GHARUDA SOFTWARE",
+        "email": "info@gharuda-hrms.in"
+      },
+      "color": "#6b7280",
+      "subject": "AMC renewal invoice",
+      "body": "Dear Lakshmi Pharma,\n\nWe have prepared the AMC renewal invoice for 12 inverter units. Will update the final amount and send it across by tomorrow.",
+      "at": "2026-09-21T17:20:00",
+      "unread": false,
+      "starred": false,
+      "to": [
+        "info@lakshmipharma.in"
+      ]
+    },
+    {
+      "id": 301,
+      "folder": "trash",
+      "from": {
+        "name": "Marketing Offers",
+        "email": "offers@vendor-promos.com"
+      },
+      "color": "#94a3b8",
+      "subject": "FLAT 70% OFF — Limited time deals!",
+      "body": "Unlock mega savings on office equipment. Offer valid till midnight. Shop now!",
+      "at": "2026-09-22T08:00:00",
+      "unread": false,
+      "starred": false,
+      "restoreTo": "inbox"
+    }
+  ],
+  "settings": {
+    "smtp": {
+      "enabled": false,
+      "host": "",
+      "encryption": "",
+      "username": "",
+      "port": null,
+      "fromName": ""
+    },
+    "imap": {
+      "enabled": false,
+      "host": "",
+      "encryption": "",
+      "username": "",
+      "port": 993
+    }
+  }
+}

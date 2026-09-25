@@ -1,0 +1,1087 @@
+<!-- =========================================================
+     TOAST / FEEDBACK ALERT
+========================================================== -->
+@if (feedbackMessage) {
+<div class="alert alert-dismissible fade show d-flex align-items-center justify-content-between p-2 px-3 mb-3 shadow-sm rounded-3"
+  [ngClass]="{
+    'alert-success': feedbackType === 'success',
+    'alert-warning': feedbackType === 'warning',
+    'alert-danger': feedbackType === 'danger'
+  }">
+  <div class="d-flex align-items-center gap-2 small fw-semibold">
+    @if (feedbackType === 'success') {
+    <i class="bi bi-check-circle-fill text-success fs-6"></i>
+    } @else if (feedbackType === 'warning') {
+    <i class="bi bi-exclamation-triangle-fill text-warning fs-6"></i>
+    } @else {
+    <i class="bi bi-x-circle-fill text-danger fs-6"></i>
+    }
+    <span>{{ feedbackMessage }}</span>
+  </div>
+  <button type="button" class="btn-close p-2" (click)="feedbackMessage = null" aria-label="Close"></button>
+</div>
+}
+
+@if (viewMode === 'list') {
+<!-- =========================================================
+     PAGE TITLE & TOP ACTIONS (LIST VIEW)
+========================================================== -->
+<div class="page-title-bar d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class="page-main-title mb-1">Salary Advance & Company Loans</h1>
+    <div class="page-breadcrumbs d-flex align-items-center gap-2 text-muted small">
+      <i class="bi bi-cash-coin text-success"></i>
+      <span>Loan & Advances</span>
+      <i class="bi bi-chevron-right text-secondary" style="font-size: 10px;"></i>
+      <span class=" text-dark">Salary Advance & Loans</span>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <button type="button" class="btn btn-outline-success btn-sm px-3 d-flex align-items-center gap-1"
+      (click)="openQuickAdvance()">
+      <i class="bi bi-lightning-charge-fill text-warning"></i>
+      <span>Quick 1-Month Advance</span>
+    </button>
+    <button type="button" class="btn btn-success btn-sm px-3 d-flex align-items-center gap-1"
+      (click)="openApplyView()">
+      <i class="bi bi-plus-lg"></i>
+      <span>Request Salary Advance</span>
+    </button>
+  </div>
+</div>
+
+<!-- =========================================================
+     KPI SUMMARY CARDS
+========================================================== -->
+<div class="row g-3 mb-4">
+  <!-- Total Disbursed (FY) -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box" style="background:var(--accent-blue-soft);color:var(--blue-550);">
+        <i class="bi bi-bank"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Total Disbursed (FY)</div>
+        <div class="kpi-value text-dark">{{ totalDisbursed }}</div>
+        <div class="kpi-sub text-muted">Across {{ loans.length }} loan accounts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly EMI Recovery -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box" style="background:var(--neutral-50);color:var(--green-500);">
+        <i class="bi bi-arrow-repeat"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Monthly EMI Recovery</div>
+        <div class="kpi-value text-dark">{{ monthlyRecovery }}</div>
+        <div class="kpi-sub text-muted">Auto-deducted via Payroll</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Review -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box" style="background:var(--warning-soft);color:var(--orange-500);">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Pending Review</div>
+        <div class="kpi-value text-dark">{{ pendingCount }}</div>
+        <div class="kpi-sub text-muted">Awaiting HR/Finance approval</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outstanding Principal -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box" style="background:var(--danger-soft);color:var(--red-500-2);">
+        <i class="bi bi-wallet2"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Outstanding Principal</div>
+        <div class="kpi-value text-dark">{{ outstandingBalance }}</div>
+        <div class="kpi-sub text-muted">Current active loan balance</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     ADVANCED FILTERS CARD (COLLAPSIBLE)
+========================================================== -->
+<div class="card-custom p-3 mb-4">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3" [class.border-bottom]="filtersOpen" [class.pb-3]="filtersOpen">
+    <div class="d-flex align-items-center gap-2">
+      <div class="filter-header-icon-box">
+        <i class="bi bi-funnel"></i>
+      </div>
+      <div>
+        <h6 class=" text-dark mb-0 fs-6">Filter Loan & Advance Records</h6>
+        <small class="text-muted" style="font-size: 12px;">Refine by search query, scheme category, department, or loan status</small>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+      (click)="toggleFilters()">
+      <span>{{ filtersOpen ? 'Collapse Filters' : 'Expand Filters' }}</span>
+      <i class="bi" [ngClass]="filtersOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </button>
+  </div>
+
+  @if (filtersOpen) {
+  <div class="row g-3 pt-3 align-items-end">
+    <!-- Search Employee -->
+    <div class="col-lg-3 col-md-6 col-sm-12">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-search text-primary"></i> Search Employee
+      </label>
+      <input type="text" class="form-control form-control-sm" [(ngModel)]="searchFilter" (keyup.enter)="applyFilters()"
+        placeholder="Name, EMP ID, or Ref #" />
+    </div>
+
+    <!-- Category -->
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-tag text-success"></i> Category
+      </label>
+      <p-select [(ngModel)]="selectedCategory" [options]="categoryOptions" (onChange)="applyFilters()"
+        optionLabel="label" optionValue="value" placeholder="All Categories" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Department -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-building text-info"></i> Department
+      </label>
+      <p-select [(ngModel)]="selectedDept" [options]="departmentOptions" (onChange)="applyFilters()"
+        optionLabel="label" optionValue="value" placeholder="All Departments" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Status -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-shield-check text-warning"></i> Status
+      </label>
+      <p-select [(ngModel)]="selectedStatus" [options]="statusOptions" (onChange)="applyFilters()"
+        optionLabel="label" optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Buttons -->
+    <div class="col-lg-2 col-md-4 col-sm-12 d-flex gap-2">
+      <button type="button" class="btn btn-outline-secondary w-50 btn-sm" (click)="clearFilters()">
+        Clear
+      </button>
+      <button type="button" class="btn btn-success w-50 btn-sm" (click)="applyFilters()">
+        Apply
+      </button>
+    </div>
+  </div>
+  }
+</div>
+
+<!-- =========================================================
+     ACTIVE FILTERS BAR
+========================================================== -->
+@if (activeChips.length > 0) {
+<div class="active-filters-bar mb-3 p-2 px-3 rounded-3 d-flex align-items-center flex-wrap gap-2 bg-white border shadow-sm">
+  <span class="active-filters-label text-muted small fw-semibold d-flex align-items-center">
+    <i class="bi bi-funnel-fill me-1 text-success"></i>Active Filters:
+  </span>
+  <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1">
+    @for (c of activeChips; track c.id) {
+    <span class="filter-chip">
+      <span class="chip-label">{{ c.label }}</span>
+      <button type="button" class="chip-close" (click)="removeChip(c.id)" title="Remove filter">
+        <i class="bi bi-x"></i>
+      </button>
+    </span>
+    }
+  </div>
+  <button type="button" class="btn btn-link text-danger btn-sm p-0 fw-semibold" (click)="clearFilters()">
+    Clear All
+  </button>
+</div>
+}
+
+<!-- =========================================================
+     LOANS DATA TABLE (Using Global PrimeDataTable)
+========================================================== -->
+<div class="row">
+  <div class="col-12">
+    <app-primedatatable
+      [modalHeader]="tableHeader"
+      [columns]="columns"
+      [data]="displayedLoans"
+      [searchPlaceholder]="searchPlaceholder"
+      [showColumnsButton]="true"
+      [showExportButton]="true"
+      [exportFileName]="'salary-advance-and-loans-report'"
+      [rows]="10"
+    >
+      <!-- Projected Toolbar Action: Active filter indicator -->
+      <div table-toolbar-actions class="d-flex align-items-center">
+        <span class="badge-filter-active">
+          Filter Active: {{ selectedStatus ? (selectedStatus === 'approved' ? 'Active / Approved' : (selectedStatus === 'pending' ? 'Pending Approval' : (selectedStatus === 'completed' ? 'Completed / Settled' : 'Rejected'))) : 'All Records' }}
+        </span>
+      </div>
+
+      <!-- Custom Cell Template for Table Columns -->
+      <ng-template #cellTemplate let-row let-col="col">
+        <!-- REF # -->
+        @if (col.field === 'ref') {
+        <a href="javascript:void(0);" class=" text-success text-decoration-none ref-code-text"
+          (click)="openLoanHub(row, 'overview', $event)">
+          {{ row.ref }}
+        </a>
+        }
+
+        <!-- EMPLOYEE -->
+        @else if (col.field === 'employee') {
+        <div class="d-flex align-items-center gap-2">
+          @if (row.avatar) {
+          <img [src]="row.avatar" [alt]="row.name" class="avatar-sm rounded-circle border"
+            style="width:34px;height:34px;object-fit:cover;"
+            (error)="row.avatar = ''" />
+          } @else {
+          <div class="emp-initials-avatar" [style.background]="row.avatarColor || 'var(--green-350)'">
+            {{ row.empInitials }}
+          </div>
+          }
+          <div>
+            <div class=" text-dark emp-name-line">
+              <a href="javascript:void(0);" class="text-dark text-decoration-none" (click)="openLoanHub(row, 'overview', $event)">
+                {{ row.name }}
+              </a>
+            </div>
+            <div class="text-muted small emp-code-line">{{ row.empId }} &bull; {{ row.dept }}</div>
+          </div>
+        </div>
+        }
+
+        <!-- CATEGORY -->
+        @else if (col.field === 'category') {
+        <span class="badge-loan-cat" [ngClass]="{
+          'badge-cat-personal': row.category === 'Personal Loan',
+          'badge-cat-advance': row.category === 'Salary Advance',
+          'badge-cat-medical': row.category === 'Medical Assistance',
+          'badge-cat-education': row.category === 'Education Support'
+        }">
+          {{ row.category }}
+        </span>
+        }
+
+        <!-- PRINCIPAL -->
+        @else if (col.field === 'principal') {
+        <span class=" text-dark">{{ formatCurrency(row.principal) }}</span>
+        }
+
+        <!-- TENURE / EMI -->
+        @else if (col.field === 'tenureEmi') {
+        <div>
+          <div class="fw-semibold text-dark">{{ row.tenure }} {{ row.tenure === 1 ? 'month' : 'months' }}</div>
+          <div class="text-muted small" style="font-size: 11.5px;">{{ formatCurrency(row.emi) }}/mo</div>
+        </div>
+        }
+
+        <!-- REPAID / BALANCE -->
+        @else if (col.field === 'repaidBalance') {
+        <div class="loan-progress-stack" style="min-width: 140px;">
+          <div class="d-flex justify-content-between small  mb-1" style="font-size: 11.5px;">
+            <span class="text-success">{{ formatCurrency(row.repaid) }}</span>
+            <span class="text-muted">{{ formatCurrency(row.balance) }}</span>
+          </div>
+          <div class="progress" style="height: 6px; border-radius: 999px; background:var(--neutral-50-6);">
+            <div class="progress-bar bg-success" role="progressbar" [style.width.%]="getProgressPercent(row)"></div>
+          </div>
+        </div>
+        }
+
+        <!-- REQUEST DATE -->
+        @else if (col.field === 'startDate') {
+        <span class="text-dark" style="font-size: 12.5px;">{{ row.startDate }}</span>
+        }
+
+        <!-- STATUS -->
+        @else if (col.field === 'status') {
+        @if (row.status === 'approved') {
+        <span class="status-pill status-approved d-inline-flex align-items-center gap-1">
+          <i class="bi bi-circle-fill" style="font-size: 8px;"></i>
+          <span>Active</span>
+        </span>
+        } @else if (row.status === 'pending') {
+        <span class="status-pill status-pending d-inline-flex align-items-center gap-1">
+          <i class="bi bi-circle-fill" style="font-size: 8px;"></i>
+          <span>Pending Approval</span>
+        </span>
+        } @else if (row.status === 'completed') {
+        <span class="status-pill status-approved d-inline-flex align-items-center gap-1">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Settled</span>
+        </span>
+        } @else {
+        <span class="status-pill status-rejected d-inline-flex align-items-center gap-1">
+          <i class="bi bi-x-circle-fill"></i>
+          <span>Rejected</span>
+        </span>
+        }
+        }
+
+        <!-- ACTIONS -->
+        @else if (col.field === 'actions') {
+        <div class="d-inline-flex align-items-center gap-1" (click)="$event.stopPropagation()">
+          <!-- View Full Details -->
+          <button type="button" class="btn-icon-action btn-view-action" (click)="openLoanHub(row, 'overview', $event)"
+            title="View Full Loan Details">
+            <i class="bi bi-eye"></i>
+          </button>
+
+          <!-- View EMI Schedule -->
+          <button type="button" class="btn-icon-action btn-schedule-action" (click)="openLoanHub(row, 'schedule', $event)"
+            title="View EMI Schedule">
+            <i class="bi bi-calendar3"></i>
+          </button>
+
+          <!-- Approve / Reject for Pending -->
+          @if (row.status === 'pending') {
+          <button type="button" class="btn-icon-action btn-icon-primary btn-approve-action" (click)="approveLoan(row, $event)"
+            title="Approve Request">
+            <i class="bi bi-check-lg"></i>
+          </button>
+          <button type="button" class="btn-icon-action btn-icon-danger btn-reject-action" (click)="rejectLoan(row, $event)"
+            title="Reject Request">
+            <i class="bi bi-x-lg"></i>
+          </button>
+          }
+        </div>
+        }
+      </ng-template>
+    </app-primedatatable>
+  </div>
+</div>
+} @else {
+<!-- =========================================================
+     LOAN APPLY VIEW (From loan-apply.php - NOT A MODAL)
+========================================================== -->
+<div class="page-title-bar d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+  <div>
+    <h1 class="page-main-title mb-1">Request Salary Advance</h1>
+    <div class="page-breadcrumbs d-flex align-items-center gap-2 text-muted small">
+      <i class="bi bi-cash-coin text-success"></i>
+      <span>Loan & Advances</span>
+      <i class="bi bi-chevron-right text-secondary" style="font-size: 10px;"></i>
+      <span class=" text-dark">Apply for Advance</span>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-outline-success btn-sm px-3 d-flex align-items-center gap-1"
+    (click)="backToList()">
+    <i class="bi bi-arrow-left"></i>
+    <span>Back to Loan Requests</span>
+  </button>
+</div>
+
+<div class="loan-apply-form">
+  <!-- Employee Eligibility -->
+  <div class="form-section mb-3">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+      <h6 class=" text-dark mb-0 d-flex align-items-center gap-2">
+        <i class="bi bi-person-check text-success fs-5"></i> Employee Eligibility
+      </h6>
+      <!-- Employee Select (p-select) -->
+      <div class="d-flex align-items-center gap-2">
+        <label class="small text-muted fw-semibold text-nowrap">Employee:</label>
+        <p-select [(ngModel)]="applyForm.employeeId" [options]="employeeOptions"
+          optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" style="min-width: 260px;" />
+      </div>
+    </div>
+
+    <div class="eligibility-grid">
+      <div class="eligibility-card">
+        <div class="val text-dark">{{ formatCurrency(currentEmployeeEligibility.salary) }}</div>
+        <div class="lbl text-muted">Monthly Net Salary</div>
+      </div>
+      <div class="eligibility-card">
+        <div class="val text-success">{{ formatCurrency(currentEmployeeEligibility.maxAdvance) }}</div>
+        <div class="lbl text-muted">Max Advance (50%)</div>
+      </div>
+      <div class="eligibility-card">
+        <div class="val text-danger">{{ formatCurrency(currentEmployeeEligibility.outstanding) }}</div>
+        <div class="lbl text-muted">Current Outstanding</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loan Details Form -->
+  <div class="form-section mb-3">
+    <h6 class=" text-dark mb-3 d-flex align-items-center gap-2">
+      <i class="bi bi-file-earmark-text text-primary fs-5"></i> Advance Details
+    </h6>
+    <form (ngSubmit)="submitApplyForm()">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label  small text-dark">Advance Type <span class="text-danger">*</span></label>
+          <p-select [(ngModel)]="applyForm.advanceType" [options]="advanceTypeOptions" name="advType"
+            optionLabel="label" optionValue="value" placeholder="Select Type" appendTo="body" styleClass="w-100" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label  small text-dark">Amount (₹) <span class="text-danger">*</span></label>
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="applyForm.amount" name="advAmt"
+            placeholder="Enter amount" min="1000" [max]="currentEmployeeEligibility.maxAdvance" required />
+          <div class="quick-amt-group d-flex gap-1 mt-1">
+            <button type="button" class="btn-quick-amt" (click)="setApplyQuickAmount(10000)">₹10K</button>
+            <button type="button" class="btn-quick-amt" (click)="setApplyQuickAmount(20000)">₹20K</button>
+            <button type="button" class="btn-quick-amt" (click)="setApplyQuickAmount(30000)">₹30K</button>
+            <button type="button" class="btn-quick-amt" (click)="setApplyQuickAmount('max')">Max (50%)</button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label  small text-dark">Repayment Tenure <span class="text-danger">*</span></label>
+          <p-select [(ngModel)]="applyForm.tenure" [options]="tenureOptions" name="advTenure"
+            optionLabel="label" optionValue="value" placeholder="Select Tenure" appendTo="body" styleClass="w-100" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label  small text-dark">Preferred Start Date</label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>  
+        </div>
+        <div class="col-12">
+          <label class="form-label  small text-dark">Reason for Advance</label>
+          <textarea class="form-control form-control-sm" [(ngModel)]="applyForm.reason" name="advReason" rows="3"
+            placeholder="Brief description of why you need this advance..."></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Repayment Summary -->
+  <div class="form-section mb-3">
+    <h6 class=" text-dark mb-3 d-flex align-items-center gap-2">
+      <i class="bi bi-calculator text-success fs-5"></i> Repayment Summary
+    </h6>
+    <div class="summary-box">
+      <div class="summary-row">
+        <span class="lbl text-muted fw-semibold">Advance Amount</span>
+        <span class="val  text-dark">{{ formatCurrency(applyTotal) }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl text-muted fw-semibold">Interest Rate</span>
+        <span class="val  text-success">0% (Interest Free)</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl text-muted fw-semibold">Repayment Tenure</span>
+        <span class="val  text-dark">{{ applyForm.tenure }} {{ applyForm.tenure === 1 ? 'Month' : 'Months' }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl text-muted fw-semibold">Monthly EMI Deduction</span>
+        <span class="val  text-success">{{ formatCurrency(applyEmi) }}/mo</span>
+      </div>
+      <div class="summary-row total pt-2 mt-2 border-top">
+        <span class="lbl text-dark ">Total Repayment</span>
+        <span class="val  text-success fs-5">{{ formatCurrency(applyTotal) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Note -->
+  <div class="form-note alert alert-light border p-3 rounded-3 mb-3 d-flex align-items-start gap-2 small text-muted">
+    <i class="bi bi-info-circle-fill text-primary fs-6 mt-1"></i>
+    <span>By submitting this request, you agree to the salary advance recovery being auto-deducted from your monthly payroll. The advance is subject to HR and Finance approval.</span>
+  </div>
+
+  <!-- Actions -->
+  <div class="d-flex gap-2 mb-4">
+    <button type="button" class="btn btn-outline-secondary flex-fill" (click)="backToList()">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-success flex-fill d-flex align-items-center justify-content-center gap-1"
+      (click)="submitApplyForm()">
+      <i class="bi bi-send"></i> Submit Request
+    </button>
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     MODAL 1: QUICK SALARY ADVANCE (STILL AVAILABLE FOR QUICK BUTTON)
+========================================================== -->
+@if (quickAdvanceModalOpen) {
+<div class="modal-backdrop-custom" (click)="closeQuickAdvance()"></div>
+<div class="modal-custom modal-md shadow-lg" (click)="$event.stopPropagation()">
+  <!-- Header -->
+  <div class="modal-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom bg-warning-subtle">
+    <div class="d-flex align-items-center gap-2">
+      <span class="modal-icon-circle bg-warning text-dark">
+        <i class="bi bi-lightning-charge-fill "></i>
+      </span>
+      <div>
+        <h5 class="modal-title fs-6  text-dark mb-0">Quick Salary Advance</h5>
+        <small class="text-muted">Instant 1-to-3 month payroll advance sanction</small>
+      </div>
+    </div>
+    <button type="button" class="btn-modal-close" (click)="closeQuickAdvance()" title="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- Body -->
+  <div class="modal-body p-4">
+    <form (ngSubmit)="submitQuickAdvance()">
+      <div class="mb-3">
+        <label class="form-label small  text-dark">Select Employee *</label>
+        <p-select [(ngModel)]="quickAdvanceData.employee" [options]="quickAdvanceEmployeeOptions" name="emp"
+          optionLabel="label" optionValue="value" placeholder="Choose Employee..." appendTo="body" styleClass="w-100" />
+        <small class="text-muted" style="font-size: 11px;">Maximum advance: Up to 50% of monthly net salary.</small>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small  text-dark">Advance Amount (₹) *</label>
+        <input type="number" class="form-control form-control-sm" [(ngModel)]="quickAdvanceData.amount" name="amt"
+          placeholder="e.g. 25000" min="1000" max="60000" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small  text-dark">Recovery Installments *</label>
+        <p-select [(ngModel)]="quickAdvanceData.tenure" [options]="quickAdvanceTenureOptions" name="tenure"
+          optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small  text-dark">Reason for Advance</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="quickAdvanceData.reason" name="reason"
+          placeholder="e.g. Family medical emergency, festival advance" />
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer p-3 px-4 border-top d-flex justify-content-end gap-2 bg-white">
+    <button type="button" class="btn btn-secondary btn-sm px-3" (click)="closeQuickAdvance()">Cancel</button>
+    <button type="button" class="btn btn-primary btn-sm px-3 d-flex align-items-center gap-1"
+      (click)="submitQuickAdvance()">
+      <i class="bi bi-check-circle"></i>
+      <span>Disburse Advance</span>
+    </button>
+  </div>
+</div>
+}
+
+<!-- =========================================================================
+     MODAL 2: COMPREHENSIVE LOAN DETAILS & ACTION HUB (WITH 4 INTERACTIVE TABS)
+========================================================================== -->
+@if (hubModalOpen && selectedLoan) {
+<div class="modal-backdrop-custom" (click)="closeLoanHub()"></div>
+<div class="modal-custom modal-xl shadow-lg" (click)="$event.stopPropagation()">
+  <!-- Modal Hero Header -->
+  <div class="modal-header modal-hero-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom">
+    <div class="d-flex align-items-center gap-3">
+      @if (selectedLoan.avatar) {
+      <img [src]="selectedLoan.avatar" [alt]="selectedLoan.name" class="avatar-sm rounded-circle border shadow-sm"
+        style="width:46px;height:46px;object-fit:cover;"
+        (error)="selectedLoan.avatar = ''" />
+      } @else {
+      <div class="emp-initials-avatar" [style.background]="selectedLoan.avatarColor" style="width:46px;height:46px;font-size:16px;">
+        {{ selectedLoan.empInitials }}
+      </div>
+      }
+      <div>
+        <div class="d-flex align-items-center gap-2">
+          <h5 class="modal-title  mb-0 text-dark fs-5">
+            {{ selectedLoan.ref }} &bull; Loan Account Hub
+          </h5>
+          @if (selectedLoan.status === 'approved') {
+          <span class="status-pill status-approved"><i class="bi bi-circle-fill me-1" style="font-size:8px;"></i>Active</span>
+          } @else if (selectedLoan.status === 'pending') {
+          <span class="status-pill status-pending"><i class="bi bi-circle-fill me-1" style="font-size:8px;"></i>Pending Approval</span>
+          } @else if (selectedLoan.status === 'completed') {
+          <span class="status-pill status-approved"><i class="bi bi-check-circle-fill me-1"></i>Settled</span>
+          } @else {
+          <span class="status-pill status-rejected"><i class="bi bi-x-circle-fill me-1"></i>Rejected</span>
+          }
+        </div>
+        <div class="text-muted small">
+          <strong class="text-dark">{{ selectedLoan.name }}</strong> ({{ selectedLoan.empId }} &bull; {{ selectedLoan.dept }}) &bull;
+          <span class="badge bg-light text-dark border">{{ selectedLoan.category }}</span> &bull;
+          Applied: {{ selectedLoan.startDate }}
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="btn btn-icon btn-sm btn-outline-secondary" (click)="printHub()" title="Print Summary">
+        <i class="bi bi-printer"></i>
+      </button>
+      <button type="button" class="btn-modal-close" (click)="closeLoanHub()" title="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Financial Overview KPI Strip -->
+  <div class="px-4 pt-3 pb-0 bg-white">
+    <div class="row g-3 mb-3">
+      <div class="col-sm-6 col-lg-3">
+        <div class="modal-kpi-card p-3 rounded border bg-light" style="border-left: 4px solid var(--blue-450) !important;">
+          <span class="text-muted small d-block mb-1"><i class="bi bi-cash-stack text-primary me-1"></i> Loan Principal</span>
+          <h4 class=" mb-0 text-dark">{{ formatCurrency(selectedLoan.principal) }}</h4>
+          <span class="text-muted" style="font-size:11px;">{{ selectedLoan.tenure }} Months &bull; Interest Free</span>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="modal-kpi-card p-3 rounded border bg-light" style="border-left: 4px solid var(--blue-450-2) !important;">
+          <span class="text-muted small d-block mb-1"><i class="bi bi-calendar-check text-info me-1"></i> Monthly EMI</span>
+          <h4 class=" mb-0 text-primary">{{ formatCurrency(selectedLoan.emi) }}</h4>
+          <span class="text-muted" style="font-size:11px;">Payroll Auto-Debit</span>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="modal-kpi-card p-3 rounded border bg-light" style="border-left: 4px solid var(--green-350) !important;">
+          <span class="text-success small d-block mb-1"><i class="bi bi-check2-circle text-success me-1"></i> Total Recovered</span>
+          <h4 class=" mb-0 text-success">{{ formatCurrency(selectedLoan.repaid) }}</h4>
+          <span class="text-success" style="font-size:11px;">{{ selectedLoan.paidCount }} of {{ selectedLoan.tenure }} EMIs Cleared</span>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="modal-kpi-card p-3 rounded border bg-light" style="border-left: 4px solid var(--danger) !important;">
+          <span class="text-danger small d-block mb-1"><i class="bi bi-hourglass-bottom text-danger me-1"></i> Outstanding Due</span>
+          <h4 class=" mb-0 text-danger">{{ formatCurrency(selectedLoan.balance) }}</h4>
+          <span class="text-danger" style="font-size:11px;">{{ selectedLoan.tenure - selectedLoan.paidCount }} EMIs Remaining</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recovery Progress Bar -->
+    <div class="p-2 px-3 bg-light rounded border d-flex align-items-center justify-content-between gap-3 mb-3">
+      <div class="d-flex align-items-center gap-2 small  text-dark" style="min-width: 140px;">
+        <i class="bi bi-pie-chart text-success"></i> Recovery Progress:
+      </div>
+      <div class="progress flex-grow-1" style="height: 8px; border-radius: 99px;">
+        <div class="progress-bar bg-success" role="progressbar" [style.width.%]="getProgressPercent(selectedLoan)"></div>
+      </div>
+      <span class=" text-success small" style="min-width: 80px; text-align: right;">
+        {{ getProgressPercent(selectedLoan) }}% Paid
+      </span>
+    </div>
+
+    <!-- Hub Tabs Navigation -->
+    <ul class="nav nav-tabs-custom" role="tablist">
+      <li class="nav-item">
+        <button role="tab" type="button" class="tab-nav-btn" [class.active]="activeHubTab === 'overview'"
+          (click)="setHubTab('overview')" [attr.aria-selected]="activeHubTab === 'overview'">
+          <i class="bi bi-info-circle"></i> 1. Loan Overview & Details
+        </button>
+      </li>
+      <li class="nav-item">
+        <button role="tab" type="button" class="tab-nav-btn" [class.active]="activeHubTab === 'schedule'"
+          (click)="setHubTab('schedule')" [attr.aria-selected]="activeHubTab === 'schedule'">
+          <i class="bi bi-calendar3"></i> 2. EMI Repayment Schedule
+        </button>
+      </li>
+      <li class="nav-item">
+        <button role="tab" type="button" class="tab-nav-btn" [class.active]="activeHubTab === 'ledger'"
+          (click)="setHubTab('ledger')" [attr.aria-selected]="activeHubTab === 'ledger'">
+          <i class="bi bi-journal-text"></i> 3. Manage Loan Ledger
+        </button>
+      </li>
+      <li class="nav-item">
+        <button role="tab" type="button" class="tab-nav-btn" [class.active]="activeHubTab === 'foreclosure'"
+          (click)="setHubTab('foreclosure')" [attr.aria-selected]="activeHubTab === 'foreclosure'">
+          <i class="bi bi-shield-check"></i> 4. Foreclosure & Settlement
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Modal Tab Content -->
+  <div class="modal-body p-4 bg-light">
+    <!-- TAB 1: OVERVIEW & DETAILS -->
+    @if (activeHubTab === 'overview') {
+    <div class="row g-3">
+      <!-- Sanction Spec -->
+      <div class="col-lg-6">
+        <div class="p-3 h-100 card-custom">
+          <h6 class=" text-dark border-bottom pb-2 mb-3">
+            <i class="bi bi-file-earmark-text text-primary me-2"></i>Loan Agreement & Sanction Details
+          </h6>
+          <div class="row g-2" style="font-size: 12.5px;">
+            <div class="col-6 text-muted">Loan Category:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.category }}</div>
+
+            <div class="col-6 text-muted">Sanction Reference #:</div>
+            <div class="col-6  text-success">{{ selectedLoan.ref }}</div>
+
+            <div class="col-6 text-muted">Sanction Amount:</div>
+            <div class="col-6  text-dark">{{ formatCurrency(selectedLoan.principal) }}</div>
+
+            <div class="col-6 text-muted">Annual Interest Rate:</div>
+            <div class="col-6  text-success">0.0% (Company Welfare Facility)</div>
+
+            <div class="col-6 text-muted">Repayment Tenure:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.tenure }} Months</div>
+
+            <div class="col-6 text-muted">Monthly EMI Deduction:</div>
+            <div class="col-6  text-primary">{{ formatCurrency(selectedLoan.emi) }} / month</div>
+
+            <div class="col-6 text-muted">Disbursal Date:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.startDate }}</div>
+
+            <div class="col-6 text-muted">Projected Maturity Date:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.maturityDate }}</div>
+
+            <div class="col-6 text-muted">Recovery Channel:</div>
+            <div class="col-6  text-dark">Automated Monthly Payroll Salary Slip</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Borrower Details -->
+      <div class="col-lg-6">
+        <div class="p-3 h-100 card-custom">
+          <h6 class=" text-dark border-bottom pb-2 mb-3">
+            <i class="bi bi-person-badge text-success me-2"></i>Borrower & Eligibility Details
+          </h6>
+          <div class="row g-2" style="font-size: 12.5px;">
+            <div class="col-6 text-muted">Employee Name:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.name }}</div>
+
+            <div class="col-6 text-muted">Employee Code:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.empId }}</div>
+
+            <div class="col-6 text-muted">Department:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.dept }}</div>
+
+            <div class="col-6 text-muted">Monthly Net Salary:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.salary }} / month</div>
+
+            <div class="col-6 text-muted">Disbursal Bank / Acc:</div>
+            <div class="col-6  text-dark">{{ selectedLoan.bankAccount }}</div>
+
+            <div class="col-6 text-muted">Purpose of Advance:</div>
+            <div class="col-6 fw-semibold text-dark">{{ selectedLoan.purpose }}</div>
+
+            <div class="col-6 text-muted">Guarantor / Approved By:</div>
+            <div class="col-6  text-success">{{ selectedLoan.approvedBy }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Shortcuts -->
+      <div class="col-12">
+        <div class="p-3 d-flex align-items-center justify-content-between flex-wrap gap-3 card-custom">
+          <div>
+            <h6 class=" mb-1 text-dark">Account Quick Shortcuts</h6>
+            <span class="text-muted small">Jump straight into Schedule, Ledger, or Foreclosure</span>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="setHubTab('schedule')">
+              <i class="bi bi-calendar3"></i> View EMI Schedule
+            </button>
+            <button type="button" class="btn btn-outline-success btn-sm" (click)="setHubTab('ledger')">
+              <i class="bi bi-journal-text"></i> Manage Loan Ledger
+            </button>
+            <button type="button" class="btn btn-outline-dark btn-sm" (click)="setHubTab('foreclosure')">
+              <i class="bi bi-shield-check"></i> Early Settlement
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- TAB 2: EMI REPAYMENT SCHEDULE -->
+    @if (activeHubTab === 'schedule') {
+    <div class="p-3 card-custom">
+      <!-- Filter Pills & Toolbar -->
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <div class="d-flex align-items-center gap-2 modal-filter-pills flex-wrap">
+          <button type="button" class="btn-sched-pill" [class.active]="activeSchedFilter === 'all'"
+            (click)="setSchedFilter('all')">
+            All Installments ({{ displayedInstallments.length }})
+          </button>
+          <button type="button" class="btn-sched-pill" [class.active]="activeSchedFilter === 'deducted'"
+            (click)="setSchedFilter('deducted')">
+            Paid / Deducted ({{ schedPaidCount }})
+          </button>
+          <button type="button" class="btn-sched-pill" [class.active]="activeSchedFilter === 'upcoming'"
+            (click)="setSchedFilter('upcoming')">
+            Upcoming ({{ schedUpcomingCount }})
+          </button>
+          <button type="button" class="btn-sched-pill" [class.active]="activeSchedFilter === 'scheduled'"
+            (click)="setSchedFilter('scheduled')">
+            Scheduled ({{ schedScheduledCount }})
+          </button>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-sm btn-outline-success" (click)="exportScheduleCSV()">
+            <i class="bi bi-file-earmark-spreadsheet"></i> Export Schedule CSV
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="printHub()">
+            <i class="bi bi-printer"></i> Print
+          </button>
+        </div>
+      </div>
+
+      <!-- Schedule Table -->
+      <div class="table-responsive border rounded overflow-hidden mb-3">
+        <table class="table table-hover table-sm text-center mb-0" style="font-size: 12.5px;">
+          <thead class="table-light">
+            <tr>
+              <th class="py-2 px-3">Inst. #</th>
+              <th class="py-2 px-3">Payroll Cycle</th>
+              <th class="py-2 px-3">Opening Balance</th>
+              <th class="py-2 px-3">Principal</th>
+              <th class="py-2 px-3">Interest</th>
+              <th class="py-2 px-3">EMI Amount</th>
+              <th class="py-2 px-3">Closing Balance</th>
+              <th class="py-2 px-3">Payment Mode</th>
+              <th class="py-2 px-3">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inst of filteredInstallments; track inst.instNo) {
+            <tr>
+              <td class="py-2 px-3 ">{{ inst.instNo }}</td>
+              <td class="py-2 px-3">{{ inst.cycle }}</td>
+              <td class="py-2 px-3">{{ formatCurrency(inst.openingBal) }}</td>
+              <td class="py-2 px-3">{{ formatCurrency(inst.principal) }}</td>
+              <td class="py-2 px-3">{{ formatCurrency(inst.interest) }}</td>
+              <td class="py-2 px-3  text-success">{{ formatCurrency(inst.emi) }}</td>
+              <td class="py-2 px-3 fw-semibold">{{ formatCurrency(inst.closingBal) }}</td>
+              <td class="py-2 px-3 text-muted">{{ inst.mode }}</td>
+              <td class="py-2 px-3">
+                @if (inst.status === 'Deducted') {
+                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1">
+                  <i class="bi bi-check-circle-fill me-1"></i> Paid
+                </span>
+                } @else if (inst.status === 'Upcoming') {
+                <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-2 py-1">
+                  <i class="bi bi-clock me-1"></i> Upcoming
+                </span>
+                } @else {
+                <span class="badge bg-light text-secondary border rounded-pill px-2 py-1">
+                  Scheduled
+                </span>
+                }
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 text-muted small">
+        <i class="bi bi-info-circle text-primary"></i>
+        <span>Monthly installments are automatically debited from the salary payslip on the final calendar day of each pay period.</span>
+      </div>
+    </div>
+    }
+
+    <!-- TAB 3: MANAGE LOAN LEDGER -->
+    @if (activeHubTab === 'ledger') {
+    <div class="p-3 card-custom">
+      <!-- Sub Nav -->
+      <ul class="nav nav-pills mb-3 gap-2">
+        <li class="nav-item">
+          <button type="button" class="btn btn-sm"
+            [ngClass]="activeLedgerSubTab === 'history' ? 'btn-success' : 'btn-outline-secondary'"
+            (click)="activeLedgerSubTab = 'history'">
+            <i class="bi bi-list-check"></i> Transaction History Statements
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn btn-sm"
+            [ngClass]="activeLedgerSubTab === 'entry' ? 'btn-success' : 'btn-outline-secondary'"
+            (click)="activeLedgerSubTab = 'entry'">
+            <i class="bi bi-plus-circle"></i> + Record Payment / Prepayment Entry
+          </button>
+        </li>
+      </ul>
+
+      <!-- Subtab 1: History -->
+      @if (activeLedgerSubTab === 'history') {
+      <div>
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+          <div class="d-flex align-items-center gap-2 modal-filter-pills flex-wrap">
+            <button type="button" class="btn-sched-pill" [class.active]="activeLedgerFilter === 'all'"
+              (click)="activeLedgerFilter = 'all'">All Txns</button>
+            <button type="button" class="btn-sched-pill" [class.active]="activeLedgerFilter === 'payroll'"
+              (click)="activeLedgerFilter = 'payroll'">Payroll Deductions</button>
+            <button type="button" class="btn-sched-pill" [class.active]="activeLedgerFilter === 'manual'"
+              (click)="activeLedgerFilter = 'manual'">Manual Prepayments</button>
+            <button type="button" class="btn-sched-pill" [class.active]="activeLedgerFilter === 'disburse'"
+              (click)="activeLedgerFilter = 'disburse'">Disbursements</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="exportLedgerCSV()">
+              <i class="bi bi-download"></i> Export Statement CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive border rounded overflow-hidden">
+          <table class="table table-hover table-sm text-center mb-0" style="font-size: 12px;">
+            <thead class="table-light">
+              <tr>
+                <th class="py-2 px-3">Date</th>
+                <th class="py-2 px-3">Txn Ref #</th>
+                <th class="py-2 px-3">Type</th>
+                <th class="py-2 px-3">Amount (₹)</th>
+                <th class="py-2 px-3">Running Balance</th>
+                <th class="py-2 px-3">Payment Mode</th>
+                <th class="py-2 px-3">Processed By</th>
+                <th class="py-2 px-3">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of filteredTransactions; track t.ref) {
+              <tr>
+                <td class="py-2 px-3">{{ t.date }}</td>
+                <td class="py-2 px-3  text-success">{{ t.ref }}</td>
+                <td class="py-2 px-3">{{ t.type }}</td>
+                <td class="py-2 px-3 " [class.text-primary]="t.isCredit" [class.text-success]="!t.isCredit">
+                  {{ t.isCredit ? '+' : '-' }}{{ formatCurrency(t.amount) }}
+                </td>
+                <td class="py-2 px-3 fw-semibold">{{ formatCurrency(t.balance) }}</td>
+                <td class="py-2 px-3 text-muted">{{ t.mode }}</td>
+                <td class="py-2 px-3">{{ t.by }}</td>
+                <td class="py-2 px-3">
+                  <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1">{{ t.status }}</span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      }
+
+      <!-- Subtab 2: Manual Payment Entry -->
+      @if (activeLedgerSubTab === 'entry') {
+      <form (ngSubmit)="postLedgerPayment()" class="p-3 border rounded bg-light">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label small  text-dark">Payment Date *</label>
+            <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+          </div>
+          <div class="col-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small  text-dark mb-0">Amount (₹) *</label>
+              <div class="d-flex gap-1">
+                <button type="button" class="btn btn-outline-secondary btn-xs px-1" style="font-size: 11px;"
+                  (click)="setQuickAmount('emi')">+1 EMI</button>
+                <button type="button" class="btn btn-outline-secondary btn-xs px-1" style="font-size: 11px;"
+                  (click)="setQuickAmount('half')">50% Bal</button>
+                <button type="button" class="btn btn-outline-secondary btn-xs px-1" style="font-size: 11px;"
+                  (click)="setQuickAmount('full')">Full Bal</button>
+              </div>
+            </div>
+            <input type="number" class="form-control form-control-sm" [(ngModel)]="ledgerPaymentForm.amount" name="payAmount" min="100" required />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small  text-dark">Projected New Balance</label>
+            <input type="text" class="form-control form-control-sm  text-success bg-white" [value]="formatCurrency(projectedNewBalance)" readonly />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small  text-dark">Transaction Type *</label>
+            <p-select [(ngModel)]="ledgerPaymentForm.type" [options]="ledgerTypeOptions" name="payType"
+              optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small  text-dark">Payment Mode / Channel *</label>
+            <p-select [(ngModel)]="ledgerPaymentForm.mode" [options]="ledgerModeOptions" name="payMode"
+              optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small  text-dark">Transaction Reference / Receipt #</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="ledgerPaymentForm.ref" name="payRef" placeholder="e.g. UPI-9384918239" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small  text-dark">Processed By / Admin Name</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="ledgerPaymentForm.admin" name="payAdmin" />
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small  text-dark">Remarks / Note</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="ledgerPaymentForm.remarks" name="payRemarks" placeholder="e.g. Prepayment from incentive/bonus payout" />
+          </div>
+
+          <div class="col-12 text-end mt-3">
+            <button type="button" class="btn btn-success btn-sm px-3" (click)="postLedgerPayment()">
+              <i class="bi bi-check-circle"></i> Post Ledger Entry & Update Balance
+            </button>
+          </div>
+        </div>
+      </form>
+      }
+    </div>
+    }
+
+    <!-- TAB 4: FORECLOSURE & SETTLEMENT -->
+    @if (activeHubTab === 'foreclosure') {
+    <div class="p-3 card-custom">
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <div>
+          <h6 class=" mb-0 text-dark">
+            <i class="bi bi-shield-check text-primary me-2"></i>Full Foreclosure & Early Payoff Quote
+          </h6>
+          <span class="text-muted small">Instant one-click loan payoff & NOC completion</span>
+        </div>
+        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">0% Foreclosure Penalty</span>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <div class="p-3 border rounded bg-light">
+            <span class="text-muted small d-block mb-1">Current Principal Balance</span>
+            <h4 class=" text-dark mb-0">{{ formatCurrency(selectedLoan.balance) }}</h4>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 border rounded bg-light">
+            <span class="text-muted small d-block mb-1">Prepayment / Exit Fee</span>
+            <h4 class=" text-success mb-0">₹0 (Nil)</h4>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 border rounded bg-light">
+            <span class="text-muted small d-block mb-1">Net Payable for Full Closure</span>
+            <h4 class=" text-primary mb-0">{{ formatCurrency(selectedLoan.balance) }}</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info py-2 px-3 mb-3 d-flex align-items-center gap-2 small">
+        <i class="bi bi-info-circle-fill fs-6"></i>
+        <span>Once full settlement is processed, future payroll auto-debits will be stopped immediately and loan status will be marked as <strong>Completed / Settled</strong>.</span>
+      </div>
+
+      <div class="text-end">
+        <button type="button" class="btn btn-primary btn-sm px-3" (click)="executeForeclosure()"
+          [disabled]="selectedLoan.balance <= 0">
+          <i class="bi bi-check2-all"></i> Settle & Close Loan Account Now
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer p-3 px-4 border-top d-flex justify-content-between bg-white">
+    <div class="text-muted small">
+      Account Ref: <strong class="text-dark">{{ selectedLoan.ref }}</strong>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="btn btn-outline-secondary btn-sm px-3" (click)="printHub()">
+        <i class="bi bi-printer"></i> Print Account Summary
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm px-3" (click)="closeLoanHub()">Close</button>
+    </div>
+  </div>
+</div>
+}

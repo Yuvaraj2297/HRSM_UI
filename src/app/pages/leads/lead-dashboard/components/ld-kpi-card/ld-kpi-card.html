@@ -1,0 +1,18 @@
+<div class="kpi tone-{{ kpi().tone }}">
+  <div class="kpi-top">
+    <span class="kpi-ico"><i class="bi {{ kpi().icon }}"></i></span>
+    <span class="kpi-label">{{ kpi().label }}</span>
+    <span class="kpi-delta {{ deltaState() }}" title="Change over the trend period">
+      <i class="bi" [class.bi-arrow-up-right]="deltaState() === 'up'" [class.bi-arrow-down-right]="deltaState() === 'down'"
+        [class.bi-dash]="deltaState() === 'flat'"></i>{{ deltaText() }}
+    </span>
+  </div>
+
+  <div class="kpi-value">{{ kpi().value.toLocaleString('en-IN') }}</div>
+  <div class="kpi-sub">{{ sub() }}</div>
+
+  <svg class="kpi-spark" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+    <polygon [attr.points]="area()" />
+    <polyline [attr.points]="line()" vector-effect="non-scaling-stroke" />
+  </svg>
+</div>

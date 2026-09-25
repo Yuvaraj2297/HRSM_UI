@@ -1,0 +1,223 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+
+  <!-- Section title -->
+  <div class="ne-section-title mb-0">
+    KYC Document :-
+  </div>
+
+  <!-- Progress -->
+  <div class="d-flex align-items-center gap-2">
+
+    <span style="
+        font-size:12px;
+        font-weight:600;
+        color:var(--aw-ink-500,var(--neutral-450));
+      ">
+      {{ uploadedMandatory }} / {{ totalMandatory }} uploaded
+    </span>
+
+    <div style="
+        width:120px;
+        height:6px;
+        background:var(--neutral-50-8);
+        border-radius:3px;
+        overflow:hidden;
+      ">
+      <div [style.width.%]="progress" style="
+          height:100%;
+          background:var(--primary);
+          transition:width .3s;
+        "></div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     KYC TABLE
+===================================================== -->
+
+<div class="ne-kyc-table-wrapper" [formGroup]="form">
+
+  <table class="ne-kyc-table" formArrayName="kyc">
+
+    <!-- =================================================
+         TABLE HEADER
+    ================================================== -->
+
+    <thead>
+      <tr>
+
+        <th style="width:35%;">
+          Document Name
+        </th>
+
+        <th style="width:25%;">
+          Upload Field
+        </th>
+
+        <th style="
+            width:10%;
+            text-align:center;
+          ">
+          Mandatory
+        </th>
+
+        <th style="width:15%;">
+          File View
+        </th>
+
+        <th style="
+            width:15%;
+            text-align:center;
+          ">
+          Actions
+        </th>
+
+      </tr>
+    </thead>
+
+
+    <!-- =================================================
+         TABLE BODY
+    ================================================== -->
+
+    <tbody>
+
+      <tr class="ne-kyc-row" *ngFor="
+          let row of kyc.controls;
+          let i = index
+        " [formGroupName]="i">
+
+        <!-- =================================================
+             DOCUMENT NAME
+        ================================================== -->
+
+        <td>
+
+          <!-- Default document -->
+          <ng-container *ngIf="
+              !row.value.custom;
+              else customName
+            ">
+
+            <div class="ne-kyc-doc-name">
+              {{ row.value.name }}
+            </div>
+
+            <div class="ne-kyc-doc-desc">
+              {{ row.value.desc }}
+            </div>
+
+          </ng-container>
+
+
+          <!-- Custom document -->
+          <ng-template #customName>
+
+            <input pInputText class="form-control" formControlName="name" placeholder="Enter document name" />
+
+          </ng-template>
+
+        </td>
+
+
+        <!-- =================================================
+             FILE UPLOAD
+        ================================================== -->
+
+        <td>
+
+          <label class="ne-kyc-upload-btn">
+
+            <i class="bi bi-cloud-arrow-up"></i>
+
+            Choose File
+
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" hidden (change)="onFile($event, i)" />
+
+          </label>
+
+
+          <span class="ne-kyc-file-name">
+
+            {{ row.value.fileName || 'No file chosen' }}
+
+          </span>
+
+        </td>
+
+
+        <!-- =================================================
+             MANDATORY
+        ================================================== -->
+
+        <td style="text-align:center;">
+
+          <span class="ne-kyc-badge" [ngClass]="
+              row.value.mandatory
+                ? 'yes'
+                : 'no'
+            ">
+
+            {{ row.value.mandatory ? 'Yes' : 'No' }}
+
+          </span>
+
+        </td>
+
+
+        <!-- =================================================
+             FILE VIEW
+        ================================================== -->
+
+        <td>
+
+          <span class="ne-kyc-file-status" [class.uploaded]="!!row.value.fileName">
+
+            {{ row.value.fileName || 'No file' }}
+
+          </span>
+
+        </td>
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <td style="text-align:center;">
+
+          <button type="button" class="ne-kyc-remove" *ngIf="
+              row.value.fileName ||
+              row.value.custom
+            " (click)="removeOrClear(i)" title="Remove">
+
+            <i class="bi bi-trash"></i>
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+
+  <!-- =====================================================
+       CUSTOM DOCUMENT
+  ====================================================== -->
+
+  <div class="border-top p-3">
+
+    <button type="button" class="btn btn-primary" (click)="addCustom()">
+      + Custom Document
+    </button>
+
+  </div>
+
+</div>

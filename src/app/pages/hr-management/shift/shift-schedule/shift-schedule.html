@@ -1,0 +1,742 @@
+<!-- =========================================================
+     PAGE HEADER & BREADCRUMB
+========================================================== -->
+<app-breadcrumb>
+  <div breadcrumb-actions class="d-flex align-items-center gap-2">
+    <button type="button" class="btn btn-shift-requests btn-sm px-3" (click)="openShiftRequestsModal()">
+      <i class="bi bi-arrow-left-right"></i> Shift Requests
+      @if (pendingRequestsCount > 0) {
+      <span class="badge-req-count">{{ pendingRequestsCount }}</span>
+      }
+    </button>
+    <button type="button" class="btn btn-outline-primary btn-sm px-3" (click)="exportCSV()">
+      <i class="bi bi-download"></i> Sample Excel
+    </button>
+    <button type="button" class="btn btn-primary btn-sm px-3" (click)="openBulkUpload()">
+      <i class="bi bi-upload"></i> Bulk Upload
+    </button>
+  </div>
+</app-breadcrumb>
+
+<!-- =========================================================
+     STATS SUMMARY CARDS
+========================================================== -->
+<div class="row g-3 mb-3" id="shiftStatsRow">
+  <!-- Total Employees -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card-custom p-3 d-flex align-items-center gap-3 stat-gender-card"
+      [class.active-all]="activeGenderFilter === 'all'" (click)="setGenderFilter('all')" style="cursor: pointer;">
+      <div class="stat-icon-wrap" style="background:var(--accent-blue-soft); color:var(--blue-600-3);">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div>
+        <div class="stat-label">Total Employees</div>
+        <div class="stat-value text-dark">{{ statTotal }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boys -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card-custom p-3 d-flex align-items-center gap-3 stat-gender-card"
+      [class.active-male]="activeGenderFilter === 'Male'" (click)="setGenderFilter('Male')" style="cursor: pointer;">
+      <div class="stat-icon-wrap" style="background:var(--blue-50-2); color:var(--blue-450);">
+        <i class="bi bi-person-standing"></i>
+      </div>
+      <div>
+        <div class="stat-label">Boys</div>
+        <div class="stat-value text-primary">{{ statBoys }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Girls -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card-custom p-3 d-flex align-items-center gap-3 stat-gender-card"
+      [class.active-female]="activeGenderFilter === 'Female'" (click)="setGenderFilter('Female')"
+      style="cursor: pointer;">
+      <div class="stat-icon-wrap" style="background:var(--pink-50-2); color:var(--pink-450);">
+        <i class="bi bi-person-standing-dress"></i>
+      </div>
+      <div>
+        <div class="stat-label">Girls</div>
+        <div class="stat-value" style="color: var(--pink-450);">{{ statGirls }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Departments Breakdown -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card-custom p-3 d-flex align-items-center gap-3" (click)="toggleDeptBreakdown()"
+      style="cursor: pointer;">
+      <div class="stat-icon-wrap" style="background:var(--blue-50-5); color:var(--purple-500);">
+        <i class="bi bi-building"></i>
+      </div>
+      <div>
+        <div class="stat-label">Departments</div>
+        <div class="stat-value" style="color: var(--purple-500);">{{ statDeptCount }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     DEPARTMENT BREAKDOWN SECTION (COLLAPSIBLE)
+========================================================== -->
+@if (deptBreakdownOpen) {
+<div class="card-custom mb-3 p-3 dept-breakdown-card">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <div class="stat-icon-wrap sm" style="background:var(--accent-blue-soft); color:var(--blue-600-3);">
+        <i class="bi bi-building"></i>
+      </div>
+      <div class=" text-dark fs-6">Department-wise Employee Count</div>
+    </div>
+    <button type="button" class="btn btn-sm btn-light" (click)="toggleDeptBreakdown()">
+      <i class="bi bi-x-lg"></i>Close
+    </button>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2">
+    @for (d of deptBreakdownList; track d.name) {
+    <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
+      (click)="filterByDepartment(d.name)">
+      <span>{{ d.name }}</span>
+      <span class="badge bg-primary rounded-pill">{{ d.count }}</span>
+    </button>
+    }
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     FILTERS CARD
+========================================================== -->
+<div class="card-custom mb-3 p-3">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <span class="fw-semibold text-dark fs-6">
+      <i class="bi bi-funnel me-1 text-primary"></i> Filter Schedule
+    </span>
+    <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
+      (click)="toggleFilters()">
+      <span>Filters</span>
+      <i class="bi" [class.bi-chevron-up]="filtersOpen" [class.bi-chevron-down]="!filtersOpen"></i>
+    </button>
+  </div>
+
+  @if (filtersOpen) {
+  <div class="mt-3 pt-3 border-top" [formGroup]="filterForm">
+    <div class="row g-3">
+      <!-- Search Employee -->
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <label class="form-label small fw-semibold">Search Employee</label>
+        <input type="text" class="form-control form-control-sm" placeholder="Name or ID" formControlName="search" />
+      </div>
+
+      <!-- Shift Name -->
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <label class="form-label small fw-semibold">Shift Name</label>
+        <p-select formControlName="shiftId" [options]="shiftOptions" optionLabel="label" optionValue="value"
+          placeholder="All Shifts" [filter]="true" filterBy="label" [showClear]="true" appendTo="body"
+          styleClass="w-100" />
+      </div>
+
+      <!-- Shift Type -->
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <label class="form-label small fw-semibold">Shift Type</label>
+        <p-select formControlName="shiftType" [options]="shiftTypeOptions" optionLabel="label" optionValue="value"
+          placeholder="All Types" appendTo="body" styleClass="w-100" />
+      </div>
+
+      <!-- Department -->
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <label class="form-label small fw-semibold">Department</label>
+        <p-select formControlName="department" [options]="departmentOptions" optionLabel="label" optionValue="value"
+          placeholder="All Departments" [filter]="true" filterBy="label" [showClear]="true" appendTo="body"
+          styleClass="w-100" />
+      </div>
+
+      <!-- Position -->
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <label class="form-label small fw-semibold">Position</label>
+        <p-select formControlName="position" [options]="positionOptions" optionLabel="label" optionValue="value"
+          placeholder="All Positions" [filter]="true" filterBy="label" [showClear]="true" appendTo="body"
+          styleClass="w-100" />
+      </div>
+
+      <!-- Schedule Type -->
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <label class="form-label small fw-semibold">Schedule Type</label>
+        <p-select formControlName="scheduleType" [options]="scheduleTypeOptions" optionLabel="label" optionValue="value"
+          placeholder="All Types" appendTo="body" styleClass="w-100" />
+      </div>
+
+      <!-- Filter Actions -->
+      <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+        <button type="button" class="btn btn-cancel btn-sm px-3" (click)="clearFilters()">
+          Clear Filters
+        </button>
+        <button type="button" class="btn btn-primary btn-sm px-4" (click)="applyFilters()">
+          <i class="bi bi-funnel"></i> Apply Filters
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+<!-- =========================================================
+     ACTIVE FILTERS BAR
+========================================================== -->
+@if (activeChips.length > 0) {
+<div class="active-filters-bar mb-3 p-2 px-3 rounded-3 d-flex align-items-center flex-wrap gap-2 bg-white border">
+  <span class="active-filters-label text-muted small fw-semibold">
+    <i class="bi bi-funnel-fill me-1 text-primary"></i>Active Filters:
+  </span>
+  <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1">
+    @for (c of activeChips; track c.id) {
+    <span class="filter-chip">
+      <span class="chip-label">{{ c.label }}</span>
+      <button aria-label="Remove filter" type="button" class="chip-close" (click)="removeChip(c.id)">
+        <i class="bi bi-x"></i>
+      </button>
+    </span>
+    }
+  </div>
+  <button type="button" class="btn btn-link text-danger btn-sm p-0 text-decoration-underline" (click)="clearFilters()">
+    Clear All
+  </button>
+</div>
+}
+
+<!-- =========================================================
+     BULK ACTION BAR (When rows selected)
+========================================================== -->
+@if (selectedEmployees.length > 0) {
+<div class="bulk-action-bar mb-3 p-2 px-3 rounded-3 d-flex align-items-center gap-3 shadow-sm">
+  <i class="bi bi-people-fill text-success fs-5"></i>
+  <span class="fw-semibold text-dark">{{ selectedEmployees.length }} employee(s) selected</span>
+  <button type="button" class="btn btn-primary btn-sm px-3" (click)="openBulkAssignModal()">
+    <i class="bi bi-calendar2-check"></i> Assign Shift
+  </button>
+  <button type="button" class="btn btn-link text-muted btn-sm p-0 ms-auto text-decoration-none"
+    (click)="clearSelection()">
+    Clear selection
+  </button>
+</div>
+}
+
+<!-- =========================================================
+     MAIN CARD & GLOBAL PRIMEDATATABLE
+========================================================== -->
+<div class="row mb-4">
+  <div class="col-12">
+    <app-primedatatable [modalHeader]="tableHeader" [columns]="columns" [data]="filteredEmployees" [selectable]="true"
+      [(selection)]="selectedEmployees" (selectionChange)="onSelectionChange($event)"
+      [searchPlaceholder]="'Search employee, ID, role...'" [showColumnsButton]="true" [showExportButton]="true"
+      [exportFileName]="'shift_schedule_' + viewMode" [rows]="10">
+      <!-- Projected Header Actions: Month Selector & Weekly/Monthly Toggle -->
+      <div table-header-actions class="d-flex align-items-center gap-2 flex-wrap">
+        @if (viewMode === 'monthly') {
+        <p-select [(ngModel)]="selectedMonth" [options]="monthOptions" optionLabel="label" optionValue="value"
+          (onChange)="onMonthChange()" appendTo="body" styleClass="month-p-select" />
+        }
+
+        <!-- View Switcher -->
+        <div class="view-toggle" role="group">
+          <button role="tab" type="button" class="view-toggle-btn" [class.active]="viewMode === 'weekly'"
+            (click)="setViewMode('weekly')" [attr.aria-selected]="viewMode === 'weekly'">
+            <i class="ti ti-calendar"></i>
+            <span>Weekly</span>
+          </button>
+          <button role="tab" type="button" class="view-toggle-btn" [class.active]="viewMode === 'monthly'"
+            (click)="setViewMode('monthly')" [attr.aria-selected]="viewMode === 'monthly'">
+            <i class="ti ti-calendar-month"></i>
+            <span>Monthly</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Header Template for Day Columns -->
+      <ng-template #headerTemplate let-col="col">
+        @if (col.meta) {
+        <div class="day-col-header" [class.past-day]="col.meta.isPast" [class.today-col]="col.meta.isToday"
+          [class.sm]="viewMode === 'monthly'">
+          <div class="day-label">{{ col.meta.dayLabel }}</div>
+          <div class="day-num">{{ col.meta.dayNum }}</div>
+        </div>
+        } @else {
+        <span class="th-title">{{ col.header }}</span>
+        }
+      </ng-template>
+
+      <!-- Custom Cell Template for Employee, Role, and Day Columns -->
+      <ng-template #cellTemplate let-row let-col="col">
+        @if (col.field === 'name') {
+        <div class="d-flex align-items-center gap-2">
+          <img [src]="row.avatar" [alt]="row.name" class="employee-avatar compact" />
+          <div>
+            <div class="fw-semibold text-dark emp-name-text">{{ row.name }}</div>
+            <span class="badge" [class.bg-info-subtle]="row.gender === 'Male'"
+              [class.text-primary]="row.gender === 'Male'" [class.bg-danger-subtle]="row.gender === 'Female'"
+              [class.text-danger]="row.gender === 'Female'" style="font-size: 10px;">
+              {{ row.gender }}
+            </span>
+          </div>
+        </div>
+        } @else if (col.field === 'role') {
+        <div>
+          <div class="fw-semibold text-dark">{{ row.role }}</div>
+          <div class="text-muted small" style="font-size: 11px;">{{ row.sub_role }}</div>
+        </div>
+        } @else if (isDayColumn(col.field)) {
+        @if (getShiftForDay(row, col.field); as s) {
+        <button type="button" class="shift-badge-btn" [class.sm]="viewMode === 'monthly'" [class]="s.badge_class"
+          (click)="openAssignModalForDay(row, col.field); $event.stopPropagation()"
+          [title]="viewMode === 'monthly' ? (s.shift_name + ' (' + s.start_time + ')') : 'Click to edit shift'">
+          <span class="badge-code">{{ s.shift_code }}</span>
+          @if (viewMode === 'weekly') {
+          <span class="badge-time">{{ s.start_time }}</span>
+          }
+        </button>
+        } @else {
+        <button type="button" class="shift-off-btn" [class.sm]="viewMode === 'monthly'"
+          (click)="openAssignModalForDay(row, col.field); $event.stopPropagation()" title="Assign Shift">
+          <span>{{ viewMode === 'weekly' ? 'Off' : '-' }}</span>
+        </button>
+        }
+        }
+      </ng-template>
+    </app-primedatatable>
+  </div>
+</div>
+
+<!-- =========================================================
+     SHIFT CHANGE REQUEST MODAL (Matches user mockup)
+========================================================== -->
+@if (assignModalOpen) {
+<div class="modal-backdrop-custom" (click)="closeAssignModal()"></div>
+<div class="modal-custom shift-change-modal shadow-lg" (click)="$event.stopPropagation()">
+  <!-- Header -->
+  <div class="modal-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom">
+    <div class="d-flex align-items-center gap-2">
+      <span class="change-icon-circle">
+        <i class="bi bi-arrow-left-right text-success "></i>
+      </span>
+      <h5 class="modal-title fs-5  text-dark mb-0">
+        Shift Change Request
+      </h5>
+    </div>
+    <button type="button" class="btn-modal-close-pink" (click)="closeAssignModal()" title="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="modal-body p-4 pt-3">
+    <!-- 1. Target Employee Summary Card -->
+    <div class="emp-banner-card mb-3 p-3 rounded-3 border d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <img [src]="targetEmployee?.avatar || 'https://i.pravatar.cc/150?img=12'" [alt]="targetEmployee?.name"
+          class="emp-banner-avatar" />
+        <div>
+          <div class=" text-dark fs-6 lh-sm mb-1">{{ targetEmployee?.name }}</div>
+          <div class="text-muted small" style="font-size: 12px;">
+            EMP{{ targetEmployee?.emp_id }} &bull; {{ targetEmployee?.role }} &mdash; {{ targetEmployee?.sub_role }}
+          </div>
+        </div>
+      </div>
+      <div class="text-end">
+        <div class="day-badge-green  text-success">{{ targetDayCol?.dayLabel }}</div>
+        <div class="text-muted small" style="font-size: 11px;">{{ targetDateFormatted }}</div>
+      </div>
+    </div>
+
+    <!-- 2. Current Shift vs Requested Shift Side-by-Side -->
+    <div class="shift-comparison-grid mb-3 d-flex align-items-center gap-2">
+      <!-- CURRENT SHIFT -->
+      <div class="shift-box current-box flex-grow-1 p-3 rounded-3 border">
+        <div class="box-caption text-uppercase text-muted  mb-1">
+          CURRENT SHIFT
+        </div>
+        <div class="box-title  text-dark mb-1">
+          {{ currentShift?.shift_name || 'No Shift' }}
+        </div>
+        <div class="box-time text-muted small">
+          {{ currentShift ? (currentShift.start_time + ' - ' + currentShift.end_time) : '-' }}
+        </div>
+      </div>
+
+      <!-- ARROW -->
+      <div class="shift-arrow text-success  px-1 fs-4">
+        <i class="bi bi-arrow-right"></i>
+      </div>
+
+      <!-- REQUESTED SHIFT -->
+      <div class="shift-box requested-box flex-grow-1 p-3 rounded-3 border">
+        <div class="box-caption text-uppercase  mb-1 text-success">
+          REQUESTED SHIFT
+        </div>
+        <div class="box-title  text-dark mb-1">
+          {{ requestedShift?.shift_name || 'Not selected' }}
+        </div>
+        <div class="box-time text-muted small">
+          {{ requestedShift ? (requestedShift.start_time + ' - ' + requestedShift.end_time) : '-' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Change To * (p-select) -->
+    <div class="mb-3">
+      <label class="form-label small fw-semibold text-dark mb-1">
+        Change To <span class="text-danger">*</span>
+      </label>
+      <p-select [options]="shiftOptionsForModal" [(ngModel)]="assignShiftId"
+        (onChange)="onRequestedShiftSelect($event.value)" optionLabel="label" optionValue="value"
+        placeholder="Select the shift you want" [filter]="false" appendTo="body" styleClass="w-100 modal-p-select" />
+    </div>
+
+    <!-- 4. Reason * and Apply For (p-select) in 2 columns -->
+    <div class="row g-3 mb-2">
+      <div class="col-6">
+        <label class="form-label small fw-semibold text-dark mb-1">
+          Reason <span class="text-danger">*</span>
+        </label>
+        <p-select [options]="reasonOptions" [(ngModel)]="changeReason" optionLabel="label" optionValue="value"
+          placeholder="Select reason" appendTo="body" styleClass="w-100 modal-p-select" />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label small fw-semibold text-dark mb-1">
+          Apply For
+        </label>
+        <p-select [options]="applyForOptions" [(ngModel)]="assignDurationType" optionLabel="label" optionValue="value"
+          appendTo="body" styleClass="w-100 modal-p-select" />
+      </div>
+    </div>
+
+    <!-- 5. Info Affected Days Notice -->
+    <div class="info-affected-notice mb-3 text-muted small d-flex align-items-center gap-1" style="font-size: 11.5px;">
+      <i class="bi bi-info-circle text-secondary"></i>
+      <span>{{ affectedDaysText }} &mdash; select a shift to preview it in the table.</span>
+    </div>
+
+    <!-- 6. Remarks (optional) -->
+    <div class="mb-3">
+      <label class="form-label small fw-semibold text-dark mb-1">
+        Remarks (optional)
+      </label>
+      <textarea class="form-control modal-textarea" rows="3" maxlength="250" [(ngModel)]="assignRemarks"
+        placeholder="e.g. I have an evening class, need the morning shift"></textarea>
+      <div class="text-end text-muted small mt-1" style="font-size: 11px;">
+        {{ assignRemarks.length }}/250
+      </div>
+    </div>
+
+    <!-- 7. Approval Goes To -->
+    <div class="mb-2">
+      <label class="form-label small fw-semibold text-muted mb-2">Approval goes to</label>
+      <div class="approver-card p-2 px-3 rounded-3 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <img src="https://i.pravatar.cc/150?img=23" alt="Shailni Raj" class="approver-avatar" />
+          <div>
+            <div class=" text-dark fs-6" style="line-height: 1.2;">Shailni Raj</div>
+            <div class="text-muted small" style="font-size: 11.5px;">Branch Manager &bull; Gharuda Infotech</div>
+          </div>
+        </div>
+        <span class="approver-pill-badge d-inline-flex align-items-center gap-1">
+          <i class="bi bi-shield-check"></i> Approver
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Actions: Send Request & Cancel -->
+  <div class="modal-footer p-3 px-4 border-top d-flex justify-content-end gap-2 bg-white">
+    <button type="button" class="btn btn-send-request" [disabled]="!assignShiftId" (click)="saveShiftAssignment()">
+      <i class="bi bi-send-fill"></i> Send Request
+    </button>
+    <button type="button" class="btn btn-modal-cancel" (click)="closeAssignModal()">
+      Cancel
+    </button>
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     BULK UPLOAD OFFCANVAS / MODAL
+========================================================== -->
+@if (bulkUploadOpen) {
+<div class="modal-backdrop-custom" (click)="closeBulkUpload()"></div>
+<div class="offcanvas-custom shadow-lg" (click)="$event.stopPropagation()">
+  <div class="offcanvas-header p-3 border-bottom d-flex align-items-center justify-content-between">
+    <h5 class="fs-5  text-dark mb-0">
+      <i class="bi bi-cloud-arrow-up text-primary me-2"></i>Bulk Upload Shift Schedule
+    </h5>
+    <button aria-label="Close" type="button" class="btn-close" (click)="closeBulkUpload()"></button>
+  </div>
+
+  <div class="offcanvas-body p-3">
+    <!-- Dropzone -->
+    <div class="dropzone-box text-center p-4 rounded-3 border border-2 border-dashed"
+      [class.drag-active]="isDraggingFile" (drop)="onDrop($event)" (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)" (click)="fileInput.click()">
+      <div class="dropzone-icon mb-2">
+        <i class="bi bi-cloud-arrow-up text-primary fs-1"></i>
+      </div>
+      <h6 class=" text-dark mb-1">Upload shift schedule spreadsheet</h6>
+      <p class="text-muted small mb-3">Drop your Excel or CSV file here, or <span
+          class="text-primary text-decoration-underline fw-semibold">browse</span>.</p>
+      <div class="text-muted" style="font-size: 11px;">Supports .xlsx, .xls, .csv (Max 5MB)</div>
+      <input #fileInput type="file" accept=".xlsx,.xls,.csv" (change)="onFileSelected($event)" hidden />
+    </div>
+
+    <!-- Uploaded File Badge -->
+    @if (uploadedFileName) {
+    <div class="mt-3 p-2 px-3 border rounded-3 bg-light d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-file-earmark-excel text-success fs-5"></i>
+        <span class="fw-semibold text-dark small">{{ uploadedFileName }}</span>
+      </div>
+      <button aria-label="Remove file" type="button" class="btn btn-link text-danger btn-sm p-0" (click)="removeUploadedFile()">
+        <i class="bi bi-trash3"></i>
+      </button>
+    </div>
+
+    <!-- Row Count & Preview -->
+    <div
+      class="mt-2 p-2 px-3 rounded-2 bg-success-subtle text-success fw-semibold small d-flex justify-content-between">
+      <span><i class="bi bi-people me-1"></i> Rows detected:</span>
+      <span>{{ uploadedRowCount }} employees</span>
+    </div>
+
+    <!-- Preview Table -->
+    <div class="table-responsive border rounded-3 mt-3" style="max-height: 180px;">
+      <table class="table table-sm table-bordered mb-0 small">
+        <thead class="table-light">
+          <tr>
+            <th>Emp ID</th>
+            <th>Name</th>
+            <th>Shift</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of uploadedPreviewRows; track row.empId) {
+          <tr>
+            <td>#{{ row.empId }}</td>
+            <td>{{ row.name }}</td>
+            <td><span class="badge bg-success-subtle text-success">{{ row.shift }}</span></td>
+            <td>{{ row.from }} to {{ row.to }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+  </div>
+
+  <div class="offcanvas-footer p-3 border-top d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-cancel btn-sm px-3" (click)="closeBulkUpload()">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-primary btn-sm px-4" [disabled]="!uploadedFileName"
+      (click)="confirmBulkUpload()">
+      <i class="bi bi-check-lg"></i> Confirm Upload
+    </button>
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     FULL-SCREEN SHIFT CHANGE REQUESTS MODAL / VIEW (Matches mockup)
+========================================================== -->
+@if (shiftRequestsModalOpen) {
+<div class="shift-requests-overlay" (click)="closeShiftRequestsModal()">
+  <div class="shift-requests-container" (click)="$event.stopPropagation()">
+    <!-- Top Header Bar -->
+    <div class="shift-requests-header d-flex align-items-center justify-content-between">
+      <!-- Left: Icon, Title & Subtitle -->
+      <div class="d-flex align-items-center gap-3">
+        <div class="header-icon-box">
+          <i class="bi bi-arrow-left-right"></i>
+        </div>
+        <div>
+          <h5 class="fs-5  text-dark mb-0">Shift Change Requests</h5>
+          <div class="text-muted small" style="font-size: 13px;">
+            {{ pendingRequestsCount }} pending with manager
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: View Switcher Pill & Pink Close Button -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- View Switcher -->
+        <div role="tablist" class="view-pill-switcher">
+          <button role="tab" type="button" class="view-toggle-btn" [class.active]="shiftRequestsViewMode === 'employee'"
+            (click)="shiftRequestsViewMode = 'employee'" [attr.aria-selected]="shiftRequestsViewMode === 'employee'">
+            <i class="bi bi-person"></i> Employee View
+          </button>
+          <button role="tab" type="button" class="view-toggle-btn" [class.active]="shiftRequestsViewMode === 'manager'"
+            (click)="shiftRequestsViewMode = 'manager'" [attr.aria-selected]="shiftRequestsViewMode === 'manager'">
+            <i class="bi bi-shield-check"></i> Manager View
+          </button>
+        </div>
+
+        <!-- Pink Close Button -->
+        <button type="button" class="btn-close" (click)="closeShiftRequestsModal()" title="Close">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="shift-requests-card-wrap">
+      <div class="shift-requests-card">
+        <!-- Table Header matching screenshot -->
+        <div class="shift-requests-table-head">
+          <div class="col-head col-req-id">REQUEST ID</div>
+          <div class="col-head col-emp">EMPLOYEE</div>
+          <div class="col-head col-day">DAY</div>
+          <div class="col-head col-shift">SHIFT CHANGE</div>
+          <div class="col-head col-reason">REASON</div>
+          <div class="col-head col-approver">APPROVER</div>
+          <div class="col-head col-status">STATUS</div>
+          <div class="col-head col-action">ACTION</div>
+        </div>
+
+        <!-- Table Body / Empty State -->
+        <div class="shift-requests-body">
+          @if (filteredShiftRequests.length === 0) {
+          <!-- Empty State matching screenshot -->
+          <div class="empty-state-wrap">
+            <div class="empty-icon-tray">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                <path
+                  d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z">
+                </path>
+              </svg>
+            </div>
+            <div class="empty-state-text">
+              No shift change requests yet.
+            </div>
+          </div>
+          } @else {
+          <!-- Rows -->
+          <div class="shift-requests-rows">
+            @for (req of filteredShiftRequests; track req.id) {
+            <div class="shift-req-row d-flex align-items-center border-bottom">
+              <!-- Request ID -->
+              <div class="col-cell col-req-id">
+                <span class="req-id-badge">{{ req.id }}</span>
+              </div>
+
+              <!-- Employee -->
+              <div class="col-cell col-emp d-flex align-items-center gap-2">
+                <img [src]="req.empAvatar" [alt]="req.empName" class="emp-avatar-sm" />
+                <div>
+                  <div class="fw-semibold text-dark small">{{ req.empName }}</div>
+                  <div class="text-muted small" style="font-size: 11px;">{{ req.empRole }} &bull; {{ req.empSubRole }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Day -->
+              <div class="col-cell col-day">
+                <div class="fw-medium text-dark small">{{ req.dayLabel }}</div>
+              </div>
+
+              <!-- Shift Change -->
+              <div class="col-cell col-shift">
+                <div class="d-flex align-items-center gap-2">
+                  @if (req.currentShift) {
+                  <span class="shift-chip current">
+                    {{ req.currentShift.shift_code }}
+                  </span>
+                  } @else {
+                  <span class="shift-chip unassigned">Off</span>
+                  }
+                  <i class="bi bi-arrow-right text-muted small"></i>
+                  <span class="shift-chip requested">
+                    {{ req.requestedShift.shift_code }} ({{ req.requestedShift.start_time }})
+                  </span>
+                </div>
+              </div>
+
+              <!-- Reason -->
+              <div class="col-cell col-reason">
+                <div class="text-dark fw-medium small">{{ req.reasonLabel }}</div>
+                @if (req.remarks) {
+                <div class="text-muted small text-truncate" style="max-width: 170px; font-size: 11px;">{{ req.remarks }}
+                </div>
+                }
+              </div>
+
+              <!-- Approver -->
+              <div class="col-cell col-approver d-flex align-items-center gap-2">
+                <img [src]="req.approverAvatar" [alt]="req.approverName" class="emp-avatar-sm" />
+                <div>
+                  <div class="fw-medium text-dark small">{{ req.approverName }}</div>
+                  <div class="text-muted small" style="font-size: 11px;">{{ req.approverRole }}</div>
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div class="col-cell col-status">
+                @if (req.status === 'Pending') {
+                <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-3 py-1">
+                  Pending
+                </span>
+                } @else if (req.status === 'Approved') {
+                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1">
+                  Approved
+                </span>
+                } @else if (req.status === 'Rejected') {
+                <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-1">
+                  Rejected
+                </span>
+                } @else {
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1">
+                  Cancelled
+                </span>
+                }
+              </div>
+
+              <!-- Action -->
+              <div class="col-cell col-action">
+                @if (shiftRequestsViewMode === 'manager') {
+                @if (req.status === 'Pending') {
+                <div class="d-inline-flex gap-1 justify-content-end w-100">
+                  <button type="button" class="btn btn-icon btn-sm btn-success" title="Approve Request"
+                    (click)="approveRequest(req)">
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button type="button" class="btn btn-icon btn-sm btn-outline-danger" title="Reject Request"
+                    (click)="rejectRequest(req)">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+                } @else {
+                <span class="text-muted small">Decided</span>
+                }
+                } @else {
+                @if (req.status === 'Pending') {
+                <button type="button" class="btn btn-sm btn-outline-secondary px-2" title="Cancel Request"
+                  (click)="cancelRequest(req)">
+                  Cancel
+                </button>
+                } @else {
+                <span class="text-muted small">-</span>
+                }
+                }
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

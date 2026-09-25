@@ -1,0 +1,111 @@
+<div class="time-picker-wrapper">
+  <!-- Time Input Display -->
+  <input
+    type="text"
+    class="form-control time-input"
+    [class]="inputClass"
+    [id]="id"
+    [placeholder]="placeholder"
+    [value]="value"
+    [disabled]="disabled"
+    readonly
+    (click)="togglePopup($event)"
+  />
+
+  <!-- Dropdown Popup (matching screenshot) -->
+  @if (isOpen) {
+    <div class="time-dropdown shadow-lg" (click)="$event.stopPropagation()">
+      <div class="time-header">Select Time</div>
+
+      <div class="time-select-wrapper">
+        <!-- Hour Select Box -->
+        <div class="time-unit-box" [class.is-open]="activeDropdown === 'hour'">
+          <button
+            type="button"
+            class="time-unit-trigger"
+            (click)="toggleDropdown('hour', $event)"
+          >
+            <span class="unit-val">{{ selectedHour }}</span>
+            <i class="bi bi-caret-down-fill unit-caret"></i>
+          </button>
+
+          @if (activeDropdown === 'hour') {
+            <div class="unit-dropdown-list hour-list shadow" (click)="$event.stopPropagation()">
+              @for (h of hours; track h) {
+                <div
+                  class="unit-option"
+                  [class.selected]="selectedHour === h"
+                  (click)="selectHour(h, $event)"
+                >
+                  {{ h }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <span class="time-colon">:</span>
+
+        <!-- Minute Select Box -->
+        <div class="time-unit-box" [class.is-open]="activeDropdown === 'minute'">
+          <button
+            type="button"
+            class="time-unit-trigger"
+            (click)="toggleDropdown('minute', $event)"
+          >
+            <span class="unit-val">{{ selectedMinute }}</span>
+            <i class="bi bi-caret-down-fill unit-caret"></i>
+          </button>
+
+          @if (activeDropdown === 'minute') {
+            <div class="unit-dropdown-list minute-list shadow" (click)="$event.stopPropagation()">
+              @for (m of minutes; track m) {
+                <div
+                  class="unit-option"
+                  [class.selected]="selectedMinute === m"
+                  (click)="selectMinute(m, $event)"
+                >
+                  {{ m }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- AM/PM Select Box -->
+        <div class="time-unit-box ampm-box" [class.is-open]="activeDropdown === 'period'">
+          <button
+            type="button"
+            class="time-unit-trigger"
+            (click)="toggleDropdown('period', $event)"
+          >
+            <span class="unit-val">{{ selectedPeriod }}</span>
+            <i class="bi bi-caret-down-fill unit-caret"></i>
+          </button>
+
+          @if (activeDropdown === 'period') {
+            <div class="unit-dropdown-list period-list shadow" (click)="$event.stopPropagation()">
+              @for (p of periods; track p) {
+                <div
+                  class="unit-option"
+                  [class.selected]="selectedPeriod === p"
+                  (click)="selectPeriod(p, $event)"
+                >
+                  {{ p }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <hr class="time-divider" />
+
+      <div class="time-footer">
+        <button type="button" class="footer-btn now-btn" (click)="setNow($event)">Now</button>
+        <button type="button" class="footer-btn clear-btn" (click)="clear($event)">Clear</button>
+        <button type="button" class="footer-btn apply-btn" (click)="apply($event)">Apply</button>
+      </div>
+    </div>
+  }
+</div>

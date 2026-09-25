@@ -1,0 +1,355 @@
+<!-- =========================================================
+     TITLE & ACTION BAR
+========================================================== -->
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class="page-title mb-1">Social &amp; Web Candidate Applications</h1>
+    <nav class="breadcrumb-line">
+      <i class="ti ti-briefcase"></i>
+      <span>Recruitment</span>
+      <i class="ti ti-chevron-right"></i>
+      <span class=" text-dark">Social &amp; Web Applicants</span>
+    </nav>
+  </div>
+
+  <div class="d-flex gap-2 flex-wrap">
+    <button type="button" class="btn-header-custom btn-primary" (click)="downloadResumeArchive(filteredApplicants)">
+      <i class="ti ti-file-download"></i>
+      <span>Bulk Download Resumes (.csv)</span>
+    </button>
+    <a routerLink="/candidate-evaluations" class="btn-header-custom btn-outline">
+      <i class="ti ti-clipboard-check"></i>
+      <span>TL Evaluations</span>
+    </a>
+    <button type="button" class="btn-header-custom btn-outline" (click)="openShareModal()">
+      <i class="ti ti-share"></i>
+      <span>Post Job Link</span>
+    </button>
+    <button type="button" class="btn-header-custom btn-primary" (click)="openAddModal()">
+      <i class="ti ti-user-plus"></i>
+      <span>Add Candidate</span>
+    </button>
+  </div>
+</div>
+
+<!-- =========================================================
+     KPI METRICS
+========================================================== -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-xl-3">
+    <div class="ln-card-kpi d-flex align-items-center gap-3">
+      <div class="ln-kpi-icon kpi-blue"><i class="ti ti-share"></i></div>
+      <div>
+        <div class="kpi-label">Total Social &amp; Web Applicants</div>
+        <div class="kpi-value">{{ totalCount }}</div>
+        <div class="kpi-sub text-success"><i class="ti ti-arrow-up"></i> Live count</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="ln-card-kpi d-flex align-items-center gap-3">
+      <div class="ln-kpi-icon kpi-amber"><i class="ti ti-bolt"></i></div>
+      <div>
+        <div class="kpi-label">LinkedIn Easy Apply</div>
+        <div class="kpi-value">{{ easyApplyCount }}</div>
+        <div class="kpi-sub">Direct Profile Imports</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="ln-card-kpi d-flex align-items-center gap-3">
+      <div class="ln-kpi-icon kpi-purple"><i class="ti ti-id-badge-2"></i></div>
+      <div>
+        <div class="kpi-label">Shortlisted / Interviewing</div>
+        <div class="kpi-value">{{ shortlistedCount }}</div>
+        <div class="kpi-sub">Across all pipeline stages</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="ln-card-kpi d-flex align-items-center gap-3">
+      <div class="ln-kpi-icon kpi-green"><i class="ti ti-circle-check-filled"></i></div>
+      <div>
+        <div class="kpi-label">Hired &amp; Offered</div>
+        <div class="kpi-value">{{ hiredCount }}</div>
+        <div class="kpi-sub text-success">Conversion tracked live</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     SOURCE TABS
+========================================================== -->
+<div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+  @for (tab of sourceTabs; track tab.key) {
+    <button role="tab" type="button" class="ln-stage-tab" [class.active]="sourceFilter === tab.key" (click)="selectSourceTab(tab.key)" [attr.aria-selected]="sourceFilter === tab.key">
+      @if (tab.icon) { <i [class]="tab.icon"></i> }
+      {{ tab.label }}
+    </button>
+  }
+</div>
+
+<!-- =========================================================
+     FLOATING BATCH ACTION BAR
+========================================================== -->
+@if (batchCount > 0) {
+  <div class="batch-action-bar">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div><i class="ti ti-square-check text-success"></i> <span class="">{{ batchCount }}</span> Candidate(s) Selected</div>
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn-header-custom btn-primary" (click)="downloadSelectedResumes()">
+          <i class="ti ti-file-download"></i> Download Selected Resumes (.csv)
+        </button>
+        <button type="button" class="btn-header-custom btn-outline-light" (click)="clearSelection()">Deselect All</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- =========================================================
+     REUSABLE TABLE
+========================================================== -->
+<app-primedatatable
+  [columns]="columns"
+  [data]="tableData"
+  [rows]="10"
+  [selectable]="true"
+  dataKey="id"
+  [selection]="selection"
+  (selectionChange)="onSelectionChange($event)"
+  [modalHeader]="modalHeader"
+  [Accessactions]="{ add: true, addLabel: 'Add Candidate', addIcon: 'ti ti-user-plus' }"
+  [rowActions]="rowActions"
+  [headerButtons]="headerButtons"
+  [globalFilterFields]="globalFilterFields"
+  searchPlaceholder="Search applicant, job, skills..."
+  exportFileName="linkedin-applicants-report"
+  (addClicked)="openAddModal()"
+  (actionClick)="onAction($event)"
+  (headerButtonClick)="onHeaderButtonClick($event)">
+
+  <ng-template #cellTemplate let-row let-col="col">
+
+    @switch (col.field) {
+
+      @case ('fullName') {
+        <div class="d-flex align-items-center gap-2">
+          <div class="applicant-avatar">{{ row.fullName.charAt(0).toUpperCase() }}</div>
+          <div>
+            <div class="applicant-name">{{ row.fullName }}</div>
+            <div class="applicant-contact">{{ row.email }} • {{ row.phone }}</div>
+          </div>
+        </div>
+      }
+
+      @case ('source') {
+        <a [href]="row.linkedinUrl" target="_blank" class="ln-badge">
+          <i [class]="sourceMeta(row.source).icon"></i> {{ sourceMeta(row.source).label }}
+        </a>
+      }
+
+      @case ('jobTitle') {
+        <div class="fw-semibold text-dark">{{ row.jobTitle }}</div>
+        <span class="id-chip">{{ row.id }}</span>
+      }
+
+      @case ('currentCompany') {
+        <div class="exp-text">{{ row.currentCompany || '-' }} ({{ row.experience || '-' }})</div>
+      }
+
+      @case ('expectedCtc') {
+        <div class="ctc-text">{{ row.expectedCtc }}</div>
+        <div class="notice-text">Notice: {{ row.noticePeriod || '-' }}</div>
+      }
+
+      @case ('rating') {
+        <div class="rating-stars">{{ stars(row.rating) }}</div>
+      }
+
+      @case ('stage') {
+        <span class="stage-badge" [ngClass]="stageClass(row.stage)">
+          <i class="ti ti-point-filled"></i> {{ row.stage }}
+        </span>
+      }
+
+    }
+
+  </ng-template>
+
+</app-primedatatable>
+
+<!-- =========================================================
+     ADD CANDIDATE  (reusable dialog model)
+========================================================== -->
+<app-reuse-modal #addModal
+  title="Add LinkedIn Applicant"
+  [fields]="addFields"
+  saveLabel="Save Candidate"
+  updateLabel="Save Candidate"
+  (saved)="onAddSaved($event)">
+</app-reuse-modal>
+
+<!-- =========================================================
+     FORWARD RESUME TO TEAM LEAD  (reusable dialog model)
+========================================================== -->
+<app-reuse-modal #forwardModal
+  title="Forward Resume to Team Lead"
+  [fields]="forwardFields"
+  saveLabel="Forward Resume to TL"
+  updateLabel="Forward Resume to TL"
+  submitIcon="ti ti-send"
+  (saved)="onForwardSaved($event)">
+</app-reuse-modal>
+
+<!-- =========================================================
+     VIEW CANDIDATE PROFILE  (custom modal — rich, read + edit layout)
+========================================================== -->
+<div class="modal fade view-applicant-modal" tabindex="-1" #viewModalRoot aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      @if (selectedApplicant) {
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <div class="profile-avatar">{{ selectedApplicant.fullName.charAt(0).toUpperCase() }}</div>
+            <div>
+              <h4 class="modal-title mb-0">{{ selectedApplicant.fullName }}</h4>
+              <div class="text-muted" style="font-size:13px;">{{ selectedApplicant.jobTitle }} • {{ selectedApplicant.source }}</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close" (click)="viewModalInstance?.hide()" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <div class="row g-3">
+            <div class="col-md-7">
+              <div class="info-box mb-3">
+                <h6 class="info-box-title"><i class="ti ti-address-book"></i> Contact &amp; Verification</h6>
+                <div class="row g-2 info-grid">
+                  <div class="col-6"><strong>Email:</strong> {{ selectedApplicant.email }}</div>
+                  <div class="col-6"><strong>Phone:</strong> {{ selectedApplicant.phone || '-' }}</div>
+                  <div class="col-12 mt-2">
+                    <strong>Application Profile URL:</strong>
+                    <a [href]="selectedApplicant.linkedinUrl" target="_blank" class="ln-badge ms-1">
+                      <i class="ti ti-world"></i> Open Application Profile
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <h6 class="info-box-title"><i class="ti ti-briefcase"></i> Experience &amp; Compensation</h6>
+                <div class="row g-2 info-grid">
+                  <div class="col-6"><strong>Experience:</strong> {{ selectedApplicant.experience || '-' }}</div>
+                  <div class="col-6"><strong>Current Company:</strong> {{ selectedApplicant.currentCompany || '-' }}</div>
+                  <div class="col-6"><strong>Current CTC:</strong> {{ selectedApplicant.currentCtc || '-' }}</div>
+                  <div class="col-6"><strong>Expected CTC:</strong> <span class="text-success ">{{ selectedApplicant.expectedCtc || '-' }}</span></div>
+                  <div class="col-12"><strong>Notice Period:</strong> {{ selectedApplicant.noticePeriod || '-' }}</div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <h6 class="info-box-title"><i class="ti ti-sparkles"></i> Key Skills &amp; Cover Note</h6>
+                <div class="d-flex flex-wrap gap-1 mb-2">
+                  @for (s of selectedApplicant.skills; track s) {
+                    <span class="skill-chip">{{ s }}</span>
+                  }
+                </div>
+                <div class="cover-note">{{ selectedApplicant.coverLetter || 'Applied via LinkedIn integration.' }}</div>
+              </div>
+            </div>
+
+            <div class="col-md-5">
+              <div class="pipeline-panel">
+                <h6 class="info-box-title"><i class="ti ti-adjustments"></i> HR Pipeline Status</h6>
+
+                <div class="mb-3">
+                  <label class="form-label-sm">Update Stage</label>
+                  <select class="form-select" [(ngModel)]="draftStage">
+                    @for (opt of stageOptions; track opt.value) {
+                      <option [value]="opt.value">{{ opt.label }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label-sm">Candidate Evaluation Rating</label>
+                  <select class="form-select" [(ngModel)]="draftRating">
+                    @for (opt of ratingOptions; track opt.value) {
+                      <option [value]="opt.value">{{ opt.label }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button type="button" class="btn-outline-action" (click)="downloadResumeArchive([selectedApplicant])">
+                    <i class="ti ti-file-type-pdf"></i> Download Resume (PDF)
+                  </button>
+                  <a routerLink="/interview-schedule" [queryParams]="{ candidate: selectedApplicant.fullName }" class="btn-outline-action">
+                    <i class="ti ti-calendar-event"></i> Schedule Interview
+                  </a>
+                  <a routerLink="/employee-create" [queryParams]="{ prefill: selectedApplicant.fullName }" class="btn-success-action">
+                    <i class="ti ti-user-check"></i> Fast-Track Onboard
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="viewModalInstance?.hide()">Close</button>
+          <button type="button" class="btn-save" (click)="saveViewChanges()">Save Changes</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     POST / SHARE JOB ON LINKEDIN  (custom modal)
+========================================================== -->
+<div class="modal fade share-job-modal" tabindex="-1" #shareModalRoot aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-brand-linkedin text-primary me-2"></i>Post &amp; Share Job on LinkedIn</h5>
+        <button type="button" class="btn-close" (click)="shareModalInstance?.hide()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="mb-3">
+          <label class="form-label-sm">Select Job Opening</label>
+          <select class="form-select" [(ngModel)]="selectedJobId" (ngModelChange)="onShareJobChange()">
+            @for (job of jobShareOptions; track job.jobId) {
+              <option [value]="job.jobId">{{ job.title }} ({{ job.jobId }})</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-sm">Direct Apply Link for Candidates</label>
+          <div class="input-group">
+            <input type="text" class="form-control bg-light" [value]="shareApplyUrl" readonly>
+            <button class="btn-outline-action" type="button" (click)="copyShareUrl()">
+              <i class="ti ti-clipboard"></i> {{ copyLinkLabel }}
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-sm">Pre-Formatted LinkedIn Post Text</label>
+          <textarea class="form-control bg-light" rows="4" readonly>{{ sharePostTemplate }}</textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn-outline-action w-100" type="button" (click)="copyPostText()">
+            <i class="ti ti-copy"></i> Copy Post Text
+          </button>
+          <a [href]="shareLinkedInUrl" target="_blank" class="btn-linkedin-action w-100">
+            <i class="ti ti-brand-linkedin"></i> Post on LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

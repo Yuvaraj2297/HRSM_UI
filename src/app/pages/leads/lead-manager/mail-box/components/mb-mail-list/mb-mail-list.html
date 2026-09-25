@@ -1,0 +1,52 @@
+@if (mails().length) {
+<div class="list-search">
+  <i class="bi bi-search"></i>
+  <input type="text" placeholder="Search mail..." aria-label="Search mail" [value]="search()" (input)="onSearch($event)">
+</div>
+}
+
+<div class="rows" role="list">
+  @for (m of visible(); track m.id) {
+  @let w = who(m);
+  <div class="mail" role="listitem" [class.unread]="m.unread">
+    <button type="button" class="mail-open" [attr.aria-label]="'Open: ' + m.subject" (click)="open.emit(m)">
+      <span class="av" [style.background]="m.color">{{ initials(m.from.name) }}</span>
+      <span class="mid">
+        <span class="top">
+          <span class="from">{{ w.name }}@if (w.email) { <span class="addr">&lt;{{ w.email }}&gt;</span> }</span>
+          <span class="time">{{ stamp(m.at) }}</span>
+        </span>
+        <span class="subj">
+          @if (m.attachments?.length) { <i class="bi bi-paperclip" aria-label="Has attachments"></i> }
+          {{ m.subject }}
+        </span>
+        <span class="snip">{{ snippet(m) }}</span>
+      </span>
+    </button>
+
+    <div class="actions">
+      @if (folder() !== 'trash') {
+      <button type="button" class="act star" [class.on]="m.starred" [attr.aria-pressed]="m.starred"
+        [title]="m.starred ? 'Unstar' : 'Star'" (click)="star.emit(m)">
+        <i class="bi" [class.bi-star-fill]="m.starred" [class.bi-star]="!m.starred"></i>
+      </button>
+      <button type="button" class="act del" title="Move to Trash" (click)="trash.emit(m)"><i class="bi bi-trash"></i></button>
+      } @else {
+      <button type="button" class="act" title="Restore" (click)="restore.emit(m)"><i class="bi bi-arrow-counterclockwise"></i></button>
+      <button type="button" class="act del" title="Delete forever" (click)="purge.emit(m)"><i class="bi bi-x-circle"></i></button>
+      }
+    </div>
+  </div>
+  } @empty {
+  <div class="empty">
+    @if (mails().length) {
+    <i class="bi bi-search"></i>
+    <div>No mail matches "{{ search() }}"</div>
+    } @else {
+    <i class="bi {{ empty().icon }}"></i>
+    <div>{{ empty().title }}</div>
+    <small>{{ empty().hint }}</small>
+    }
+  </div>
+  }
+</div>

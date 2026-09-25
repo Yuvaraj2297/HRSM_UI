@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.route-map {
+  position: relative;
+  height: 520px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.route-map-canvas {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* sits above the tiles, lets the map stay draggable */
+.route-map-empty {
+  position: absolute;
+  inset: auto 0 16px 0;
+  margin: 0 auto;
+  width: fit-content;
+  z-index: 500;
+  pointer-events: none;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  color: var(--text-light);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 991.98px) {
+  .route-map {
+    height: 380px;
+  }
+}

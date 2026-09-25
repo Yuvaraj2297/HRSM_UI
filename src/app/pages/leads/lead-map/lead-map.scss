@@ -1,0 +1,48 @@
+/* shared pieces (top bar, stat tiles, status-dot, activity colours, markers) live in global-style/classes.scss */
+
+/* =========================================================
+
+.lm-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.lm-battery {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.is-high { color: var(--success); }
+  &.is-mid { color: var(--warning); }
+  &.is-low { color: var(--danger); }
+}
+
+/* =========================================================
+   MAP SECTION
+========================================================== */
+.lm-map-section {
+  scroll-margin-top: calc(var(--header-height) + 12px);
+}
+
+.lm-map-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--gh-heading);
+
+  i {
+    color: var(--gh-primary);
+  }
+
+  .sep {
+    color: var(--text-faint);
+  }
+}

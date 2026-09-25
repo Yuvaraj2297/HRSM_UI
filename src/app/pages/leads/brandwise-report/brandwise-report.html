@@ -1,0 +1,219 @@
+<div class="bwr-page">
+
+  <!-- =========================================================
+       HERO — title, quick range, refresh + filters
+  ========================================================== -->
+  <div class="bwr-hero">
+    <div class="bwr-hero-head">
+      <div class="bwr-hero-title-wrap">
+        <div class="bwr-hero-icon"><i class="bi bi-graph-up-arrow"></i></div>
+        <div>
+          <h1 class="bwr-hero-title">Sales Performance Dashboard</h1>
+          <div class="bwr-hero-sub">Brand-wise lead, conversion &amp; revenue analytics · {{ todayLabel }}</div>
+        </div>
+      </div>
+
+      <div class="bwr-hero-actions">
+        <div class="bwr-range" role="group" aria-label="Quick range">
+          @for (r of ranges; track r.key) {
+          <button type="button" [class.active]="range() === r.key" [attr.aria-pressed]="range() === r.key"
+            (click)="selectRange(r.key)">{{ r.label }}</button>
+          }
+        </div>
+        <button type="button" class="bwr-hero-btn" [disabled]="loading()" (click)="load()">
+          <i class="bi bi-arrow-clockwise me-1" [class.bwr-spin]="loading()"></i>Refresh
+        </button>
+      </div>
+    </div>
+
+    <form class="bwr-filters" (submit)="$event.preventDefault(); search()">
+      <div class="bwr-field">
+        <label for="bwr_date">Date</label>
+       <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+      </div>
+
+      <div class="bwr-field">
+        <label for="bwr_brand">Brand</label>
+        <p-select inputId="bwr_brand" [options]="brandOptions()" [ngModel]="brand()" (ngModelChange)="brand.set($event)"
+          name="brand" optionLabel="label" optionValue="value" placeholder="All brands" [showClear]="true"
+          appendTo="body" styleClass="w-100" />
+      </div>
+
+      <div class="bwr-field">
+        <label for="bwr_product">Product</label>
+        <p-select inputId="bwr_product" [options]="productOptions()" [ngModel]="product()"
+          (ngModelChange)="product.set($event)" name="product" optionLabel="label" optionValue="value"
+          placeholder="All products" [showClear]="true" appendTo="body" styleClass="w-100" />
+      </div>
+
+      <div class="bwr-field">
+        <label for="bwr_source">Lead Source</label>
+        <p-select inputId="bwr_source" [options]="sourceOptions()" [ngModel]="source()"
+          (ngModelChange)="source.set($event)" name="source" optionLabel="label" optionValue="value"
+          placeholder="All sources" [showClear]="true" appendTo="body" styleClass="w-100" />
+      </div>
+
+      <div class="bwr-filter-actions">
+        <button type="button" class="bwr-hero-btn" [disabled]="loading()" (click)="reset()">Reset</button>
+        <button type="submit" class="bwr-btn-search" [disabled]="loading()">
+          <i class="bi bi-search me-1"></i>Search
+        </button>
+      </div>
+    </form>
+  </div>
+
+  @if (error()) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+    <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Retry</button>
+  </div>
+  }
+
+  @if (data(); as d) {
+
+  <!-- =========================================================
+       KPI CARDS
+  ========================================================== -->
+  <div class="row g-3 mb-3" [class.bwr-dim]="loading()">
+    @for (k of d.kpis; track k.key) {
+    <div class="col-xl-3 col-md-6">
+      <div class="bwr-kpi tone-{{ k.tone }}">
+        <div class="bwr-kpi-top">
+          <div>
+            <div class="bwr-kpi-label">{{ k.label }}</div>
+            <div class="bwr-kpi-sub">{{ k.sub }}</div>
+          </div>
+          <div class="bwr-kpi-icon"><i class="bi {{ k.icon }}"></i></div>
+        </div>
+        <div class="bwr-kpi-val">{{ formatKpi(k) }}</div>
+        <div class="bwr-kpi-delta">
+          <i class="bi" [class.bi-arrow-up-short]="k.delta >= 0" [class.bi-arrow-down-short]="k.delta < 0"></i>
+          {{ k.delta < 0 ? -k.delta : k.delta }}% vs last month
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- =========================================================
+       SECTION TABS
+  ========================================================== -->
+  <nav class="page-tabs mb-3" role="tablist" aria-label="Dashboard sections">
+    @for (s of sections; track s.key) {
+    <button type="button" role="tab" class="page-tab" [class.active]="section() === s.key"
+      [attr.aria-selected]="section() === s.key" (click)="section.set(s.key)">
+      <i [class]="s.icon"></i> {{ s.label }}
+    </button>
+    }
+  </nav>
+
+  <div class="bwr-panel" [class.bwr-dim]="loading()">
+    @switch (section()) {
+
+    <!-- ============ OVERVIEW ============ -->
+    @case ('overview') {
+    <app-dash-section icon="bi-trophy-fill" title="Performance Summary"
+      subtitle="Revenue trend, target progress and customer mix at a glance"
+      [meta]="formatInr(revenueYtd()) + ' revenue YTD'" metaIcon="bi-cash-stack">
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <app-chart-card title="Monthly Revenue Trend" badge="Jan – Dec" type="line" [config]="revenueChart()"
+            height="240px" />
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <app-chart-card title="Target vs Achieved" type="doughnut" [config]="targetChart()" height="240px">
+            <div class="bwr-gauge-center">
+              <div class="pct">{{ targetPct() }}%</div>
+              <div class="sub">{{ d.target.achieved.toLocaleString('en-IN') }} / {{ d.target.goal.toLocaleString('en-IN') }}</div>
+            </div>
+          </app-chart-card>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <app-chart-card title="Customer Insights" type="doughnut" [config]="customerChart()" height="240px" />
+        </div>
+      </div>
+    </app-dash-section>
+    }
+
+    <!-- ============ LEAD GENERATION ============ -->
+    @case ('leads') {
+    <app-dash-section icon="bi-person-plus-fill" title="Lead Generation & Distribution"
+      subtitle="Daily inflow, source-wise split and conversion behaviour" [meta]="leadsTotal() + ' leads this period'"
+      metaIcon="bi-lightning-charge-fill">
+      <div class="row g-3 mb-3">
+        <div class="col-lg-7">
+          <app-chart-card title="Leads by Date" badge="Last 30 days" type="line" [config]="leadsDateChart()"
+            height="240px" />
+        </div>
+        <div class="col-lg-5">
+          <app-chart-card title="Leads by Source" [badge]="d.leadsBySource.length + ' sources'" type="bar"
+            [config]="leadsSourceChart()" height="240px" />
+        </div>
+      </div>
+
+      <app-chart-card title="Conversion Overview" type="line" [config]="conversionChart()" height="220px">
+        <div card-actions class="bwr-seg" role="group" aria-label="Conversion period">
+          @for (v of conversionViews; track v.key) {
+          <button type="button" [class.active]="conversionView() === v.key" [attr.aria-pressed]="conversionView() === v.key"
+            (click)="conversionView.set(v.key)">{{ v.label }}</button>
+          }
+        </div>
+      </app-chart-card>
+    </app-dash-section>
+    }
+
+    <!-- ============ QUALIFICATION & BRANDS ============ -->
+    @case ('qualification') {
+    <app-dash-section icon="bi-funnel-fill" title="Qualification & Brand Performance"
+      subtitle="SQL / MQL / UQL mix and conversion rate across brands" [meta]="qualifiedTotal() + ' qualified leads'"
+      metaIcon="bi-bullseye">
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <app-chart-card title="Lead Qualification" type="doughnut" [config]="qualificationChart()" height="250px" />
+        </div>
+        <div class="col-lg-8">
+          <app-chart-card title="Conversion Rate by Brand" [badge]="'Avg ' + avgBrandConversion() + '%'" type="bar"
+            [config]="brandConversionChart()" height="250px" />
+        </div>
+      </div>
+    </app-dash-section>
+    }
+
+    <!-- ============ GEOGRAPHY & PRODUCTS ============ -->
+    @case ('geo') {
+    <app-dash-section icon="bi-globe-americas" title="Country Specific Sales"
+      subtitle="Revenue contribution by country"
+      [meta]="d.countrySales.length + ' countries · ' + countryShare() + '% share'" metaIcon="bi-globe2">
+      @for (c of countries(); track c.country; let i = $index) {
+      <div class="bwr-country">
+        <span class="rank" [class.is-top]="i === 0">{{ i + 1 }}</span>
+        <span class="flag">{{ c.flag }}</span>
+        <span class="name">{{ c.country }}</span>
+        <div class="bar"><span [style.width.%]="c.bar"></span></div>
+        <span class="val">{{ formatInr(c.revenue, 2) }}</span>
+        <span class="pct">{{ c.share }}%</span>
+      </div>
+      } @empty {
+      <div class="bwr-empty">No country sales for this filter.</div>
+      }
+    </app-dash-section>
+
+    <app-dash-section icon="bi-box-seam-fill" title="Product / Service Performance"
+      subtitle="Units sold per product, highest first" [meta]="d.products.length + ' products tracked'"
+      metaIcon="bi-boxes">
+      <app-chart-card title="Units by Product"
+        [badge]="productsSorted().length ? 'Top: ' + productsSorted()[0].label + ' (' + productsSorted()[0].value + ')' : null"
+        type="bar" [config]="productChart()" [height]="productChartHeight()" />
+    </app-dash-section>
+    }
+
+    }
+  </div>
+
+  } @else if (loading()) {
+  <div class="bwr-loading">
+    <span class="spinner-border spinner-border-sm"></span> Loading dashboard...
+  </div>
+  }
+
+</div>

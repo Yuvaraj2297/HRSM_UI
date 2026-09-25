@@ -1,0 +1,360 @@
+<!-- Title & Action Bar -->
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class=" mb-1" style="font-size:1.7rem;">
+      Team Lead Candidate Evaluations &amp; Scorecards
+    </h1>
+    <nav class="d-flex align-items-center gap-2 text-muted" style="font-size:13px;">
+      <i class="bi bi-briefcase fs-6"></i>
+      <span>Recruitment</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class=" text-dark">Team Lead Evaluations</span>
+    </nav>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="btn btn-outline-secondary" type="button" (click)="goToSocialApplicants()">
+      <i class="bi bi-share text-primary"></i> Social &amp; Web Applicants
+    </button>
+    <button class="btn btn-outline-primary" type="button" (click)="goToPipeline()">
+      <i class="bi bi-people"></i> Candidate Pipeline
+    </button>
+    <button class="btn btn-success" type="button" (click)="openAssignModal()">
+      <i class="bi bi-person-up"></i> Shortlist &amp; Forward to TL
+    </button>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-3">
+
+  <!-- Card 1: Total Resumes to TLs -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
+         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
+      <div class="d-grid flex-shrink-0"
+           style="width:52px;height:52px;border-radius:14px;background:var(--neutral-50);color:var(--green-550);place-items:center;font-size:22px;line-height:1;">
+        <i class="bi bi-send-check"></i>
+      </div>
+      <div style="line-height:1.25;">
+        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Total Resumes to TLs</div>
+        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ totalAssigned }}</div>
+        <div class="text-success " style="font-size:11.5px;">
+          <i class="bi bi-arrow-up"></i> Active Shortlisting
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Evaluations Completed -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
+         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
+      <div class="d-grid flex-shrink-0"
+           style="width:52px;height:52px;border-radius:14px;background:var(--blue-50);color:var(--blue-450-2);place-items:center;font-size:22px;line-height:1;">
+        <i class="bi bi-file-earmark-bar-graph"></i>
+      </div>
+      <div style="line-height:1.25;">
+        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Evaluations Completed</div>
+        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ totalEvaluated }}</div>
+        <div class="text-muted" style="font-size:11.5px;">Scorecards Submitted</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Strong Hire Recommended -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
+         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
+      <div class="d-grid flex-shrink-0"
+           style="width:52px;height:52px;border-radius:14px;background:var(--green-50-2);color:var(--primary-dark);place-items:center;font-size:22px;line-height:1;">
+        <i class="bi bi-star-fill"></i>
+      </div>
+      <div style="line-height:1.25;">
+        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Strong Hire Recommended</div>
+        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ strongHires }}</div>
+        <div class="text-success " style="font-size:11.5px;">Score &gt; 8.5 / 10</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Pending HR Action -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="bg-white d-flex align-items-center gap-3 p-3 h-100"
+         style="border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);">
+      <div class="d-grid flex-shrink-0"
+           style="width:52px;height:52px;border-radius:14px;background:var(--yellow-50);color:var(--orange-400);place-items:center;font-size:22px;line-height:1;">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div style="line-height:1.25;">
+        <div class="text-muted fw-semibold mb-1" style="font-size:12.5px;">Pending HR Action</div>
+        <div class=" text-dark mb-1" style="font-size:26px;line-height:1.1;">{{ pendingHrAction }}</div>
+        <div class="text-muted" style="font-size:11.5px;">Awaiting Offer Release</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Tabs Filter -->
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'all'" (click)="setFilter('all')" [attr.aria-selected]="currentFilter === 'all'">
+      All Shortlisted
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'pending_tl'" (click)="setFilter('pending_tl')" [attr.aria-selected]="currentFilter === 'pending_tl'">
+      <i class="bi bi-clock-history"></i> Pending TL Review
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'sent_hr'" (click)="setFilter('sent_hr')" [attr.aria-selected]="currentFilter === 'sent_hr'">
+      <i class="bi bi-send"></i> Evaluated - Sent to HR
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'hr_approved'" (click)="setFilter('hr_approved')" [attr.aria-selected]="currentFilter === 'hr_approved'">
+      <i class="bi bi-check-circle-fill"></i> Offer Approved
+    </button>
+  </div>
+</div>
+
+<!-- Data Table -->
+<app-primedatatable
+  [columns]="columns"
+  [data]="filteredEvaluations"
+  [rows]="10"
+  [paginator]="true"
+  [dataKey]="'eval_id'"
+  [searchPlaceholder]="'Search candidate, TL, score...'"
+  [exportFileName]="'teamlead-candidate-evaluations-report'"
+  [rowActions]="rowActions"
+  (actionClick)="onTableAction($event)"
+>
+  <ng-template #cellTemplate let-row let-col="col">
+    <ng-container [ngSwitch]="col.field">
+
+      <!-- Candidate -->
+      <ng-container *ngSwitchCase="'candidate_name'">
+        <div class="d-flex align-items-center gap-2">
+          <div class="candidate-avatar">{{ initials(row.candidate_name) }}</div>
+          <div>
+            <div class="" style="color:var(--green-550);">{{ row.candidate_name }}</div>
+            <div class="text-muted" style="font-size:11px;">ID: {{ row.candidate_id }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Position & Source -->
+      <ng-container *ngSwitchCase="'job_title'">
+        <div class="fw-semibold text-dark">{{ row.job_title }}</div>
+        <span class="badge bg-light text-muted border" style="font-size:10px;">{{ row.source }}</span>
+      </ng-container>
+
+      <!-- TL -->
+      <ng-container *ngSwitchCase="'assigned_tl'">
+        <div class=" text-dark" style="font-size:12.5px;">
+          <i class="bi bi-person-badge text-primary me-1"></i>{{ row.assigned_tl }}
+        </div>
+        <div class="text-muted" style="font-size:11px;">{{ row.tl_role }}</div>
+      </ng-container>
+
+      <!-- Score -->
+      <ng-container *ngSwitchCase="'overall_score'">
+        <span class="score-badge" [ngClass]="scoreBadgeClass(row.overall_score)">
+          <i class="bi bi-star-fill" style="font-size:9px;"></i> {{ scoreText(row.overall_score) }}
+        </span>
+      </ng-container>
+
+      <!-- Recommendation -->
+      <ng-container *ngSwitchCase="'recommendation'">
+        <span class="rec-pill" [ngClass]="recPillClass(row.recommendation)">
+          {{ row.recommendation }}
+        </span>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container *ngSwitchCase="'status'">
+        <span class="badge" [ngClass]="statusBadgeClass(row.status)" style="font-size:11px; font-weight:700;">
+          <i class="bi bi-circle-fill" style="font-size:7px;"></i> {{ row.status }}
+        </span>
+      </ng-container>
+
+      <!-- Fallback -->
+      <ng-container *ngSwitchDefault>{{ row[col.field] }}</ng-container>
+
+    </ng-container>
+  </ng-template>
+</app-primedatatable>
+
+<!-- =========================================================
+     REUSABLE MODAL 1 — Assign / Shortlist to Team Lead
+========================================================== -->
+<app-reuse-modal
+  #assignModal
+  [fields]="assignFields"
+  [title]="'Shortlist & Forward to Team Lead'"
+  [saveLabel]="'Forward Resume'"
+  [cancelLabel]="'Cancel'"
+  [submitIcon]="'bi bi-send'"
+  (saved)="onAssignSaved($event)"
+></app-reuse-modal>
+
+<!-- =========================================================
+     REUSABLE MODAL 2 — Scorecard (editable OR read-only)
+========================================================== -->
+<app-reuse-modal
+  #scoreModal
+  [fields]="scoreFields"
+  [title]="'Submit Interview Scorecard'"
+  [editTitle]="'Scorecard'"
+  [saveLabel]="'Save'"
+  [updateLabel]="'Submit Scorecard & Send to HR'"
+  [cancelLabel]="'Close'"
+  [submitIcon]="'bi bi-send'"
+  (saved)="onScoreSaved($event)"
+></app-reuse-modal>
+
+<!-- =========================================================
+     MODAL 3 — Schedule Next Interview (inline Bootstrap-style)
+========================================================== -->
+@if (scheduleVisible) {
+  <div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius:16px;">
+
+        <div class="modal-header border-0 pb-0" style="background:var(--bg-soft);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0 text-white "
+                 style="width:44px;height:44px;background:var(--green-550);font-size:18px;">
+              <i class="bi bi-calendar2-plus"></i>
+            </div>
+            <div>
+              <h4 class="modal-title  text-dark mb-0">Schedule Next Interview Round</h4>
+              <div class="text-muted" style="font-size:13px;">
+                Schedule Candidate Interview &amp; Send Email / WhatsApp Invites
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeSchedule()"></button>
+        </div>
+
+        <div class="modal-body p-4">
+
+          <!-- Candidate & TL score box -->
+          <div class="p-3 mb-3 rounded-3 d-flex align-items-center justify-content-between"
+               style="background:var(--neutral-50); border:1px solid var(--green-100);">
+            <div>
+              <div class=" text-dark" style="font-size:14px;">{{ scheduleForm.candidate_name }}</div>
+              <div class="text-muted" style="font-size:12px;">{{ scheduleForm.job_title }}</div>
+            </div>
+            <div class="text-end">
+              <span class="badge bg-success text-white px-2 py-1" style="font-size:12px;"
+                    *ngIf="schedulingRow">
+                TL Score: {{ schedulingRow.overall_score > 0 ? schedulingRow.overall_score : 'Pending' }}
+              </span>
+              <div class="text-muted " style="font-size:11px;" *ngIf="schedulingRow">
+                {{ schedulingRow.recommendation }}
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" style="font-size:13px;">Select Next Interview Round *</label>
+              <select class="form-select" [(ngModel)]="scheduleForm.round">
+                <option value="Technical Round 2 (System Arch / Live Coding)">Technical Round 2 (System Arch / Live Coding)</option>
+                <option value="HR & Culture Fit Round">HR &amp; Culture Fit Discussion</option>
+                <option value="Managerial & Executive Discussion">Managerial &amp; Executive Discussion</option>
+                <option value="Final Salary & Offer Negotiation">Final Salary &amp; Offer Negotiation</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" style="font-size:13px;">Assigned Interviewer / Panel *</label>
+              <select class="form-select" [(ngModel)]="scheduleForm.interviewer">
+                <option value="Santhosh Kumar (Frontend Tech Lead)">Santhosh Kumar (Frontend Tech Lead)</option>
+                <option value="Karthik V (Backend Tech Lead)">Karthik V (Backend Tech Lead)</option>
+                <option value="Anitha R (iOS Mobile Tech Lead)">Anitha R (iOS Mobile Tech Lead)</option>
+                <option value="Deepak (Lead UI/UX Designer)">Deepak (Lead UI/UX Designer)</option>
+                <option value="Sarah Mitchell (HR Head)">Sarah Mitchell (HR Head)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold" style="font-size:13px;">Interview Date *</label>
+              <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold" style="font-size:13px;">Start Time *</label>
+              <input type="time" class="form-control" [(ngModel)]="scheduleForm.time">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold" style="font-size:13px;">Duration</label>
+              <select class="form-select" [(ngModel)]="scheduleForm.duration">
+                <option value="30 mins">30 minutes</option>
+                <option value="45 mins">45 minutes</option>
+                <option value="60 mins">60 minutes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold" style="font-size:13px;">Meeting Link / Room Location</label>
+            <input type="text" class="form-control" [(ngModel)]="scheduleForm.meeting_link"
+                   placeholder="https://meet.google.com/... or Room 3B">
+          </div>
+
+          <!-- Delivery channels -->
+          <div class="p-3 rounded-3 bg-light border mb-2">
+            <h6 class=" text-dark mb-3" style="font-size:13px;">
+              <i class="bi bi-send-fill me-1 text-success"></i> Invitation Delivery Channels
+            </h6>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:12.5px;">
+                  <i class="bi bi-envelope me-1 text-primary"></i> Candidate Email
+                </label>
+                <input type="email" class="form-control" [(ngModel)]="scheduleForm.candidate_email">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:12.5px;">
+                  <i class="bi bi-whatsapp me-1 text-success"></i> WhatsApp Number
+                </label>
+                <input type="text" class="form-control" [(ngModel)]="scheduleForm.candidate_phone">
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-4 flex-wrap pt-2 border-top">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="sendEmailToggle"
+                       [(ngModel)]="scheduleForm.send_email">
+                <label class="form-check-label fw-semibold" for="sendEmailToggle" style="font-size:12.5px;">
+                  <i class="bi bi-envelope-at-fill text-primary me-1"></i> Send Email Calendar Invite
+                </label>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="sendWhatsappToggle"
+                       [(ngModel)]="scheduleForm.send_whatsapp">
+                <label class="form-check-label fw-semibold" for="sendWhatsappToggle" style="font-size:12.5px;">
+                  <i class="bi bi-whatsapp text-success me-1"></i> Send WhatsApp Message
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-light" (click)="closeSchedule()">Cancel</button>
+          <button type="button" class="btn btn-outline-success" (click)="openWhatsappDirect()">
+            <i class="bi bi-whatsapp"></i> Open WhatsApp Web
+          </button>
+          <button type="button" class="btn btn-success" (click)="submitSchedule()">
+            <i class="bi bi-send-check"></i> Schedule &amp; Send Invites
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+}

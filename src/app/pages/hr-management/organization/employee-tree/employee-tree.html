@@ -1,0 +1,203 @@
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+
+  <div>
+    <h4 class=" mb-1">Employee Tree</h4>
+    <nav class="d-flex align-items-center gap-2 text-muted small mb-0">
+      <i class="bi bi-diagram-3"></i>
+      <span>Employee Management</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class="fw-semibold text-dark">Organization Tree</span>
+    </nav>
+  </div>
+
+  <div class="d-flex align-items-center gap-3 flex-wrap">
+
+    <div class="card view-toggle-card flex-row p-1 gap-1">
+      <button type="button" class="btn btn-sm fw-semibold px-3 rounded-3"
+        [ngClass]="activeView === 'dept' ? 'btn-success' : 'btn-light text-muted'"
+        (click)="setView('dept')">Department Tree</button>
+      <button type="button" class="btn btn-sm fw-semibold px-3 rounded-3"
+        [ngClass]="activeView === 'emp' ? 'btn-success' : 'btn-light text-muted'"
+        (click)="setView('emp')">Employee Tree</button>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="card tool-btn-card d-flex align-items-center justify-content-center" (click)="resetView()" title="Reset view">
+        <i class="bi bi-arrow-counterclockwise"></i>
+      </button>
+      <button type="button" class="card tool-btn-card d-flex align-items-center justify-content-center" (click)="printTree()" title="Print">
+        <i class="bi bi-printer"></i>
+      </button>
+      <button type="button" class="card tool-btn-card d-flex align-items-center justify-content-center" (click)="openFilter()" title="Filter">
+        <i class="bi bi-sliders"></i>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     TREE BODY — scrolls internally (both directions) inside its
+     own box so the header above stays static/visible, instead of
+     the whole page scrolling past it.
+============================================================ -->
+<div class="tree-scroll-area">
+
+  <!-- DEPARTMENT TREE -->
+<!-- DEPARTMENT TREE -->
+<div class="d-flex flex-column gap-2" *ngIf="activeView === 'dept'">
+  <div class="d-flex align-items-stretch" *ngFor="let dept of departments">
+
+    <div class="card dept-card flex-row align-items-center gap-2 p-2"
+      [class.dept-card-selected]="dept.id === selectedDeptId"
+      (click)="toggleDept(dept.id)">
+      <div class="dept-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0" [style.background]="dept.color">
+        <span class="text-white ">{{ dept.name.charAt(0) }}</span>
+      </div>
+      <div class="flex-grow-1 min-width-0">
+        <div class=" small text-truncate mb-0">{{ dept.name }}</div>
+        <div class="text-muted small">-</div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center dept-connector flex-shrink-0"
+      [class.show-line]="dept.id === selectedDeptId"
+      *ngIf="dept.employees?.length">
+      <span class="badge rounded-2 dept-count-badge" [class.active]="dept.id === selectedDeptId">{{ dept.employeeCount }}</span>
+    </div>
+
+    <!-- ▼ add `dept-employees--flat` class here -->
+    <div class="d-flex flex-column gap-3 dept-employees dept-employees--flat"
+         [class.animating]="dept.id === selectedDeptId"
+         *ngIf="dept.id === selectedDeptId">
+      <div class="card emp-card flex-row align-items-center gap-2 p-2"
+        *ngFor="let emp of dept.employees; let i = index"
+        [style.--stagger-index]="i"
+        [class.emp-card-selected]="selectedDetail === emp"
+        (click)="showDetail(emp); $event.stopPropagation()">
+        <img [src]="emp.img" [alt]="emp.name" class="emp-avatar rounded-circle flex-shrink-0">
+        <div class="min-width-0">
+          <div class=" small text-truncate mb-0">{{ emp.code }} {{ emp.name }}</div>
+          <div class="text-muted small">{{ emp.dept }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  <!-- EMPLOYEE TREE — always renders, CSS hides collapsed children -->
+  <div class="d-flex flex-column gap-2" *ngIf="activeView === 'emp'">
+
+    <ng-template #empNode let-node>
+      <div class="d-flex align-items-stretch">
+
+        <!-- Employee card: toggles expand (branches) AND opens the
+             detail panel — matches the PHP reference's click handler,
+             which does both for non-leaf nodes and just the detail
+             panel for leaves. -->
+        <div class="card dept-card flex-row align-items-center gap-2 p-2"
+          [class.dept-card-selected]="isExpanded(node.id)"
+          [class.emp-card-selected]="selectedDetail === node"
+          (click)="toggleEmp(node.id); showDetail(node)">
+          <img [src]="node.img" [alt]="node.name" class="emp-avatar rounded-circle flex-shrink-0">
+          <div class="flex-grow-1 min-width-0">
+            <div class=" small text-truncate mb-0">{{ node.code }} {{ node.name }}</div>
+            <div class="text-muted small">{{ node.dept }}</div>
+          </div>
+        </div>
+
+        <!-- Connector -->
+        <div class="d-flex align-items-center justify-content-center dept-connector flex-shrink-0"
+          [class.show-line]="isExpanded(node.id)"
+          *ngIf="node.children?.length"
+          (click)="$event.stopPropagation(); toggleEmp(node.id); showDetail(node)">
+          <span class="badge rounded-2 dept-count-badge" [class.active]="isExpanded(node.id)">{{ countChildren(node) }}</span>
+        </div>
+
+        <!-- Children — always rendered, hidden via CSS if not expanded -->
+        <div class="d-flex flex-column gap-3 dept-employees emp-children"
+             [class.is-collapsed]="!isExpanded(node.id)">
+          <div *ngFor="let child of node.children; let i = index" [style.--stagger-index]="i">
+            <ng-container *ngTemplateOutlet="empNode; context: { $implicit: child }"></ng-container>
+          </div>
+        </div>
+
+      </div>
+    </ng-template>
+
+    <div *ngFor="let root of employeeTree">
+      <ng-container *ngTemplateOutlet="empNode; context: { $implicit: root }"></ng-container>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============================================================
+     DETAIL PANEL — opens on any employee/node card click.
+     Plain CSS slide-in (transform + class toggle), same approach
+     as the PHP reference's .detail-panel/.open — no bootstrap.Offcanvas
+     needed here, so it can't hit the timing issue that hit AddCountry.
+============================================================ -->
+<div class="detail-panel" [class.open]="selectedDetail">
+  <button type="button" class="detail-close" (click)="hideDetail()" aria-label="Close">
+    <i class="bi bi-x-lg"></i>
+  </button>
+
+  <ng-container *ngIf="selectedDetail as n">
+    <img class="detail-avatar" [src]="n.img" [alt]="n.name">
+    <div class="detail-name">{{ n.name }}</div>
+    <div class="detail-id">{{ n.code }}</div>
+
+    <div class="detail-row">
+      <i class="bi bi-briefcase"></i>
+      <div>
+        <div class="detail-label">Position</div>
+        <div class="detail-value">{{ n.pos }}</div>
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <i class="bi bi-building"></i>
+      <div>
+        <div class="detail-label">Department</div>
+        <div class="detail-value">{{ n.dept }}</div>
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <i class="bi bi-people"></i>
+      <div>
+        <div class="detail-label">Direct Reports</div>
+        <div class="detail-value">{{ directReportsCount(n) }}</div>
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <i class="bi bi-diagram-3"></i>
+      <div>
+        <div class="detail-label">Total Reports</div>
+        <div class="detail-value">{{ totalReportsCount(n) }}</div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" #countryOffcanvas>
+  <div class="offcanvas-content">
+    <div class="offcanvas-header border-bottom">
+      <i class="ti ti-world-plus"> </i>
+    
+    </div>
+
+    <div class="offcanvas-body">
+
+
+
+    </div>
+
+
+
+  </div>
+</div>

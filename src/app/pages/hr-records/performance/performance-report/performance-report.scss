@@ -1,0 +1,153 @@
+/* Modern Executive KPI & Card Styling */
+.rpt-kpi {
+    min-height: 96px;
+    padding: 16px;
+    border: 1px solid var(--border-soft, var(--border));
+    border-radius: 14px;
+    background: var(--white, var(--white));
+    box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), .04);
+    transition: transform .2s ease;
+}
+.rpt-kpi:hover { transform: translateY(-2px); }
+.rpt-kpi .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.rpt-kpi .label {
+    color: var(--ink-500, var(--neutral-500));
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.rpt-kpi .value {
+    color: var(--ink-900, var(--neutral-900));
+    font-size: 22px;
+    font-weight: 800;
+}
+.rpt-kpi .sub {
+    color: var(--ink-500, var(--neutral-500));
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+/* Executive Score Chips & Workflow Status Capsules */
+.score-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.04);
+    transition: all 0.2s ease;
+    letter-spacing: 0.1px;
+}
+.score-chip-high {
+    background: linear-gradient(135deg, var(--primary-soft) 0%, var(--green-50-4) 100%);
+    color: var(--green-550-2);
+    border: 1px solid var(--green-100-3);
+}
+.score-chip-good {
+    background: linear-gradient(135deg, var(--green-50) 0%, var(--green-50-2) 100%);
+    color: var(--primary-dark);
+    border: 1px solid var(--green-100);
+}
+.score-chip-active {
+    background: linear-gradient(135deg, var(--blue-50-8) 0%, var(--blue-50) 100%);
+    color: var(--blue-450-2);
+    border: 1px solid var(--blue-100-2);
+}
+.score-chip-warning {
+    background: linear-gradient(135deg, var(--yellow-50-2) 0%, var(--yellow-50) 100%);
+    color: var(--orange-550-2);
+    border: 1px solid var(--yellow-100);
+}
+.score-chip-pending {
+    background: linear-gradient(135deg, var(--bg-soft) 0%, var(--bg-muted) 100%);
+    color: var(--neutral-500);
+    border: 1px solid var(--border);
+}
+
+.status-capsule {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    box-shadow: 0 2px 5px rgba(var(--black-rgb), 0.06);
+    white-space: nowrap;
+}
+.status-capsule-completed {
+    background: linear-gradient(135deg, var(--green-350) 0%, var(--green-450) 100%);
+    color: var(--white);
+}
+.status-capsule-hr {
+    background: linear-gradient(135deg, var(--teal-300) 0%, var(--teal-450) 100%);
+    color: var(--white);
+}
+.status-capsule-tl {
+    background: linear-gradient(135deg, var(--warning) 0%, var(--orange-400) 100%);
+    color: var(--white);
+}
+.status-capsule-mgr {
+    background: linear-gradient(135deg, var(--blue-500) 0%, var(--blue-600-3) 100%);
+    color: var(--white);
+}
+.status-capsule-pending {
+    background: linear-gradient(135deg, var(--neutral-500) 0%, var(--neutral-650) 100%);
+    color: var(--white);
+}
+
+/* Toast Notification */
+.rpt-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--neutral-900);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.2);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+.rpt-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Equal-width 5-up KPI grid column (Bootstrap has no col-xl-2-4 by default) */
+.col-xl-2-4 {
+    @media (min-width: 1200px) {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}
+
+/* Department Performance Breakdown table — keep the drill-down button on one
+   line and let the table scroll horizontally instead of squeezing columns */
+.dept-breakdown-table {
+    min-width: 640px;
+}
+.dept-drilldown-btn {
+    white-space: nowrap;
+}

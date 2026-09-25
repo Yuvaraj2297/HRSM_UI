@@ -1,0 +1,190 @@
+/* list / reader / compose / settings styles live in components/ */
+
+.mbx-page { max-width: 1500px; }
+
+.mbx-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.mbx-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gh-heading);
+
+  i { color: var(--primary); }
+}
+
+.mbx-account {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+}
+
+/* ---------- shell ---------- */
+.mbx-shell {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.mbx-side {
+  flex: 0 0 240px;
+  position: sticky;
+  top: calc(var(--header-height) + 12px);
+  padding: 14px;
+}
+
+.mbx-compose-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  box-shadow: 0 6px 14px rgba(var(--primary-rgb), 0.28);
+  transition: transform 0.15s ease;
+
+  &:hover { transform: translateY(-1px); }
+}
+
+.mbx-nav-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mbx-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+
+  i { font-size: 15px; color: var(--text-light); }
+
+  &:hover { background: var(--bg-soft); }
+
+  &.active {
+    font-weight: 700;
+    color: var(--primary-dark);
+    background: var(--primary-soft);
+
+    i { color: var(--primary); }
+  }
+}
+
+.mbx-count {
+  margin-left: auto;
+  min-width: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 19px;
+  text-align: center;
+  color: var(--white);
+  background: var(--primary);
+
+  &.muted { background: var(--neutral-500-2); }
+}
+
+.mbx-side-sep {
+  height: 1px;
+  margin: 8px 4px;
+  background: var(--border);
+}
+
+/* ---------- main ---------- */
+.mbx-main {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.mbx-main-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mbx-head-title {
+  margin: 0;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gh-heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mbx-back {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 9px;
+  color: var(--text);
+  background: var(--bg-muted);
+
+  &:hover { background: var(--border); }
+}
+
+.mbx-main-body {
+  min-height: 460px;
+  padding: 16px 18px;
+}
+
+.mbx-loading {
+  padding: 60px 0;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ---------- small screens: folders become a scrollable strip ---------- */
+@media (max-width: 899.98px) {
+  .mbx-shell { flex-direction: column; align-items: stretch; }
+
+  .mbx-side {
+    position: static;
+    flex-basis: auto;
+    padding: 10px;
+  }
+
+  .mbx-nav-wrap {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .mbx-nav { width: auto; white-space: nowrap; }
+  .mbx-side-sep { display: none; }
+  .mbx-main-body { padding: 12px; }
+}

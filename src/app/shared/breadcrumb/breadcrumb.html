@@ -1,0 +1,26 @@
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-4 breadcrumb-header">
+  <div>
+    @if (resolvedTitle) {
+      <h1 class="page-title mb-1">{{ resolvedTitle }}</h1>
+    }
+
+    <nav class="d-flex align-items-center gap-2 page-breadcrumb">
+      @if (resolvedIcon) {
+        <i [class]="resolvedIcon + ' icon-breadcrumb'"></i>
+      }
+
+      @if (resolvedParent) {
+        <span>{{ resolvedParent }}</span>
+        <i class="bi bi-chevron-right separator"></i>
+      }
+
+      @if (resolvedTitle) {
+        <span class="active-crumb">{{ resolvedTitle }}</span>
+      }
+    </nav>
+  </div>
+
+  <div class="breadcrumb-actions">
+    <ng-content select="[actions], [breadcrumb-actions]"></ng-content>
+  </div>
+</div>

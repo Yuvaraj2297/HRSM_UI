@@ -1,0 +1,65 @@
+<form [formGroup]="form" (submit)="$event.preventDefault(); onSend()" novalidate>
+
+  <div class="field">
+    <label for="mb_to">To <span class="req">*</span></label>
+    <input id="mb_to" type="text" class="form-control" formControlName="to" autocomplete="off"
+      placeholder="recipient@example.com (separate several with commas)" [class.is-invalid]="invalid('to')">
+    @if (invalid('to')) { <div class="field-error">{{ error('to') }}</div> }
+  </div>
+
+  <div class="field">
+    <label for="mb_cc">CC</label>
+    <input id="mb_cc" type="text" class="form-control" formControlName="cc" autocomplete="off"
+      placeholder="cc@example.com" [class.is-invalid]="invalid('cc')">
+    @if (invalid('cc')) { <div class="field-error">{{ error('cc') }}</div> }
+  </div>
+
+  <div class="field">
+    <label for="mb_subject">Subject <span class="req">*</span></label>
+    <input id="mb_subject" type="text" class="form-control" formControlName="subject" autocomplete="off"
+      placeholder="Email subject" [class.is-invalid]="invalid('subject')">
+    @if (invalid('subject')) { <div class="field-error">{{ error('subject') }}</div> }
+  </div>
+
+  <div class="field">
+    <label>Message</label>
+    <p-editor formControlName="html" [modules]="editorModules" placeholder="Write your email here..."
+      [style]="{ height: '240px' }" />
+  </div>
+
+  <div class="field">
+    <label for="mb_files">Attachment</label>
+    <label class="file-drop" for="mb_files">
+      <i class="bi bi-cloud-arrow-up"></i>
+      <span>Choose files <small>(max {{ maxMb }} MB each)</small></span>
+    </label>
+    <input id="mb_files" type="file" multiple hidden (change)="onFiles($event)">
+
+    @if (fileError()) { <div class="field-error">{{ fileError() }}</div> }
+
+    @if (attachments().length) {
+    <div class="files">
+      @for (f of attachments(); track f) {
+      <span class="file">
+        <i class="bi bi-paperclip"></i>{{ f }}
+        <button type="button" [attr.aria-label]="'Remove ' + f" (click)="removeFile(f)"><i class="bi bi-x"></i></button>
+      </span>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="footer">
+    <button type="button" class="btn btn-link text-muted me-auto px-0" [disabled]="busy()" (click)="discard.emit()">
+      Discard
+    </button>
+    <button type="button" class="btn btn-outline-secondary" [disabled]="busy()" (click)="onSaveDraft()">
+      <i class="bi bi-file-earmark"></i>Save as draft
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="busy()">
+      @if (busy()) { <span class="spinner-border spinner-border-sm"></span>Sending... }
+      @else { <i class="bi bi-send"></i>Send }
+    </button>
+  </div>
+
+</form>

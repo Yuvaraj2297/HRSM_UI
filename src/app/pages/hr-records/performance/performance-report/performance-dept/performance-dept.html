@@ -1,0 +1,197 @@
+<!-- =========================================================
+     TOP TITLE & NAVIGATION BAR
+========================================================== -->
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <button type="button" class="btn btn-sm btn-outline-secondary px-3 me-1" (click)="onBack()">
+        <i class="bi bi-arrow-left"></i> Back to Reports
+      </button>
+      <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fs-6 ">
+        @if (currentDept === 'All Departments') {
+          <i class="bi bi-globe me-1"></i> All Departments
+        } @else {
+          <i class="bi bi-building me-1"></i> {{ currentDept }} Department
+        }
+      </span>
+    </div>
+    <h1 class="font-display  mb-0" style="font-size:1.6rem;">{{ headerTitle }}</h1>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="btn btn-outline-danger" type="button" (click)="exportDeptReport('PDF')">
+      <i class="bi bi-file-earmark-pdf-fill"></i> Export Dept PDF
+    </button>
+    <button class="btn btn-success" type="button" (click)="exportDeptReport('Excel')">
+      <i class="bi bi-file-earmark-excel-fill"></i> Export Dept Excel
+    </button>
+  </div>
+</div>
+
+<!-- =========================================================
+     KPI SUMMARY CARDS
+========================================================== -->
+<div class="row g-3 mb-4">
+  <!-- Card 1 -->
+  <div class="col-sm-6 col-md-3">
+    <div class="card h-100 p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--blue-50); color:var(--blue-450-2); font-size: 1.25rem;">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div>
+          <div class="text-muted " style="font-size:12px;">Total Headcount</div>
+          <div class="fs-4  text-dark lh-1 my-1">{{ deptStat.headcount }}</div>
+          <div class="text-muted" style="font-size:11px;">Active Employees</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="col-sm-6 col-md-3">
+    <div class="card h-100 p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--green-50-2); color:var(--primary-dark); font-size: 1.25rem;">
+          <i class="bi bi-star-fill text-warning"></i>
+        </div>
+        <div>
+          <div class="text-muted " style="font-size:12px;">Avg Department Score</div>
+          <div class="fs-4  text-dark lh-1 my-1">
+            {{ deptStat.avgRating }} <span style="font-size:12px;" class="text-muted">/ 5.0</span>
+          </div>
+          <div class="text-success " style="font-size:11px;">
+            <i class="bi bi-award me-1"></i>High Performance
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="col-sm-6 col-md-3">
+    <div class="card h-100 p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--purple-50); color:var(--purple-600); font-size: 1.25rem;">
+          <i class="bi bi-trophy-fill"></i>
+        </div>
+        <div>
+          <div class="text-muted " style="font-size:12px;">Avg KPI Achievement</div>
+          <div class="fs-4  lh-1 my-1" style="color:var(--purple-600);">{{ deptStat.kpiAvg }}</div>
+          <div class="text-muted" style="font-size:11px;">Targets Completed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="col-sm-6 col-md-3">
+    <div class="card h-100 p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="dept-kpi-icon d-flex align-items-center justify-content-center rounded" style="width: 48px; height: 48px; background:var(--primary-soft); color:var(--green-550-2); font-size: 1.25rem;">
+          <i class="bi bi-person-badge-fill"></i>
+        </div>
+        <div>
+          <div class="text-muted " style="font-size:12px;">Top Performer</div>
+          <div class="fs-6  text-dark text-truncate lh-1 my-1" style="max-width:140px;">{{ deptStat.topEmp }}</div>
+          <div class="text-success " style="font-size:11px;">{{ deptStat.topScore }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     RATING DISTRIBUTION
+========================================================== -->
+<div class="card p-4 mb-4">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <div>
+      <h5 class=" text-dark mb-0 font-display"><i class="bi bi-pie-chart-fill text-success me-2"></i>Department Rating Distribution</h5>
+      <div class="text-muted small" style="font-size:12px;">Score spread across all department team members</div>
+    </div>
+    <span class="badge bg-light text-dark border px-3 py-1"><i class="bi bi-shield-check text-success me-1"></i>100% HR Approved</span>
+  </div>
+
+  <div class="progress rounded-pill overflow-hidden mb-1" style="height: 18px; box-shadow: inset 0 1px 2px rgba(var(--black-rgb), 0.1);">
+    @for (band of ratingDistribution; track band.label) {
+      <div class="progress-bar" [ngClass]="band.barClass" [style.width.%]="band.pct" [title]="band.label + ': ' + band.pct + '%'">
+        {{ band.label }} ({{ band.pct }}%)
+      </div>
+    }
+  </div>
+</div>
+
+<!-- =========================================================
+     EXECUTIVE PERFORMANCE BREAKDOWN TABLE
+========================================================== -->
+<div class="card p-4 mb-4">
+
+  <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+    <select class="form-select form-select-sm border-0 fw-semibold shadow-sm rounded-3 px-3 py-2 text-dark"
+      style="width: auto; min-width: 170px; background-color: var(--bg-muted); font-size: 13.5px;"
+      [ngModel]="currentDept" (ngModelChange)="onDepartmentChange($event)">
+      @for (d of departments; track d) {
+        <option [value]="d">{{ d }}</option>
+      }
+    </select>
+  </div>
+
+  <app-primedatatable
+    [columns]="columns"
+    [data]="filteredEmployees"
+    [dataKey]="'id'"
+    [showColumnsButton]="true"
+    [showExportButton]="true"
+    [showGlobalFilter]="true"
+    [searchPlaceholder]="'Search employee...'"
+    [exportFileName]="currentDept + '_Performance_Report'">
+
+    <ng-template #cellTemplate let-row let-col="col">
+      @switch (col.field) {
+
+        @case ('mgrScore') {
+          <span [ngClass]="scoreClass(row.mgrScore)" style="font-size:13.5px;">{{ row.mgrScore }}</span>
+        }
+
+        @case ('tlScore') {
+          <span [ngClass]="scoreClass(row.tlScore)" style="font-size:13.5px;">{{ row.tlScore }}</span>
+        }
+
+        @case ('hrScore') {
+          <span [ngClass]="scoreClass(row.hrScore)" style="font-size:13.5px;">{{ row.hrScore }}</span>
+        }
+
+        @case ('overall') {
+          <span class="badge rounded-pill border px-3 py-2 " style="font-size:12.5px;"
+            [style.background]="overallStyle(row.overall).background"
+            [style.color]="overallStyle(row.overall).color"
+            [style.border]="overallStyle(row.overall).border">
+            @if (row.overall === 'Pending') {
+              <i class="bi bi-hourglass-split me-1"></i>Pending
+            } @else {
+              <i class="bi bi-star-fill text-warning me-1"></i>{{ row.overall }}
+              <span class="fw-normal text-muted" style="font-size:11px;">/ 5.0</span>
+            }
+          </span>
+        }
+
+        @case ('status') {
+          <span class="badge rounded-pill px-3 py-2 text-white fw-semibold" style="font-size:12px;"
+            [style.background]="statusMeta(row.statusClass, row.status).background">
+            <i [class]="'bi ' + statusMeta(row.statusClass, row.status).icon + ' me-1'"></i>
+            {{ statusMeta(row.statusClass, row.status).text }}
+          </span>
+        }
+
+      }
+    </ng-template>
+
+  </app-primedatatable>
+
+</div>
+
+<!-- Toast Container -->
+<div class="rpt-toast" [class.show]="toastVisible">
+  <i class="bi bi-info-circle-fill text-success fs-5"></i>
+  <span>{{ toastMessage }}</span>
+</div>

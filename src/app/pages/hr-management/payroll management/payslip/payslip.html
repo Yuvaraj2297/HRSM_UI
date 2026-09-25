@@ -1,0 +1,551 @@
+<!-- Page header -->
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Payslip Management</h1>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <bi-icon class="crumb-icon" name="cash-stack" />
+      <span>Payroll Management</span>
+      <bi-icon name="chevron-right" />
+      <span class="crumb-current" aria-current="page">Payslip</span>
+    </nav>
+  </div>
+
+  <div class="role-tabs" role="tablist" aria-label="View">
+    <button type="button" role="tab" class="role-tab" id="tabEmployee" aria-controls="panelEmployee" [class.active]="tab() === 'employee'" [attr.aria-selected]="tab() === 'employee'" (click)="setTab('employee')">
+      <bi-icon name="person" /> Employee View
+    </button>
+    <button type="button" role="tab" class="role-tab" id="tabAdmin" aria-controls="panelAdmin" [class.active]="tab() === 'admin'" [attr.aria-selected]="tab() === 'admin'" (click)="setTab('admin')">
+      <bi-icon name="shield-check" /> HR / Admin View
+      @if (counts().pending > 0) {
+        <span class="page-tab-count" [attr.aria-label]="counts().pending + ' pending'">{{ counts().pending }}</span>
+      }
+    </button>
+  </div>
+</header>
+
+<!-- ===================== EMPLOYEE VIEW ===================== -->
+@if (tab() === 'employee') {
+  <div id="panelEmployee" role="tabpanel" aria-labelledby="tabEmployee">
+    <ol class="stepper" aria-label="Payslip request progress">
+      @for (s of steps; track s.n) {
+        <li class="step" [class.done]="s.n < dotStep()" [class.active]="s.n === dotStep()">
+          <button type="button" class="step-btn" [attr.aria-current]="panel() === s.n ? 'step' : null" (click)="showStep(s.n)">
+            <span class="step-dot"><bi-icon [name]="s.icon" /></span>
+            <span class="step-label">{{ s.label }}</span>
+          </button>
+        </li>
+      }
+    </ol>
+
+    @switch (panel()) {
+      @case (1) {
+        <div class="split">
+          <!-- Request form -->
+          <section class="req-card" aria-labelledby="reqTitle">
+            <h2 class="card-title" id="reqTitle"><bi-icon class="accent" name="file-earmark-plus" /> Request Payslip</h2>
+
+            <div class="field">
+              <label for="reqEmployee">Select Employee</label>
+              <select id="reqEmployee" class="form-select" disabled>
+                @for (e of employees; track e.id) {
+                  <option [value]="e.id" [selected]="e.id === me.id">{{ e.empId }} — {{ e.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="reqPeriod">Pay Period</label>
+              <select id="reqPeriod" class="form-select" (change)="period.set(value($event))">
+                @for (p of periods; track p.value) {
+                  <option [value]="p.value" [selected]="period() === p.value">{{ p.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="reqNote">Reason / Note <span class="optional">(optional)</span></label>
+              <textarea id="reqNote" class="form-control" rows="3" placeholder="e.g. Loan application, visa processing..." [value]="note()" (input)="note.set(value($event))"></textarea>
+            </div>
+
+            <button type="button" class="btn-primary block" [class.ok]="submitted()" (click)="submitRequest()">
+              @if (submitted()) {
+                <bi-icon name="check-circle" /> Request Submitted!
+              } @else {
+                <bi-icon name="send" /> Submit Payslip Request
+              }
+            </button>
+          </section>
+
+          <!-- My requests -->
+          <section class="card table-card" aria-labelledby="myReqTitle">
+            <div class="card-head">
+              <h2 class="card-title" id="myReqTitle"><bi-icon class="accent" name="clock-history" /> My Payslip Requests</h2>
+              <div class="badges">
+                <span class="badge pending">{{ myPending().length }} Pending</span>
+                <span class="badge approved">{{ myApproved().length + myGenerated().length }} Approved</span>
+              </div>
+            </div>
+            <div class="table-wrap tall" role="region" aria-label="My payslip requests" tabindex="0">
+<app-primedatatable
+  [columns]="columns"
+  [data]="tableData">
+</app-primedatatable>
+            </div>
+          </section>
+        </div>
+      }
+
+      @case (2) {
+        <section class="card table-card" aria-labelledby="pendTitle">
+          <div class="card-head">
+            <h2 class="card-title" id="pendTitle"><bi-icon class="amber" name="hourglass-split" /> My Pending Requests</h2>
+          </div>
+          <div class="table-wrap" role="region" aria-label="My pending requests" tabindex="0">
+            <table class="ps-table">
+              <thead>
+                <tr><th>S.No</th><th>Employee</th><th>Pay Period</th><th>Requested On</th><th>Note</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                @for (v of myPending(); track v.r.reqId; let i = $index) {
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td><div class="emp-name">{{ v.e.name }}</div><div class="emp-id">{{ v.e.empId }}</div></td>
+                    <td>{{ v.r.period }}</td>
+                    <td>{{ v.r.requestedOn }}</td>
+                    <td>{{ v.r.note || '—' }}</td>
+                    <td><span class="badge pending">Pending</span></td>
+                  </tr>
+                } @empty {
+                  <tr><td class="empty" colspan="6">No pending requests.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+
+      @case (3) {
+        <section class="card table-card" aria-labelledby="apprTitle">
+          <div class="card-head">
+            <h2 class="card-title" id="apprTitle"><bi-icon class="green" name="check-circle" /> Approved Requests</h2>
+          </div>
+          <div class="table-wrap" role="region" aria-label="Approved requests" tabindex="0">
+            <table class="ps-table">
+              <thead>
+                <tr><th>S.No</th><th>Employee</th><th>Pay Period</th><th>Requested On</th><th>Note</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                @for (v of myApproved(); track v.r.reqId; let i = $index) {
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td><div class="emp-name">{{ v.e.name }}</div><div class="emp-id">{{ v.e.empId }}</div></td>
+                    <td>{{ v.r.period }}</td>
+                    <td>{{ v.r.requestedOn }}</td>
+                    <td>{{ v.r.note || '—' }}</td>
+                    <td><span class="badge approved">Approved</span></td>
+                  </tr>
+                } @empty {
+                  <tr><td class="empty" colspan="6">No approved requests.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+
+      @case (4) {
+        <section class="card table-card" aria-labelledby="genTitle">
+          <div class="card-head">
+            <h2 class="card-title" id="genTitle"><bi-icon class="blue" name="file-earmark-pdf" /> Generated Payslips</h2>
+          </div>
+          <div class="table-wrap" role="region" aria-label="Generated payslips" tabindex="0">
+            <table class="ps-table">
+              <thead>
+                <tr><th>S.No</th><th>Employee</th><th>Pay Period</th><th>Generated On</th><th>Type</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                @for (v of myGenerated(); track v.r.reqId; let i = $index) {
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td><div class="emp-name">{{ v.e.name }}</div><div class="emp-id">{{ v.e.empId }}</div></td>
+                    <td>{{ v.r.period }}</td>
+                    <td>{{ v.r.generatedOn }}</td>
+                    <td><span class="badge generated small">{{ v.r.genType === 'manual' ? 'Manual' : 'Auto' }}</span></td>
+                    <td>
+                      <div class="row-actions">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openPreview(v.r.reqId, $event)"><bi-icon name="eye" /> View</button>
+                        <button type="button" class="btn-icon btn-sm" aria-label="Print payslip" (click)="printSlip(v.r.reqId)"><bi-icon name="printer" /></button>
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr><td class="empty" colspan="6">No payslips generated yet.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+    }
+  </div>
+}
+
+<!-- ===================== HR / ADMIN VIEW ===================== -->
+@if (tab() === 'admin') {
+  <div id="panelAdmin" role="tabpanel" aria-labelledby="tabAdmin">
+    <section class="kpis" aria-label="Request summary">
+      <article class="kpi">
+        <span class="kpi-icon amber-bg"><bi-icon name="hourglass-split" /></span>
+        <div><div class="kpi-label">Pending</div><div class="kpi-value">{{ counts().pending }}</div></div>
+      </article>
+      <article class="kpi">
+        <span class="kpi-icon green-bg"><bi-icon name="check-circle" /></span>
+        <div><div class="kpi-label">Approved</div><div class="kpi-value">{{ counts().approved }}</div></div>
+      </article>
+      <article class="kpi">
+        <span class="kpi-icon blue-bg"><bi-icon name="file-earmark-pdf" /></span>
+        <div><div class="kpi-label">Generated</div><div class="kpi-value">{{ counts().generated }}</div></div>
+      </article>
+      <article class="kpi">
+        <span class="kpi-icon red-bg"><bi-icon name="x-circle" /></span>
+        <div><div class="kpi-label">Rejected</div><div class="kpi-value">{{ counts().rejected }}</div></div>
+      </article>
+    </section>
+
+    <!-- Pending requests -->
+    <section class="card table-card spaced" aria-labelledby="adminPendTitle">
+      <div class="card-head wrap">
+        <h2 class="card-title" id="adminPendTitle"><bi-icon class="amber" name="inbox" /> Pending Requests</h2>
+        @if (pendingSelected().length) {
+          <div class="bulk">
+            <button type="button" class="btn btn-outline-primary" (click)="bulkApprove()"><bi-icon name="check-all" /> Approve Selected</button>
+            <button type="button" class="btn btn-cancel" (click)="bulkReject()"><bi-icon name="x-circle" /> Reject Selected</button>
+          </div>
+        }
+      </div>
+      <div class="table-wrap" role="region" aria-label="Pending requests" tabindex="0" (scroll)="onTableScroll()">
+        <table class="ps-table">
+          <thead>
+            <tr>
+              <th>
+                <label class="chk-cell">
+                  <input
+                    type="checkbox"
+                    aria-label="Select all pending requests"
+                    [checked]="pendingViews().length > 0 && pendingSelected().length === pendingViews().length"
+                    [indeterminate]="pendingSelected().length > 0 && pendingSelected().length < pendingViews().length"
+                    [disabled]="!pendingViews().length"
+                    (change)="togglePendingAll($any($event.target).checked)"
+                  />
+                  S.No
+                </label>
+              </th>
+              <th>Employee</th>
+              <th>Dept</th>
+              <th>Pay Period</th>
+              <th>Requested On</th>
+              <th>Note</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (v of pendingViews(); track v.r.reqId; let i = $index) {
+              <tr>
+                <td>
+                  <label class="chk-cell">
+                    <input type="checkbox" [attr.aria-label]="'Select request from ' + v.e.name" [checked]="isPendingSelected(v.r.reqId)" (change)="togglePending(v.r.reqId)" />
+                    {{ i + 1 }}
+                  </label>
+                </td>
+                <td>
+                  <div class="emp">
+                    @if (!brokenAvatars().has(v.e.id)) {
+                      <img class="avatar" [src]="avatarSrc(v.e.id)" alt="" width="30" height="30" (error)="onAvatarError(v.e.id)" />
+                    } @else {
+                      <span class="avatar fallback" aria-hidden="true">{{ initials(v.e.name) }}</span>
+                    }
+                    <div><div class="emp-name">{{ v.e.name }}</div><div class="emp-id">{{ v.e.empId }}</div></div>
+                  </div>
+                </td>
+                <td>{{ v.e.dept }}</td>
+                <td>{{ v.r.period }}</td>
+                <td>{{ v.r.requestedOn }}</td>
+                <td class="wrap">{{ v.r.note || '—' }}</td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="approve(v.r.reqId)"><bi-icon name="check-lg" /> Approve</button>
+                    <button type="button" class="btn btn-sm btn-cancel" (click)="openReject(v, $event)"><bi-icon name="x-lg" /> Reject</button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td class="empty" colspan="7">No pending requests.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Approved: generate payslip -->
+    <section class="card table-card" aria-labelledby="adminApprTitle" [class.is-scrolled]="scrolled()">
+      <div class="card-head wrap">
+        <h2 class="card-title" id="adminApprTitle"><bi-icon class="green" name="check-circle" /> Approved — Generate Payslip</h2>
+        @if (approvedSelected().length) {
+          <div class="bulk">
+            <span class="bulk-count">{{ approvedSelected().length }} selected</span>
+            <button type="button" class="btn btn-outline-primary" (click)="bulkAuto()"><bi-icon name="lightning" /> Generate Auto Pay Slip</button>
+            @if (approvedSelected().length === 1) {
+              <button type="button" class="btn btn-outline-secondary" (click)="bulkManual($event)"><bi-icon name="pencil-square" /> Manual Pay Slip</button>
+            }
+            <button type="button" class="btn btn-cancel" (click)="clearApprovedSelection()"><bi-icon name="x-circle" /> Clear</button>
+          </div>
+        }
+      </div>
+      <div class="table-wrap" role="region" aria-label="Approved requests" tabindex="0" (scroll)="onTableScroll()">
+        <table class="ps-table wide">
+          <thead>
+            <tr>
+              <th rowspan="2" class="c-sno">
+                <label class="chk-cell">
+                  <input
+                    type="checkbox"
+                    aria-label="Select all approved requests"
+                    [checked]="approvedViews().length > 0 && approvedSelected().length === approvedViews().length"
+                    [indeterminate]="approvedSelected().length > 0 && approvedSelected().length < approvedViews().length"
+                    [disabled]="!approvedViews().length"
+                    (change)="toggleApprovedAll($any($event.target).checked)"
+                  />
+                  S.No
+                </label>
+              </th>
+              <th rowspan="2" class="c-emp">Employee</th>
+              <th rowspan="2">Department</th>
+              <th rowspan="2">Pay Period</th>
+              <th rowspan="2" class="num">Present</th>
+              <th rowspan="2" class="num">Absent</th>
+              <th [attr.colspan]="earnFields.length" class="group">Earning Components</th>
+              <th rowspan="2" class="num">Gross Salary</th>
+              <th [attr.colspan]="dedFields.length" class="group">Deduction Components</th>
+              <th rowspan="2">Net Pay</th>
+              <th rowspan="2">Action</th>
+            </tr>
+            <tr>
+              @for (f of earnFields; track f.key) {
+                <th class="num sub">{{ f.short }}</th>
+              }
+              @for (f of dedFields; track f.key) {
+                <th class="num sub">{{ f.short }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (v of approvedViews(); track v.r.reqId; let i = $index) {
+              @let x = valuesFor(v);
+              <tr>
+                <td class="c-sno">
+                  <label class="chk-cell">
+                    <input type="checkbox" [attr.aria-label]="'Select ' + v.e.name" [checked]="isApprovedSelected(v.r.reqId)" (change)="toggleApproved(v.r.reqId)" />
+                    {{ i + 1 }}
+                  </label>
+                </td>
+                <td class="c-emp">
+                  <div class="emp">
+                    @if (!brokenAvatars().has(v.e.id)) {
+                      <img class="avatar" [src]="avatarSrc(v.e.id)" alt="" width="30" height="30" (error)="onAvatarError(v.e.id)" />
+                    } @else {
+                      <span class="avatar fallback" aria-hidden="true">{{ initials(v.e.name) }}</span>
+                    }
+                    <div><div class="emp-name">{{ v.e.name }}</div><div class="emp-id">{{ v.e.empId }}</div></div>
+                  </div>
+                </td>
+                <td>{{ v.e.dept }}</td>
+                <td>{{ v.r.period }}</td>
+                <td class="num good">{{ x.present }}</td>
+                <td class="num bad">{{ x.absent }}</td>
+                @for (f of earnFields; track f.key) {
+                  <td class="num good">{{ inr(x.earn[f.key]) }}</td>
+                }
+                <td class="num strong">{{ inr(grossOf(x.earn)) }}</td>
+                @for (f of dedFields; track f.key) {
+                  <td class="num bad">{{ inr(x.ded[f.key]) }}</td>
+                }
+                <td>
+                  <div class="salary-stack">
+                    <div class="amount">{{ inr(netOf(v)) }}</div>
+                    <div class="bar"><span [style.width.%]="netPct(v)"></span></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-cell">
+                    @if (v.r.status === 'generated') {
+                      <span class="badge generated small"><bi-icon name="file-earmark-check" /> Generated</span>
+                    }
+                    <button
+                      type="button"
+                      class="menu-trigger"
+                      aria-haspopup="menu"
+                      [attr.aria-expanded]="actionMenu()?.reqId === v.r.reqId"
+                      [attr.aria-label]="'Actions for ' + v.e.name"
+                      (click)="openMenu($event, v.r.reqId)"
+                    >
+                      <bi-icon name="three-dots-vertical" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td class="empty" colspan="19">No approved requests yet.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+}
+
+<!-- Row action menu (fixed so horizontal table scroll never clips it) -->
+@if (actionMenu(); as m) {
+  <div class="action-menu" role="menu" aria-label="Payslip actions" [style.top.px]="m.top" [style.left.px]="m.left">
+    <button type="button" role="menuitem" (click)="menuAction('auto', $event)"><bi-icon class="amber" name="lightning" /> Generate Auto Pay Slip</button>
+    <button type="button" role="menuitem" (click)="menuAction('manual', $event)"><bi-icon class="blue" name="pencil-square" /> Manual Pay Slip</button>
+    <hr />
+    <button type="button" role="menuitem" (click)="menuAction('preview', $event)"><bi-icon name="eye" /> View / Preview</button>
+    <button type="button" role="menuitem" (click)="menuAction('print', $event)"><bi-icon name="printer" /> Print</button>
+    <button type="button" role="menuitem" (click)="menuAction('pdf', $event)"><bi-icon name="download" /> Download PDF</button>
+  </div>
+}
+
+<!-- ============================ Reject modal ============================ -->
+@if (reject(); as r) {
+  <div class="modal-backdrop">
+    <div class="modal-dialog narrow" role="dialog" aria-modal="true" aria-labelledby="rejectTitle" (keydown)="trapFocus($event)">
+      <div class="modal-head danger">
+        <h2 id="rejectTitle"><bi-icon name="x-circle" /> Reject Payslip Request</h2>
+        <button type="button" class="modal-close" aria-label="Close" (click)="closeReject()"><bi-icon name="x-lg" /></button>
+      </div>
+      <div class="modal-body">
+        <p class="lead">Rejecting request for <strong>{{ r.name }}</strong> — {{ r.period }}</p>
+        <div class="field">
+          <label for="rejectReason">Reason for Rejection</label>
+          <textarea
+            id="rejectReason"
+            class="form-control"
+            rows="3"
+            placeholder="Enter reason..."
+            data-autofocus
+            [value]="r.reason"
+            (input)="reject.set({ reqId: r.reqId, name: r.name, period: r.period, reason: value($event) })"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-cancel" (click)="closeReject()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="confirmReject()"><bi-icon name="x-circle" /> Confirm Reject</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ============================ Manual payslip modal ============================ -->
+@if (manual(); as m) {
+  <div class="modal-backdrop">
+    <form class="modal-dialog wide" role="dialog" aria-modal="true" aria-labelledby="manualTitle" novalidate (submit)="onManualSubmit($event)" (keydown)="trapFocus($event)">
+      <div class="modal-head brand">
+        <div>
+          <h2 id="manualTitle"><bi-icon name="pencil-square" /> Manual Pay Slip</h2>
+          <p>{{ m.subtitle }}</p>
+        </div>
+        <button type="button" class="modal-close light" aria-label="Close" (click)="closeManual()"><bi-icon name="x-lg" /></button>
+      </div>
+
+      <div class="modal-body grid">
+        <h3 class="section g12"><bi-icon class="green" name="calendar-check" /> Attendance</h3>
+        <div class="field g3">
+          <label for="mWorking">Working Days</label>
+          <input id="mWorking" type="number" min="0" max="31" class="form-control" data-autofocus [value]="m.workingDays" (input)="patchManual({ workingDays: value($event) })" />
+        </div>
+        <div class="field g3">
+          <label for="mPresent">Present Days</label>
+          <input id="mPresent" type="number" min="0" max="31" class="form-control" [value]="m.present" (input)="patchManual({ present: value($event) })" />
+        </div>
+        <div class="field g3">
+          <label for="mAbsent">Absent Days</label>
+          <input id="mAbsent" type="number" min="0" max="31" class="form-control" [value]="m.absent" (input)="patchManual({ absent: value($event) })" />
+        </div>
+        <div class="field g3">
+          <label for="mPeriod">Pay Period</label>
+          <input id="mPeriod" type="text" class="form-control" readonly [value]="m.period" />
+        </div>
+
+        <hr class="g12" />
+
+        <h3 class="section g12"><bi-icon class="green" name="plus-circle" /> Earning Components</h3>
+        @for (f of earnFields; track f.key) {
+          <div class="field g4">
+            <label [for]="'m-' + f.key">{{ f.label }}</label>
+            <div class="input-group">
+              <span class="prefix green">&#8377;</span>
+              <input [id]="'m-' + f.key" type="number" min="0" class="form-control" [value]="m.earn[f.key]" (input)="setManualEarn(f.key, $event)" />
+            </div>
+          </div>
+        }
+
+        <hr class="g12" />
+
+        <h3 class="section g12"><bi-icon class="red" name="dash-circle" /> Deduction Components</h3>
+        @for (f of dedFields; track f.key) {
+          <div class="field g3">
+            <label [for]="'m-' + f.key">{{ f.label }}</label>
+            <div class="input-group">
+              <span class="prefix red">&#8377;</span>
+              <input [id]="'m-' + f.key" type="number" min="0" class="form-control" [value]="m.ded[f.key]" (input)="setManualDed(f.key, $event)" />
+            </div>
+          </div>
+        }
+
+        <div class="net-preview g12" aria-live="polite">
+          <div><div class="np-label">GROSS SALARY</div><div class="np-value">{{ inr(manualPreview().gross) }}</div></div>
+          <span class="np-sep"></span>
+          <div><div class="np-label">TOTAL DEDUCTIONS</div><div class="np-value ded">{{ inr(manualPreview().deduct) }}</div></div>
+          <span class="np-sep"></span>
+          <div><div class="np-label">NET PAY</div><div class="np-value big">{{ inr(manualPreview().net) }}</div></div>
+        </div>
+
+        @if (m.error) {
+          <p class="field-error g12" role="alert">{{ m.error }}</p>
+        }
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn-cancel" (click)="closeManual()">Cancel</button>
+        <button type="submit" class="btn-primary"><bi-icon name="file-earmark-check" /> Generate Payslip</button>
+      </div>
+    </form>
+  </div>
+}
+
+<!-- ============================ Preview modal ============================ -->
+@if (previewSlip(); as slip) {
+  <div class="modal-backdrop">
+    <div class="modal-dialog wide flush" role="dialog" aria-modal="true" aria-labelledby="previewTitle" (keydown)="trapFocus($event)">
+      <div class="modal-head solid">
+        <h2 id="previewTitle"><bi-icon name="file-earmark-text" /> Payslip Preview</h2>
+        <button type="button" class="modal-close light" aria-label="Close" (click)="closePreview()"><bi-icon name="x-lg" /></button>
+      </div>
+      <div class="preview-body">
+        <app-payslip-sheet [slip]="slip" />
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-cancel" data-autofocus (click)="closePreview()">Close</button>
+        <button type="button" class="btn-cancel" (click)="printSlip(previewId()!)"><bi-icon name="printer" /> Print</button>
+        <button type="button" class="btn-primary" (click)="downloadPdf(previewId()!)"><bi-icon name="download" /> Download PDF</button>
+      </div>
+    </div>
+  </div>
+}
+
+<div class="toast" role="status" aria-live="polite">
+  @if (toast(); as message) {
+    <span>{{ message }}</span>
+  }
+</div>

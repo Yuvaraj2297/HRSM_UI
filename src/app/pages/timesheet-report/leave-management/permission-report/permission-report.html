@@ -1,0 +1,504 @@
+<main class="permission-report-page">
+  <!-- =========================================================
+       BREADCRUMB & HEADER
+  ========================================================== -->
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+    <div>
+      <app-breadcrumb
+        title="Permission Requests"
+        parent="Attendance Management"
+        icon="bi bi-clock-history">
+      </app-breadcrumb>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="d-flex flex-wrap gap-2">
+      <!-- Employee Permissions Button with notification badge -->
+      <button
+        type="button"
+        class="btn btn-outline-primary perm-notify-btn"
+        (click)="openEmployeePermModal()">
+        <i class="bi bi-people"></i> Employee Permissions
+        @if (pendingTeamCount > 0) {
+        <span class="perm-notify-badge">{{ pendingTeamCount }}</span>
+        }
+      </button>
+
+      <!-- Apply Permission Button -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="openApplyModal()">
+        <i class="bi bi-clock-history"></i> Apply Permission
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       STATUS KPI BLOCKS (MY PERMISSION REQUESTS)
+  ========================================================== -->
+  <div class="row g-3 mb-3" id="permStatBlocks">
+      <!-- Total Requests -->
+      <div class="col-lg-3 col-md-6">
+        <div
+          class="perm-stat-card total cursor-pointer"
+          [class.active]="activeStatusFilter === ''"
+          (click)="onKpiClick('')"
+          title="Click to show all requests">
+          <div class="perm-stat-icon"><i class="bi bi-stack"></i></div>
+          <div class="perm-stat-info">
+            <div class="perm-stat-count">{{ totalCount }}</div>
+            <div class="perm-stat-label">Total Requests</div>
+          </div>
+          <i class="bi bi-chevron-right perm-stat-arrow"></i>
+        </div>
+      </div>
+
+      <!-- Pending Requests -->
+      <div class="col-lg-3 col-md-6">
+        <div
+          class="perm-stat-card pending cursor-pointer"
+          [class.active]="activeStatusFilter === 'Pending'"
+          (click)="onKpiClick('Pending')"
+          title="Click to filter. Click again to show all">
+          <div class="perm-stat-icon"><i class="bi bi-hourglass-split"></i></div>
+          <div class="perm-stat-info">
+            <div class="perm-stat-count">{{ pendingCount }}</div>
+            <div class="perm-stat-label">Pending Requests</div>
+          </div>
+          <i class="bi bi-chevron-right perm-stat-arrow"></i>
+        </div>
+      </div>
+
+      <!-- Approved Requests -->
+      <div class="col-lg-3 col-md-6">
+        <div
+          class="perm-stat-card approved cursor-pointer"
+          [class.active]="activeStatusFilter === 'Approved'"
+          (click)="onKpiClick('Approved')"
+          title="Click to filter. Click again to show all">
+          <div class="perm-stat-icon"><i class="bi bi-check-circle-fill"></i></div>
+          <div class="perm-stat-info">
+            <div class="perm-stat-count">{{ approvedCount }}</div>
+            <div class="perm-stat-label">Approved Requests</div>
+          </div>
+          <i class="bi bi-chevron-right perm-stat-arrow"></i>
+        </div>
+      </div>
+
+      <!-- Rejected Requests -->
+      <div class="col-lg-3 col-md-6">
+        <div
+          class="perm-stat-card rejected cursor-pointer"
+          [class.active]="activeStatusFilter === 'Rejected'"
+          (click)="onKpiClick('Rejected')"
+          title="Click to filter. Click again to show all">
+          <div class="perm-stat-icon"><i class="bi bi-x-circle-fill"></i></div>
+          <div class="perm-stat-info">
+            <div class="perm-stat-count">{{ rejectedCount }}</div>
+            <div class="perm-stat-label">Rejected Requests</div>
+          </div>
+          <i class="bi bi-chevron-right perm-stat-arrow"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Month & Year Filter Bar (with PrimeNG p-select) -->
+    <div class="d-flex align-items-center flex-wrap gap-2 mb-3 p-3 card-custom">
+      <div class="perm-month-wrap">
+        <p-select
+          [options]="monthOptions"
+          [(ngModel)]="selectedMonth"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="perm-filter-select"
+          placeholder="Select month">
+        </p-select>
+      </div>
+
+      <div class="perm-year-wrap">
+        <p-select
+          [options]="yearOptions"
+          [(ngModel)]="selectedYear"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="perm-filter-select"
+          placeholder="Select year">
+        </p-select>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary perm-filter-apply"
+        (click)="applyMonthYearFilter()">
+        <i class="bi bi-funnel-fill"></i> Apply
+      </button>
+    </div>
+
+    <!-- PrimeDataTable Card -->
+    <div class="card-custom p-0" id="permissionTableWrap">
+      <app-primedatatable
+        [modalHeader]="modalHeader"
+        [columns]="columns"
+        [data]="filteredRequests"
+        [Accessactions]="tableActions"
+        [searchPlaceholder]="'Search permission requests...'"
+        exportFileName="permission-requests">
+
+        <!-- Custom Cell Template -->
+        <ng-template #cellTemplate let-row let-col="col">
+          <!-- Permission Type Column -->
+          @if (col.field === 'type') {
+          <span
+            class="perm-type-chip"
+            [ngClass]="{
+              'type-late': row.type === 'Late Coming',
+              'type-early': row.type === 'Early Leaving',
+              'type-out': row.type === 'Out Permission'
+            }">
+            @if (row.type === 'Late Coming') {
+            <i class="bi bi-sunrise"></i>
+            } @else if (row.type === 'Early Leaving') {
+            <i class="bi bi-sunset"></i>
+            } @else {
+            <i class="bi bi-box-arrow-right"></i>
+            }
+            {{ row.type }}
+          </span>
+          }
+
+          <!-- Total Hours Column -->
+          @else if (col.field === 'total') {
+          <span class=" text-success">{{ row.total }}</span>
+          }
+
+          <!-- Status Column -->
+          @else if (col.field === 'status') {
+          <span
+            class="perm-status-badge"
+            [ngClass]="{
+              'pending': row.status === 'Pending',
+              'approved': row.status === 'Approved',
+              'rejected': row.status === 'Rejected'
+            }">
+            @if (row.status === 'Pending') {
+            <i class="bi bi-hourglass-split"></i>
+            } @else if (row.status === 'Approved') {
+            <i class="bi bi-check-circle-fill"></i>
+            } @else {
+            <i class="bi bi-x-circle-fill"></i>
+            }
+            {{ row.status }}
+          </span>
+          }
+
+          <!-- Fallback -->
+          @else {
+          <span>{{ row[col.field] }}</span>
+          }
+        </ng-template>
+
+      </app-primedatatable>
+    </div>
+</main>
+
+<!-- =========================================================
+     MODAL: EMPLOYEE PERMISSION REQUESTS (FULLSCREEN MODAL)
+========================================================== -->
+@if (employeePermModalOpen) {
+<div class="modal fade show d-block emp-perm-modal-backdrop" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+    <div class="modal-content">
+      <!-- Modal Head -->
+      <div class="emp-perm-head">
+        <div class="d-flex align-items-center gap-3">
+          <span class="ep-head-icon"><i class="bi bi-people-fill"></i></span>
+          <div>
+            <h4 class="mb-0  ep-title">Employee Permission Requests</h4>
+            <p class="mb-0 text-muted small">
+              Review and approve / reject permission requests raised by your team members
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn-close-custom"
+          (click)="closeEmployeePermModal()"
+          aria-label="Close"
+          title="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body emp-perm-body">
+        <div class="emp-perm-card">
+          <div class="table-responsive w-100 overflow-x-auto">
+            <table class="table-modern w-100 ep-table">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width: 50px;">S.NO</th>
+                  <th style="min-width: 175px;">EMPLOYEE</th>
+                  <th style="min-width: 155px;">PERMISSION TYPE</th>
+                  <th style="min-width: 110px;">DATE</th>
+                  <th style="min-width: 95px;">FROM TIME</th>
+                  <th style="min-width: 95px;">TO TIME</th>
+                  <th style="min-width: 105px;">TOTAL HOURS</th>
+                  <th style="min-width: 180px; max-width: 250px;">REASON</th>
+                  <th style="min-width: 115px;">REQUESTED ON</th>
+                  <th style="min-width: 195px; width: 200px;">ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (req of pendingTeamRequests; track req.id; let i = $index) {
+                <tr>
+                  <td class="text-center text-muted fw-semibold">{{ i + 1 }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <img
+                        [src]="req.avatar"
+                        class="avatar-sm rounded-circle"
+                        style="width: 36px; height: 36px; object-fit: cover;"
+                        alt="avatar" />
+                      <div>
+                        <div class=" text-dark" style="font-size: 13px;">{{ req.name }}</div>
+                        <div class="text-success small fw-semibold" style="font-size: 11.5px;">
+                          EMP {{ req.emp_id }} &middot; {{ req.role }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    @if (req.type === 'Go on business') {
+                    <span class="perm-type-chip type-business">
+                      <i class="bi bi-briefcase me-1"></i> Go on business
+                    </span>
+                    } @else if (req.type === 'Early Leaving') {
+                    <span class="perm-type-chip type-early">
+                      <i class="bi bi-sunset me-1"></i> Early Leaving
+                    </span>
+                    } @else if (req.type === 'Late Coming') {
+                    <span class="perm-type-chip type-late">
+                      <i class="bi bi-sunrise me-1"></i> Late Coming
+                    </span>
+                    } @else {
+                    <span class="perm-type-chip type-out">
+                      <i class="bi bi-box-arrow-right me-1"></i> Out Permission
+                    </span>
+                    }
+                  </td>
+                  <td class="fw-semibold text-nowrap" style="font-size: 12.5px;">{{ req.date }}</td>
+                  <td class="fw-semibold text-nowrap" style="font-size: 12.5px;">{{ req.from }}</td>
+                  <td class="fw-semibold text-nowrap" style="font-size: 12.5px;">{{ req.to }}</td>
+                  <td class=" text-success text-nowrap" style="font-size: 12.5px;">{{ req.total }}</td>
+                  <td>
+                    <div class="perm-reason-cell" [title]="req.reason">{{ req.reason }}</div>
+                  </td>
+                  <td class="text-muted text-nowrap" style="font-size: 12.5px;">{{ req.requestedOn }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2 text-nowrap">
+                      <button
+                        type="button"
+                        class="btn btn-sm ep-approve"
+                        (click)="approveTeamRequest(req)">
+                        <i class="bi bi-check-lg"></i> Approve
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm ep-reject"
+                        (click)="rejectTeamRequest(req)">
+                        <i class="bi bi-x-lg"></i> Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                }
+
+                @if (pendingTeamRequests.length === 0) {
+                <tr>
+                  <td colspan="10" class="text-center py-5">
+                    <div class="perm-empty-state">
+                      <div class="empty-icon" style="background: var(--primary-soft); color: var(--green-550);">
+                        <i class="bi bi-check-circle-fill"></i>
+                      </div>
+                      <div class="empty-title  fs-5">No permission request</div>
+                      <div class="empty-sub text-muted">All employee permission requests have been reviewed. Great job!</div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     MODAL 1: APPLY PERMISSION MODAL (MASTER DEPARTMENT ANIMATION)
+========================================================== -->
+@if (applyModalOpen) {
+<div class="modal-backdrop-custom" (click)="closeApplyModal()"></div>
+<div class="modal-custom-dialog-wrap">
+  <div class="modal-dialog modal-dialog-centered modal-custom-content" style="max-width: 520px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title  fs-5">
+          <i class="bi bi-clock-history text-primary me-2"></i>Apply Permission
+        </h5>
+        <button
+          type="button"
+          class="btn-close-custom"
+          (click)="closeApplyModal()"
+          aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        @if (!applySubmittedSuccess) {
+        <div id="permFormWrap">
+          <!-- Date -->
+          <div class="perm-row mb-3" [class.has-error]="applyFormErrors['date']">
+            <label class="form-label required-label">Date</label>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="applyDate" />
+            @if (applyFormErrors['date']) {
+            <div class="field-error-msg">Please select a date</div>
+            }
+          </div>
+
+          <!-- Permission Type (PrimeNG p-select) -->
+          <div class="perm-row mb-3" [class.has-error]="applyFormErrors['type']">
+            <label class="form-label required-label">Permission Type</label>
+            <p-select
+              [options]="permissionTypeOptions"
+              [(ngModel)]="applyType"
+              optionLabel="label"
+              optionValue="value"
+              styleClass="w-100"
+              placeholder="Select permission type">
+            </p-select>
+            @if (applyFormErrors['type']) {
+            <div class="field-error-msg">Please select a permission type</div>
+            }
+          </div>
+
+          <!-- Time Range -->
+          <div class="perm-row mb-3" [class.has-error]="applyFormErrors['time']">
+            <label class="form-label required-label">
+              Time <span class="perm-time-hint">(max 2 hours)</span>
+            </label>
+            <div class="d-flex gap-2">
+              <input
+                type="time"
+                class="form-control"
+                [(ngModel)]="applyFromTime"
+                (ngModelChange)="recalcApplyTotal()" />
+              <input
+                type="time"
+                class="form-control"
+                [(ngModel)]="applyToTime"
+                (ngModelChange)="recalcApplyTotal()" />
+            </div>
+            @if (applyFormErrors['time']) {
+            <div class="field-error-msg">{{ applyFormErrors['time'] }}</div>
+            }
+          </div>
+
+          <!-- Total Permission Time Display -->
+          <div class="perm-total-row mb-3">
+            <span>Total permission time</span>
+            <strong
+              [ngClass]="{
+                'is-ok': applyDurationMinutes > 0 && applyDurationMinutes <= 120,
+                'is-over': applyDurationMinutes > 120 || applyTotalDuration === 'Invalid range'
+              }">
+              {{ applyTotalDuration }}
+            </strong>
+          </div>
+
+          <!-- Approve By (PrimeNG p-select) -->
+          <div class="perm-row mb-3" [class.has-error]="applyFormErrors['approver']">
+            <label class="form-label required-label">Approve by</label>
+            <p-select
+              [options]="approverOptions"
+              [(ngModel)]="applyApprover"
+              optionLabel="label"
+              optionValue="value"
+              styleClass="w-100"
+              placeholder="Select approver">
+            </p-select>
+            @if (applyFormErrors['approver']) {
+            <div class="field-error-msg">Please select an approver</div>
+            }
+          </div>
+
+          <!-- Reason -->
+          <div class="perm-row mb-0" [class.has-error]="applyFormErrors['reason']">
+            <label class="form-label required-label">Reason</label>
+            <textarea
+              class="form-control"
+              [(ngModel)]="applyReason"
+              rows="3"
+              placeholder="Enter reason for permission (min 5 characters)">
+            </textarea>
+            @if (applyFormErrors['reason']) {
+            <div class="field-error-msg">Please enter a reason (min 5 characters)</div>
+            }
+          </div>
+        </div>
+        } @else {
+        <!-- Submitted Success Step -->
+        <div class="perm-result show text-center py-4">
+          <div class="perm-result-icon mx-auto mb-3">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="perm-result-title  fs-5 mb-1">Request Submitted</div>
+          <div class="perm-result-sub text-muted small">
+            {{ applyType }} &middot; {{ applyTotalDuration }} request sent to {{ applyApprover }} for approval.
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        @if (!applySubmittedSuccess) {
+        <button type="button" class="btn btn-cancel" (click)="closeApplyModal()">Cancel</button>
+        <button
+          type="button"
+          class="btn btn-save"
+          [disabled]="applyIsSubmitting"
+          (click)="submitApplyPermission()">
+          @if (applyIsSubmitting) {
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Submitting&hellip;
+          } @else {
+          Submit Request
+          }
+        </button>
+        } @else {
+        <button type="button" class="btn btn-primary px-4" (click)="closeApplyModal()">Close</button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+
+
+<!-- =========================================================
+     TOAST NOTIFICATION
+========================================================== -->
+@if (showToast) {
+<div class="perm-report-toast">
+  <i class="bi bi-check-circle-fill me-2"></i>
+  <span>{{ toastMessage }}</span>
+</div>
+}

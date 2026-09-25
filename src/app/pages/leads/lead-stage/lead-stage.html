@@ -1,0 +1,53 @@
+<div class="lead-stage-page">
+
+  <!-- =========================================================
+       FEEDBACK / ERROR
+  ========================================================== -->
+  @if (feedback(); as fb) {
+  <div class="alert d-flex align-items-center justify-content-between py-2 px-3 mb-3"
+    [class.alert-success]="fb.type === 'success'" [class.alert-danger]="fb.type === 'danger'" role="status">
+    <span class="small fw-semibold">
+      <i class="bi me-2" [class.bi-check-circle-fill]="fb.type === 'success'"
+        [class.bi-x-circle-fill]="fb.type === 'danger'"></i>{{ fb.text }}
+    </span>
+    <button type="button" class="btn-close p-2" aria-label="Close" (click)="feedback.set(null)"></button>
+  </div>
+  }
+
+  @if (error()) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+    <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Retry</button>
+  </div>
+  }
+
+ 
+
+  <!-- =========================================================
+       TABLE (shared) — New Stage / Edit / Delete
+  ========================================================== -->
+  <app-primedatatable [modalHeader]="header()" [columns]="columns" [data]="ordered()" [loading]="loading()"
+    [Accessactions]="actions" [inlineToolbar]="true" searchPlaceholder="Search stages..." exportFileName="lead-stages"
+    (addClicked)="openCreate()" (actionClick)="onTableAction($event)">
+
+    <ng-template #cellTemplate let-row let-col="col">
+      @switch (col.field) {
+      @case ('orderNo') {
+      <span class="ls-order">{{ row.orderNo }}</span>
+      }
+      @case ('name') {
+      <span class="ls-name">{{ row.name }}</span>
+      }
+      }
+    </ng-template>
+
+  </app-primedatatable>
+
+  <!-- =========================================================
+       CREATE / EDIT (shared reuse modal)
+  ========================================================== -->
+  <app-reuse-modal #stageModal [fields]="fields()" title="New Stage" editTitle="Edit Stage" saveLabel="Submit"
+    updateLabel="Update" cancelLabel="Close" submitIcon="bi bi-check2" [validate]="validateStage"
+    (saved)="onSaved($event)" />
+
+</div>

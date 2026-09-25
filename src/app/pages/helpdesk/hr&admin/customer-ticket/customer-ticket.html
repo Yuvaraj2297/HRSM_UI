@@ -1,0 +1,608 @@
+<!-- Page Header & Breadcrumb -->
+<app-breadcrumb title="Customer Ticket Dashboard" parent="HR / Admin" icon="bi bi-speedometer2">
+  <div breadcrumb-actions class="d-flex gap-2">
+    <!-- <a routerLink="/helpdesk/customer-create-ticket" class="btn btn-outline-primary btn-sm">
+      <i class="bi bi-person me-1"></i> Customer View
+    </a> -->
+    <a routerLink="/helpdesk/ticket-dashboard" class="btn btn-primary btn-sm">
+      <i class="bi bi-people me-1"></i> Employee Tickets
+    </a>
+  </div>
+</app-breadcrumb>
+
+<!-- KPI Row -->
+<div class="row g-3 mb-3">
+  <div class="col-6 col-xl">
+    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'all'"
+      (click)="toggleQuickFilter('all')" style="--wash: rgba(var(--blue-550-rgb), 0.07);" role="button" tabindex="0">
+      <div class="k-ico" style="background: var(--accent-blue-soft); color: var(--blue-550);">
+        <i class="bi bi-ticket-perforated"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiData.total }}</div>
+        <div class="k-label">Total Tickets</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl">
+    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'new'"
+      (click)="toggleQuickFilter('new')" style="--wash: rgba(var(--purple-550-rgb), 0.07);" role="button" tabindex="0">
+      <div class="k-ico" style="background: var(--blue-50-3); color: var(--purple-550);">
+        <i class="bi bi-inbox"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiData.newT }}</div>
+        <div class="k-label">New</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl">
+    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'progress'"
+      (click)="toggleQuickFilter('progress')" style="--wash: rgba(var(--orange-400-rgb), 0.08);" role="button" tabindex="0">
+      <div class="k-ico" style="background: var(--orange-50); color: var(--orange-550);">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiData.progress }}</div>
+        <div class="k-label">In Progress</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl">
+    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'resolved'"
+      (click)="toggleQuickFilter('resolved')" style="--wash: rgba(var(--green-400-2-rgb), 0.07);" role="button" tabindex="0">
+      <div class="k-ico" style="background: var(--primary-soft); color: var(--green-550);">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiData.resolved }}</div>
+        <div class="k-label">Resolved</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl">
+    <div class="cta-kpi d-flex align-items-center gap-3" [class.active]="quickFilter === 'high'"
+      (click)="toggleQuickFilter('high')" style="--wash: rgba(var(--danger-rgb), 0.08);" role="button" tabindex="0">
+      <div class="k-ico" style="background: var(--danger-soft); color: var(--red-550);">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiData.highCritical }}</div>
+        <div class="k-label">High / Critical</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- All tickets table (full width) -->
+<div class="card-custom p-0 overflow-hidden mb-3">
+  <div class="row align-items-center p-3 gy-2">
+
+    <!-- Title + count -->
+    <div class="col-12 col-md-auto  d-flex align-items-center" style="font-size: 14px;">
+      <i class="bi bi-ticket-detailed me-2" style="color: var(--blue-550);"></i> All Customer Tickets
+      <span class="badge rounded-pill ms-2" style="background: var(--accent-blue-soft); color: var(--blue-550); font-size: 11px;">
+        {{ filteredTickets.length }}
+      </span>
+    </div>
+
+    <!-- Filters -->
+    <div class="col-12 col-md ms-md-auto">
+      <div class="row gy-2 gx-2 justify-content-md-end">
+
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+          <p-select [options]="projectOptions" [(ngModel)]="filterProject" (onChange)="applyFilters()"
+            optionLabel="label" optionValue="value" placeholder="All Projects" appendTo="body"
+            styleClass="ct-p-select w-100"></p-select>
+        </div>
+
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+          <p-select [options]="issueOptions" [(ngModel)]="filterIssue" (onChange)="applyFilters()" optionLabel="label"
+            optionValue="value" placeholder="All Issue Types" appendTo="body" styleClass="ct-p-select w-100"></p-select>
+        </div>
+
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+          <p-select [options]="statusOptions" [(ngModel)]="filterStatus" (onChange)="applyFilters()" optionLabel="label"
+            optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="ct-p-select w-100"></p-select>
+        </div>
+
+        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+          <div class="mt-search-wrap w-100">
+            <i class="bi bi-search mt-search-icon"></i>
+            <input type="text" class="mt-search-input w-100" placeholder="Search ticket / customer..."
+              [(ngModel)]="searchTerm" (input)="applyFilters()" />
+          </div>
+        </div>
+
+        <div class="col-6 col-sm-6 col-md-auto d-flex">
+          <button type="button" class="btn btn-outline-secondary btn-sm w-100" (click)="clearFilters()"
+            title="Reset Filters">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="table-responsive table-modern-wrap overflow-auto column-border" style="max-height: 520px;">
+    <table class="table-modern w-100 mb-0" id="ctAllTable">
+      <thead>
+        <tr>
+          <th class="text-nowrap">Ticket</th>
+          <th class="text-nowrap">Customer</th>
+          <th class="text-nowrap">Project</th>
+          <th class="text-nowrap">Issue Type</th>
+          <th class="text-nowrap">Priority</th>
+          <th class="text-nowrap">Assigned To</th>
+          <th class="text-nowrap">SLA</th>
+          <th class="text-nowrap">Status</th>
+          <th class="text-nowrap text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredTickets.length === 0) {
+        <tr>
+          <td colspan="9" class="text-center text-muted py-4">No tickets match the current filters</td>
+        </tr>
+        } @else {
+        @for (t of filteredTickets; track t.id) {
+        <tr class="ak-row" (click)="openManage(t)" style="cursor: pointer;">
+          <td>
+            <span class=" text-primary">{{ t.id }}</span>
+            <div class="text-muted" style="font-size: 10.5px;">{{ t.createdDate }}</div>
+          </td>
+          <td>
+            <div class="" style="font-size: 12.5px;">{{ t.customerName }}</div>
+            <div class="text-muted" style="font-size: 10.5px;">{{ t.customerOrg }}</div>
+            @if (t.contactPhone) {
+            <div style="font-size: 10.5px; color: var(--blue-600);">
+              <i class="bi bi-telephone me-1"></i>{{ t.contactPhone }}
+            </div>
+            }
+          </td>
+          <td>
+            <span class="prj-chip" [style.background]="ticketService.getProject(t.projectId)?.bg || 'var(--bg-muted)'"
+              [style.color]="ticketService.getProject(t.projectId)?.color || 'var(--neutral-650)'">
+              <span>{{ t.projectIcon }}</span>
+              {{ t.projectName }}
+            </span>
+          </td>
+          <td>
+            <span style="font-size: 13px;">{{ t.issueIcon }}</span>
+            <span style="font-size: 12px;" class="ms-1">{{ t.issueType }}</span>
+          </td>
+          <td>
+            <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(t.priority).bg"
+              [style.color]="ticketService.priorityMeta(t.priority).color">
+              {{ t.priority }}
+            </span>
+          </td>
+          <td style="font-size: 12px;">
+            @if (t.assignedTo) {
+            <div class="fw-semibold">{{ t.assignedTo }}</div>
+            <div class="text-muted" style="font-size: 10px;">{{ t.assignedTeam || '' }}</div>
+            } @else {
+            <span class="badge rounded-pill" style="background: var(--bg-muted); color: var(--neutral-500-2); font-size: 10px;">
+              Unassigned
+            </span>
+            }
+          </td>
+          <td>
+            @if (ticketService.slaState(t) === 'breached') {
+            <span class="badge rounded-pill" style="background: var(--danger-soft); color: var(--red-550); font-size: 10.5px;">
+              Breached
+            </span>
+            } @else if (ticketService.slaState(t) === 'at-risk') {
+            <span class="badge rounded-pill" style="background: var(--orange-50); color: var(--orange-550); font-size: 10.5px;">
+              At Risk
+            </span>
+            } @else {
+            <span class="badge rounded-pill" style="background: var(--primary-soft); color: var(--green-550); font-size: 10.5px;">
+              On Track
+            </span>
+            }
+            <div class="sla-due">{{ getSlaDueFormatted(t.resolutionDueTs) }}</div>
+          </td>
+          <td>
+            <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(t.status).bg"
+              [style.color]="ticketService.statusMeta(t.status).color">
+              <i [class]="'bi ' + ticketService.statusMeta(t.status).icon"></i>
+              {{ t.status }}
+            </span>
+          </td>
+          <td class="text-center" (click)="$event.stopPropagation()">
+            @if (t.status.toLowerCase() === 'new') {
+            <button type="button" class="btn btn-sm btn-primary text-nowrap" (click)="openQuickAssign(t, $event)"
+              style="font-size: 11px; padding: 3px 8px;">
+              <i class="bi bi-person-plus"></i>Assign
+            </button>
+            } @else {
+            <button type="button" class="btn btn-action-icon" (click)="openManage(t)" title="Manage Ticket">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            }
+          </td>
+        </tr>
+        }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center p-3"
+    style="border-top: 1px solid var(--border-soft, var(--bg-muted));">
+    <span class="text-muted" style="font-size: 12px;">
+      Showing <strong>{{ filteredTickets.length }}</strong> of <strong>{{ allTickets.length }}</strong> tickets
+    </span>
+    <span class="text-muted" style="font-size: 12px;">Click a row to manage &amp; reply</span>
+  </div>
+</div>
+
+<!-- Side cards row -->
+<div class="row g-3 align-items-stretch">
+  <!-- Project-wise tickets -->
+  <div class="col-xl-6 col-md-6 d-flex">
+    <div class="card-custom p-3 flex-grow-1">
+      <div class="side-card-title mb-2">
+        <i class="bi bi-kanban" style="color: var(--blue-550);"></i> Project-wise Tickets
+        <span class="sc-badge">{{ projectStats.length }}</span>
+      </div>
+      <div class="d-flex flex-column gap-2 side-scroll" style="max-height: 280px;">
+        @if (projectStats.length === 0) {
+        <div class="text-center text-muted py-3" style="font-size: 12px;">No tickets yet</div>
+        } @else {
+        @for (p of projectStats; track p.id) {
+        <div class="attn-row" (click)="filterProject = p.id; applyFilters()" role="button">
+          <span style="font-size: 15px;">{{ p.icon }}</span>
+          <div class="min-w-0">
+            <div class=" text-truncate" style="font-size: 12px;">{{ p.name }}</div>
+            <div class="text-muted" style="font-size: 10.5px;">{{ p.total }} tickets · {{ p.active }} active</div>
+          </div>
+          @if (p.unassigned > 0) {
+          <span class="badge rounded-pill ms-auto" [style.background]="p.bg" [style.color]="p.color"
+            style="font-size: 9.5px;">
+            {{ p.unassigned }} unassigned
+          </span>
+          } @else {
+          <span class="badge rounded-pill ms-auto" style="background: var(--primary-soft); color: var(--green-550); font-size: 9.5px;">
+            ✓ clear
+          </span>
+          }
+        </div>
+        }
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Workload -->
+  <div class="col-xl-6 col-md-6 d-flex">
+    <div class="card-custom p-3 flex-grow-1">
+      <div class="side-card-title mb-2">
+        <i class="bi bi-people" style="color: var(--blue-550);"></i> Team Workload
+      </div>
+      <div class="d-flex flex-column gap-2 side-scroll" style="max-height: 280px;">
+        @for (s of teamWorkload; track s.person) {
+        <div class="attn-row" style="cursor: default;">
+          <span
+            style="width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; color: var(--white); flex-shrink: 0;"
+            [style.background]="s.teamColor">
+            {{ s.initials }}
+          </span>
+          <div class="min-w-0 flex-grow-1">
+            <div class=" text-truncate" style="font-size: 12px;">{{ s.person }}</div>
+            <div class="text-muted" style="font-size: 10.5px;">{{ s.team }}</div>
+            <div style="height: 5px; border-radius: 99px; background: var(--bg-muted); margin-top: 5px; overflow: hidden;">
+              <span style="display: block; height: 100%; border-radius: 99px;" [style.width.%]="s.pct"
+                [style.background]="s.color"></span>
+            </div>
+          </div>
+          <span class="badge rounded-pill ms-auto" [style.background]="'color-mix(in srgb, ' + s.color + ' 9%, transparent)'" [style.color]="s.color"
+            style="font-size: 10px;">
+            {{ s.active }} active
+          </span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Needs Attention & Bug vs Change Split -->
+  <div class="col-xl-6 col-md-12 d-flex">
+    <div class="card-custom p-3 flex-grow-1 d-flex flex-column">
+      <div class="side-card-title mb-2">
+        <i class="bi bi-lightning-charge" style="color: var(--orange-550);"></i> Needs Attention
+        <span class="sc-badge" style="background: var(--orange-50); color: var(--orange-550);">{{ attentionItems.length }}</span>
+      </div>
+
+      <div class="d-flex flex-column gap-2 side-scroll mb-3" style="max-height: 190px;">
+        @if (attentionItems.length === 0) {
+        <div class="text-center text-muted py-3" style="font-size: 12px;">All good — nothing pending 🎉</div>
+        } @else {
+        @for (item of attentionItems; track item.ticket.id) {
+        <div class="attn-row" (click)="openManage(item.ticket)">
+          <span style="font-size: 15px;">{{ item.ticket.projectIcon }}</span>
+          <div class="min-w-0">
+            <div class=" text-truncate" style="font-size: 12px;">
+              {{ item.ticket.id }} · {{ item.ticket.subject }}
+            </div>
+            <div class="text-muted" style="font-size: 10.5px;">
+              {{ item.ticket.customerName }} · {{ item.ticket.createdDate }}
+            </div>
+          </div>
+          <span class="badge rounded-pill ms-auto" [style.background]="'color-mix(in srgb, ' + item.color + ' 8%, transparent)'" [style.color]="item.color"
+            style="font-size: 9.5px;">
+            {{ item.label }}
+          </span>
+        </div>
+        }
+        }
+      </div>
+
+      <div class="side-card-title mb-2">
+        <i class="bi bi-pie-chart" style="color: var(--blue-550);"></i> Bug vs Change Request
+      </div>
+      <div class="split-bar">
+        <span style="background: var(--red-550);" [style.width.%]="issueSplit.bugsPct"></span>
+        <span style="background: var(--blue-550);" [style.width.%]="issueSplit.changesPct"></span>
+        <span style="background: var(--neutral-350);" [style.width.%]="issueSplit.othersPct"></span>
+      </div>
+      <div class="split-legend">
+        <span class="lg">
+          <span class="dot" style="background: var(--red-550);"></span> Bugs <strong>{{ issueSplit.bugs }}</strong>
+        </span>
+        <span class="lg">
+          <span class="dot" style="background: var(--blue-550);"></span> Change / Feature <strong>{{ issueSplit.changes
+            }}</strong>
+        </span>
+        <span class="lg">
+          <span class="dot" style="background: var(--neutral-350);"></span> Others <strong>{{ issueSplit.others }}</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     QUICK ASSIGN MODAL
+========================================================================== -->
+@if (isQuickAssignOpen) {
+<div class="modal-backdrop-custom" (click)="closeQuickAssign()"></div>
+<div class="modal-dialog-custom modal-sm-custom" role="dialog" aria-modal="true">
+  <div class="modal-content-custom">
+    <div class="modal-header-custom d-flex align-items-center justify-content-between p-3">
+      <h5 class="modal-title m-0 " style="font-size: 15px;">Assign Ticket: {{ assignTicketId }}</h5>
+      <button type="button" class="btn-close-custom" (click)="closeQuickAssign()" aria-label="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="modal-body-custom p-3">
+      <div class="mb-3">
+        <label class="form-label fw-semibold" style="font-size: 12px;">Select Person</label>
+        <select class="form-select form-select-sm" [(ngModel)]="selectedAssignPerson">
+          <option value="">-- Select Person --</option>
+          @for (person of assigneeList; track person) {
+          <option [value]="person">{{ person }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer-custom d-flex justify-content-end gap-2 p-3">
+      <button type="button" class="btn btn-light btn-sm" (click)="closeQuickAssign()">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm" (click)="saveQuickAssign()">Assign Now</button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ==========================================================================
+     FULLSCREEN MANAGE MODAL
+========================================================================== -->
+@if (isManageOpen && currentTicket) {
+<div class="modal-backdrop-custom" (click)="closeManage()"></div>
+<div class="modal-fullscreen-custom" role="dialog" aria-modal="true">
+  <div class="modal-content-custom cm-fs-content d-flex flex-column h-100">
+    <!-- Header -->
+    <div class="cm-fs-header d-flex align-items-center justify-content-between px-3 py-2">
+      <div class="d-flex align-items-center gap-2 flex-wrap min-w-0">
+        <h5 class="modal-title  mb-0 me-1" style="font-family: var(--font-family-display);">{{ currentTicket.id }}</h5>
+        <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(currentTicket.status).bg"
+          [style.color]="ticketService.statusMeta(currentTicket.status).color">
+          {{ currentTicket.status }}
+        </span>
+        <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(currentTicket.priority).bg"
+          [style.color]="ticketService.priorityMeta(currentTicket.priority).color">
+          {{ currentTicket.priority }}
+        </span>
+        <span class=" ms-2 text-truncate d-none d-md-block" style="font-size: 13.5px; color: var(--neutral-500-2);">
+          {{ currentTicket.subject }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-primary btn-sm" (click)="saveManageTicket()">
+          <i class="bi bi-check-circle"></i> Update Ticket
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="closeManage()">
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="cm-fs-body flex-grow-1 d-flex overflow-hidden">
+      <!-- Left: Ticket info & controls -->
+      <div class="cm-fs-left">
+        <div class="cm-card">
+          <div class=" mb-2" style="font-size: 13.5px;">
+            <i class="bi bi-info-circle me-1 text-primary"></i>Ticket Information
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Customer</span>
+            <span class="v">{{ currentTicket.customerName }} ({{ currentTicket.customerOrg }})</span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Contact Person</span>
+            <span class="v">{{ currentTicket.contactPerson || currentTicket.customerName }}</span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Phone</span>
+            <span class="v">
+              @if (currentTicket.contactPhone) {
+              <a [href]="'tel:' + currentTicket.contactPhone" style="color: var(--blue-600); text-decoration: none;">
+                <i class="bi bi-telephone me-1"></i>{{ currentTicket.contactPhone }}
+              </a>
+              } @else {
+              —
+              }
+            </span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Project</span>
+            <span class="v">{{ currentTicket.projectIcon }} {{ currentTicket.projectName }}</span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Issue Type</span>
+            <span class="v">{{ currentTicket.issueIcon }} {{ currentTicket.issueType }}</span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Created</span>
+            <span class="v">{{ currentTicket.createdDate }}</span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">SLA Due</span>
+            <span class="v">{{ getSlaDueFormatted(currentTicket.resolutionDueTs) }}</span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Expected Date</span>
+            <span class="v">{{ currentTicket.expectedDate || '—' }}</span>
+          </div>
+          <div class="cm-info-row">
+            <span class="text-muted">Attachment</span>
+            <span class="v">
+              @if (currentTicket.attachment) {
+              <span style="color: var(--blue-600);"><i class="bi bi-paperclip me-1"></i>{{ currentTicket.attachment }}</span>
+              } @else {
+              —
+              }
+            </span>
+          </div>
+        </div>
+
+        <div class="cm-card">
+          <div class=" mb-2" style="font-size: 13.5px;">
+            <i class="bi bi-file-text me-1 text-primary"></i>Description
+          </div>
+          <div class="cm-desc">{{ currentTicket.description }}</div>
+        </div>
+
+        <div class="cm-card">
+          <div class=" mb-2" style="font-size: 13.5px;">
+            <i class="bi bi-sliders me-1 text-primary"></i>Manage
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label  mb-1" style="font-size: 11px;">Team</label>
+              <select class="form-select form-select-sm" [(ngModel)]="manageTeam"
+                (ngModelChange)="onTeamChange($event)">
+                <option value="">Select Team...</option>
+                @for (tm of teamList; track tm) {
+                <option [value]="tm">{{ tm }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label  mb-1" style="font-size: 11px;">Assign To</label>
+              <select class="form-select form-select-sm" [(ngModel)]="manageAssignee" [disabled]="!manageTeam">
+                <option value="">{{ manageTeam ? 'Select person...' : 'Select team first' }}</option>
+                @for (assignee of manageAssigneeOptions; track assignee) {
+                <option [value]="assignee">{{ assignee }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label  mb-1" style="font-size: 11px;">Priority</label>
+              <select class="form-select form-select-sm" [(ngModel)]="managePriority">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label  mb-1" style="font-size: 11px;">Status</label>
+              <select class="form-select form-select-sm" [(ngModel)]="manageStatus">
+                @for (st of manageStatusOptions; track st) {
+                <option [value]="st">{{ st }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-12 form-text" style="font-size: 10.5px;">
+              Flow: New → Assigned → In Progress → Waiting for Customer → Resolved → Closed
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Conversation -->
+      <div class="cm-fs-right flex-grow-1 d-flex flex-column">
+        <div class="cm-chat-head d-flex align-items-center gap-2 p-3">
+          <i class="bi bi-chat-dots text-primary"></i>
+          <span>Conversation</span>
+          <span class="badge rounded-pill ms-1" style="background: var(--accent-blue-soft); color: var(--blue-550); font-size: 10.5px;">
+            {{ currentTicket.conversation.length }} messages
+          </span>
+        </div>
+
+        <div class="cm-chat-scroll flex-grow-1 p-3">
+          @for (m of currentTicket.conversation; track m.ts) {
+          <div class="cm-msg" [class.staff]="m.by === 'staff'" [class.customer]="m.by === 'customer'">
+            <span class="m-av" [style.background]="getAvatarColor(m.name)">
+              {{ getInitials(m.name) }}
+            </span>
+            <div>
+              <div class="m-meta">{{ m.name }} · {{ ticketService.formatTs(m.ts) }}</div>
+              <div class="m-bubble">
+                {{ m.text }}
+                @if (m.attachment) {
+                <div class="m-att">
+                  <i class="bi bi-paperclip"></i> {{ m.attachment }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="cm-composer-wrap p-3">
+          <div class="cm-composer d-flex align-items-end gap-2 p-2">
+            <textarea class="form-control" rows="2" placeholder="Reply to customer..." [(ngModel)]="manageReplyText"
+              (keydown.enter)="$event.preventDefault(); sendReply()"></textarea>
+            <button type="button" class="btn btn-icon btn-primary cm-send-btn" (click)="sendReply()" title="Send reply">
+              <i class="bi bi-send"></i>
+            </button>
+          </div>
+          <div class="cm-hint mt-1 text-center text-muted" style="font-size: 10.5px;">
+            Enter to send · Reply appears in customer conversation · Update Ticket saves assignment &amp; status
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Toast Notification -->
+@if (isToastVisible) {
+<div class="cta-toast show">
+  <i class="bi bi-check-circle-fill t-ico"></i>
+  <span>{{ toastMessage }}</span>
+</div>
+}

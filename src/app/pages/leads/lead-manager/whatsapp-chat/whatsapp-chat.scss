@@ -1,0 +1,33 @@
+/* page layout: global .chat-* (global-style/classes.scss) · sidebar + chat: ../shared/chat */
+
+.wa-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green-300);
+    animation: wa-pulse 1.6s ease-out infinite;
+  }
+
+  &.off {
+    color: var(--danger);
+    background: var(--danger-soft);
+
+    .pulse { background: var(--danger); animation: none; }
+  }
+}
+
+@keyframes wa-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(var(--green-300-rgb), 0.55); }
+  100% { box-shadow: 0 0 0 8px rgba(var(--green-300-rgb), 0); }
+}

@@ -1,0 +1,66 @@
+<div class="backgroundimageblock">
+  <img src="/assets/backgroundimage.jpg" alt="" />
+</div>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <a routerLink="/" class="auth-brand">
+      <img src="/assets/logo-icon.png" alt="" class="brand-icon" />
+      <img src="/assets/logo-text.png" alt="Gharuda Infotech" class="brand-text" />
+    </a>
+
+    <h4 class="text-center mb-1 ">Welcome</h4>
+    <p class="text-muted text-center mb-4">Login in to your account</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          class="form-control"
+          placeholder="Enter username"
+          formControlName="username"
+          [class.is-invalid]="f['username'].invalid && f['username'].touched"
+        />
+        <div class="invalid-feedback" *ngIf="f['username'].invalid && f['username'].touched">
+          Username is required.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-between">
+          <label class="form-label" for="password">Password</label>
+        </div>
+        <div class="password-field">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control"
+            placeholder="Enter password"
+            formControlName="password"
+            [class.is-invalid]="f['password'].invalid && f['password'].touched"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <i class="mdi" [class.mdi-eye-outline]="!showPassword" [class.mdi-eye-off-outline]="showPassword"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback" *ngIf="f['password'].invalid && f['password'].touched">
+          Password is required.
+        </div>
+      </div>
+
+      <div class="alert alert-danger py-2" *ngIf="loginError">{{ loginError }}</div>
+
+      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting"><i class="mdi mdi-login"></i>Login</span>
+        <span *ngIf="isSubmitting">Signing in...</span>
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="sum-toolbar">
+  <span class="sum-count"><i class="bi bi-people-fill me-1"></i>{{ rows().length }} staff</span>
+  <div class="sum-search">
+    <i class="bi bi-search"></i>
+    <input type="text" placeholder="Search staff..." autocomplete="off" aria-label="Search staff" [value]="search()"
+      (input)="onSearch($event)">
+  </div>
+</div>
+
+<div class="sum-wrap">
+  <table class="sum">
+    <thead>
+      <tr>
+        <th rowspan="2" class="stick-1">S.No</th>
+        <th rowspan="2" class="stick-2 left">Staff name</th>
+        @for (p of periods(); track p.key; let b = $index) {
+        <th colspan="3" class="band band-{{ b + 1 }}">{{ p.label }}<small>{{ p.range }}</small></th>
+        }
+      </tr>
+      <tr>
+        @for (p of periods(); track p.key; let b = $index) {
+        <th class="sub-{{ b + 1 }}">Target</th>
+        <th class="sub-{{ b + 1 }}">Achieved</th>
+        <th class="sub-{{ b + 1 }}">%</th>
+        }
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (r of filtered(); track r.name; let i = $index) {
+      <tr>
+        <td class="stick-1">{{ i + 1 }}</td>
+        <td class="stick-2 left">
+          <span class="staff">
+            <span class="avatar tone-{{ avatarTones[i % avatarTones.length] }}">{{ r.name.charAt(0).toUpperCase() }}</span>
+            {{ r.name }}
+          </span>
+        </td>
+        @for (p of periods(); track p.key) {
+        @let v = r[p.key];
+        @let pc = percent(v);
+        <td [class.muted]="!v.t">{{ v.t > 0 ? inr(v.t, 0) : '—' }}</td>
+        <td [class.neg]="v.a < 0">{{ inr(v.a) }}</td>
+        <td>
+          <div class="pct">
+            <b class="p-{{ band(pc) }}">{{ pc }}%</b>
+            <div class="bar"><i [style.width.%]="clamp(pc)"></i></div>
+          </div>
+        </td>
+        }
+      </tr>
+      }
+    </tbody>
+
+    @if (filtered().length) {
+    <tfoot>
+      <tr>
+        <td class="stick-1"></td>
+        <td class="stick-2 left"><i class="bi bi-people-fill me-1"></i>Team total</td>
+        @for (p of periods(); track p.key) {
+        @let v = totals()[p.key];
+        <td>{{ v.t > 0 ? inr(v.t, 0) : '—' }}</td>
+        <td [class.neg]="v.a < 0">{{ inr(v.a) }}</td>
+        <td>{{ percent(v) }}%</td>
+        }
+      </tr>
+    </tfoot>
+    }
+  </table>
+
+  @if (!filtered().length) {
+  <div class="sum-empty"><i class="bi bi-search me-1"></i>No staff found matching your search</div>
+  }
+</div>

@@ -1,0 +1,22 @@
+<div class="target">
+  <div class="gauge">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <circle class="track" cx="50" cy="50" r="42" />
+      <circle class="fill" cx="50" cy="50" r="42" [attr.stroke-dasharray]="circumference"
+        [attr.stroke-dashoffset]="offset()" transform="rotate(-90 50 50)" />
+    </svg>
+    <div class="gauge-center"><strong>{{ percent() }}%</strong><span>achieved</span></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat is-total"><span>Total</span><strong>{{ inr(target().total) }}</strong></div>
+    <div class="stat is-achieved">
+      <span>Achieved</span><strong [class.neg]="target().achieved < 0">{{ inr(target().achieved) }}</strong>
+    </div>
+    <div class="stat is-pending"><span>Pending</span><strong>{{ inr(target().pending) }}</strong></div>
+  </div>
+</div>
+
+@if (!target().total) {
+<div class="note"><i class="bi bi-info-circle me-1"></i>No target is set for {{ period() }}.</div>
+}

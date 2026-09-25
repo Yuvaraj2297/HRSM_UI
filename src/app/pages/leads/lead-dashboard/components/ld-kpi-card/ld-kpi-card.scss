@@ -1,0 +1,104 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.kpi {
+  --tone: var(--primary);
+  --tone-soft: var(--primary-soft);
+
+  position: relative;
+  height: 100%;
+  padding: 16px 16px 44px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+  // accent bar
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--tone), color-mix(in srgb, var(--tone) 45%, white));
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(var(--neutral-950-rgb), 0.08);
+  }
+
+  &.tone-blue { --tone: var(--accent-blue); --tone-soft: var(--accent-blue-soft); }
+  &.tone-amber { --tone: var(--warning); --tone-soft: var(--warning-soft); }
+  &.tone-red { --tone: var(--danger); --tone-soft: var(--danger-soft); }
+  &.tone-violet { --tone: var(--purple-500); --tone-soft: var(--blue-50-6); }
+}
+
+.kpi-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi-ico {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tone);
+  background: var(--tone-soft);
+}
+
+.kpi-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.kpi-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+
+  &.up { color: var(--primary-dark); background: var(--primary-soft); }
+  &.down { color: var(--danger); background: var(--danger-soft); }
+  &.flat { color: var(--text-light); background: var(--bg-muted); }
+}
+
+.kpi-value {
+  margin-top: 12px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--gh-heading);
+}
+
+.kpi-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.kpi-spark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 34px;
+
+  polygon { fill: var(--tone); opacity: 0.12; }
+  polyline { fill: none; stroke: var(--tone); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+}

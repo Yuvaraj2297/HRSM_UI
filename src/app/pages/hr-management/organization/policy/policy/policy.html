@@ -1,0 +1,32 @@
+<div class="row">
+
+  <div class="col-12">
+
+    <app-primedatatable
+      [modalHeader]="header"
+      [columns]="columns"
+      [data]="tableData"
+      [menuItems]="menuItems"
+      [searchPlaceholder]="searchPlaceholder"
+      [Accessactions]="actions"
+      (addClicked)="openCreateModal()"
+      (actionClick)="onTableAction($event)">
+
+    </app-primedatatable>
+
+  </div>
+
+</div>
+
+<!-- label / type / placeholder come from `modalFields`, buttons from the inputs below -->
+<app-reuse-modal
+  #policyModal
+  [fields]="modalFields"
+  title="Upload Policy"
+  editTitle="Edit Policy"
+  saveLabel="Upload Policy"
+  updateLabel="Update Policy"
+  submitIcon="ti ti-cloud-upload"
+  cancelLabel="Cancel"
+  (saved)="onPolicySaved($event)">
+</app-reuse-modal>

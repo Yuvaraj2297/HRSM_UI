@@ -1,0 +1,467 @@
+<!-- =========================================================
+     PAGE TITLE & TOP ACTIONS
+========================================================== -->
+<div class="page-title-bar d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class="page-main-title mb-1">Loan & Advance Ledger Report</h1>
+    <div class="page-breadcrumbs d-flex align-items-center gap-2 text-muted small">
+      <i class="bi bi-graph-up-arrow text-success"></i>
+      <span>Loan & Advances</span>
+      <i class="bi bi-chevron-right text-secondary" style="font-size: 10px;"></i>
+      <span class=" text-dark">Deduction & Recovery Ledger</span>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <a routerLink="/loanAdv/policies" class="btn btn-outline-success btn-sm px-3 d-flex align-items-center gap-1">
+      <i class="bi bi-journal-text"></i>
+      <span>Loan Requests</span>
+    </a>
+    <button type="button" class="btn btn-outline-secondary btn-sm px-3 d-flex align-items-center gap-1"
+      (click)="printStatement()">
+      <i class="bi bi-printer"></i>
+      <span>Print Statement</span>
+    </button>
+    <button type="button" class="btn btn-success btn-sm px-3 d-flex align-items-center gap-1" (click)="exportExcel()">
+      <i class="bi bi-file-earmark-excel"></i>
+      <span>Export Excel</span>
+    </button>
+  </div>
+</div>
+
+<!-- =========================================================
+     KPI SUMMARY CARDS
+========================================================== -->
+<div class="row g-3 mb-4">
+  <!-- Total Disbursed -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box bg-primary-subtle text-primary">
+        <i class="bi bi-wallet2"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Total Disbursed</div>
+        <div class="kpi-value text-dark">{{ formatCurrency(totalDisbursed) }}</div>
+        <div class="kpi-sub text-muted">Life to date sanctioned sum</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Recovered -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box bg-success-subtle text-success">
+        <i class="bi bi-check2-circle"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Total Recovered</div>
+        <div class="kpi-value text-dark">{{ formatCurrency(totalRecovered) }}</div>
+        <div class="kpi-sub d-flex align-items-center gap-1">
+          <span class="badge bg-success-subtle text-success " style="font-size: 10px;">{{ recoveredPercentage
+            }}</span>
+          <span class="text-muted">Via payroll auto-deductions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Balance -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box bg-warning-subtle text-warning-emphasis">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Pending Balance (To Recover)</div>
+        <div class="kpi-value text-dark">{{ formatCurrency(totalPendingBalance) }}</div>
+        <div class="kpi-sub text-muted">{{ pendingAccountsCount }} ongoing active employee accounts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fully Settled Accounts -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="kpi-card p-3 d-flex align-items-center gap-3 card-custom">
+      <div class="kpi-icon-box bg-success-subtle text-success">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div>
+        <div class="kpi-label">Fully Settled Accounts</div>
+        <div class="kpi-value text-dark">{{ settledAccountsCount }} Accounts</div>
+        <div class="kpi-sub text-muted">{{ formatCurrency(settledRecoveredAmount) }} completely recovered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     ADVANCED LEDGER QUERY & FILTERS CARD
+========================================================== -->
+<div class="card-custom p-3 mb-4">
+  <!-- Query Card Header -->
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 border-bottom">
+    <div class="d-flex align-items-center gap-2">
+      <div class="filter-header-icon-box">
+        <i class="bi bi-sliders"></i>
+      </div>
+      <div>
+        <h6 class=" text-dark mb-0 fs-6">Advanced Ledger Query & Filters</h6>
+        <small class="text-muted" style="font-size: 12px;">Filter by category, department, tenure, and repayment
+          completion</small>
+      </div>
+    </div>
+
+    <!-- Status Tabs Segment -->
+    <div role="tablist" class="status-tabs-pill d-flex align-items-center gap-2">
+      <button role="tab" type="button" class="tab-pill-btn" [class.active]="activeStatusTab === 'all'"
+        (click)="setStatusTab('all')" [attr.aria-selected]="activeStatusTab === 'all'">
+        <i class="bi bi-grid-fill"></i> All Accounts
+        <span class="page-tab-count">{{ allAccounts.length }}</span>
+      </button>
+      <button role="tab" type="button" class="tab-pill-btn pending-tab" [class.active]="activeStatusTab === 'pending'"
+        (click)="setStatusTab('pending')" [attr.aria-selected]="activeStatusTab === 'pending'">
+        <i class="bi bi-hourglass-split"></i> Pending Repayments
+        <span class="page-tab-count">{{ pendingAccountsCount }}</span>
+      </button>
+      <button role="tab" type="button" class="tab-pill-btn settled-tab" [class.active]="activeStatusTab === 'settled'"
+        (click)="setStatusTab('settled')" [attr.aria-selected]="activeStatusTab === 'settled'">
+        <i class="bi bi-check-circle-fill"></i> Fully Settled
+        <span class="page-tab-count">{{ settledAccountsCount }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Presets Row -->
+  <div class="quick-presets-row py-3 d-flex align-items-center flex-wrap gap-2 border-bottom">
+    <span class="preset-label d-flex align-items-center gap-1 text-warning  small text-uppercase">
+      <i class="bi bi-lightning-charge-fill"></i> Quick Presets:
+    </span>
+    <button type="button" class="btn-preset-chip" [class.active]="activePreset === 'high-balance'"
+      (click)="togglePreset('high-balance')">
+      <i class="bi bi-cash-stack text-danger me-1"></i> High Balance (≥ ₹1,00,000)
+    </button>
+    <button type="button" class="btn-preset-chip" [class.active]="activePreset === 'near-completion'"
+      (click)="togglePreset('near-completion')">
+      <i class="bi bi-clock-history text-primary me-1"></i> Near Completion (&gt; 70%)
+    </button>
+    <button type="button" class="btn-preset-chip" [class.active]="activePreset === 'salary-advance'"
+      (click)="togglePreset('salary-advance')">
+      <i class="bi bi-wallet-fill text-warning me-1"></i> Salary Advance
+    </button>
+    <button type="button" class="btn-preset-chip" [class.active]="activePreset === 'medical-assistance'"
+      (click)="togglePreset('medical-assistance')">
+      <i class="bi bi-heart-pulse-fill text-danger me-1"></i> Medical Assistance
+    </button>
+    <button type="button" class="btn-preset-chip" [class.active]="activePreset === 'engineering'"
+      (click)="togglePreset('engineering')">
+      <i class="bi bi-code-slash text-info me-1"></i> Engineering
+    </button>
+    <button type="button" class="btn-preset-chip" [class.active]="activePreset === 'long-tenure'"
+      (click)="togglePreset('long-tenure')">
+      <i class="bi bi-calendar3 text-primary me-1"></i> Long Tenure (&gt; 12 EMIs)
+    </button>
+  </div>
+
+  <!-- Dropdown Filters Row -->
+  <div class="row g-3 pt-3 align-items-end">
+    <!-- Payment Status -->
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-shield-check text-primary"></i> Payment Status
+      </label>
+      <p-select [(ngModel)]="selectedPaymentStatus" [options]="paymentStatusOptions" (onChange)="applyFilters()"
+        optionLabel="label" optionValue="value" placeholder="All Payment Statuses" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Loan Category -->
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-tag text-success"></i> Loan Category
+      </label>
+      <p-select [(ngModel)]="selectedCategory" [options]="categoryOptions" (onChange)="applyFilters()"
+        optionLabel="label" optionValue="value" placeholder="All Categories" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Repayment Progress -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-pie-chart text-warning"></i> Repayment Progress
+      </label>
+      <p-select [(ngModel)]="selectedProgress" [options]="progressOptions" (onChange)="applyFilters()"
+        optionLabel="label" optionValue="value" placeholder="All Progress" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Department -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
+        <i class="bi bi-building text-info"></i> Department
+      </label>
+      <p-select [(ngModel)]="selectedDepartment" [options]="departmentOptions" (onChange)="applyFilters()"
+        optionLabel="label" optionValue="value" placeholder="All Departments" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Reset Filters Button -->
+    <div class="col-lg-2 col-md-4 col-sm-12">
+      <button type="button"
+        class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-1 btn-reset-filters"
+        (click)="resetFilters()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        <span>Reset Filters</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     ACTIVE FILTERS BAR
+========================================================== -->
+@if (activeChips.length > 0) {
+<div
+  class="active-filters-bar mb-3 p-2 px-3 rounded-3 d-flex align-items-center flex-wrap gap-2 bg-white border shadow-sm">
+  <span class="active-filters-label text-muted small fw-semibold d-flex align-items-center">
+    <i class="bi bi-funnel-fill me-1 text-success"></i>Active Filters:
+  </span>
+  <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1">
+    @for (c of activeChips; track c.id) {
+    <span class="filter-chip">
+      <span class="chip-label">{{ c.label }}</span>
+      <button type="button" class="chip-close" (click)="removeChip(c.id)" title="Remove filter">
+        <i class="bi bi-x"></i>
+      </button>
+    </span>
+    }
+  </div>
+  <button type="button" class="btn btn-link text-danger btn-sm p-0  fw-semibold" (click)="resetFilters()">
+    Clear All
+  </button>
+</div>
+}
+
+<!-- =========================================================
+     LEDGER DATA TABLE (Using PrimeDataTable)
+========================================================== -->
+<div class="row">
+  <div class="col-12">
+    <app-primedatatable [modalHeader]="tableHeader" [columns]="columns" [data]="displayedAccounts"
+      [searchPlaceholder]="searchPlaceholder" [showColumnsButton]="true" [showExportButton]="true"
+      [exportFileName]="'loan-deduction-ledger-report'" [rows]="10">
+      <!-- Projected Toolbar Actions: Showing active chip -->
+      <div table-toolbar-actions class="d-flex align-items-center">
+        <span class="badge-filter-active">
+          Filter Active: {{ activeStatusTab === 'all' ? 'All Accounts' : (activeStatusTab === 'pending' ? 'Pending Repayments' : 'Fully Settled') }}
+        </span>
+      </div>
+
+      <!-- Custom Cell Template for Table Columns -->
+      <ng-template #cellTemplate let-row let-col="col">
+        <!-- REF # -->
+        @if (col.field === 'refNo') {
+        <span class=" text-success ref-code-text">{{ row.refNo }}</span>
+        }
+
+        <!-- EMPLOYEE -->
+        @else if (col.field === 'employee') {
+        <div class="d-flex align-items-center gap-2">
+          <div class="emp-initials-avatar" [style.background]="row.avatarColor">
+            {{ row.empInitials }}
+          </div>
+          <div>
+            <div class=" text-dark emp-name-line">{{ row.empName }}</div>
+            <div class="text-muted small emp-code-line">{{ row.empId }}</div>
+          </div>
+        </div>
+        }
+
+        <!-- CATEGORY -->
+        @else if (col.field === 'category') {
+        <span class="category-pill-badge">
+          <i [class]="row.categoryIcon + ' me-1'"></i>
+          <span>{{ row.category }}</span>
+        </span>
+        }
+
+        <!-- DEPARTMENT -->
+        @else if (col.field === 'department') {
+        <span class="text-dark">{{ row.department }}</span>
+        }
+
+        <!-- DISBURSED -->
+        @else if (col.field === 'disbursed') {
+        <span class="text-dark">{{ formatCurrency(row.disbursedAmount) }}</span>
+        }
+
+        <!-- RECOVERED -->
+        @else if (col.field === 'recovered') {
+        <span class="text-dark">{{ formatCurrency(row.recoveredAmount) }}</span>
+        }
+
+        <!-- BALANCE DUE -->
+        @else if (col.field === 'balanceDue') {
+        <span class="" [class.text-dark]="row.balanceDueAmount > 0"
+          [class.text-success]="row.balanceDueAmount === 0">
+          {{ formatCurrency(row.balanceDueAmount) }}
+        </span>
+        }
+
+        <!-- REPAYMENT PROGRESS -->
+        @else if (col.field === 'progress') {
+        <div class="repayment-progress-wrap" style="min-width: 150px;">
+          <div class="d-flex align-items-center justify-content-between small mb-1" style="font-size: 11px;">
+            <span class=" text-dark">{{ row.progressPercent }}%</span>
+            @if (row.progressPercent === 100) {
+            <span class="text-success ">Cleared</span>
+            } @else {
+            <span class="text-muted">{{ formatCurrency(row.balanceDueAmount) }} Left</span>
+            }
+          </div>
+          <div class="progress" style="height: 6px; border-radius: 999px;">
+            <div class="progress-bar" [class.bg-success]="row.progressPercent === 100"
+              [class.bg-warning]="row.progressPercent < 100" role="progressbar" [style.width.%]="row.progressPercent">
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- EMI TENURE -->
+        @else if (col.field === 'tenure') {
+        <span class="badge fw-medium px-2 py-1 rounded-pill" [class.bg-success-subtle]="row.progressPercent === 100"
+          [class.text-success]="row.progressPercent === 100" [class.bg-light]="row.progressPercent < 100"
+          [class.text-dark]="row.progressPercent < 100" [class.border]="row.progressPercent < 100"
+          style="font-size: 11.5px;">
+          {{ row.tenurePaid }} of {{ row.tenureTotal }} EMIs
+        </span>
+        }
+
+        <!-- STATUS -->
+        @else if (col.field === 'status') {
+        @if (row.status === 'Fully Settled') {
+        <span class="status-pill status-approved d-inline-flex align-items-center gap-1">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Fully Settled</span>
+        </span>
+        } @else {
+        <span class="status-pill status-pending d-inline-flex align-items-center gap-1">
+          <i class="bi bi-hourglass-split"></i>
+          <span>Pending Repayment</span>
+        </span>
+        }
+        }
+
+        <!-- ACTION -->
+        @else if (col.field === 'action') {
+        <button type="button" class="btn btn-sm btn-statement-action d-inline-flex align-items-center gap-1"
+          (click)="openStatement(row)" title="View Statement">
+          <i class="bi bi-file-earmark-text"></i>
+          <span>Statement</span>
+        </button>
+        }
+      </ng-template>
+    </app-primedatatable>
+  </div>
+</div>
+
+<!-- =========================================================
+     ACCOUNT STATEMENT MODAL / BREAKDOWN
+========================================================== -->
+@if (statementModalOpen && selectedAccountForStatement) {
+<div class="modal-backdrop-custom" (click)="closeStatement()"></div>
+<div class="modal-custom modal-xl shadow-lg" (click)="$event.stopPropagation()">
+  <!-- Modal Header -->
+  <div class="modal-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom">
+    <div class="d-flex align-items-center gap-2">
+      <span class="modal-icon-circle" style="background: var(--primary-soft); color: var(--green-350);">
+        <i class="bi bi-file-earmark-spreadsheet text-success "></i>
+      </span>
+      <div>
+        <h5 class="modal-title fs-5  text-dark mb-0">
+          Account Deduction Statement &mdash; {{ selectedAccountForStatement.refNo }}
+        </h5>
+        <small class="text-muted">{{ selectedAccountForStatement.empName }} ({{ selectedAccountForStatement.empId }})
+          &bull; {{ selectedAccountForStatement.department }}</small>
+      </div>
+    </div>
+    <button type="button" class="btn-modal-close-pink" (click)="closeStatement()" title="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body p-4 pt-3">
+    <!-- Account Summary Banner -->
+    <div class="row g-3 mb-3 p-3 bg-light rounded-3 border">
+      <div class="col-md-3 col-6">
+        <span class="text-muted small">Sanction Amount:</span>
+        <div class=" text-dark fs-6">{{ formatCurrency(selectedAccountForStatement.disbursedAmount) }}</div>
+      </div>
+      <div class="col-md-3 col-6">
+        <span class="text-muted small">Total Recovered:</span>
+        <div class=" text-success fs-6">{{ formatCurrency(selectedAccountForStatement.recoveredAmount) }}</div>
+      </div>
+      <div class="col-md-3 col-6">
+        <span class="text-muted small">Remaining Balance:</span>
+        <div class=" text-danger fs-6">{{ formatCurrency(selectedAccountForStatement.balanceDueAmount) }}</div>
+      </div>
+      <div class="col-md-3 col-6">
+        <span class="text-muted small">Scheme & Rate:</span>
+        <div class=" text-dark fs-6">{{ selectedAccountForStatement.category }} ({{
+          selectedAccountForStatement.interestRate }}%)</div>
+      </div>
+    </div>
+
+    <!-- Installments Table -->
+    <div class="table-responsive border rounded-3 overflow-hidden">
+      <table class="table table-sm table-hover mb-0" style="font-size: 13px;">
+        <thead class="table-light">
+          <tr>
+            <th class="py-2 px-3">EMI #</th>
+            <th class="py-2 px-3">Due Date</th>
+            <th class="py-2 px-3">Principal</th>
+            <th class="py-2 px-3">Interest</th>
+            <th class="py-2 px-3">Total Deducted</th>
+            <th class="py-2 px-3">Balance After</th>
+            <th class="py-2 px-3">Ledger Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (inst of statementInstallments; track inst.instNo) {
+          <tr>
+            <td class="py-2 px-3 ">{{ inst.instNo }}</td>
+            <td class="py-2 px-3">{{ inst.date }}</td>
+            <td class="py-2 px-3">{{ formatCurrency(inst.principal) }}</td>
+            <td class="py-2 px-3">{{ formatCurrency(inst.interest) }}</td>
+            <td class="py-2 px-3  text-success">{{ formatCurrency(inst.totalEmi) }}</td>
+            <td class="py-2 px-3 fw-semibold">{{ formatCurrency(inst.balance) }}</td>
+            <td class="py-2 px-3">
+              @if (inst.status === 'Payroll Deducted' || inst.status === 'Fully Settled') {
+              <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1">
+                <i class="bi bi-check-circle-fill me-1"></i> {{ inst.status }}
+              </span>
+              } @else {
+              <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-2 py-1">
+                <i class="bi bi-clock me-1"></i> Pending
+              </span>
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer p-3 px-4 border-top d-flex justify-content-between bg-white">
+    <div class="text-muted small">
+      <i class="bi bi-info-circle me-1"></i> Auto deductions are linked to monthly payroll runs.
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="btn btn-secondary btn-sm px-3" (click)="closeStatement()">
+        Close
+      </button>
+      <button type="button" class="btn btn-primary btn-sm px-3" (click)="printStatement()">
+        <i class="bi bi-printer"></i> Print Statement
+      </button>
+    </div>
+  </div>
+</div>
+}

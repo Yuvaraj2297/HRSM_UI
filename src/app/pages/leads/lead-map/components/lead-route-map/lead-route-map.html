@@ -1,0 +1,10 @@
+<div class="route-map">
+  <div #mapHost class="route-map-canvas"></div>
+
+  @if (!activities().length) {
+  <div class="route-map-empty">
+    <i class="bi bi-geo"></i>
+    <span>No route recorded for this user</span>
+  </div>
+  }
+</div>

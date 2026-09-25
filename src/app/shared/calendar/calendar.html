@@ -1,0 +1,140 @@
+<div class="card-custom team-cal-card p-3 mb-3">
+  <!-- Top Controls: Filters + Month Navigation -->
+  @if (showFilters) {
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <!-- Left: Team & Team Member Filters -->
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <div class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0 fw-semibold text-muted text-nowrap">Team</label>
+        <p-select
+          [options]="teamOptions"
+          [(ngModel)]="selectedTeam"
+          (ngModelChange)="onTeamChange()"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="team-cal-select"
+          placeholder="All Teams">
+        </p-select>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0 fw-semibold text-muted text-nowrap">Team Member</label>
+        <p-select
+          [options]="filteredMemberOptions"
+          [(ngModel)]="selectedMemberId"
+          (ngModelChange)="onMemberChange()"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="member-cal-select"
+          placeholder="Select Team Member">
+        </p-select>
+      </div>
+    </div>
+
+    <!-- Right: Month Navigator -->
+    <div class="acm-cal-head mb-0">
+      <button
+        type="button"
+        class="acm-nav-btn"
+        (click)="prevMonth()"
+        aria-label="Previous month"
+        title="Previous Month">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <span class="month">{{ monthLabel }}</span>
+      <button
+        type="button"
+        class="acm-nav-btn"
+        (click)="nextMonth()"
+        aria-label="Next month"
+        title="Next Month">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+  }
+
+  <!-- Body: Left Summary Column + Right Calendar Grid -->
+  <div class="acm-body">
+    <!-- Left Summary Metrics -->
+    @if (showSummaryCards) {
+    <div class="acm-summary">
+      <div class="card summary-card">
+        <div class="n text-present">{{ summary.present }}</div>
+        <div class="l">PRESENT</div>
+      </div>
+      <div class="card summary-card">
+        <div class="n text-absent">{{ summary.absent }}</div>
+        <div class="l">ABSENT</div>
+      </div>
+      <div class="card summary-card">
+        <div class="n text-late">{{ summary.late }}</div>
+        <div class="l">LATE</div>
+      </div>
+      <div class="card summary-card">
+        <div class="n text-leave">{{ summary.leave }}</div>
+        <div class="l">ON LEAVE</div>
+      </div>
+      <div class="card summary-card">
+        <div class="n text-hours">{{ summary.avgHours }}</div>
+        <div class="l">AVG HOURS</div>
+      </div>
+    </div>
+    }
+
+    <!-- Right: 7-Column Calendar Grid -->
+    <div class="d-flex gap-2 flex-column w-100 overflow-auto">
+      <div class="acm-grid">
+        <!-- Day-of-week headers -->
+        @for (dow of dayHeaders; track dow) {
+        <div class="acm-dow">{{ dow }}</div>
+        }
+
+        <!-- Month Day Cells -->
+        @for (cell of calendarCells; track $index) {
+        @if (cell.isEmpty) {
+        <div class="acm-day empty"></div>
+        } @else {
+        <div
+          class="acm-day status-{{ cell.status }}"
+          [class.acm-today]="cell.isToday"
+          [attr.data-status]="cell.status">
+          <span class="num">{{ cell.dayNumber }}</span>
+          <span class="tag tag-{{ cell.status }}">{{ cell.tagLabel }}</span>
+        </div>
+        }
+        }
+      </div>
+
+      <!-- Bottom Legend -->
+      @if (showLegend) {
+      <div class="acm-legend">
+        <div class="item">
+          <span class="swatch swatch-present"></span>
+          <span>Present</span>
+        </div>
+        <div class="item">
+          <span class="swatch swatch-absent"></span>
+          <span>Absent</span>
+        </div>
+        <div class="item">
+          <span class="swatch swatch-late"></span>
+          <span>Late</span>
+        </div>
+        <div class="item">
+          <span class="swatch swatch-half"></span>
+          <span>Half Day</span>
+        </div>
+        <div class="item">
+          <span class="swatch swatch-leave"></span>
+          <span>On Leave</span>
+        </div>
+        <div class="item">
+          <span class="swatch swatch-holiday"></span>
+          <span>Weekend/Holiday</span>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

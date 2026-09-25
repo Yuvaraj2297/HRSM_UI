@@ -1,0 +1,167 @@
+/* ===== Page view tabs ===== */
+.lp-tabs {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.lp-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+}
+
+.lp-panel {
+  display: none;
+
+  &.active {
+    display: block;
+    animation: lpFadeIn 0.15s ease;
+  }
+}
+
+@keyframes lpFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Lead Stats Matrix ===== */
+.lead-stats-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.lead-stats-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th, td {
+    text-align: center;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    border: 1px solid var(--border-soft);
+    white-space: nowrap;
+  }
+
+  thead tr:first-child th {
+    color: var(--white);
+    font-weight: 800;
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    border-color: rgba(var(--white-rgb), 0.25);
+  }
+
+  thead tr:nth-child(2) th {
+    background: var(--bg-muted);
+    color: var(--ink-700);
+    font-weight: 700;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  tbody td {
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+
+  tbody tr:first-child td {
+    color: var(--green-400-2);
+    font-weight: 800;
+  }
+
+  tbody tr:last-child td {
+    color: var(--ink-500);
+
+    &.stat-danger {
+      color: var(--danger);
+      font-weight: 800;
+    }
+  }
+
+  .row-label-cell {
+    text-align: left;
+    font-weight: 800;
+    background: var(--bg-soft);
+    color: var(--ink-700);
+  }
+}
+
+.grp-activity { background: var(--danger); }
+.grp-followup { background: var(--blue-500-3); }
+.grp-appointment { background: var(--pink-500); }
+.grp-calls { background: var(--blue-300); }
+.grp-quote { background: var(--orange-300); }
+.grp-closure { background: var(--neutral-500-3); }
+
+/* ===== Filters ===== */
+.filters-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-soft);
+  background: var(--white);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-700);
+
+  .chevron { transition: transform 0.15s; }
+  .chevron.rotated { transform: rotate(180deg); }
+}
+
+.filters-collapse {
+  display: none;
+  margin-top: 14px;
+
+  &.show { display: block; }
+}
+
+/* ===== Lead table bits (used by the primedatatable custom cell template) ===== */
+.lead-tag-pill {
+  display: inline-block;
+  background: var(--border);
+  color: var(--ink-700);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  margin: 1px 2px 1px 0;
+}
+
+.stage-ring {
+  --pct: 0;
+  --ring-color: var(--danger);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto;
+  background: conic-gradient(var(--ring-color) calc(var(--pct) * 3.6deg), var(--neutral-50-3) 0deg);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: var(--white);
+    border-radius: 50%;
+  }
+
+  span {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--ink-900);
+    z-index: 1;
+  }
+}
+

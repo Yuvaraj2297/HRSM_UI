@@ -1,0 +1,325 @@
+<div class="onboarding-page">
+
+    <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
+
+    <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+
+        <div>
+
+            <app-breadcrumb></app-breadcrumb>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <button type="button" class="btn btn-primary" (click)="openAddModal()">
+
+                <i class="bi bi-plus-lg"></i>
+
+                Add Checklist Task
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+       TABLE
+  ====================================================== -->
+
+    <app-primedatatable [columns]="columns" [data]="tableData" [searchPlaceholder]="searchPlaceholder"
+        [Accessactions]="actions" [showGlobalFilter]="true" [showColumnsButton]="true" [showExportButton]="true"
+        (actionClick)="onTableAction($event)">
+
+    </app-primedatatable>
+
+
+    <!-- =====================================================
+       ADD / EDIT MODAL
+  ====================================================== -->
+
+    @if (showTaskModal) {
+
+    <!-- BACKDROP -->
+
+    <div class="custom-modal-backdrop" (click)="closeModal()">
+    </div>
+
+
+    <!-- MODAL WRAPPER -->
+
+    <div class="custom-modal-wrapper">
+
+        <div class="custom-task-modal">
+
+
+            <!-- =================================================
+             MODAL HEADER
+        ================================================== -->
+
+            <div class="modal-header bg-light">
+
+                <h5 class="modal-title ">
+
+                    @if (modalType === 'add') {
+
+                    <i class="bi bi-check2-square text-primary me-2">
+                    </i>
+
+                    Add Onboarding Checklist Task
+
+                    }
+
+                    @if (modalType === 'edit') {
+
+                    <i class="bi bi-pencil-square text-primary me-2">
+                    </i>
+
+                    Edit Onboarding Task
+
+                    }
+
+                </h5>
+
+
+                <button type="button" class="modal-close" (click)="closeModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+             REACTIVE FORM
+        ================================================== -->
+
+            <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
+
+
+                <!-- =================================================
+               MODAL BODY
+          ================================================== -->
+
+                <div class="modal-body p-4">
+
+                    <div class="row g-3">
+
+
+                        <!-- =================================================
+                   TASK TITLE
+              ================================================== -->
+
+                        <div class="col-12">
+
+                            <label class="form-label">
+
+                                Task Title 
+
+                            </label>
+
+
+                            <input type="text" class="form-control" formControlName="taskTitle"
+                                placeholder="e.g. Enroll in Corporate Health Insurance">
+
+
+                            @if (
+                            taskForm.get('taskTitle')?.touched &&
+                            taskForm.get('taskTitle')?.hasError('required')
+                            ) {
+
+                            <small class="text-danger">
+
+                                Task title is required.
+
+                            </small>
+
+                            }
+
+                        </div>
+
+
+                        <!-- =================================================
+                   MILESTONE PHASE
+              ================================================== -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+
+                                Milestone Phase 
+
+                            </label>
+
+
+                            <p-select [options]="milestoneOptions" formControlName="milestonePhase" optionLabel="label"
+                                optionValue="value" placeholder="Select milestone phase" [filter]="true"
+                                filterPlaceholder="Search milestone..." [showClear]="false" appendTo="body"
+                                styleClass="w-100">
+
+                            </p-select>
+
+
+                            @if (
+                            taskForm.get('milestonePhase')?.touched &&
+                            taskForm.get('milestonePhase')?.hasError('required')
+                            ) {
+
+                            <small class="text-danger">
+
+                                Milestone phase is required.
+
+                            </small>
+
+                            }
+
+                        </div>
+
+
+                        <!-- =================================================
+                   JOINER
+              ================================================== -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label ">
+
+                                Assign to Joiner
+
+                            </label>
+
+
+                            <p-select [options]="joinerOptions" formControlName="taskJoiner" optionLabel="label"
+                                optionValue="value" placeholder="Select joiner" [filter]="true"
+                                filterPlaceholder="Search joiner..." [showClear]="false" appendTo="body"
+                                styleClass="w-100">
+
+                            </p-select>
+
+                        </div>
+
+
+                        <!-- =================================================
+                   TASK OWNER
+              ================================================== -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+
+                                Task Owner
+
+                            </label>
+
+
+                            <input type="text" class="form-control" formControlName="taskOwner"
+                                placeholder="e.g. HR Ops, IT Support">
+
+                        </div>
+
+
+                        <!-- =================================================
+                   DUE DATE
+              ================================================== -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+
+                                Due Date
+
+                            </label>
+
+
+                           <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+
+                        </div>
+
+
+                        <!-- =================================================
+                   STATUS - EDIT ONLY
+              ================================================== -->
+
+                        @if (modalType === 'edit') {
+
+                        <div class="col-12">
+
+                            <label class="form-label ">
+
+                                Status
+
+                            </label>
+
+
+                            <p-select [options]="statusOptions" formControlName="taskStatus" optionLabel="label"
+                                optionValue="value" placeholder="Select status" [showClear]="true" appendTo="body"
+                                styleClass="w-100">
+
+                            </p-select>
+
+                        </div>
+
+                        }
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+               MODAL FOOTER
+          ================================================== -->
+
+                <div class="modal-footer">
+
+
+                    <button type="button" class="btn btn-secondary" (click)="closeModal()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">
+
+
+                        @if (modalType === 'add') {
+
+                        <i class="bi bi-plus-circle">
+                        </i>
+
+                        Add Task
+
+                        }
+
+
+                        @if (modalType === 'edit') {
+
+                        <i class="bi bi-check-lg">
+                        </i>
+
+                        Update Task
+
+                        }
+
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+    }
+
+</div>

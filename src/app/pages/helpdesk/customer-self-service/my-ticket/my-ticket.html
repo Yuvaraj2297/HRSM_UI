@@ -1,0 +1,415 @@
+<!-- Hero -->
+<div class="ct-hero d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <div class="hero-crumb">
+      <i class="bi bi-headset"></i>
+      <span>Customer Self Service</span>
+      <i class="bi bi-chevron-right" style="font-size: 10px;"></i>
+      <span class=" text-white">My Tickets</span>
+    </div>
+    <h1>My Tickets</h1>
+  </div>
+  <div class="d-flex gap-2">
+    <a routerLink="/helpdesk/create-ticket" class="btn btn-hero-solid">
+      <i class="bi bi-plus-lg me-1"></i> New Ticket
+    </a>
+  </div>
+</div>
+
+<!-- Table Card -->
+<div class="card-custom p-0 overflow-hidden">
+  <!-- Filters Toolbar -->
+  <div class="row g-2 align-items-center p-3">
+    <!-- Title (2 cols) -->
+    <div class="col-12 col-lg-2">
+      <div class=" d-flex align-items-center text-nowrap" style="font-size: 14px;">
+        <i class="bi bi-ticket-detailed me-2 text-primary"></i> All My Tickets
+        <span class="badge rounded-pill ms-2 ct-count-badge">
+          {{ filteredTickets.length }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Filter Project (2 cols) -->
+    <div class="col-6 col-md-3 col-lg-2">
+      <p-select [options]="projectOptions" [(ngModel)]="filterProject" (onChange)="applyFilters()" optionLabel="label"
+        optionValue="value" placeholder="All Projects" appendTo="body" styleClass="ct-p-select w-100"
+        class="w-100"></p-select>
+    </div>
+
+    <!-- Filter Issue Type (2 cols) -->
+    <div class="col-6 col-md-3 col-lg-2">
+      <p-select [options]="issueOptions" [(ngModel)]="filterIssue" (onChange)="applyFilters()" optionLabel="label"
+        optionValue="value" placeholder="All Issue Types" appendTo="body" styleClass="ct-p-select w-100"
+        class="w-100"></p-select>
+    </div>
+
+    <!-- Filter Priority (2 cols) -->
+    <div class="col-6 col-md-3 col-lg-2">
+      <p-select [options]="priorityOptions" [(ngModel)]="filterPriority" (onChange)="applyFilters()" optionLabel="label"
+        optionValue="value" placeholder="All Priorities" appendTo="body" styleClass="ct-p-select w-100"
+        class="w-100"></p-select>
+    </div>
+
+    <!-- Filter Status (2 cols) -->
+    <div class="col-6 col-md-3 col-lg-2">
+      <p-select [options]="statusOptions" [(ngModel)]="filterStatus" (onChange)="applyFilters()" optionLabel="label"
+        optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="ct-p-select w-100"
+        class="w-100"></p-select>
+    </div>
+
+    <!-- Search (2 cols) -->
+    <div class="col-12 col-lg-2">
+      <div class="mt-search-wrap">
+        <i class="bi bi-search mt-search-icon"></i>
+        <input type="text" class="mt-search-input" placeholder="Search ticket / subject..." [(ngModel)]="searchQuery"
+          (input)="applyFilters()" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Table View -->
+  <div class="table-responsive table-modern-wrap overflow-auto column-border" style="max-height: 560px;">
+    <table class="table-modern w-100 mb-0" id="ctMyTable">
+      <thead>
+        <tr>
+          <th class="text-nowrap">Ticket</th>
+          <th class="text-nowrap">Project</th>
+          <th class="text-nowrap">Issue Type</th>
+          <th class="text-nowrap">Priority</th>
+          <th class="text-nowrap">Assigned To</th>
+          <th class="text-nowrap">Status</th>
+          <th class="text-nowrap text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ticket of filteredTickets; track ticket.id) {
+        <tr class="ctv-row" (click)="openTicket(ticket)">
+          <!-- Ticket ID & Date -->
+          <td>
+            <span class=" text-primary">{{ ticket.id }}</span>
+            <div class="ticket-date-sub">{{ ticket.createdDate }}</div>
+          </td>
+
+          <!-- Project -->
+          <td>
+            <span class="me-1" style="font-size: 13px;">{{ ticket.projectIcon }}</span>
+            <span class="fw-semibold" style="font-size: 12.5px;">{{ ticket.projectName }}</span>
+          </td>
+
+          <!-- Issue Type -->
+          <td>
+            <span class="me-1" style="font-size: 13px;">{{ ticket.issueIcon }}</span>
+            <span style="font-size: 12px;">{{ ticket.issueType }}</span>
+          </td>
+
+          <!-- Priority -->
+          <td>
+            <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(ticket.priority).bg"
+              [style.color]="ticketService.priorityMeta(ticket.priority).color">
+              {{ ticket.priority }}
+            </span>
+          </td>
+
+          <!-- Assigned To -->
+          <td style="font-size: 12px;">
+            @if (ticket.assignedTo) {
+            <div class="fw-semibold">{{ ticket.assignedTo }}</div>
+            <div class="assigned-team-sub">{{ ticket.assignedTeam }}</div>
+            } @else {
+            <span class="badge rounded-pill unassigned-badge">
+              Unassigned
+            </span>
+            }
+          </td>
+
+          <!-- Status -->
+          <td>
+            <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(ticket.status).bg"
+              [style.color]="ticketService.statusMeta(ticket.status).color">
+              <i class="bi {{ ticketService.statusMeta(ticket.status).icon }}"></i>
+              {{ ticket.status }}
+            </span>
+          </td>
+
+          <!-- Action -->
+          <td class="text-center" (click)="$event.stopPropagation()">
+            <button type="button" class="btn btn-action-icon btn-view-details" (click)="openTicket(ticket)"
+              title="View Ticket">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+        }
+
+        <!-- Empty State -->
+        @if (!filteredTickets.length) {
+        <tr>
+          <td colspan="7">
+            <div class="ct-empty">
+              <div class="e-ico">
+                <i class="bi bi-inbox"></i>
+              </div>
+              <div class="" style="font-size: 14px;">No tickets found</div>
+              <div class="text-muted" style="font-size: 12px; margin-top: 3px;">
+                Try clearing filters or raise a new ticket
+              </div>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Table Footer -->
+  <div class="d-flex justify-content-between align-items-center p-3 table-footer-bar">
+    <span class="text-muted" style="font-size: 12px;">
+      Showing <strong>{{ filteredTickets.length }}</strong> tickets
+    </span>
+    <span class="text-muted" style="font-size: 12px;">
+      Click a row to view conversation
+    </span>
+  </div>
+</div>
+
+<!-- =========================================================================
+     FULLSCREEN TICKET VIEW MODAL
+========================================================================== -->
+@if (isModalOpen && currentTicket) {
+<div class="cv-modal-backdrop" (click)="closeModal()"></div>
+
+<div class="cv-fs-modal" role="dialog" aria-modal="true">
+  <div class="cv-fs-content d-flex flex-column h-100">
+    <!-- Modal Header -->
+    <div class="modal-header cv-fs-header py-3 px-4 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2 flex-wrap min-w-0">
+        <h5 class="modal-title  mb-0 me-1 cv-modal-title">
+          {{ currentTicket.id }}
+        </h5>
+
+        <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(currentTicket.status).bg"
+          [style.color]="ticketService.statusMeta(currentTicket.status).color">
+          <i class="bi {{ ticketService.statusMeta(currentTicket.status).icon }}"></i>
+          {{ currentTicket.status }}
+        </span>
+
+        <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(currentTicket.priority).bg"
+          [style.color]="ticketService.priorityMeta(currentTicket.priority).color">
+          {{ currentTicket.priority }}
+        </span>
+
+        <span class=" ms-2 text-truncate d-none d-md-block cv-subject-sub">
+          {{ currentTicket.subject }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="closeModal()">
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body (2 Columns) -->
+    <div class="cv-fs-body">
+      <!-- Left Column: Details -->
+      <div class="cv-fs-left">
+        <!-- Ticket Information -->
+        <div class="cv-card">
+          <div class=" mb-2 card-section-title">
+            <i class="bi bi-info-circle me-1 text-primary"></i> Ticket Information
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Project</span>
+            <span class="v">{{ currentTicket.projectIcon }} {{ currentTicket.projectName }}</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Issue Type</span>
+            <span class="v">{{ currentTicket.issueIcon }} {{ currentTicket.issueType }}</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Raised By</span>
+            <span class="v">{{ currentTicket.customerName }} ({{ currentTicket.customerOrg }})</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Contact Person</span>
+            <span class="v">{{ currentTicket.contactPerson }}</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Phone</span>
+            <span class="v">
+              @if (currentTicket.contactPhone) {
+              <a [href]="'tel:' + currentTicket.contactPhone" class="text-primary text-decoration-none">
+                <i class="bi bi-telephone me-1"></i>{{ currentTicket.contactPhone }}
+              </a>
+              } @else {
+              —
+              }
+            </span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Created</span>
+            <span class="v">{{ currentTicket.createdDate }}</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Assigned To</span>
+            <span class="v">{{ currentTicket.assignedTo || 'Not yet assigned' }}</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">SLA Resolution Due</span>
+            <span class="v">{{ formatDue(currentTicket.resolutionDueTs) }}</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Expected Resolution</span>
+            <span class="v">{{ currentTicket.expectedDate || '—' }}</span>
+          </div>
+          <div class="cv-info-row">
+            <span class="text-muted">Attachment</span>
+            <span class="v">
+              @if (currentTicket.attachment) {
+              <span class="text-primary">
+                <i class="bi bi-paperclip me-1"></i>{{ currentTicket.attachment }}
+              </span>
+              } @else {
+              —
+              }
+            </span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="cv-card">
+          <div class=" mb-2 card-section-title">
+            <i class="bi bi-file-text me-1 text-primary"></i> Description
+          </div>
+          <div class="cv-desc">{{ currentTicket.description }}</div>
+        </div>
+
+        <!-- Progress / Stepper -->
+        <div class="cv-card">
+          <div class=" mb-2 card-section-title">
+            <i class="bi bi-diagram-2 me-1 text-primary"></i> Progress
+          </div>
+
+          @if (currentTicket.status === 'Reopened') {
+          <div class="cv-banner banner-reopened">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            Ticket reopened — our team is re-working on it
+          </div>
+          } @else if (currentTicket.status === 'Closed') {
+          <div class="cv-banner banner-closed">
+            <i class="bi bi-lock"></i>
+            Ticket closed — thank you for confirming
+          </div>
+          } @else {
+          <div class="stepper-list">
+            @for (step of getStepper(currentTicket); track step.name; let isLast = $last; let i = $index) {
+            <div class="cv-step" [class.done]="step.isDone" [class.current]="step.isCurrent">
+              <div class="s-rail">
+                <div class="s-dot">
+                  @if (step.isDone) {
+                  <i class="bi bi-check"></i>
+                  } @else {
+                  {{ i + 1 }}
+                  }
+                </div>
+                @if (!isLast) {
+                <div class="s-line"></div>
+                }
+              </div>
+              <div class="s-label">
+                {{ step.name }}
+                @if (step.caption) {
+                <span> — {{ step.caption }}</span>
+                }
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Column: Conversation -->
+      <div class="cv-fs-right">
+        <!-- Chat Head -->
+        <div class="cv-chat-head">
+          <i class="bi bi-chat-dots text-primary"></i> Conversation
+          <span class="badge rounded-pill ms-1 msg-count-pill">
+            {{ currentTicket.conversation.length }} messages
+          </span>
+        </div>
+
+        <!-- Chat Scroll -->
+        <div class="cv-chat-scroll" #chatScroll>
+          @for (msg of currentTicket.conversation; track msg.ts; let idx = $index) {
+          @if (shouldShowDaySep(idx)) {
+          <div class="cv-day-sep">{{ dayLabel(msg.ts) }}</div>
+          }
+
+          <div class="cv-msg" [class.staff]="msg.by === 'staff'" [class.customer]="msg.by === 'customer'">
+            <span class="m-av" [style.background]="avatarColor(msg.name)">
+              {{ getInitials(msg.name) }}
+            </span>
+
+            <div>
+              <div class="m-meta">
+                {{ msg.name }} · {{ ticketService.formatTs(msg.ts) }}
+              </div>
+              <div class="m-bubble">
+                {{ msg.text }}
+                @if (msg.attachment) {
+                <div class="m-att">
+                  <i class="bi bi-paperclip"></i>
+                  {{ msg.attachment }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Chat Composer & Actions -->
+        <div class="cv-composer-wrap">
+          <div class="cv-actions mb-2">
+            @if (ticketService.customerAllowedActions(currentTicket).includes('Reply')) {
+            <span class="badge rounded-pill waiting-reply-pill">
+              <i class="bi bi-reply me-1"></i> Support is waiting for your reply
+            </span>
+            }
+
+            @if (ticketService.customerAllowedActions(currentTicket).includes('Reopen')) {
+            <button type="button" class="btn btn-warning btn-sm" (click)="doReopen()">
+              <i class="bi bi-arrow-counterclockwise"></i> Reopen
+            </button>
+            }
+
+            @if (ticketService.customerAllowedActions(currentTicket).includes('Close')) {
+            <button type="button" class="btn btn-success btn-sm" (click)="doClose()">
+              <i class="bi bi-check-circle"></i> Close Ticket
+            </button>
+            }
+          </div>
+
+          <div class="cv-composer d-flex align-items-end gap-2 p-2">
+            <textarea class="form-control flex-grow-1" rows="1" placeholder="Reply to support team..."
+              [(ngModel)]="replyText" (keydown)="onReplyKeydown($event)"></textarea>
+            <button type="button" class="btn btn-icon btn-primary cv-send-btn" (click)="sendReply()" title="Send reply">
+              <i class="bi bi-send"></i>
+            </button>
+          </div>
+          <div class="cv-hint">Enter to send · Shift+Enter for a new line</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Floating Toast -->
+<div class="ct-toast" [class.show]="isToastVisible">
+  <i class="bi bi-check-circle-fill t-ico"></i>
+  <span>{{ toastMessage }}</span>
+</div>

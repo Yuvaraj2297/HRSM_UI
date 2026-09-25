@@ -1,0 +1,39 @@
+<div class="chat-page">
+
+  <!-- =========================================================
+       TITLE
+  ========================================================== -->
+  <div class="chat-title-row">
+    <h1 class="chat-title"><i class="bi bi-chat-dots"></i>SMS</h1>
+    @if (account()?.senderId) {
+    <span class="sms-sender"><i class="bi bi-broadcast"></i>Sender ID: {{ account()!.senderId }}</span>
+    }
+  </div>
+
+  @if (error()) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+    <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Retry</button>
+  </div>
+  }
+
+  @if (sendError()) {
+  <div class="alert alert-warning py-2 px-3 mb-3 small fw-semibold" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ sendError() }}
+  </div>
+  }
+
+  <!-- =========================================================
+       SHELL — contacts | chat  (shared chat components, SMS look)
+  ========================================================== -->
+  <div class="chat-shell" [class.chat-open]="activeId() !== null">
+    <app-chat-contact-list class="chat-side" variant="sms" [brand]="brand()" [tabs]="tabs" [contacts]="contacts()"
+      [activeId]="activeId()" [loading]="loading()" (select)="open($event)" />
+
+    <app-chat-window class="chat-main" variant="sms" [contact]="active()" [showSmsCounter]="true"
+      placeholder="Write your message here..." emptyIcon="bi bi-chat-dots"
+      emptyHint="Pick a lead or customer from the list to view and send SMS." (send)="send($event)"
+      (back)="closeChat()" />
+  </div>
+
+</div>

@@ -1,0 +1,112 @@
+{
+  "users": [
+    { "id": "GHRA0011", "name": "GHRAUDA SOFTWARE", "login": "09:02 AM", "loginArea": "Nungambakkam", "logout": "06:15 PM", "logoutArea": "T. Nagar", "visits": 5, "kms": 32.4, "battery": 78, "online": true },
+    { "id": "1234", "name": "thilak ma", "login": "09:30 AM", "loginArea": "Anna Nagar", "logout": "05:45 PM", "logoutArea": "Koyambedu", "visits": 3, "kms": 18.7, "battery": 54, "online": true },
+    { "id": "GHRA0012", "name": "ARUN KUMAR", "login": "08:55 AM", "loginArea": "Guindy", "logout": "06:00 PM", "logoutArea": "Adyar", "visits": 6, "kms": 41.2, "battery": 66, "online": false },
+    { "id": "GHRA0013", "name": "MOHAN RAJ", "login": "09:10 AM", "loginArea": "Velachery", "logout": "05:30 PM", "logoutArea": "Tambaram", "visits": 4, "kms": 27.9, "battery": 91, "online": true },
+    { "id": "GHRA0014", "name": "PRIYA DHARSHINI", "login": "09:45 AM", "loginArea": "Mylapore", "logout": "06:20 PM", "logoutArea": "Egmore", "visits": 7, "kms": 35.0, "battery": 43, "online": false },
+    { "id": "GHRA0015", "name": "SURESH BABU", "login": null, "loginArea": null, "logout": null, "logoutArea": null, "visits": 0, "kms": 0, "battery": 0, "online": false },
+    { "id": "GHRA0016", "name": "DIVYA LAKSHMI", "login": "10:00 AM", "loginArea": "Porur", "logout": "06:05 PM", "logoutArea": "Vadapalani", "visits": 2, "kms": 14.3, "battery": 82, "online": true },
+    { "id": "GHRA0017", "name": "KARTHIK RAJA", "login": "09:20 AM", "loginArea": "Perambur", "logout": "05:50 PM", "logoutArea": "Tondiarpet", "visits": 5, "kms": 29.6, "battery": 60, "online": true },
+    { "id": "GHRA0018", "name": "NANDHINI S", "login": null, "loginArea": null, "logout": null, "logoutArea": null, "visits": 0, "kms": 0, "battery": 0, "online": false },
+    { "id": "GHRA0019", "name": "VIGNESH R", "login": "09:05 AM", "loginArea": "Ashok Nagar", "logout": "06:30 PM", "logoutArea": "Saidapet", "visits": 6, "kms": 38.1, "battery": 37, "online": false },
+    { "id": "GHRA0020", "name": "SANTHOSH M", "login": "09:40 AM", "loginArea": "Kodambakkam", "logout": "05:55 PM", "logoutArea": "Ambattur", "visits": 3, "kms": 21.5, "battery": 72, "online": true }
+  ],
+
+  "timelines": {
+    "GHRA0011": [
+      { "type": "login", "time": "09:02 AM", "title": "Login", "area": "Nungambakkam", "note": "Battery 92%", "lat": 13.0605, "lng": 80.2425 },
+      { "type": "visit", "time": "09:40 AM", "title": "Visit - Hona Traders", "area": "Thousand Lights", "note": "Duration 25 min", "lat": 13.0580, "lng": 80.2590 },
+      { "type": "visit", "time": "10:45 AM", "title": "Visit - Sri Vel Agencies", "area": "Royapettah", "note": "Duration 30 min", "lat": 13.0530, "lng": 80.2640 },
+      { "type": "idle", "time": "12:30 PM", "title": "Idle / Lunch Break", "area": "Mylapore", "note": "Duration 45 min", "lat": 13.0339, "lng": 80.2690 },
+      { "type": "visit", "time": "02:10 PM", "title": "Visit - Kumar Stores", "area": "Teynampet", "note": "Duration 20 min", "lat": 13.0450, "lng": 80.2500 },
+      { "type": "visit", "time": "03:35 PM", "title": "Visit - Balaji Motors", "area": "Guindy", "note": "Duration 35 min", "lat": 13.0100, "lng": 80.2200 },
+      { "type": "visit", "time": "04:40 PM", "title": "Visit - Anand Textiles", "area": "Nandanam", "note": "Duration 25 min", "lat": 13.0290, "lng": 80.2400 },
+      { "type": "logout", "time": "06:15 PM", "title": "Logout", "area": "T. Nagar", "note": "Total 32.4 km travelled", "lat": 13.0418, "lng": 80.2341 }
+    ],
+
+    "1234": [
+      { "type": "login", "time": "09:30 AM", "title": "Login", "area": "Anna Nagar", "note": "Battery 88%", "lat": 13.0850, "lng": 80.2101 },
+      { "type": "visit", "time": "10:15 AM", "title": "Visit - Lakshmi Enterprises", "area": "Kilpauk", "note": "Duration 30 min", "lat": 13.0850, "lng": 80.2420 },
+      { "type": "visit", "time": "11:40 AM", "title": "Visit - Sri Ram Hardware", "area": "Aminjikarai", "note": "Duration 20 min", "lat": 13.0735, "lng": 80.2270 },
+      { "type": "idle", "time": "01:00 PM", "title": "Idle / Lunch Break", "area": "Arumbakkam", "note": "Duration 50 min", "lat": 13.0720, "lng": 80.2090 },
+      { "type": "visit", "time": "03:05 PM", "title": "Visit - Metro Distributors", "area": "Mogappair", "note": "Duration 40 min", "lat": 13.0830, "lng": 80.1760 },
+      { "type": "logout", "time": "05:45 PM", "title": "Logout", "area": "Koyambedu", "note": "Total 18.7 km travelled", "lat": 13.0694, "lng": 80.1948 }
+    ],
+
+    "GHRA0012": [
+      { "type": "login", "time": "08:55 AM", "title": "Login", "area": "Guindy", "note": "Battery 95%", "lat": 13.0100, "lng": 80.2200 },
+      { "type": "visit", "time": "09:30 AM", "title": "Visit - Chola Electricals", "area": "Ekkatuthangal", "note": "Duration 25 min", "lat": 13.0170, "lng": 80.2050 },
+      { "type": "visit", "time": "10:40 AM", "title": "Visit - Vasanth & Co", "area": "West Mambalam", "note": "Duration 30 min", "lat": 13.0380, "lng": 80.2210 },
+      { "type": "visit", "time": "11:50 AM", "title": "Visit - Priya Pharma", "area": "Nandanam", "note": "Duration 20 min", "lat": 13.0290, "lng": 80.2400 },
+      { "type": "idle", "time": "01:10 PM", "title": "Idle / Lunch Break", "area": "Besant Nagar", "note": "Duration 40 min", "lat": 12.9990, "lng": 80.2670 },
+      { "type": "visit", "time": "02:30 PM", "title": "Visit - Ocean Traders", "area": "Thiruvanmiyur", "note": "Duration 35 min", "lat": 12.9830, "lng": 80.2594 },
+      { "type": "visit", "time": "03:45 PM", "title": "Visit - Green Leaf Foods", "area": "Velachery", "note": "Duration 30 min", "lat": 12.9791, "lng": 80.2209 },
+      { "type": "visit", "time": "04:55 PM", "title": "Visit - Sakthi Motors", "area": "Pallikaranai", "note": "Duration 25 min", "lat": 12.9376, "lng": 80.2160 },
+      { "type": "logout", "time": "06:00 PM", "title": "Logout", "area": "Adyar", "note": "Total 41.2 km travelled", "lat": 13.0012, "lng": 80.2565 }
+    ],
+
+    "GHRA0013": [
+      { "type": "login", "time": "09:10 AM", "title": "Login", "area": "Velachery", "note": "Battery 100%", "lat": 12.9791, "lng": 80.2209 },
+      { "type": "visit", "time": "09:55 AM", "title": "Visit - Star Hardware", "area": "Medavakkam", "note": "Duration 30 min", "lat": 12.9200, "lng": 80.1920 },
+      { "type": "visit", "time": "11:10 AM", "title": "Visit - Royal Paints", "area": "Pallikaranai", "note": "Duration 25 min", "lat": 12.9376, "lng": 80.2160 },
+      { "type": "idle", "time": "12:45 PM", "title": "Idle / Lunch Break", "area": "Chromepet", "note": "Duration 45 min", "lat": 12.9516, "lng": 80.1462 },
+      { "type": "visit", "time": "02:20 PM", "title": "Visit - Murugan Stores", "area": "Chromepet", "note": "Duration 20 min", "lat": 12.9530, "lng": 80.1420 },
+      { "type": "visit", "time": "03:40 PM", "title": "Visit - Kaveri Agencies", "area": "Tambaram East", "note": "Duration 35 min", "lat": 12.9280, "lng": 80.1180 },
+      { "type": "logout", "time": "05:30 PM", "title": "Logout", "area": "Tambaram", "note": "Total 27.9 km travelled", "lat": 12.9249, "lng": 80.1000 }
+    ],
+
+    "GHRA0014": [
+      { "type": "login", "time": "09:45 AM", "title": "Login", "area": "Mylapore", "note": "Battery 76%", "lat": 13.0339, "lng": 80.2690 },
+      { "type": "visit", "time": "10:10 AM", "title": "Visit - Kapali Silks", "area": "Mylapore", "note": "Duration 20 min", "lat": 13.0335, "lng": 80.2700 },
+      { "type": "visit", "time": "10:50 AM", "title": "Visit - Sri Devi Medicals", "area": "Royapettah", "note": "Duration 25 min", "lat": 13.0530, "lng": 80.2640 },
+      { "type": "visit", "time": "11:35 AM", "title": "Visit - City Opticals", "area": "Thousand Lights", "note": "Duration 20 min", "lat": 13.0580, "lng": 80.2590 },
+      { "type": "idle", "time": "12:40 PM", "title": "Idle / Lunch Break", "area": "Nungambakkam", "note": "Duration 40 min", "lat": 13.0605, "lng": 80.2425 },
+      { "type": "visit", "time": "01:45 PM", "title": "Visit - Ganesh Traders", "area": "Kilpauk", "note": "Duration 30 min", "lat": 13.0850, "lng": 80.2420 },
+      { "type": "visit", "time": "02:50 PM", "title": "Visit - Bharath Stationery", "area": "Purasawalkam", "note": "Duration 25 min", "lat": 13.0880, "lng": 80.2530 },
+      { "type": "visit", "time": "04:00 PM", "title": "Visit - Madras Electronics", "area": "Vepery", "note": "Duration 30 min", "lat": 13.0830, "lng": 80.2620 },
+      { "type": "visit", "time": "05:15 PM", "title": "Visit - Egmore Book House", "area": "Egmore", "note": "Duration 20 min", "lat": 13.0760, "lng": 80.2580 },
+      { "type": "logout", "time": "06:20 PM", "title": "Logout", "area": "Egmore", "note": "Total 35.0 km travelled", "lat": 13.0732, "lng": 80.2609 }
+    ],
+
+    "GHRA0016": [
+      { "type": "login", "time": "10:00 AM", "title": "Login", "area": "Porur", "note": "Battery 97%", "lat": 13.0382, "lng": 80.1565 },
+      { "type": "visit", "time": "11:05 AM", "title": "Visit - Sri Balaji Furniture", "area": "Valasaravakkam", "note": "Duration 35 min", "lat": 13.0400, "lng": 80.1720 },
+      { "type": "idle", "time": "01:15 PM", "title": "Idle / Lunch Break", "area": "Virugambakkam", "note": "Duration 45 min", "lat": 13.0530, "lng": 80.1920 },
+      { "type": "visit", "time": "03:20 PM", "title": "Visit - KK Nagar Mart", "area": "KK Nagar", "note": "Duration 30 min", "lat": 13.0410, "lng": 80.1990 },
+      { "type": "logout", "time": "06:05 PM", "title": "Logout", "area": "Vadapalani", "note": "Total 14.3 km travelled", "lat": 13.0500, "lng": 80.2121 }
+    ],
+
+    "GHRA0017": [
+      { "type": "login", "time": "09:20 AM", "title": "Login", "area": "Perambur", "note": "Battery 90%", "lat": 13.1210, "lng": 80.2329 },
+      { "type": "visit", "time": "10:00 AM", "title": "Visit - Perambur Traders", "area": "Kolathur", "note": "Duration 25 min", "lat": 13.1240, "lng": 80.2120 },
+      { "type": "visit", "time": "11:15 AM", "title": "Visit - Anbu Agencies", "area": "Vyasarpadi", "note": "Duration 30 min", "lat": 13.1170, "lng": 80.2550 },
+      { "type": "idle", "time": "12:50 PM", "title": "Idle / Lunch Break", "area": "Washermenpet", "note": "Duration 40 min", "lat": 13.1140, "lng": 80.2830 },
+      { "type": "visit", "time": "02:05 PM", "title": "Visit - Harbour Supplies", "area": "Royapuram", "note": "Duration 35 min", "lat": 13.1137, "lng": 80.2954 },
+      { "type": "visit", "time": "03:25 PM", "title": "Visit - Selvam Hardware", "area": "Washermenpet", "note": "Duration 20 min", "lat": 13.1160, "lng": 80.2800 },
+      { "type": "visit", "time": "04:35 PM", "title": "Visit - North Star Foods", "area": "Tondiarpet", "note": "Duration 25 min", "lat": 13.1290, "lng": 80.2850 },
+      { "type": "logout", "time": "05:50 PM", "title": "Logout", "area": "Tondiarpet", "note": "Total 29.6 km travelled", "lat": 13.1260, "lng": 80.2880 }
+    ],
+
+    "GHRA0019": [
+      { "type": "login", "time": "09:05 AM", "title": "Login", "area": "Ashok Nagar", "note": "Battery 84%", "lat": 13.0373, "lng": 80.2123 },
+      { "type": "visit", "time": "09:45 AM", "title": "Visit - Vijay Electricals", "area": "KK Nagar", "note": "Duration 25 min", "lat": 13.0410, "lng": 80.1990 },
+      { "type": "visit", "time": "10:50 AM", "title": "Visit - Surya Textiles", "area": "West Mambalam", "note": "Duration 30 min", "lat": 13.0380, "lng": 80.2210 },
+      { "type": "visit", "time": "12:00 PM", "title": "Visit - Pondy Bazaar Mart", "area": "T. Nagar", "note": "Duration 35 min", "lat": 13.0418, "lng": 80.2341 },
+      { "type": "idle", "time": "01:10 PM", "title": "Idle / Lunch Break", "area": "Nandanam", "note": "Duration 45 min", "lat": 13.0290, "lng": 80.2400 },
+      { "type": "visit", "time": "02:35 PM", "title": "Visit - Adyar Bakers", "area": "Adyar", "note": "Duration 20 min", "lat": 13.0012, "lng": 80.2565 },
+      { "type": "visit", "time": "03:50 PM", "title": "Visit - Guindy Tools", "area": "Guindy", "note": "Duration 30 min", "lat": 13.0100, "lng": 80.2200 },
+      { "type": "visit", "time": "05:05 PM", "title": "Visit - Little Mount Stores", "area": "Little Mount", "note": "Duration 25 min", "lat": 13.0150, "lng": 80.2250 },
+      { "type": "logout", "time": "06:30 PM", "title": "Logout", "area": "Saidapet", "note": "Total 38.1 km travelled", "lat": 13.0213, "lng": 80.2231 }
+    ],
+
+    "GHRA0020": [
+      { "type": "login", "time": "09:40 AM", "title": "Login", "area": "Kodambakkam", "note": "Battery 89%", "lat": 13.0521, "lng": 80.2255 },
+      { "type": "visit", "time": "10:30 AM", "title": "Visit - Kodai Agencies", "area": "Virugambakkam", "note": "Duration 30 min", "lat": 13.0530, "lng": 80.1920 },
+      { "type": "visit", "time": "12:00 PM", "title": "Visit - Padi Motors", "area": "Padi", "note": "Duration 25 min", "lat": 13.0970, "lng": 80.1860 },
+      { "type": "idle", "time": "01:20 PM", "title": "Idle / Lunch Break", "area": "Mogappair", "note": "Duration 40 min", "lat": 13.0830, "lng": 80.1760 },
+      { "type": "visit", "time": "03:10 PM", "title": "Visit - Ambattur Industrial Supply", "area": "Ambattur Estate", "note": "Duration 45 min", "lat": 13.1000, "lng": 80.1650 },
+      { "type": "logout", "time": "05:55 PM", "title": "Logout", "area": "Ambattur", "note": "Total 21.5 km travelled", "lat": 13.1143, "lng": 80.1548 }
+    ]
+  }
+}

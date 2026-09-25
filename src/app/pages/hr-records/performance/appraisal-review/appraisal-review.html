@@ -1,0 +1,803 @@
+<div class="main-content">
+  <div class="content-wrapper">
+
+    <!-- Top Header & Breadcrumb -->
+    <div class="page-header d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <h4 class="mb-1 text-dark ">Performance Appraisal Lifecycle</h4>
+        <p class="text-muted mb-0 small">
+          Two-Tier Portal System: <strong>Employee Portal</strong> (Self-Review & Live Status) vs
+          <strong>Admin & Reviewer Portal</strong> (TL, HR & Manager Approvals).
+        </p>
+      </div>
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-success btn-sm" (click)="cycleModal.open('add')">
+          Launch New Cycle
+        </button>
+      </div>
+    </div>
+
+    <!-- MASTER PORTAL SWITCHER -->
+    <div role="tablist" class="portal-switcher-wrapper">
+      <button role="tab" type="button" class="portal-tab-btn emp-portal-btn" [class.active]="mainPortal === 'employee'" (click)="switchMainPortal('employee')" [attr.aria-selected]="mainPortal === 'employee'">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        1. Employee Portal (Fill Self-Review & Track Approvals)
+        <span class="page-tab-count">Employee View</span>
+      </button>
+
+      <button role="tab" type="button" class="portal-tab-btn admin-portal-btn" [class.active]="mainPortal === 'admin'" (click)="switchMainPortal('admin')" [attr.aria-selected]="mainPortal === 'admin'">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        2. Admin & Reviewer Portal (TL, HR & Manager Approvals)
+        <span class="page-tab-count">3 Actions Needed</span>
+      </button>
+    </div>
+
+    <!-- #####################################################################
+         PORTAL 1: EMPLOYEE PORTAL
+    ###################################################################### -->
+    @if (mainPortal === 'employee') {
+      <div>
+
+        <!-- Journey Stepper -->
+        <div class="journey-stepper-card">
+          <div class="journey-stepper-header">
+            <div>
+              <h6 class="mb-0  text-dark">My Appraisal Progression Status</h6>
+              <small class="text-muted">
+                Currently active profile: <strong class="text-success">{{ data.name }} ({{ data.id }})</strong>
+                &bull; Click any stage bubble to view status
+              </small>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge px-3 py-1.5 " [ngClass]="data.mgrApproved ? 'bg-success' : 'bg-success-subtle text-success border border-success'">
+                {{ portalStatusLabel }}
+              </span>
+            </div>
+          </div>
+
+          <div class="journey-stepper">
+            <div [class]="stepClass(1)" (click)="switchEmpStage(1)">
+              <div class="journey-step-bubble"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="journey-step-title">Stage 1: Employee</div>
+              <div class="journey-step-subtitle">{{ stageSubtitle(1) }}</div>
+            </div>
+
+            <div class="journey-connector" [class.active]="connectorActive(1)"></div>
+
+            <div [class]="stepClass(2)" (click)="switchEmpStage(2)">
+              <div class="journey-step-bubble"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+              <div class="journey-step-title">Stage 2: Team Lead</div>
+              <div class="journey-step-subtitle">{{ stageSubtitle(2) }}</div>
+            </div>
+
+            <div class="journey-connector" [class.active]="connectorActive(2)"></div>
+
+            <div [class]="stepClass(3)" (click)="switchEmpStage(3)">
+              <div class="journey-step-bubble"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+              <div class="journey-step-title">Stage 3: HR Dept</div>
+              <div class="journey-step-subtitle">{{ stageSubtitle(3) }}</div>
+            </div>
+
+            <div class="journey-connector" [class.active]="connectorActive(3)"></div>
+
+            <div [class]="stepClass(4)" (click)="switchEmpStage(4)">
+              <div class="journey-step-bubble"><svg viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1v-1h14v1z"/></svg></div>
+              <div class="journey-step-title">Stage 4: Manager</div>
+              <div class="journey-step-subtitle">{{ stageSubtitle(4) }}</div>
+            </div>
+
+            <div class="journey-connector" [class.active]="connectorActive(4)"></div>
+
+            <div [class]="stepClass(5)" (click)="switchEmpStage(5)">
+              <div class="journey-step-bubble"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+              <div class="journey-step-title">Stage 5: Scorecard</div>
+              <div class="journey-step-subtitle">{{ stageSubtitle(5) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Stage Content -->
+        <div class="content-hub-card">
+          <div class="content-hub-header">
+            <div>
+              <h5 class="mb-0  text-dark">{{ empHubTitle }}</h5>
+              <small class="text-muted">{{ empHubSub }}</small>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="text-muted small ">Select Profile:</span>
+              <select class="form-select form-select-sm fw-semibold" [ngModel]="currentEmpKey" (ngModelChange)="onProfileChange($event)">
+                @for (opt of employeeOptions; track opt.value) {
+                  <option [value]="opt.value">{{ opt.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="p-4 bg-white">
+
+            <!-- PANE 1: SELF REVIEW FORM -->
+            @if (activeEmpStage === 1) {
+              <form (ngSubmit)="submitEmpSelfReview()">
+                <div class="form-section-head">1. Employee Professional Profile Details</div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-3">
+                    <label class="form-label  text-dark small">Employee ID</label>
+                    <input type="text" class="form-control" [value]="data.id" readonly>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Full Name</label>
+                    <input type="text" class="form-control " [(ngModel)]="selfDraft.name" name="selfName" required>
+                  </div>
+                  <div class="col-md-5">
+                    <label class="form-label  text-dark small">Official Email</label>
+                    <input type="email" class="form-control" [(ngModel)]="selfDraft.email" name="selfEmail" required>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Department</label>
+                    <select class="form-select" [(ngModel)]="selfDraft.dept" name="selfDept">
+                      <option value="Engineering">Engineering</option>
+                      <option value="Product Design">Product Design</option>
+                      <option value="Human Resources">Human Resources</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Role / Designation</label>
+                    <input type="text" class="form-control" [(ngModel)]="selfDraft.role" name="selfRole">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Reporting Team Lead</label>
+                    <input type="text" class="form-control fw-semibold" [(ngModel)]="selfDraft.tl" name="selfTl">
+                  </div>
+                </div>
+
+                <div class="form-section-head">2. Projects & Key Deliverables Handled</div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label  text-dark small">Projects Handled</label>
+                    <input type="text" class="form-control" [(ngModel)]="selfDraft.projects" name="selfProjects">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label  text-dark small">Tech Stack Utilized</label>
+                    <input type="text" class="form-control" [(ngModel)]="selfDraft.tools" name="selfTools">
+                  </div>
+                </div>
+
+                <div class="form-section-head">3. Self Performance Review & Rating</div>
+
+                <div class="mb-3">
+                  <label class="form-label  text-dark small">3.1 Performance Summary</label>
+                  <textarea class="form-control" rows="3" [(ngModel)]="selfDraft.summary" name="selfSummary"></textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label  text-dark small">3.2 Key Achievements & Metrics</label>
+                  <textarea class="form-control" rows="3" [(ngModel)]="selfDraft.achievements" name="selfAchievements"></textarea>
+                </div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label  text-dark small">3.3 Self Rating (Out of 5.0)</label>
+                    <select class="form-select  text-success" [(ngModel)]="selfDraft.rating" name="selfRating">
+                      <option value="5.0">5.0 - Outstanding</option>
+                      <option value="4.5">4.5 - Excellent (Exceeded Goals)</option>
+                      <option value="4.0">4.0 - Very Good</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label  text-dark small">3.4 Upskilling & Certifications</label>
+                    <input type="text" class="form-control" [(ngModel)]="selfDraft.certs" name="selfCerts">
+                  </div>
+                </div>
+
+                <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                  <button type="button" class="btn btn-outline-secondary" (click)="saveDraft()">Save Draft</button>
+                  <button type="submit" class="btn btn-success px-4">
+                    Submit Self-Appraisal to Team Lead (TL) &rarr;
+                  </button>
+                </div>
+              </form>
+            }
+
+            <!-- PANE 2: TL REVIEW STATUS -->
+            @if (activeEmpStage === 2) {
+              @if (data.tlApproved) {
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-4" style="background:var(--primary-soft); border:1px solid var(--green-100-3);">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle p-2 bg-success text-white d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                      <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div>
+                      <h6 class=" text-success mb-0">Stage 2: Reviewed & Approved by Team Lead</h6>
+                      <small class="text-muted">Evaluated by: <strong class="text-dark">{{ data.tl }}</strong></small>
+                    </div>
+                  </div>
+                  <span class="badge bg-success px-3 py-2 ">TL Approved</span>
+                </div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">Team Lead Performance Score:</span>
+                      <h4 class=" text-success mb-0">{{ data.tlRating }} / 5.0</h4>
+                      <small class="text-muted">Rating: Exceeded Expectations</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">Recommended Salary Hike %:</span>
+                      <h4 class=" text-success mb-0">{{ data.tlHike }}</h4>
+                      <small class="text-muted">Recommended Annual Hike</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">Promotion Recommendation:</span>
+                      <h5 class=" text-dark mb-0">{{ data.tlPromo }}</h5>
+                      <small class="text-muted">Forwarded to HR Dept</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card border mb-3 shadow-none bg-light">
+                  <div class="card-body p-3">
+                    <strong class="text-dark small d-block mb-2">Team Lead Feedback & Observations:</strong>
+                    <p class="mb-0 text-muted fst-italic bg-white p-3 rounded border">"{{ data.tlFeedback }}"</p>
+                  </div>
+                </div>
+              } @else {
+                <div class="p-4 text-center border rounded-3 bg-light">
+                  <div class="text-warning mb-2">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  </div>
+                  <h6 class=" text-dark">Stage 2: Team Lead Review Pending</h6>
+                  <p class="text-muted small mb-0">Your self-appraisal has been sent to your Team Lead for scoring and increment recommendation.</p>
+                </div>
+              }
+            }
+
+            <!-- PANE 3: HR REVIEW STATUS -->
+            @if (activeEmpStage === 3) {
+              @if (data.hrApproved) {
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-4" style="background:var(--blue-50-5); border:1px solid var(--blue-150-2);">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle p-2 text-white d-flex align-items-center justify-content-center" style="width:40px;height:40px;background:var(--purple-550);">
+                      <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    </div>
+                    <div>
+                      <h6 class=" mb-0" style="color:var(--purple-550);">Stage 3: Verified & Approved by HR Department</h6>
+                      <small class="text-muted">Verified by: <strong class="text-dark">Ananya Roy (HRBP)</strong> &bull; Policy & Merit Endorsement</small>
+                    </div>
+                  </div>
+                  <span class="badge text-white px-3 py-2 " style="background:var(--purple-550);">HR Approved</span>
+                </div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">HR Evaluation Score:</span>
+                      <h4 class=" mb-0" style="color:var(--purple-550);">{{ data.hrRating }} / 5.0</h4>
+                      <small class="text-muted">Exceeds Benchmark</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">Approved Hike %:</span>
+                      <h4 class=" text-success mb-0">{{ data.hrHike }}</h4>
+                      <small class="text-muted">Merit Increment Approved</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">Promotion Endorsement:</span>
+                      <h5 class=" text-dark mb-0">{{ data.hrPromo }}</h5>
+                      <small class="text-muted">Endorsed for Stage 4</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card border mb-3 shadow-none bg-light">
+                  <div class="card-body p-3">
+                    <strong class="text-dark small d-block mb-2">HR Department Policy Remarks:</strong>
+                    <p class="mb-0 text-muted fst-italic bg-white p-3 rounded border">"{{ data.hrComments }}"</p>
+                  </div>
+                </div>
+              } @else {
+                <div class="p-4 text-center border rounded-3 bg-light">
+                  <div class="text-muted mb-2">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  </div>
+                  <h6 class=" text-dark">Stage 3: HR Department Verification Pending</h6>
+                  <p class="text-muted small mb-0">Awaiting HR Department policy & merit check after Stage 2 completion.</p>
+                </div>
+              }
+            }
+
+            <!-- PANE 4: MANAGER DECISION -->
+            @if (activeEmpStage === 4) {
+              @if (data.mgrApproved) {
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-4" style="background:var(--primary-soft); border:1px solid var(--green-150);">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle p-2 bg-success text-white d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                      <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1v-1h14v1z"/></svg>
+                    </div>
+                    <div>
+                      <h6 class=" text-success mb-0">Stage 4: Signed Off by Executive Manager</h6>
+                      <small class="text-muted">Executive Signoff: <strong class="text-dark">Vikramaditya (MD)</strong> &bull; Recognition & Decision</small>
+                    </div>
+                  </div>
+                  <span class="badge bg-success px-3 py-2 ">Signoff Complete</span>
+                </div>
+
+                <div class="p-3 mb-4 rounded-3 border-start border-4 border-success shadow-sm" style="background:var(--green-50); border:1px solid var(--green-100);">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <svg width="20" height="20" fill="var(--green-550)" viewBox="0 0 24 24"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+                    <strong class="text-success fs-6">Executive Manager Recognition Reply:</strong>
+                  </div>
+                  <p class="mb-0 fs-6 fw-semibold text-dark fst-italic">"{{ data.mgrReply }}"</p>
+                </div>
+
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">Final Manager Evaluation Rating:</span>
+                      <h4 class=" text-dark mb-0">{{ data.mgrRating }} / 5.0</h4>
+                      <small class="text-muted">Top Performer Band</small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                      <span class="text-muted small d-block mb-1 ">Final Confirmed Hike:</span>
+                      <h4 class=" text-success mb-0">{{ data.mgrHike }} Annual Merit Hike</h4>
+                      <small class="text-muted">Effective next fiscal cycle</small>
+                    </div>
+                  </div>
+                </div>
+              } @else {
+                <div class="p-4 text-center border rounded-3 bg-light">
+                  <div class="text-warning mb-2">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  </div>
+                  <h6 class=" text-dark">Stage 4: Executive Manager Decision Pending</h6>
+                  <p class="text-muted small mb-0">Currently awaiting executive signoff and recognition reply message from Vikramaditya (MD).</p>
+                </div>
+              }
+            }
+
+            <!-- PANE 5: SCORECARD -->
+            @if (activeEmpStage === 5) {
+              @if (data.mgrApproved) {
+                <div class="p-4 border rounded-3 bg-light">
+                  <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                    <div>
+                      <h5 class="mb-0  text-dark">GHARUDA HRMS</h5>
+                      <small class="text-muted">Official Merit Performance Scorecard • FY 2025-26</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                      <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">COMPLETED</span>
+                      <button type="button" class="btn btn-outline-success btn-sm" (click)="print()">Print Scorecard</button>
+                    </div>
+                  </div>
+
+                  <div class="row g-2 mb-3 p-3 card-custom">
+                    <div class="col-md-4"><span class="text-muted small">Employee:</span><div class=" text-dark fs-6">{{ data.name }}</div></div>
+                    <div class="col-md-4"><span class="text-muted small">Role:</span><div class="fw-semibold text-dark">{{ data.role }}</div></div>
+                    <div class="col-md-4"><span class="text-muted small">Department:</span><div class="fw-semibold text-dark">{{ data.dept }}</div></div>
+                  </div>
+
+                  <div class="card mb-3">
+                    <div class="card-body p-3">
+                      <div class="row g-2 text-center">
+                        <div class="col-3"><div class="p-2 border rounded bg-light"><div class="text-muted small">1. Emp Self</div><div class=" text-success fs-5">{{ data.rating }}</div></div></div>
+                        <div class="col-3"><div class="p-2 border rounded bg-light"><div class="text-muted small">2. TL Score</div><div class=" text-success fs-5">{{ data.tlRating }}</div></div></div>
+                        <div class="col-3"><div class="p-2 border rounded bg-light"><div class="text-muted small">3. HR Score</div><div class=" fs-5" style="color:var(--purple-550);">{{ data.hrRating }}</div></div></div>
+                        <div class="col-3"><div class="p-2 border rounded bg-success-subtle border-success"><div class="text-muted small ">4. Manager Score</div><div class=" text-success fs-5">{{ data.mgrRating }}</div></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="alert alert-success border-success mb-3 p-3 rounded-3">
+                    <strong class="text-success fs-6 d-block mb-1">Executive Manager Reply & Recognition:</strong>
+                    <p class="mb-0 text-dark fw-medium fst-italic">"{{ data.mgrReply }}"</p>
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="p-3 border rounded-3 bg-white h-100 border-start border-4 border-success">
+                        <span class="text-muted small">Approved Salary Increment:</span>
+                        <h4 class=" text-success mb-0">{{ data.mgrHike }} Annual Merit Hike</h4>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="p-3 border rounded-3 bg-white h-100 border-start border-4 border-success">
+                        <span class="text-muted small">Promotion Confirmation:</span>
+                        <h5 class=" text-success mb-0">{{ data.tlPromo }}</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              } @else {
+                <div class="p-4 text-center border rounded-3 bg-light">
+                  <div class="text-muted mb-2">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                  </div>
+                  <h6 class=" text-dark">Stage 5: Official Scorecard Certificate Locked</h6>
+                  <p class="text-muted small mb-0">The scorecard will automatically generate and release once the Executive Manager approves Stage 4 with the recognition reply.</p>
+                </div>
+              }
+            }
+
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- #####################################################################
+         PORTAL 2: ADMIN & REVIEWER PORTAL
+    ###################################################################### -->
+    @if (mainPortal === 'admin') {
+      <div>
+
+        <div role="tablist" class="admin-subnav-container">
+          <button role="tab" type="button" class="admin-subtab-btn subtab-tl" [class.active]="adminSubtab === 'tl'" (click)="switchAdminSubtab('tl')" [attr.aria-selected]="adminSubtab === 'tl'">
+            1. Team Lead (TL) Approval Hub
+          </button>
+          <button role="tab" type="button" class="admin-subtab-btn subtab-hr" [class.active]="adminSubtab === 'hr'" (click)="switchAdminSubtab('hr')" [attr.aria-selected]="adminSubtab === 'hr'">
+            2. HR Department Approval Hub
+          </button>
+          <button role="tab" type="button" class="admin-subtab-btn subtab-mgr" [class.active]="adminSubtab === 'mgr'" (click)="switchAdminSubtab('mgr')" [attr.aria-selected]="adminSubtab === 'mgr'">
+            3. Manager Final Decision & Reply Hub
+          </button>
+          <button role="tab" type="button" class="admin-subtab-btn subtab-all" [class.active]="adminSubtab === 'all'" (click)="switchAdminSubtab('all')" [attr.aria-selected]="adminSubtab === 'all'">
+            4. Master Company Ledger
+          </button>
+        </div>
+
+        <!-- TL APPROVAL DESK -->
+        @if (adminSubtab === 'tl') {
+          <div class="content-hub-card">
+            <div class="content-hub-header">
+              <div>
+                <h5 class="mb-0  text-dark">Stage 2: Team Lead (TL) Approval & Review Desk</h5>
+                <small class="text-muted">Review submitted employee self-appraisals, assign TL ratings & feedback, and forward to HR.</small>
+              </div>
+              <span class="badge bg-success px-3 py-2">Role: Team Lead</span>
+            </div>
+
+            <div class="p-4 bg-white">
+              <div class="p-3 bg-light rounded-3 border mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <div>
+                    <strong class="text-dark fs-6">{{ data.name }}</strong>
+                    <span class="text-muted small"> ({{ data.role }} - {{ data.dept }})</span>
+                  </div>
+                  <span class="score-badge score-high">Emp Rating: {{ data.rating }} / 5.0</span>
+                </div>
+                <div class="bg-white p-3 rounded border small">
+                  <strong>Employee Performance Summary:</strong>
+                  <p class="mb-1 text-muted">{{ data.summary }}</p>
+                  <strong>Key Achievements:</strong>
+                  <p class="mb-0 text-muted" style="white-space:pre-line;">{{ data.achievements }}</p>
+                </div>
+              </div>
+
+              <form (ngSubmit)="processAdminTLApproval()">
+                <div class="form-section-head">Team Lead Scoring & Recommendations</div>
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">TL Rating (Out of 5.0) <span class="text-danger">*</span></label>
+                    <select class="form-select  text-success" [(ngModel)]="tlDraft.rating" name="tlRating" required>
+                      <option value="5.0">5.0 - Outstanding</option>
+                      <option value="4.6">4.6 - Exceeded Expectations</option>
+                      <option value="4.2">4.2 - Strong Contributor</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Recommended Hike % <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control  text-success" [(ngModel)]="tlDraft.hike" name="tlHike" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Promotion Recommendation</label>
+                    <input type="text" class="form-control" [(ngModel)]="tlDraft.promo" name="tlPromo">
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label  text-dark small">Team Lead Feedback & Observations <span class="text-danger">*</span></label>
+                  <textarea class="form-control" rows="3" [(ngModel)]="tlDraft.feedback" name="tlFeedback" required></textarea>
+                </div>
+
+                <div class="pt-3 border-top d-flex justify-content-end">
+                  <button type="submit" class="btn btn-success px-4">
+                    Approve & Forward to HR Department (Stage 3) &rarr;
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        }
+
+        <!-- HR APPROVAL DESK -->
+        @if (adminSubtab === 'hr') {
+          <div class="content-hub-card">
+            <div class="content-hub-header">
+              <div>
+                <h5 class="mb-0  text-dark">Stage 3: HR Department Policy & Increment Desk</h5>
+                <small class="text-muted">Conduct policy & attendance checks, set official increment %, and route to Executive Manager.</small>
+              </div>
+              <span class="badge px-3 py-2 text-white" style="background:var(--purple-550);">Role: HRBP</span>
+            </div>
+
+            <div class="p-4 bg-white">
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <div class="p-3 bg-light rounded border h-100">
+                    <div class="d-flex justify-content-between mb-1">
+                      <strong class="small text-primary">1. Employee Self Score</strong>
+                      <span class="score-badge score-high">{{ data.rating }} / 5.0</span>
+                    </div>
+                    <div class="small text-muted">{{ data.summary }}</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3 bg-light rounded border h-100">
+                    <div class="d-flex justify-content-between mb-1">
+                      <strong class="small text-success">2. Team Lead Evaluation</strong>
+                      <span class="score-badge score-high">TL Score: {{ data.tlRating }} / 5.0</span>
+                    </div>
+                    <div class="small text-muted">{{ data.tlFeedback }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <form (ngSubmit)="processAdminHRApproval()">
+                <div class="form-section-head">HR Approval & Official Hike Endorsement</div>
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">HR Rating (Out of 5.0) <span class="text-danger">*</span></label>
+                    <select class="form-select " style="color:var(--purple-550);" [(ngModel)]="hrDraft.rating" name="hrRating" required>
+                      <option value="5.0">5.0 - Exceptional</option>
+                      <option value="4.8">4.8 - Exceeds Benchmark</option>
+                      <option value="4.5">4.5 - Strong Performer</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Approved Hike % <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control  text-success" [(ngModel)]="hrDraft.hike" name="hrHike" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label  text-dark small">Promotion Endorsement</label>
+                    <input type="text" class="form-control" [(ngModel)]="hrDraft.promo" name="hrPromo">
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label  text-dark small">HR Remarks for Executive Manager <span class="text-danger">*</span></label>
+                  <textarea class="form-control" rows="2" [(ngModel)]="hrDraft.comments" name="hrComments" required></textarea>
+                </div>
+
+                <div class="pt-3 border-top d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary px-4">
+                    Approve & Send to Executive Manager (Stage 4) &rarr;
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        }
+
+        <!-- MANAGER DECISION DESK -->
+        @if (adminSubtab === 'mgr') {
+          <div class="content-hub-card">
+            <div class="content-hub-header">
+              <div>
+                <h5 class="mb-0  text-dark">Stage 4: Executive Manager Final Decision & Reply Desk</h5>
+                <small class="text-muted">Review full 3-level evaluation trail, assign final score, and send executive "Good" reply message.</small>
+              </div>
+              <span class="badge bg-warning text-dark px-3 py-2 ">Role: Executive Manager / MD</span>
+            </div>
+
+            <div class="p-4 bg-white">
+              <div class="row g-2 text-center mb-4">
+                <div class="col-4"><div class="bg-light p-3 rounded border"><div class="text-muted small">1. Employee Self Score</div><div class=" text-primary fs-5">{{ data.rating }} / 5.0</div></div></div>
+                <div class="col-4"><div class="bg-light p-3 rounded border"><div class="text-muted small">2. TL Assessment Score</div><div class=" text-success fs-5">{{ data.tlRating }} / 5.0</div></div></div>
+                <div class="col-4"><div class="bg-light p-3 rounded border"><div class="text-muted small">3. HR Approval Score</div><div class=" fs-5" style="color:var(--purple-550);">{{ data.hrRating }} / 5.0</div></div></div>
+              </div>
+
+              <form (ngSubmit)="processAdminManagerSignoff()">
+                <div class="form-section-head">Executive Signoff & "Good" Recognition Reply</div>
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label  text-dark small">Final Manager Rating (Out of 5.0) <span class="text-danger">*</span></label>
+                    <select class="form-select  text-warning" [(ngModel)]="mgrDraft.rating" name="mgrRating" required>
+                      <option value="5.0">5.0 - Exceptional (Top Performer)</option>
+                      <option value="4.8">4.8 - Outstanding / Good</option>
+                      <option value="4.5">4.5 - Exceeded Expectations</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label  text-dark small">Approved Hike % <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control  text-success" [(ngModel)]="mgrDraft.hike" name="mgrHike" required>
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label  text-dark d-flex align-items-center justify-content-between small">
+                    <span>Manager Executive Reply & Recognition Message <span class="text-danger">*</span></span>
+                    <span class="text-muted small">This message will immediately appear in the Employee Portal</span>
+                  </label>
+
+                  <div class="d-flex gap-2 mb-2 flex-wrap">
+                    <button type="button" class="btn btn-xs btn-outline-success px-2.5 small" (click)="setAdminMgrPreset('Good! Outstanding contributions to backend microservices and zero downtime.')">
+                      &ldquo;Good! Outstanding contributions...&rdquo;
+                    </button>
+                    <button type="button" class="btn btn-xs btn-outline-success px-2.5 small" (click)="setAdminMgrPreset('Excellent performance! Approved 15% merit hike and promotion to Tech Lead.')">
+                      &ldquo;Excellent! Approved promotion...&rdquo;
+                    </button>
+                  </div>
+
+                  <textarea class="form-control fw-medium border-success" rows="3" [(ngModel)]="mgrDraft.reply" name="mgrReply" required></textarea>
+                </div>
+
+                <div class="pt-3 border-top d-flex justify-content-end">
+                  <button type="submit" class="btn btn-success px-4">
+                    Confirm Signoff & Send Reply to Employee (Complete) &rarr;
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        }
+
+        <!-- MASTER LEDGER -->
+        @if (adminSubtab === 'all') {
+          <div class="content-hub-card">
+            <div class="content-hub-header">
+              <div>
+                <h5 class="mb-0  text-dark">Stage 5: Master Company Ledger & Scorecards</h5>
+                <small class="text-muted">Master database of all employee appraisals across all 4 stages.</small>
+              </div>
+            </div>
+
+            <div class="p-4 bg-white">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 custom-table">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="ps-3">Employee</th>
+                      <th>Department & Role</th>
+                      <th>Hierarchy Status</th>
+                      <th>Ratings (Emp &rarr; TL &rarr; HR &rarr; Mgr)</th>
+                      <th>Manager Reply Note</th>
+                      <th class="text-end pe-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of ledgerRows; track row.key) {
+                      <tr>
+                        <td class="ps-3"><strong>{{ row.name }}</strong><div class="text-muted small">{{ row.id }}</div></td>
+                        <td>{{ row.role }}<div class="text-muted small">{{ row.dept }}</div></td>
+                        <td><span class="badge px-2.5 py-1 border" [ngClass]="ledgerStatus(row).cls">{{ ledgerStatus(row).label }}</span></td>
+                        <td>
+                          Emp: {{ row.rating }} &rarr;
+                          TL: {{ row.tlApproved ? row.tlRating : '--' }} &rarr;
+                          HR: {{ row.hrApproved ? row.hrRating : '--' }}
+                          @if (row.mgrApproved) { &rarr; <strong>Mgr: {{ row.mgrRating }}</strong> }
+                        </td>
+                        <td>
+                          @if (row.mgrApproved) {
+                            <span class="badge bg-light text-dark border">"{{ row.mgrReply.slice(0, 40) }}..."</span>
+                          } @else {
+                            <span class="text-muted small fst-italic">Waiting for {{ !row.tlApproved ? 'TL' : !row.hrApproved ? 'HR' : 'Manager' }} review</span>
+                          }
+                        </td>
+                        <td class="text-end pe-3">
+                          <button type="button" class="btn btn-sm" [ngClass]="row.mgrApproved ? 'btn-outline-success' : 'btn-success'" (click)="ledgerAction(row)">
+                            {{ row.mgrApproved ? 'Scorecard' : ('Review in ' + (!row.tlApproved ? 'TL' : !row.hrApproved ? 'HR' : 'Mgr')) }}
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+
+      </div>
+    }
+
+  </div>
+</div>
+
+<!-- Scorecard Modal -->
+@if (scorecardModalOpen) {
+  <div class="modal-backdrop-custom" (click)="closeScorecardModal()"></div>
+  <div class="modal-shell-custom">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header border-bottom px-4 py-3 bg-success text-white">
+        <h5 class="modal-title  text-white mb-0">Official Performance Appraisal Certificate</h5>
+        <button aria-label="Close" type="button" class="btn-close btn-close-white" (click)="closeScorecardModal()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="p-4 border rounded-3 bg-light">
+          <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+            <div>
+              <h5 class="mb-0  text-dark">GHARUDA HRMS</h5>
+              <small class="text-muted">Merit Performance Scorecard Certificate • FY 2025-26</small>
+            </div>
+            <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">APPRAISAL COMPLETED</span>
+          </div>
+
+          <div class="row g-2 mb-3 p-3 card-custom">
+            <div class="col-md-4"><span class="text-muted small">Employee:</span><div class=" text-dark fs-6">{{ data.name }}</div></div>
+            <div class="col-md-4"><span class="text-muted small">Role:</span><div class="fw-semibold text-dark">{{ data.role }}</div></div>
+            <div class="col-md-4"><span class="text-muted small">Department:</span><div class="fw-semibold text-dark">{{ data.dept }}</div></div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="card-body p-3">
+              <div class="row g-2 text-center">
+                <div class="col-3"><div class="p-2 border rounded bg-light"><div class="text-muted small">1. Emp Self</div><div class=" text-success fs-5">{{ data.rating }}</div></div></div>
+                <div class="col-3"><div class="p-2 border rounded bg-light"><div class="text-muted small">2. TL Score</div><div class=" text-success fs-5">{{ data.tlRating }}</div></div></div>
+                <div class="col-3"><div class="p-2 border rounded bg-light"><div class="text-muted small">3. HR Score</div><div class=" fs-5" style="color:var(--purple-550);">{{ data.hrRating }}</div></div></div>
+                <div class="col-3"><div class="p-2 border rounded bg-warning-subtle border-warning"><div class="text-muted small ">4. Manager Score</div><div class=" text-dark fs-5">{{ data.mgrRating }}</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-success border-success mb-3 p-3 rounded-3">
+            <strong class="text-success fs-6 d-block mb-1">Executive Manager Reply & Recognition:</strong>
+            <p class="mb-0 text-dark fw-medium fst-italic">"{{ data.mgrReply }}"</p>
+          </div>
+
+          <div class="row g-3 mb-2">
+            <div class="col-md-6">
+              <div class="p-3 border rounded-3 bg-white h-100 border-start border-4 border-success">
+                <span class="text-muted small">Approved Salary Increment:</span>
+                <h4 class=" text-success mb-0">{{ data.mgrHike }} Annual Merit Hike</h4>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 border rounded-3 bg-white h-100 border-start border-4 border-success">
+                <span class="text-muted small">Promotion Confirmation:</span>
+                <h5 class=" text-success mb-0">{{ data.tlPromo }}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-top px-4 py-3 bg-light d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeScorecardModal()">Close</button>
+        <button type="button" class="btn btn-success px-4" (click)="print()">Print Official Certificate</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Launch New Cycle Modal -->
+<app-reuse-modal
+  #cycleModal
+  [fields]="cycleFields"
+  title="Launch New Appraisal Cycle"
+  saveLabel="Launch Appraisal Cycle"
+  submitIcon="bi bi-rocket-takeoff-fill"
+  (saved)="onCycleLaunched($event)"
+></app-reuse-modal>
+
+<!-- Toast -->
+@if (toast) {
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+    <div class="toast show border-0 shadow-lg rounded-3" role="alert">
+      <div class="toast-header bg-success text-white">
+        <strong class="me-auto">{{ toast.title }}</strong>
+        <small>Just now</small>
+        <button aria-label="Dismiss" type="button" class="btn-close btn-close-white" (click)="toast = null"></button>
+      </div>
+      <div class="toast-body bg-white text-dark small">{{ toast.message }}</div>
+    </div>
+  </div>
+}

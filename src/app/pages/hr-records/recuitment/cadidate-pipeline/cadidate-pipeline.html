@@ -1,0 +1,118 @@
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class=" mb-1" style="font-size:1.7rem;">
+      Candidate ATS Pipeline
+    </h1>
+    <nav class="d-flex align-items-center gap-2 text-muted" style="font-size:13px;">
+      <i class="bi bi-people fs-6 text-success"></i>
+      <span>Recruitment</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class=" text-dark">Candidate Pipeline</span>
+    </nav>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="btn btn-outline-secondary" type="button" (click)="goToSocialApplicants()">
+      <i class="bi bi-share text-success"></i> Social &amp; Web Applicants
+    </button>
+    <button class="btn btn-outline-success" type="button" (click)="goToInterviewCalendar()">
+      <i class="bi bi-calendar2-check"></i> Interview Calendar
+    </button>
+    <button class="btn btn-success" type="button" (click)="openAddCandidateModal()">
+      <i class="bi bi-person-plus"></i> Add Candidate
+    </button>
+  </div>
+</div>
+
+<!-- Pipeline Stage Navigation Tabs -->
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'all_application'" (click)="setFilter('all_application')" [attr.aria-selected]="currentFilter === 'all_application'">
+      All Applicants <span class="page-tab-count">{{ stageCounts['all_application'] }}</span>
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'screening'" (click)="setFilter('screening')" [attr.aria-selected]="currentFilter === 'screening'">
+      <i class="bi bi-clock-history"></i> Screening <span class="page-tab-count">{{ stageCounts['screening'] }}</span>
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'tech_interview'" (click)="setFilter('tech_interview')" [attr.aria-selected]="currentFilter === 'tech_interview'">
+      <i class="bi bi-send"></i> Tech Interview <span class="page-tab-count">{{ stageCounts['tech_interview'] }}</span>
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'hr_round'" (click)="setFilter('hr_round')" [attr.aria-selected]="currentFilter === 'hr_round'">
+      <i class="bi bi-send"></i> HR Round <span class="page-tab-count">{{ stageCounts['hr_round'] }}</span>
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'offered'" (click)="setFilter('offered')" [attr.aria-selected]="currentFilter === 'offered'">
+      <i class="bi bi-send"></i> Offered <span class="page-tab-count">{{ stageCounts['offered'] }}</span>
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'hired'" (click)="setFilter('hired')" [attr.aria-selected]="currentFilter === 'hired'">
+      <i class="bi bi-check-circle-fill"></i> Hired <span class="page-tab-count">{{ stageCounts['hired'] }}</span>
+    </button>
+    <button role="tab" type="button" class="eval-stage-tab" [class.active]="currentFilter === 'archived'" (click)="setFilter('archived')" [attr.aria-selected]="currentFilter === 'archived'">
+      <i class="bi bi-x-circle-fill"></i> Archived <span class="page-tab-count">{{ stageCounts['archived'] }}</span>
+    </button>
+  </div>
+</div>
+
+<app-primedatatable
+  [columns]="columns"
+  [data]="filteredCandidates"
+  [rows]="10"
+  [paginator]="true"
+  [dataKey]="'id'"
+  [searchPlaceholder]="'Search candidate, skill, job...'"
+  [exportFileName]="'candidates-pipeline-report'"
+  [rowActions]="rowActions"
+  (actionClick)="onTableAction($event)"
+>
+  <ng-template #cellTemplate let-row let-col="col">
+    <ng-container [ngSwitch]="col.field">
+
+      <ng-container *ngSwitchCase="'candidate'">
+        <div class="d-flex align-items-center gap-2">
+          <img [src]="'/assets/' + row.avatar + '.jpg'" class="cand-avatar" [alt]="row.name" />
+          <div>
+            <div class=" text-dark">{{ row.name }}</div>
+            <div class="text-muted" style="font-size:11px;">{{ row.email }} • {{ row.phone }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'applied_position'">
+        <div class="fw-semibold text-dark">{{ row.position }}</div>
+        <span class="badge bg-light text-dark border" style="font-size:10.5px;">{{ row.dept }}</span>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'experience_company'">
+        <div class="text-dark fw-semibold" style="font-size:12px;">{{ row.company }} ({{ row.experience }})</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'expected_ctc'">
+        <div class=" text-success" style="font-size:12.5px;">{{ row.ctc }}</div>
+        <div class="text-muted" style="font-size:11px;">Notice: {{ row.notice }}</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'rating'">
+        <div class="rating-stars">{{ starString(row.rating) }}</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'stage_status'">
+        <span class="stage-badge" [ngClass]="stageBadgeClass(row.stage)">
+          <i [class]="stageIcon(row.stage)" style="font-size:7px;"></i> {{ row.stageLabel }}
+        </span>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'applied_date'">
+        <span style="font-size:12px;">{{ row.appliedDate }}</span>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>{{ row[col.field] }}</ng-container>
+    </ng-container>
+  </ng-template>
+</app-primedatatable>
+
+<app-reuse-modal
+  #candidateModal
+  [fields]="candidateFields"
+  [title]="'Add Candidate to Talent Pool'"
+  [saveLabel]="'Save Candidate'"
+  [cancelLabel]="'Cancel'"
+  [submitIcon]="'bi bi-check2-circle'"
+  (saved)="onCandidateSaved($event)"
+></app-reuse-modal>

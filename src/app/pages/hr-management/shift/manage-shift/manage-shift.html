@@ -1,0 +1,21 @@
+<app-breadcrumb />
+
+<!-- =========================================================
+     SHIFTS TABLE CARD
+========================================================== -->
+<div class="row">
+  <div class="col-12">
+    <app-primedatatable
+      [modalHeader]="header"
+      [columns]="columns"
+      [data]="tableData"
+      [searchPlaceholder]="searchPlaceholder"
+      [Accessactions]="actions"
+      [headerButtons]="headerButtons"
+      (headerButtonClick)="onHeaderButtonClick($event)"
+      (addClicked)="onCreateShift()"
+      (actionClick)="onTableAction($event)"
+    >
+    </app-primedatatable>
+  </div>
+</div>

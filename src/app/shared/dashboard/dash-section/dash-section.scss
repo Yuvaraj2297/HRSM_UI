@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  height: 100%; // equal-height cards inside a Bootstrap row
+}
+
+:host + :host {
+  margin-top: 16px;
+}
+
+.dash-section-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dash-section {
+  height: 100%;
+  padding: 18px;
+}
+
+.dash-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.dash-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-section-icon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.dash-section-title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--gh-heading);
+}
+
+.dash-section-sub {
+  margin-top: 1px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.dash-section-meta {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
+}

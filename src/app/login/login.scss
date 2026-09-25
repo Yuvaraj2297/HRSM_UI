@@ -1,0 +1,159 @@
+
+
+.backgroundimageblock {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--gh-card);
+  border-radius: var(--gh-radius-lg);
+  box-shadow: var(--gh-shadow-lg);
+  padding: 2.5rem;
+  border: 1px solid var(--gh-border);
+
+  @media (max-width: 426px) {
+    padding: 20px;
+  }
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+
+  .brand-icon {
+    height: 50px;
+  }
+
+  .brand-text {
+    width: 170px;
+    margin-top: 12px;
+  }
+}
+
+h4 {
+  color: var(--gh-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-muted {
+  color: var(--gh-muted) !important;
+}
+
+.form-label {
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+
+}
+
+.invalid-feedback {
+  display: block;
+  color: var(--red-450);
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+.password-field {
+  position: relative;
+
+  .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gh-muted);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: var(--gh-primary);
+    }
+  }
+}
+
+.btn {
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
+.btn-primary {
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+.alert-danger {
+  background: rgba(var(--red-450-rgb), 0.1);
+  color: var(--red-450);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+.mb-3 {
+  margin-bottom: 1rem;
+}
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+.w-100 {
+  width: 100%;
+}
+.text-center {
+  text-align: center;
+}
+.fw-bold {
+  font-weight: 700;
+}
+.d-flex {
+  display: flex;
+}
+.justify-content-between {
+  justify-content: space-between;
+}
+.me-1 {
+  margin-right: 0.25rem;
+}

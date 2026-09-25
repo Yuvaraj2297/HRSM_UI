@@ -1,0 +1,206 @@
+// =============================================================
+// KPI CARDS
+// =============================================================
+.job-kpi {
+  min-height: 112px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .label {
+    color: var(--neutral-500);
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .value {
+    color: var(--neutral-900);
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .sub {
+    color: var(--neutral-350);
+    font-size: 11px;
+    margin-top: 3px;
+  }
+}
+
+// =============================================================
+// TABLE CELL STYLES — used by job-opening's #cellTemplate,
+// projected into the shared <app-primedatatable>.
+// =============================================================
+.job-code-text {
+  font-weight: 700;
+  color: var(--green-400);
+}
+
+.job-title-cell {
+  .job-title-text {
+    font-weight: 700;
+    color: var(--neutral-900);
+    font-size: 13.5px;
+    white-space: normal;
+  }
+
+  .job-title-sub {
+    color: var(--neutral-350);
+    font-size: 11.5px;
+    margin-top: 2px;
+  }
+}
+
+.job-loc-cell {
+  .job-loc-text {
+    font-weight: 600;
+    color: var(--neutral-850);
+    font-size: 12.5px;
+  }
+
+  .job-type-text {
+    color: var(--neutral-350);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+}
+
+.job-openings-text {
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.applicants-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent-blue-soft);
+  color: var(--blue-550);
+  font-weight: 700;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--blue-100);
+    color: var(--blue-600-4);
+  }
+}
+
+.job-budget-text {
+  color: var(--green-500);
+  font-weight: 700;
+}
+
+// Priority pills
+.priority-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.priority-urgent {
+  background: var(--red-100);
+  color: var(--red-500);
+}
+
+.priority-high {
+  background: var(--orange-50-2);
+  color: var(--orange-450-2);
+}
+
+.priority-normal {
+  background: var(--blue-50);
+  color: var(--blue-450-2);
+}
+
+// Posted portal pills
+.portal-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.portal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  i {
+    font-size: 12px;
+  }
+}
+
+.portal-pill-blue {
+  background: var(--accent-blue-soft);
+  color: var(--blue-550);
+}
+
+.portal-pill-green {
+  background: var(--neutral-50);
+  color: var(--green-500);
+}
+
+// Status badges
+.status-badge-open,
+.status-badge-draft,
+.status-badge-hold,
+.status-badge-closed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.status-badge-open {
+  color: var(--green-550);
+  background: var(--primary-soft);
+}
+
+.status-badge-draft {
+  color: var(--text-light);
+  background: var(--border);
+}
+
+.status-badge-hold {
+  color: var(--orange-500);
+  background: var(--orange-50);
+}
+
+.status-badge-closed {
+  color: var(--red-550);
+  background: var(--danger-soft);
+}
+

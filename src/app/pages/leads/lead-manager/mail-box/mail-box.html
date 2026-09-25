@@ -1,0 +1,87 @@
+<div class="mbx-page">
+
+  <div class="mbx-title-row">
+    <h1 class="mbx-title"><i class="bi bi-envelope-open"></i>Mailbox</h1>
+    @if (account().email) { <span class="mbx-account">{{ account().email }}</span> }
+  </div>
+
+  @if (error()) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+    <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Retry</button>
+  </div>
+  }
+
+  @if (feedback(); as fb) {
+  <div class="alert d-flex align-items-center justify-content-between py-2 px-3 mb-3"
+    [class.alert-success]="fb.type === 'success'" [class.alert-danger]="fb.type === 'danger'" role="status">
+    <span class="small fw-semibold">
+      <i class="bi me-2" [class.bi-check-circle-fill]="fb.type === 'success'" [class.bi-x-circle-fill]="fb.type === 'danger'"></i>{{ fb.text }}
+    </span>
+    <button type="button" class="btn-close p-2" aria-label="Close" (click)="feedback.set(null)"></button>
+  </div>
+  }
+
+  <div class="mbx-shell">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="mbx-side">
+      <button type="button" class="mbx-compose-btn" (click)="compose()">
+        <i class="bi bi-pencil-square"></i>Compose Email
+      </button>
+
+      <nav class="mbx-nav-wrap" aria-label="Mail folders">
+        @for (f of folders; track f.key) {
+        <button type="button" class="mbx-nav" [class.active]="view() === f.key" [attr.aria-current]="view() === f.key ? 'page' : null"
+          (click)="setView(f.key)">
+          <i [class]="f.icon"></i>{{ f.label }}
+          @if (f.key === 'inbox' && counts().inbox) { <span class="mbx-count">{{ counts().inbox }}</span> }
+          @if (f.key === 'draft' && counts().draft) { <span class="mbx-count muted">{{ counts().draft }}</span> }
+        </button>
+        }
+        <div class="mbx-side-sep"></div>
+        <button type="button" class="mbx-nav" [class.active]="view() === 'setting'" (click)="setView('setting')">
+          <i class="bi bi-gear"></i>Setting
+        </button>
+      </nav>
+    </aside>
+
+    <!-- ===== Main panel ===== -->
+    <section class="mbx-main">
+      <div class="mbx-main-head">
+        @if (reading()) {
+        <button type="button" class="mbx-back" title="Back" aria-label="Back to list" (click)="back()">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+        }
+        <h2 class="mbx-head-title">{{ title() }}</h2>
+      </div>
+
+      <div class="mbx-main-body">
+        @if (loading() && !mails().length) {
+        <div class="mbx-loading"><span class="spinner-border spinner-border-sm"></span> Loading mailbox...</div>
+        } @else {
+        @switch (view()) {
+        @case ('compose') {
+        <app-mb-compose [prefill]="prefill()" [busy]="busy()" (send)="send($event)" (saveDraft)="saveDraft($event)"
+          (discard)="setView('inbox')" />
+        }
+        @case ('setting') {
+        <app-mb-settings [settings]="settings()" [busy]="busy()" (save)="saveSettings($event)" />
+        }
+        @default {
+        @if (reading(); as m) {
+        <app-mb-mail-reader [mail]="m" [folder]="folder()!" (reply)="reply($event)" (trash)="moveToTrash($event)"
+          (restore)="restore($event)" (purge)="purge($event)" (star)="toggleStar($event)" />
+        } @else {
+        <app-mb-mail-list [mails]="folderMails()" [folder]="folder()!" (open)="openMail($event)"
+          (star)="toggleStar($event)" (trash)="moveToTrash($event)" (restore)="restore($event)" (purge)="purge($event)" />
+        }
+        }
+        }
+        }
+      </div>
+    </section>
+
+  </div>
+</div>

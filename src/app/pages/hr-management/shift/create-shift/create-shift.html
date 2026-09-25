@@ -1,0 +1,243 @@
+<!-- =========================================================
+     PAGE HEADER & BREADCRUMB
+========================================================== -->
+<app-breadcrumb>
+  <div breadcrumb-actions class="d-flex align-items-center gap-2">
+    <a routerLink="/shift/manage-shift" class="btn btn-cancel btn-sm px-3">
+      Cancel
+    </a>
+    <button type="button" class="btn btn-primary btn-sm px-3" (click)="saveShift()">
+      <i class="bi bi-save"></i> Save Shift
+    </button>
+  </div>
+</app-breadcrumb>
+
+<!-- =========================================================
+     ALERTS
+========================================================== -->
+@if (alertMessage) {
+<div class="alert alert-{{ alertType }} alert-dismissible fade show mb-4" role="alert">
+  {{ alertMessage }}
+  <button type="button" class="btn-close" (click)="dismissAlert()" aria-label="Close"></button>
+</div>
+}
+
+<!-- =========================================================
+     CARD 1: SHIFT BASIC DETAILS (Name, Dept, Position, Color)
+========================================================== -->
+<div class="card-custom mb-4 p-3 p-md-4" [formGroup]="shiftForm">
+  <div class="row g-3">
+
+    <!-- Shift Name (p-select with editable, filter & clear) -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold" for="create_shift_name">
+        Shift Name <span class="text-danger">*</span>
+      </label>
+      <p-select inputId="create_shift_name" formControlName="shiftName" [options]="shiftNameOptions" optionLabel="label"
+        optionValue="value" placeholder="Select or enter shift" [filter]="true" filterBy="label" [showClear]="true"
+        [resetFilterOnHide]="true" appendTo="body" (onChange)="onShiftNameChange($event.value)" styleClass="w-100" />
+    </div>
+
+    <!-- Department (p-select with filter & clear) -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold" for="create_shift_dept">
+        Department <span class="text-danger">*</span>
+      </label>
+      <p-select inputId="create_shift_dept" formControlName="department" [options]="departmentOptions"
+        optionLabel="label" optionValue="value" placeholder="Select Department" [filter]="true" filterBy="label"
+        [showClear]="true" [resetFilterOnHide]="true" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Position (p-select with filter & clear) -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold" for="create_shift_position">
+        Position <span class="text-danger">*</span>
+      </label>
+      <p-select inputId="create_shift_position" formControlName="position" [options]="positionOptions"
+        optionLabel="label" optionValue="value" placeholder="Select Position" [filter]="true" filterBy="label"
+        [showClear]="true" [resetFilterOnHide]="true" appendTo="body" styleClass="w-100" />
+    </div>
+
+    <!-- Colors (p-select with filter & clear) -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold" for="create_shift_color">
+        Colors <span class="text-danger">*</span>
+      </label>
+      <p-select inputId="create_shift_color" formControlName="color" [options]="shiftColors" optionLabel="name"
+        placeholder="Choose your shift color" [filter]="true" filterBy="name" [showClear]="true"
+        [resetFilterOnHide]="true" appendTo="body" styleClass="w-100">
+        <ng-template #selectedItem let-selectedOption>
+          @if (selectedOption) {
+          <div class="d-flex align-items-center gap-2">
+            <span class="color-picker-dot" [style.background]="selectedOption.hex"></span>
+            <span class="fw-semibold text-dark">{{ selectedOption.name }}</span>
+          </div>
+          }
+        </ng-template>
+        <ng-template #item let-color>
+          <div class="d-flex align-items-center gap-2 py-1">
+            <span class="color-picker-dot" [style.background]="color.hex"></span>
+            <span>{{ color.name }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+  </div>
+</div>
+
+<!-- =========================================================
+     CARD 2: COMMON TIMING FOR ALL DAYS
+========================================================== -->
+<div class="card-custom mb-4 p-3 p-md-4">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <h3 class="card-title mb-0 fs-5 ">Shift timing</h3>
+    <span class="text-muted small">(Common for All Day)</span>
+  </div>
+
+  <div class="common-timing-row d-flex flex-wrap align-items-center gap-3 p-3 rounded-3">
+    <div class="d-flex align-items-center gap-2 text-nowrap">
+      <i class="bi bi-calendar2-week text-primary fs-5"></i>
+      <span class="fw-semibold text-dark">Shift time:</span>
+    </div>
+
+    <!-- Start / End Time using app-time-picker -->
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <app-time-picker [(ngModel)]="commonStartTime" placeholder="HH:MM" />
+      <i class="bi bi-arrow-right text-muted"></i>
+      <app-time-picker [(ngModel)]="commonEndTime" placeholder="HH:MM" />
+    </div>
+
+    <!-- Common Break Dropdown -->
+    <div class="dropdown-wrapper position-relative">
+      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+        [class.break-set]="commonBreakStart && commonBreakEnd" (click)="toggleCommonBreak($event)">
+        <i class="bi bi-cup-hot"></i>
+        <span>{{ formatBreakLabel(commonBreakStart, commonBreakEnd) }}</span>
+      </button>
+
+      @if (commonBreakDropdownOpen) {
+      <div class="custom-break-popover shadow-lg" (click)="$event.stopPropagation()">
+        <div class="popover-title">Break Timing</div>
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <app-time-picker [(ngModel)]="commonBreakStart" placeholder="HH:MM" />
+          <i class="bi bi-arrow-right text-muted"></i>
+          <app-time-picker [(ngModel)]="commonBreakEnd" placeholder="HH:MM" />
+        </div>
+        <div class="d-flex justify-content-between gap-2">
+          <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeCommonBreak()">
+            <i class="bi bi-trash3"></i>Remove
+          </button>
+          <button type="button" class="btn btn-sm btn-primary" (click)="doneCommonBreak()">
+            Done
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Apply to All Days -->
+    <button type="button" class="btn btn-outline-primary btn-sm ms-md-auto" [disabled]="!canApplyAll"
+      (click)="applyToAllDays()">
+      Apply to All Days
+    </button>
+  </div>
+</div>
+
+<!-- =========================================================
+     CARD 3: PER-DAY TABLE
+========================================================== -->
+<div class="card-custom p-0 mb-4 overflow-hidden">
+  <div class="table-responsive">
+    <table class="table table-modern align-middle mb-0" id="shiftDaysTable">
+      <thead>
+        <tr>
+          <th style="min-width: 150px;">Day</th>
+          <th style="min-width: 290px;">Timing <span class="text-danger">*</span></th>
+          <th style="min-width: 200px;">Break</th>
+          <th style="min-width: 150px;">Working Hours</th>
+          <th style="width: 100px;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (day of days; track day.day) {
+        <tr [class.is-weekend]="day.isWeekend">
+          <!-- Day Name -->
+          <td>
+            <div class="day-name-cell">
+              <span class="day-dot"></span>
+              <span class="fw-semibold text-dark">{{ day.day }}</span>
+            </div>
+          </td>
+
+          <!-- Timing Inputs using app-time-picker -->
+          <td>
+            <div class="d-flex align-items-center gap-2 flex-nowrap">
+              <app-time-picker [(ngModel)]="day.startTime" placeholder="HH:MM" />
+              <i class="bi bi-arrow-right text-muted small"></i>
+              <app-time-picker [(ngModel)]="day.endTime" placeholder="HH:MM" />
+            </div>
+          </td>
+
+          <!-- Break Dropdown using app-time-picker -->
+          <td>
+            <div class="dropdown-wrapper position-relative">
+              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                [class.break-set]="day.breakStart && day.breakEnd" (click)="toggleDayBreak(day, $event)">
+                <i class="bi bi-cup-hot"></i>
+                <span>{{ formatBreakLabel(day.breakStart, day.breakEnd) }}</span>
+              </button>
+
+              @if (day.showBreakDropdown) {
+              <div class="custom-break-popover shadow-lg" (click)="$event.stopPropagation()">
+                <div class="popover-title">Break Timing</div>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <app-time-picker [(ngModel)]="day.breakStart" placeholder="HH:MM" />
+                  <i class="bi bi-arrow-right text-muted small"></i>
+                  <app-time-picker [(ngModel)]="day.breakEnd" placeholder="HH:MM" />
+                </div>
+                <div class="d-flex justify-content-between gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeDayBreak(day)">
+                    <i class="bi bi-trash3"></i>Remove
+                  </button>
+                  <button type="button" class="btn btn-sm btn-primary" (click)="doneDayBreak(day)">
+                    Done
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+          </td>
+
+          <!-- Working Hours -->
+          <td>
+            <span class="working-hours-pill" [class.has-value]="hasWorkingHours(day)">
+              {{ computeWorkingHours(day) }}
+            </span>
+          </td>
+
+          <!-- Copy to All Days -->
+          <td>
+            <button type="button" class="btn btn-link btn-sm text-muted day-copy-btn p-0 text-decoration-none"
+              (click)="copyDayToAll(day)" title="Copy this timing to all days">
+              <i class="bi bi-copy"></i>Copy
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =========================================================
+     BOTTOM ACTION BUTTONS
+========================================================== -->
+<div class="d-flex justify-content-end align-items-center gap-2 mb-4">
+  <a routerLink="/shift/manage-shift" class="btn btn-cancel px-4">
+    Cancel
+  </a>
+  <button type="button" class="btn btn-primary px-4" (click)="saveShift()">
+    <i class="bi bi-save"></i> Save Shift
+  </button>
+</div>

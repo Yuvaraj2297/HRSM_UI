@@ -1,0 +1,156 @@
+{
+  "account": {
+    "name": "GHARUDA SOFTWARE",
+    "senderId": "GHRA"
+  },
+  "contacts": [
+    {
+      "id": 171,
+      "name": "MOHAN",
+      "phone": "9677063368",
+      "type": "lead",
+      "color": "#2563eb",
+      "online": true,
+      "unread": 2,
+      "messages": [
+        {
+          "id": 1,
+          "dir": "in",
+          "text": "Hello, have you sent the quotation details?",
+          "at": "2026-09-24T10:02:00"
+        },
+        {
+          "id": 2,
+          "dir": "out",
+          "text": "Hello MOHAN, I am sending it now. Please wait a moment.",
+          "at": "2026-09-24T10:05:00"
+        },
+        {
+          "id": 3,
+          "dir": "in",
+          "text": "OK sir, thank you.",
+          "at": "2026-09-24T10:06:00"
+        }
+      ]
+    },
+    {
+      "id": 170,
+      "name": "Test",
+      "phone": "9807456321",
+      "type": "lead",
+      "color": "#8b5cf6",
+      "online": true,
+      "unread": 0,
+      "messages": [
+        {
+          "id": 1,
+          "dir": "out",
+          "text": "Our new solar package offer is starting, are you interested?",
+          "at": "2026-09-24T09:10:00"
+        },
+        {
+          "id": 2,
+          "dir": "in",
+          "text": "Please send the details, I will take a look.",
+          "at": "2026-09-24T09:32:00"
+        }
+      ]
+    },
+    {
+      "id": 168,
+      "name": "Sundar",
+      "phone": "9876543210",
+      "type": "customer",
+      "color": "#0d9488",
+      "online": true,
+      "unread": 0,
+      "messages": [
+        {
+          "id": 1,
+          "dir": "in",
+          "text": "Payment has been done sir, please confirm.",
+          "at": "2026-09-24T08:45:00"
+        },
+        {
+          "id": 2,
+          "dir": "out",
+          "text": "Received sir, thank you! Invoice has been sent.",
+          "at": "2026-09-24T08:50:00"
+        }
+      ]
+    },
+    {
+      "id": 166,
+      "name": "Suresh",
+      "phone": "9876543218",
+      "type": "customer",
+      "color": "#d97706",
+      "online": false,
+      "unread": 0,
+      "messages": [
+        {
+          "id": 1,
+          "dir": "out",
+          "text": "The AMC renewal will start next week sir.",
+          "at": "2026-09-23T16:20:00"
+        },
+        {
+          "id": 2,
+          "dir": "in",
+          "text": "OK, we will discuss it then.",
+          "at": "2026-09-23T17:02:00"
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "name": "Priya Sundar",
+      "phone": "9840011223",
+      "type": "lead",
+      "color": "#e11d48",
+      "online": false,
+      "unread": 0,
+      "messages": [
+        {
+          "id": 1,
+          "dir": "out",
+          "text": "I have sent the quotation by email ma’am, please check.",
+          "at": "2026-09-21T11:15:00"
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "name": "Test Lead",
+      "phone": "NA",
+      "type": "lead",
+      "color": "#64748b",
+      "online": false,
+      "unread": 0,
+      "lastActive": "2026-09-21T09:00:00",
+      "messages": []
+    },
+    {
+      "id": 117,
+      "name": "test Java",
+      "phone": "NA",
+      "type": "customer",
+      "color": "#7c3aed",
+      "online": false,
+      "unread": 0,
+      "lastActive": "2026-09-17T09:00:00",
+      "messages": []
+    },
+    {
+      "id": 116,
+      "name": "Hello",
+      "phone": "NA",
+      "type": "lead",
+      "color": "#059669",
+      "online": false,
+      "unread": 0,
+      "lastActive": "2026-09-10T09:00:00",
+      "messages": []
+    }
+  ]
+}

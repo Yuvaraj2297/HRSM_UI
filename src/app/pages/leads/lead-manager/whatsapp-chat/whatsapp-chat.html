@@ -1,0 +1,40 @@
+<div class="chat-page">
+
+  <!-- =========================================================
+       TITLE
+  ========================================================== -->
+  <div class="chat-title-row">
+    <h1 class="chat-title"><i class="bi bi-whatsapp"></i>WhatsApp</h1>
+    @if (account()) {
+    <span class="wa-status" [class.off]="!connected()">
+      <span class="pulse"></span>{{ connected() ? 'WhatsApp Connected' : 'WhatsApp Disconnected' }}
+    </span>
+    }
+  </div>
+
+  @if (error()) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+    <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Retry</button>
+  </div>
+  }
+
+  @if (sendError()) {
+  <div class="alert alert-warning py-2 px-3 mb-3 small fw-semibold" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ sendError() }}
+  </div>
+  }
+
+  <!-- =========================================================
+       SHELL — contacts | chat  (one at a time on small screens)
+  ========================================================== -->
+  <div class="chat-shell" [class.chat-open]="activeId() !== null">
+    <app-chat-contact-list class="chat-side" variant="whatsapp" [brand]="brand()" [tabs]="tabs" [contacts]="contacts()"
+      [activeId]="activeId()" [loading]="loading()" (select)="open($event)" />
+
+    <app-chat-window class="chat-main" variant="whatsapp" [contact]="active()" [showAttach]="true"
+      emptyIcon="bi bi-whatsapp" emptyHint="Pick a lead, customer or staff from the list to chat on WhatsApp."
+      (send)="send($event)" (back)="closeChat()" />
+  </div>
+
+</div>

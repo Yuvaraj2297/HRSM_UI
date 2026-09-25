@@ -1,0 +1,36 @@
+/* =============================================================
+   OFFER STATUS BADGE
+============================================================= */
+.offer-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+
+  i {
+    font-size: 8px;
+  }
+}
+
+.offer-accepted {
+  background: var(--green-50-2);
+  color: var(--primary-dark);
+}
+
+.offer-pending {
+  background: var(--orange-50);
+  color: var(--orange-500);
+}
+
+.offer-draft {
+  background: var(--bg-muted);
+  color: var(--neutral-650);
+}
+
+.offer-declined {
+  background: var(--red-100);
+  color: var(--red-600);
+}

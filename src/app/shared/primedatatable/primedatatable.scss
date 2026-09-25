@@ -1,0 +1,1165 @@
+/* =============================================================
+   TABLE CARD CONTAINER & HEADER
+============================================================= */
+.table-card-container {
+  width: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* Card Header */
+.table-top-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .header-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--primary-soft);
+      color: var(--green-350);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--neutral-850);
+      margin: 0;
+      line-height: 1;
+
+      .header-count {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--neutral-500);
+        margin-left: 6px;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+
+    .btn-header-custom {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+
+      i {
+        font-size: 13px;
+      }
+
+    }
+
+    .btn-add-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+
+      &:active {
+        transform: scale(0.96);
+      }
+
+      &.has-label {
+        width: auto;
+        height: auto;
+        gap: 6px;
+
+        i {
+          font-size: 13px;
+        }
+
+        .btn-add-text {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+/* =============================================================
+   INLINE HEAD (inlineToolbar = true)
+   Title | Columns + Export | Search in one row, wraps when narrow
+============================================================= */
+.table-head-area.is-inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-bottom: 20px;
+
+  .table-top-header {
+    flex: 0 1 auto;
+    margin-bottom: 0;
+    gap: 12px;
+  }
+
+  .table-toolbar-row {
+    flex: 1 1 520px;
+    margin-bottom: 0;
+    flex-wrap: nowrap;
+    gap: 12px;
+
+    .toolbar-left {
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .table-toolbar-row {
+      flex-wrap: wrap;
+
+      .toolbar-left {
+        margin-left: 0;
+      }
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .table-toolbar-row .toolbar-right,
+    .table-toolbar-row .search-input-box,
+    .table-toolbar-row .search-input-box input {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+}
+
+/* =============================================================
+   ACTION TOOLBAR (Columns, Export, Search Bar)
+============================================================= */
+.table-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+
+  .toolbar-left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+
+    .btn-tool {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      i {
+        font-size: 16px;
+      }
+
+      .caret-icon {
+        font-size: 11px;
+      }
+
+      &.btn-columns {
+        background: var(--orange-50-4);
+        color: var(--orange-400);
+
+        &:hover {
+          background: var(--orange-50-6);
+        }
+      }
+
+      &.btn-export {
+        background: var(--primary-soft);
+        color: var(--green-350);
+
+        &:hover {
+          background: var(--green-100-2);
+        }
+      }
+    }
+  }
+
+  .toolbar-right {
+    .search-input-box {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        color: var(--neutral-350);
+        font-size: 16px;
+        pointer-events: none;
+      }
+
+      input {
+        padding-left: 36px;
+        min-width: 230px;
+
+      }
+    }
+  }
+}
+
+/* =============================================================
+   PRIMENG TABLE CUSTOMIZATION
+============================================================= */
+:host ::ng-deep .hrms-custom-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+
+  .p-datatable-table-container,
+  .p-datatable-wrapper {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .p-datatable-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  /* Table Header */
+  .p-datatable-thead>tr>th {
+    background: var(--border) !important;
+    color: var(--text) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 14px 18px !important;
+    white-space: nowrap;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-right: none !important;
+    vertical-align: middle;
+
+    .th-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .p-sortable-column-icon {
+      color: var(--neutral-350);
+      font-size: 11px;
+    }
+  }
+
+  /* Table Body */
+  .p-datatable-tbody>tr {
+    transition: background 0.15s ease;
+    background: var(--white);
+
+    &:hover {
+      background: var(--bg-soft) !important;
+    }
+
+    &>td {
+      padding: 14px 18px !important;
+      font-size: 13.5px !important;
+      color: var(--text) !important;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--bg-muted) !important;
+      border-right: none !important;
+      vertical-align: middle;
+    }
+  }
+
+  /* Checkbox styling */
+  .p-checkbox {
+    width: 18px;
+    height: 18px;
+
+    .p-checkbox-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--text-faint);
+
+      &:hover {
+        border-color: var(--neutral-350);
+      }
+
+      &.p-highlight {
+        background: var(--primary);
+        border-color: var(--primary);
+      }
+    }
+  }
+}
+
+/* =============================================================
+   CELL STYLES
+============================================================= */
+.sno-text {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.cell-text {
+  color: var(--text);
+}
+
+/* Shift Name Cell */
+.shift-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .shift-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .shift-name-text {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--neutral-900);
+  }
+
+  .shift-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid;
+    margin-left: 6px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+}
+
+/* Day Timing */
+.day-timing-cell {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neutral-850);
+  white-space: nowrap;
+
+  &.flexible {
+    color: var(--neutral-350);
+    font-style: italic;
+    font-weight: 500;
+  }
+}
+
+.day-col {
+  text-align: center;
+  min-width: 140px;
+}
+
+/* Header action button styles for projected actions */
+.btn-shift-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  line-height: 1.4;
+
+  &.btn-primary-action {
+    color: var(--white);
+    background: var(--blue-550);
+    border: 1px solid var(--blue-550);
+
+    &:hover {
+      background: var(--blue-600);
+      border-color: var(--blue-600);
+    }
+  }
+}
+
+.emp-id-text {
+  color: var(--green-450);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.employee-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: var(--bg-muted);
+  flex-shrink: 0;
+}
+
+.employee-name {
+  color: var(--neutral-900);
+  font-size: 13.5px;
+}
+
+/* Master Status Badge (Enable / Disable) */
+.badge-master-status {
+  display: inline-block;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.3;
+
+  &.status-enable {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+  }
+
+  &.status-disable {
+    background: var(--red-100);
+    color: var(--danger);
+  }
+}
+
+/* Attendance Status Pill (with dot) */
+.att-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px 4px 10px;
+  border-radius: 9999px;
+  line-height: 1.2;
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.status-present {
+    background: var(--green-50-2);
+    color: var(--primary-dark);
+
+    .dot {
+      background: var(--primary);
+    }
+  }
+
+  &.status-absent {
+    background: var(--red-100);
+    color: var(--red-600);
+
+    .dot {
+      background: var(--danger);
+    }
+  }
+
+  &.status-late {
+    background: var(--yellow-50);
+    color: var(--orange-550-2);
+
+    .dot {
+      background: var(--warning);
+    }
+  }
+
+  &.status-half {
+    background: var(--purple-50);
+    color: var(--purple-600);
+
+    .dot {
+      background: var(--purple-550-2);
+    }
+  }
+
+  &.status-leave {
+    background: var(--blue-100);
+    color: var(--blue-600);
+
+    .dot {
+      background: var(--blue-550);
+    }
+  }
+
+  &.status-default {
+    background: var(--bg-muted);
+    color: var(--neutral-650);
+
+    .dot {
+      background: var(--neutral-500);
+    }
+  }
+}
+
+/* Working Hours Progress */
+.whrs-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 100px;
+
+  .whrs-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--neutral-850);
+    line-height: 1;
+  }
+
+  .whrs-track {
+    height: 5px;
+    border-radius: 999px;
+    background: var(--border);
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .whrs-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--green-350);
+    transition: width 0.4s ease;
+  }
+}
+
+/* =============================================================
+   ACTION BUTTONS
+============================================================= */
+/* Dual Action Pill (Edit + Delete) */
+.action-pill-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--border);
+  padding: 4px 6px;
+  border-radius: 20px;
+
+  .btn-action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+  }
+}
+
+/* 3-Dots Action button */
+.btn-action-dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 15px;
+    line-height: 1;
+  }
+
+}
+
+/* =============================================================
+   PAGINATION
+============================================================= */
+.paginator-left-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--neutral-500);
+
+  .show-label {
+    color: var(--neutral-500);
+  }
+
+  .show-select {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--neutral-850);
+    font-weight: 600;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+
+    &:focus {
+      border-color: var(--primary);
+    }
+  }
+
+  .show-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--neutral-850);
+    font-weight: 500;
+    font-size: 12.5px;
+  }
+
+  .showing-range {
+    color: var(--neutral-500);
+    margin-left: 4px;
+  }
+}
+
+:host ::ng-deep .p-paginator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 0 0;
+  background: var(--white);
+  border-top: none;
+  gap: 4px;
+
+  .p-paginator-left-content {
+    margin-right: auto;
+  }
+
+  .p-paginator-page,
+  .p-paginator-first,
+  .p-paginator-prev,
+  .p-paginator-next,
+  .p-paginator-last {
+    min-width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--neutral-500);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--bg-muted);
+      color: var(--neutral-900);
+    }
+
+    &.p-paginator-page-selected,
+    &.p-highlight {
+      background: var(--primary) !important;
+      color: var(--white) !important;
+      font-weight: 600;
+    }
+  }
+}
+
+/* =========================================================
+   COLUMNS VISIBILITY OFFCANVAS
+========================================================= */
+
+.columns-offcanvas-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(var(--black-rgb), 0.35);
+  z-index: 2040;
+  animation: fadeInBackdrop 0.2s ease;
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   OFFCANVAS PANEL
+========================================================= */
+
+.columns-offcanvas-panel {
+  position: fixed;
+
+  top: 10px !important;
+  right: 10px !important;
+
+  width: 400px;
+  max-width: 92vw;
+
+  height: calc(100vh - 20px);
+
+  background: var(--white);
+
+  z-index: 2050;
+
+  border-radius: 25px;
+
+  box-shadow: -20px 0 60px rgba(var(--black-rgb), 0.18);
+
+  display: flex;
+  flex-direction: column;
+
+  /* Panel itself should not scroll */
+  overflow: hidden;
+
+  animation: slideInPanel 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInPanel {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* =========================================================
+   HEADER - FIXED
+========================================================= */
+
+.columns-offcanvas-header {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 22px 26px;
+
+  background: var(--white);
+
+  border-bottom: 1px solid var(--neutral-100-2);
+
+  z-index: 2;
+}
+
+.columns-offcanvas-title {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  color: var(--neutral-950);
+}
+
+.columns-offcanvas-close {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+
+  border-radius: 50%;
+
+  border: 1px solid var(--border);
+
+  background: var(--white);
+
+  color: var(--neutral-800);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.columns-offcanvas-close:hover {
+  background: var(--neutral-50-2);
+  transform: rotate(90deg);
+}
+
+/* =========================================================
+   BODY - ONLY BODY SCROLLS
+========================================================= */
+
+.columns-offcanvas-body {
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  padding: 18px 26px 26px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  /* Scroll only here */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scroll-behavior: smooth;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.columns-offcanvas-body::-webkit-scrollbar {
+  width: 7px;
+}
+
+.columns-offcanvas-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.columns-offcanvas-body::-webkit-scrollbar-thumb {
+  background: var(--neutral-150);
+  border-radius: 10px;
+}
+
+.columns-offcanvas-body::-webkit-scrollbar-thumb:hover {
+  background: var(--neutral-250-2);
+}
+
+/* =========================================================
+   COLUMN ROW
+========================================================= */
+
+.column-visibility-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 18px;
+
+  border: 1px solid var(--neutral-50-3);
+
+  border-radius: 14px;
+
+  background: var(--white);
+
+  flex-shrink: 0;
+}
+
+.column-visibility-label {
+  font-size: 16px;
+  font-weight: 500;
+
+  color: var(--neutral-800);
+}
+
+/* =========================================================
+   TOGGLE SWITCH
+========================================================= */
+
+.column-toggle-switch {
+  width: 46px;
+  height: 26px;
+
+  border-radius: 999px;
+
+  border: none;
+
+  background: var(--border-strong);
+
+  position: relative;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+
+  flex-shrink: 0;
+
+  padding: 0;
+}
+
+.column-toggle-switch.on {
+  background: var(--green-400-2);
+}
+
+.column-toggle-knob {
+  position: absolute;
+
+  top: 3px;
+  left: 3px;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: var(--white);
+
+  box-shadow: 0 2px 5px rgba(var(--black-rgb), 0.15);
+
+  transition: transform 0.2s ease;
+}
+
+.column-toggle-switch.on .column-toggle-knob {
+  transform: translateX(20px);
+}
+
+/* =========================================================
+   RESTORE ALL
+========================================================= */
+
+.btn-restore-all {
+  align-self: flex-start;
+
+  margin-top: 4px;
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--green-400-2);
+
+  background: var(--white);
+
+  color: var(--green-400-2);
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+
+  flex-shrink: 0;
+}
+
+.btn-restore-all:hover {
+  background: var(--green-50);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .columns-offcanvas-panel {
+    width: calc(100vw - 20px);
+    max-width: none;
+
+    height: calc(100vh - 20px);
+
+    top: 10px !important;
+    right: 10px !important;
+  }
+
+  .columns-offcanvas-header {
+    padding: 18px 20px;
+  }
+
+  .columns-offcanvas-body {
+    padding: 16px 20px 22px;
+  }
+}
+
+/* =========================================================
+   EXPORT DROPDOWN
+========================================================= */
+
+.export-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.caret-icon {
+  transition: transform 0.2s ease;
+}
+
+.caret-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.export-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+}
+
+.export-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 190px;
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(var(--black-rgb), 0.15);
+  padding: 8px;
+  z-index: 950;
+  animation: exportMenuFadeIn 0.15s ease;
+}
+
+@keyframes exportMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.export-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--neutral-800);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.export-menu-item i {
+  font-size: 17px;
+  color: var(--neutral-550);
+  width: 20px;
+}
+
+.export-menu-item:hover {
+  background: var(--neutral-50-5);
+}
+
+// ===== Append this to the END of your existing primedatatable.scss =====
+
+.cell-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.btn-kebab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.row-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1999;
+}
+
+.row-menu {
+  position: fixed;
+  z-index: 2000;
+  width: 180px;
+  padding: 8px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(var(--neutral-900-rgb), 0.15);
+  border: 1px solid var(--border);
+}
+
+.row-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--bg-muted);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.row-menu-divider {
+  height: 1px;
+  margin: 6px 4px;
+  background: var(--border);
+}
+
+// ===== Append this to primedatatable.scss (adds to what you already have) =====
+
+// =========================================================
+// PILL ACTIONS — column.type === 'pill-actions'
+// A row of buttons fused into one rounded capsule, each
+// segment colored per its own `variant`/`color`.
+// =========================================================
+.pill-action-group {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 30px;
+}
+
+.pill-action-seg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: none;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.15s ease;
+
+  &.icon-only {
+    width: 34px;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  // outline segments sit next to a solid segment, so give them a
+  // right border in the solid segment's own color to read as one pill
+  &.is-outline {
+    box-shadow: inset -1px 0 0 rgba(var(--black-rgb), 0.08);
+  }
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.94);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

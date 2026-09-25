@@ -1,0 +1,475 @@
+<!-- Page Header & Breadcrumb -->
+<app-breadcrumb title="My Tickets" parent="Helpdesk / Ticketing" icon="bi bi-life-preserver">
+  <div breadcrumb-actions class="d-flex gap-2">
+    <button type="button" class="btn btn-icon btn-outline-primary" (click)="resetDemoData()" title="Reset demo data">
+      <i class="bi bi-arrow-counterclockwise"></i>
+    </button>
+    <a routerLink="/helpdesk/ticketing" class="btn btn-primary">
+      <i class="bi bi-plus-lg me-1"></i> Create Ticket
+    </a>
+  </div>
+</app-breadcrumb>
+
+<!-- KPI filter strip -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-xl-3">
+    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'all'"
+      (click)="setKpiFilter('all')" role="button" tabindex="0">
+      <div class="k-ico kpi-all-ico">
+        <i class="bi bi-ticket-perforated"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiCounts.all }}</div>
+        <div class="k-label">All Tickets</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'open'"
+      (click)="setKpiFilter('open')" role="button" tabindex="0">
+      <div class="k-ico kpi-open-ico">
+        <i class="bi bi-inbox"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiCounts.open }}</div>
+        <div class="k-label">Open / Pending</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'progress'"
+      (click)="setKpiFilter('progress')" role="button" tabindex="0">
+      <div class="k-ico kpi-prog-ico">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiCounts.progress }}</div>
+        <div class="k-label">In Progress / Waiting</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="mtk-kpi d-flex align-items-center gap-3" [class.active]="activeKpiFilter === 'resolved'"
+      (click)="setKpiFilter('resolved')" role="button" tabindex="0">
+      <div class="k-ico kpi-res-ico">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpiCounts.resolved }}</div>
+        <div class="k-label">Resolved / Closed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Table Card -->
+<div class="card-custom p-0 overflow-hidden">
+  <!-- Toolbar: PrimeNG Select Filters + Search -->
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3">
+    <div class="row g-2 align-items-center">
+      <!-- Category Filter -->
+      <div class="col-6">
+        <p-select [options]="categoryOptions" [(ngModel)]="filterCategory" (onChange)="onFilterChange()"
+          optionLabel="label" optionValue="value" placeholder="All Categories" appendTo="body"
+          styleClass="ct-p-select w-100" class="w-100"></p-select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="col-6">
+        <p-select [options]="statusOptions" [(ngModel)]="filterStatus" (onChange)="onFilterChange()" optionLabel="label"
+          optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="ct-p-select w-100"
+          class="w-100"></p-select>
+      </div>
+    </div>
+
+    <!-- Search wrap -->
+    <div class="mt-search-wrap">
+      <i class="bi bi-search mt-search-icon"></i>
+      <input type="text" class="form-control mt-search-input" placeholder="Search subject / ticket #..."
+        [(ngModel)]="searchTerm" (input)="onFilterChange()" />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive table-modern-wrap overflow-auto column-border">
+    <table class="table-modern w-100 mb-0">
+      <thead>
+        <tr>
+          <th class="text-nowrap">Ticket ID</th>
+          <th class="text-nowrap">Category</th>
+          <th class="text-nowrap">Subject</th>
+          <th class="text-nowrap">Priority</th>
+          <th class="text-nowrap">Assigned To</th>
+          <th class="text-nowrap">SLA</th>
+          <th class="text-nowrap">Status</th>
+          <th class="text-nowrap">Created Date</th>
+          <th class="text-nowrap text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (paginatedTickets.length === 0) {
+        <tr>
+          <td colspan="9">
+            <div class="mtk-empty">
+              <div class="empty-icon">
+                <i class="bi bi-ticket-perforated"></i>
+              </div>
+              <div class=" empty-title">No tickets found</div>
+              <div class="empty-sub">
+                Create a ticket and it will appear here.
+              </div>
+              <div class="mt-3">
+                <a routerLink="/helpdesk/ticketing" class="btn btn-primary btn-sm">
+                  <i class="bi bi-plus-lg me-1"></i> Create Ticket
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        } @else {
+        @for (t of paginatedTickets; track t.id) {
+        <tr>
+          <td>
+            <button type="button" class="btn btn-link p-0  text-primary text-decoration-none tkt-link"
+              (click)="openTicket(t)">
+              {{ t.id }}
+            </button>
+          </td>
+          <td>
+            <span class="me-1">{{ t.categoryIcon }}</span>
+            <span class="fw-semibold" style="font-size: 12.5px;">{{ t.category }}</span>
+          </td>
+          <td style="max-width: 220px;" class="text-truncate fw-semibold" [title]="t.subject">
+            {{ t.subject }}
+          </td>
+          <td>
+            <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(t.priority).bg"
+              [style.color]="ticketService.priorityMeta(t.priority).color">
+              {{ t.priority }}
+            </span>
+          </td>
+          <td style="font-size: 12.5px;">
+            @if (t.assignedTo) {
+            <span>{{ t.assignedTo }}</span>
+            } @else {
+            <span class="text-muted">—</span>
+            }
+          </td>
+          <td>
+            @if (ticketService.slaState(t) === 'breached') {
+            <span class="badge rounded-pill badge-sla-breached">Breached</span>
+            } @else if (ticketService.slaState(t) === 'at-risk') {
+            <span class="badge rounded-pill badge-sla-risk">At Risk</span>
+            } @else {
+            <span class="badge rounded-pill badge-sla-ok">On Track</span>
+            }
+          </td>
+          <td>
+            <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(t.status).bg"
+              [style.color]="ticketService.statusMeta(t.status).color">
+              <i [class]="'bi ' + ticketService.statusMeta(t.status).icon"></i>
+              {{ t.status }}
+            </span>
+          </td>
+          <td style="font-size: 12.5px;">{{ t.createdDate }}</td>
+          <td class="text-center">
+            <button type="button" class="btn btn-action-icon btn-outline-primary btn-sm" (click)="openTicket(t)"
+              title="View Ticket">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+        }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Footer -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 report-footer p-3">
+    <div class="d-flex gap-2 align-items-center">
+      <span class="small text-muted text-nowrap">Show:</span>
+      <p-select [options]="pageSizeOptions" [(ngModel)]="pageSize" (onChange)="onPageSizeChange($event.value)"
+        optionLabel="label" optionValue="value" appendTo="body" styleClass="ct-p-select-sm"></p-select>
+      <span class="small text-muted text-nowrap">
+        Showing <strong>{{ startIndex }}</strong>–<strong>{{ endIndex }}</strong> of <strong>{{ filteredTickets.length
+          }}</strong>
+      </span>
+    </div>
+
+    <!-- Pagination Controls -->
+    @if (totalPages > 1) {
+    <nav>
+      <ul class="pagination pagination-sm mb-0">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button aria-label="Previous page" class="page-link" type="button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+
+        @for (p of pages; track p) {
+        <li class="page-item" [class.active]="currentPage === p">
+          <button class="page-link" type="button" (click)="goToPage(p)">
+            {{ p }}
+          </button>
+        </li>
+        }
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button aria-label="Next page" class="page-link" type="button" (click)="goToPage(currentPage + 1)"
+            [disabled]="currentPage === totalPages">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+</div>
+
+<!-- =========================================================================
+     FULLSCREEN / MODAL TICKET VIEW
+========================================================================== -->
+@if (isModalOpen && selectedTicket) {
+<div class="tkt-modal-backdrop" (click)="closeModal()"></div>
+
+<div class="tkt-modal-wrapper" role="dialog" aria-modal="true">
+  <div class="tkt-fs-content">
+    <!-- Header -->
+    <div class="tkt-fs-header">
+      <div class="d-flex align-items-center gap-3 min-w-0">
+        <div class="tkt-fs-icon">
+          <i class="bi bi-ticket-perforated"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h5 class="modal-title mb-0">{{ selectedTicket.id }}</h5>
+            <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(selectedTicket.status).bg"
+              [style.color]="ticketService.statusMeta(selectedTicket.status).color">
+              <i [class]="'bi ' + ticketService.statusMeta(selectedTicket.status).icon"></i>
+              {{ selectedTicket.status }}
+            </span>
+            <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(selectedTicket.priority).bg"
+              [style.color]="ticketService.priorityMeta(selectedTicket.priority).color">
+              {{ selectedTicket.priority }}
+            </span>
+            @if (currentTicketSlaState === 'breached') {
+            <span class="badge rounded-pill badge-sla-breached">SLA Breached</span>
+            } @else if (currentTicketSlaState === 'at-risk') {
+            <span class="badge rounded-pill badge-sla-risk">SLA At Risk</span>
+            } @else {
+            <span class="badge rounded-pill badge-sla-ok">SLA On Track</span>
+            }
+          </div>
+          <div class="tkt-fs-subject text-truncate" [title]="selectedTicket.subject">
+            {{ selectedTicket.subject }}
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-outline-secondary btn-sm px-3 btn-close-custom" (click)="closeModal()">
+        <i class="bi bi-x-lg"></i> Close
+      </button>
+    </div>
+
+    <!-- Body: left details + right chat -->
+    <div class="tkt-fs-body">
+      <!-- LEFT — ticket details -->
+      <div class="tkt-fs-left">
+        <!-- Progress Stepper -->
+        <div class="tkt-fs-card">
+          <div class="tkt-fs-sec-title">
+            <i class="bi bi-diagram-2"></i> Progress
+          </div>
+
+          @if (isSpecialStatus(selectedTicket.status)) {
+          <div class="tkt-status-banner" [class.rejected]="selectedTicket.status === 'Rejected'"
+            [class.cancelled]="selectedTicket.status === 'Cancelled'"
+            [class.reopened]="selectedTicket.status === 'Reopened'">
+            <span class="sb-icon">
+              <i [class]="'bi ' + ticketService.statusMeta(selectedTicket.status).icon"></i>
+            </span>
+            <div>
+              <div class="sb-title">{{ selectedTicket.status }}</div>
+              <div class="sb-note">
+                @if (selectedTicket.status === 'Rejected') {
+                This ticket was rejected by the helpdesk team.
+                } @else if (selectedTicket.status === 'Cancelled') {
+                This ticket was cancelled.
+                } @else {
+                Ticket reopened — back with the support team.
+                }
+              </div>
+            </div>
+          </div>
+          } @else {
+          <div class="tkt-stepper">
+            @for (step of statusFlow; track step; let i = $index) {
+            <div class="tkt-step" [class.done]="i < getStepperIndex(selectedTicket.status)"
+              [class.current]="i === getStepperIndex(selectedTicket.status)">
+              <span class="st-dot">
+                @if (i < getStepperIndex(selectedTicket.status)) { <i class="bi bi-check-lg"></i>
+                  }
+              </span>
+              <span class="st-info">
+                <span class="st-label">{{ step }}</span>
+                @if (i === getStepperIndex(selectedTicket.status)) {
+                <span class="st-caption">{{ stepCaptions[step] }}</span>
+                }
+              </span>
+            </div>
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Ticket Information -->
+        <div class="tkt-fs-card">
+          <div class="tkt-fs-sec-title">
+            <i class="bi bi-info-circle"></i> Ticket Information
+          </div>
+          <div class="tkt-meta-grid">
+            <div>
+              <div class="m-label">Category</div>
+              <div class="m-value" [title]="selectedTicket.category">
+                {{ selectedTicket.categoryIcon }} {{ selectedTicket.category }}
+              </div>
+            </div>
+            <div>
+              <div class="m-label">Sub Category</div>
+              <div class="m-value" [title]="selectedTicket.subCategory">
+                {{ selectedTicket.subCategory }}
+              </div>
+            </div>
+            <div>
+              <div class="m-label">Created By</div>
+              <div class="m-value" [title]="selectedTicket.createdBy">
+                {{ selectedTicket.createdBy }} ({{ selectedTicket.createdByEmp }})
+              </div>
+            </div>
+            <div>
+              <div class="m-label">Assigned To</div>
+              <div class="m-value" [title]="selectedTicket.assignedTo || 'Not yet assigned'">
+                {{ selectedTicket.assignedTo || 'Not yet assigned' }}
+              </div>
+            </div>
+            <div>
+              <div class="m-label">Created Date</div>
+              <div class="m-value" [title]="selectedTicket.createdDate">
+                {{ selectedTicket.createdDate }}
+              </div>
+            </div>
+            <div>
+              <div class="m-label">Preferred Contact</div>
+              <div class="m-value" [title]="selectedTicket.preferredContact">
+                {{ selectedTicket.preferredContact }}
+              </div>
+            </div>
+            <div class="w-100">
+              <div class="m-label">Resolution Due</div>
+              <div class="m-value" [title]="ticketService.fmtTs(selectedTicket.resolutionDueTs)">
+                {{ ticketService.fmtTs(selectedTicket.resolutionDueTs) }}
+              </div>
+            </div>
+            <div class="w-100">
+              <div class="m-label">Attachment</div>
+              <div class="m-value">
+                @if (selectedTicket.attachment) {
+                <span class="text-primary">
+                  <i class="bi bi-paperclip me-1"></i>{{ selectedTicket.attachment }}
+                </span>
+                } @else {
+                <span>—</span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="tkt-fs-card">
+          <div class="tkt-fs-sec-title">
+            <i class="bi bi-card-text"></i> Description
+          </div>
+          <div class="tkt-fs-desc">
+            {{ selectedTicket.description }}
+          </div>
+        </div>
+
+        <!-- Reopen action for resolved tickets -->
+        @if (selectedTicket.status === 'Resolved') {
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-warning btn-sm" (click)="reopenTicket()">
+            <i class="bi bi-arrow-counterclockwise"></i> Reopen Ticket
+          </button>
+        </div>
+        }
+      </div>
+
+      <!-- RIGHT — conversation -->
+      <div class="tkt-fs-right">
+        <div class="tkt-fs-chat-head">
+          <i class="bi bi-chat-dots"></i> Conversation
+          <span class="tkt-chat-count">
+            {{ selectedTicket.conversation.length }} {{ selectedTicket.conversation.length === 1 ? 'message' :
+            'messages' }}
+          </span>
+        </div>
+
+        <!-- Chat stream -->
+        <div class="tkt-chat-wrap">
+          @for (msg of selectedTicket.conversation; track $index) {
+          <div class="tkt-msg" [class.staff]="msg.by === 'staff'" [class.employee]="msg.by === 'employee'">
+            <span class="tkt-avatar" [style.background]="getAvatarColor(msg.name)">
+              {{ getInitials(msg.name) }}
+            </span>
+
+            <div class="tkt-msg-main">
+              <div class="msg-meta">
+                {{ msg.name }} · {{ ticketService.fmtTs(msg.ts) }}
+              </div>
+              <div class="msg-bubble">
+                {{ msg.text }}
+
+                @if (msg.attachment) {
+                <div>
+                  <span class="msg-attachment">
+                    <i class="bi bi-paperclip"></i>{{ msg.attachment }}
+                  </span>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Composer -->
+        <div class="tkt-fs-composer">
+          <input type="file" #replyFileInput hidden (change)="onReplyFileSelected($event)" />
+
+          <button type="button" class="tkt-reply-file-btn" [class.has-file]="!!replyFileName"
+            (click)="replyFileName ? removeReplyFile() : replyFileInput.click()"
+            [title]="replyFileName ? 'Remove file: ' + replyFileName : 'Attach file'">
+            <i class="bi" [class.bi-paperclip]="!replyFileName" [class.bi-x-lg]="!!replyFileName"></i>
+            @if (replyFileName) {
+            <span>{{ replyFileName }}</span>
+            }
+          </button>
+
+          <textarea class="form-control tkt-reply-input" rows="1" placeholder="Type your reply... (Press Enter to send)"
+            [(ngModel)]="replyText" (keydown)="onReplyKeydown($event)"></textarea>
+
+          <button type="button" class="btn btn-primary tkt-send-btn" (click)="sendReply()"
+            [disabled]="!replyText.trim()">
+            <i class="bi bi-send"></i> Send
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

@@ -1,0 +1,574 @@
+<!-- =========================================================
+     TITLE & ACTION BAR
+========================================================= -->
+
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+    <div>
+        <h1 class="font-display  mb-1 page-title">
+            Asset Provisioning &
+            Lifecycle Management
+        </h1>
+
+        <nav class="d-flex align-items-center gap-2 text-neutral breadcrumb-sm">
+            <i class="bi bi-person-check fs-6 text-success"></i>
+            <span>Onboarding</span>
+            <i class="bi bi-chevron-right"></i>
+            <span class=" text-dark">Asset Provisioning</span>
+        </nav>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary btn-brand" type="button" (click)="openProvisionModal()">
+            <i class="bi bi-plus-lg"></i>
+            Allocate Asset
+        </button>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     KPI CARDS
+========================================================= -->
+
+<div class="row g-3 mb-3">
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="asset-kpi d-flex align-items-center gap-3">
+            <div class="icon kpi-icon-total">
+                <i class="bi bi-laptop"></i>
+            </div>
+            <div>
+                <div class="label">Total Provisioned Assets</div>
+                <div class="value">{{ kpis.totalProvisioned }} Devices</div>
+                <div class="sub">Laptops, Mobile &amp; Access Cards</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="asset-kpi d-flex align-items-center gap-3">
+            <div class="icon kpi-icon-pending">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+            <div>
+                <div class="label">Pending Approval &amp; Request</div>
+                <div class="value">{{ kpis.pendingApproval }} Requests</div>
+                <div class="sub">Awaiting HR / IT allocation</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="asset-kpi d-flex align-items-center gap-3">
+            <div class="icon kpi-icon-active">
+                <i class="bi bi-check2-square"></i>
+            </div>
+            <div>
+                <div class="label">Active In-Use Assets</div>
+                <div class="value">{{ kpis.activeInUse }} Assigned</div>
+                <div class="sub">Assigned to active employees</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="asset-kpi d-flex align-items-center gap-3">
+            <div class="icon kpi-icon-returned">
+                <i class="bi bi-box-arrow-in-left"></i>
+            </div>
+            <div>
+                <div class="label">Returned &amp; Maintenance</div>
+                <div class="value">{{ kpis.returnedOrDamaged }} Returned / Damaged</div>
+                <div class="sub">Exit clearance &amp; repair</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     WORKFLOW STAGE FILTER
+========================================================= -->
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+        <button role="tab" *ngFor="let tab of stageTabs" type="button" class="ln-stage-tab"
+            [class.active]="activeFilter === tab.key" (click)="selectFilter(tab.key)" [attr.aria-selected]="activeFilter === tab.key">
+            {{ tab.label }}
+            <span class="page-tab-count">{{ tabCounts[tab.key] }}</span>
+        </button>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     TABLE
+     Action buttons come from the "actions" column itself
+     (type: 'pill-actions', buttons: [...] — see the component),
+     rendered as segmented pill buttons. No [rowActions] input
+     needed on the table for this mode.
+========================================================= -->
+
+<app-primedatatable [columns]="columns" [data]="tableData" [searchPlaceholder]="searchPlaceholder"
+    (addClicked)="openProvisionModal()" (actionClick)="onTableAction($event)">
+</app-primedatatable>
+
+
+<!-- =========================================================
+     MODAL 1
+     ALLOCATE / REQUEST ASSET
+========================================================= -->
+
+<div class="modal fade" #provisionAssetModal tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg modal-content-rounded">
+
+            <div class="modal-header border-0 pb-0 modal-header-soft">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-circle modal-icon-circle-md">
+                        <i class="bi bi-laptop"></i>
+                    </div>
+                    <div>
+                        <h4 class="modal-title  text-dark mb-0">Allocate / Request Company Asset</h4>
+                        <div class="text-muted modal-subtitle">
+                            Assign Hardware, Accessories &amp; Access Badges to Joiners
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form [formGroup]="addForm" (ngSubmit)="saveNewAsset()">
+                <div class="modal-body p-4">
+
+                    <h6 class=" text-dark mb-3">
+                        <i class="bi bi-person-badge text-success me-1"></i>
+                        Employee &amp; Asset Classification
+                    </h6>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Select Employee *</label>
+
+                            <p-select [options]="employees" formControlName="empKey" optionLabel="name"
+                                optionValue="name" placeholder="Select Employee" [filter]="true"
+                                filterBy="name,empId,role" [showClear]="true" appendTo="body" styleClass="w-100">
+                                <ng-template #item let-emp>
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-semibold">{{ emp.name }}</span>
+                                        <small class="text-muted">{{ emp.empId }} - {{ emp.role }}</small>
+                                    </div>
+                                </ng-template>
+                                <ng-template #selectedItem let-emp>
+                                    <span>{{ emp.name }}</span>
+                                </ng-template>
+                            </p-select>
+
+                            <small class="text-danger"
+                                *ngIf="addForm.get('empKey')?.touched && addForm.get('empKey')?.hasError('required')">
+                                Employee is required.
+                            </small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Asset Type *</label>
+
+                            <p-select [options]="assetTypes" formControlName="type" optionLabel="label"
+                                optionValue="value" placeholder="Select Asset Type" appendTo="body" styleClass="w-100">
+                                <ng-template #item let-item>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi" [ngClass]="{
+                        'bi-laptop': item.value === 'Laptop',
+                        'bi-pc-display': item.value === 'Desktop',
+                        'bi-display': item.value === 'Monitor',
+                        'bi-phone': item.value === 'Mobile',
+                        'bi-headphones': item.value === 'Headset',
+                        'bi-person-badge': item.value === 'ID Card',
+                        'bi-key-fill': item.value === 'Access Card'
+                      }"></i>
+                                        <span>{{ item.label }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Asset Name / Model *</label>
+                            <input type="text" class="form-control" formControlName="model"
+                                placeholder="e.g. MacBook Pro 16 M3 Max 36GB">
+                            <small class="text-danger"
+                                *ngIf="addForm.get('model')?.touched && addForm.get('model')?.hasError('required')">
+                                Asset model is required.
+                            </small>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold form-label-sm">Asset Tag / ID *</label>
+                            <input type="text" class="form-control" formControlName="assetId"
+                                placeholder="AST-MAC-2026-099">
+                            <small class="text-danger"
+                                *ngIf="addForm.get('assetId')?.touched && addForm.get('assetId')?.hasError('required')">
+                                Asset ID is required.
+                            </small>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold form-label-sm">Serial Number *</label>
+                            <input type="text" class="form-control" formControlName="serial" placeholder="C02G4109Q05P">
+                            <small class="text-danger"
+                                *ngIf="addForm.get('serial')?.touched && addForm.get('serial')?.hasError('required')">
+                                Serial number is required.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold form-label-sm">Assigned Date</label>
+                            <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold form-label-sm">Assigned By</label>
+                            <p-select [options]="assignedByOptions" formControlName="assignedBy" optionLabel="label"
+                                optionValue="value" placeholder="Select Assigned By" appendTo="body" styleClass="w-100">
+                            </p-select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold form-label-sm">Initial Condition</label>
+                            <p-select [options]="conditionOptions" formControlName="condition" optionLabel="label"
+                                optionValue="value" placeholder="Select Condition" appendTo="body" styleClass="w-100">
+                            </p-select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Accessories Included</label>
+                            <input type="text" class="form-control" formControlName="accessories"
+                                placeholder="Mouse, Keyboard, Charger, Bag">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold form-label-sm">Location</label>
+                            <p-select [options]="locationOptions" formControlName="location" optionLabel="label"
+                                optionValue="value" placeholder="Select Location" appendTo="body" styleClass="w-100">
+                            </p-select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold form-label-sm">Expected Return Date</label>
+                            <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Lifecycle Status *</label>
+                            <p-select [options]="statusOptions" formControlName="status" optionLabel="label"
+                                optionValue="value" placeholder="Select Lifecycle Status" appendTo="body"
+                                styleClass="w-100">
+                            </p-select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Remarks / Notes</label>
+                            <input type="text" class="form-control" formControlName="remarks"
+                                placeholder="Handover completed & sign-off received">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-brand">
+                        <i class="bi bi-check2-circle"></i>
+                        Save Asset Allocation
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     VIEW MODAL
+========================================================= -->
+
+<div class="modal fade" #viewAssetModal tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg modal-content-rounded" *ngIf="viewData as v">
+
+            <div class="modal-header border-0 pb-0 modal-header-soft">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-circle modal-icon-circle-lg">
+                        <i class="bi" [ngClass]="v.typeIcon"></i>
+                    </div>
+                    <div>
+                        <h4 class="modal-title  text-dark mb-0">{{ v.model }}</h4>
+                        <div class="text-muted modal-subtitle">
+                            {{ v.empName }} • {{ v.empId }} • {{ v.role }} ({{ v.dept }})
+                        </div>
+                    </div>
+                </div>
+                <button aria-label="Close" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4">
+
+                <div class="card p-3 bg-light border-0 mb-4 workflow-card">
+                    <div class=" text-dark mb-2 workflow-card-title">
+                        <i class="bi bi-diagram-3 text-success me-1"></i>
+                        Asset Lifecycle Stage
+                    </div>
+
+                    <div class="workflow-steps">
+                        <div class="workflow-step" *ngFor="let step of viewWorkflowSteps" [ngClass]="step.state">
+                            <div class="workflow-icon">
+                                <i class="bi" [ngClass]="step.icon"></i>
+                            </div>
+                            <div class="workflow-text">{{ step.label }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-3 mb-3 view-detail-card">
+                    <h6 class=" text-dark mb-3">
+                        <i class="bi bi-cpu text-primary me-1"></i>
+                        Device Specifications &amp; Identification Tag
+                    </h6>
+
+                    <div class="row g-3 text-dark view-detail-grid">
+                        <div class="col-md-4">
+                            <strong>Asset Category:</strong><br>
+                            <span class="badge bg-light text-dark border mt-1">{{ v.type }}</span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <strong>Asset Tag ID:</strong><br>
+                            <span class="tag-badge mt-1">{{ v.assetId }}</span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <strong>Serial Number:</strong><br>
+                            <span class=" text-primary mt-1 serial-mono">{{ v.serial }}</span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <strong>Condition:</strong><br>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle mt-1">
+                                {{ v.condition }}
+                            </span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <strong>Location:</strong><br>
+                            <span class="badge bg-light text-dark border mt-1">{{ v.location }}</span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <strong>Expected Return:</strong><br>
+                            <span class="fw-semibold text-muted mt-1">{{ v.returnDateDisplay }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-3 mb-3 view-detail-card">
+                    <h6 class=" text-dark mb-2">
+                        <i class="bi bi-person-check text-success me-1"></i>
+                        Handover Sign-off &amp; Accessories
+                    </h6>
+
+                    <div class="row g-2 text-dark view-detail-grid">
+                        <div class="col-md-6">
+                            <strong>Assigned Date:</strong>
+                            <span class="fw-semibold">{{ v.assignedDateDisplay }}</span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <strong>Allocated By:</strong>
+                            <span class="fw-semibold">{{ v.assignedBy }}</span>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <strong>Accessories Checklist:</strong><br>
+                            <div class="mt-1 d-flex flex-wrap gap-1">
+                                <span class="badge bg-light text-dark border me-1 mb-1 accessory-pill"
+                                    *ngFor="let item of v.accessoriesList">
+                                    <i class="bi bi-check2 text-success me-1"></i>
+                                    {{ item }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <strong>Remarks &amp; Notes:</strong><br>
+                            <span class="text-muted fst-italic">{{ v.remarks || 'No remarks provided.' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     EDIT MODAL
+========================================================= -->
+
+<div class="modal fade" #editAssetModal tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg modal-content-rounded">
+
+            <div class="modal-header border-0 pb-0 modal-header-soft">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-circle modal-icon-circle-md">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div>
+                        <h4 class="modal-title  text-dark mb-0">Edit Asset &amp; Transition Lifecycle</h4>
+                        <div class="text-muted modal-subtitle">
+                            Update Device Tag, Accessories or Progress Workflow Stage
+                        </div>
+                    </div>
+                </div>
+                <button aria-label="Close" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form [formGroup]="editForm" (ngSubmit)="updateAsset()">
+                <div class="modal-body p-4">
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Employee Name *</label>
+                            <input type="text" class="form-control" formControlName="empName">
+                            <small class="text-danger"
+                                *ngIf="editForm.get('empName')?.touched && editForm.get('empName')?.hasError('required')">
+                                Employee name is required.
+                            </small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Employee ID &amp;
+                                Department</label>
+                            <input type="text" class="form-control" formControlName="empInfo"
+                                placeholder="EMP-2026-041 • Design">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Asset Category *</label>
+                            <p-select [options]="assetTypes" formControlName="type" optionLabel="label"
+                                optionValue="value" placeholder="Select Asset Category" appendTo="body"
+                                styleClass="w-100">
+                            </p-select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Asset Name / Model *</label>
+                            <input type="text" class="form-control" formControlName="model">
+                            <small class="text-danger"
+                                *ngIf="editForm.get('model')?.touched && editForm.get('model')?.hasError('required')">
+                                Asset model is required.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Asset Tag ID *</label>
+                            <input type="text" class="form-control" formControlName="assetId">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Device Serial Number *</label>
+                            <input type="text" class="form-control" formControlName="serial">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold form-label-sm">Assigned Date</label>
+                            <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold form-label-sm">Assigned By</label>
+                            <p-select [options]="assignedByOptions" formControlName="assignedBy" optionLabel="label"
+                                optionValue="value" placeholder="Select Assigned By" appendTo="body" styleClass="w-100">
+                            </p-select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold form-label-sm">Device Condition</label>
+                            <p-select [options]="conditionOptions" formControlName="condition" optionLabel="label"
+                                optionValue="value" placeholder="Select Condition" appendTo="body" styleClass="w-100">
+                            </p-select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Accessories Included</label>
+                            <input type="text" class="form-control" formControlName="accessories">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold form-label-sm">Location</label>
+                            <p-select [options]="locationOptions" formControlName="location" optionLabel="label"
+                                optionValue="value" placeholder="Select Location" appendTo="body" styleClass="w-100">
+                            </p-select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold form-label-sm">Expected Return Date</label>
+                           <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Workflow Lifecycle Status
+                                *</label>
+                            <p-select [options]="statusOptions" formControlName="status" optionLabel="label"
+                                optionValue="value" placeholder="Select Workflow Status" appendTo="body"
+                                styleClass="w-100">
+                            </p-select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold form-label-sm">Remarks &amp; Inspection
+                                Notes</label>
+                            <input type="text" class="form-control" formControlName="remarks">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-brand">
+                        <i class="bi bi-check-lg"></i>
+                        Update Asset Record
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

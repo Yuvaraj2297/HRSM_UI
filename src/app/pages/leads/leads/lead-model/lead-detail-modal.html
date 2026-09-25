@@ -1,0 +1,193 @@
+<div class="modal fade" #modalRoot tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content" style="border-radius:18px;border:none;" *ngIf="lead as l">
+
+      <div class="modal-header">
+        <h5 class=" mb-0">{{ l.name }} <span class="text-neutral fw-normal">— {{ l.company }}</span></h5>
+        <button aria-label="Close" type="button" class="btn-close" (click)="close()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Tabs -->
+        <div role="tablist" class="ld-tabs">
+          <button role="tab" type="button" class="ld-tab" [class.active]="activeTab === t.id" *ngFor="let t of tabs" (click)="setTab(t.id)" [attr.aria-selected]="activeTab === t.id">
+            {{ t.label }}
+            <span class="page-tab-count" *ngIf="t.badge">{{ t.badge }}</span>
+          </button>
+        </div>
+
+        <!-- ===== Profile ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'profile'">
+          <div class="ld-pipeline">
+            <span class="ld-pipe-step done"><i class="bi bi-check-circle-fill"></i> Qualified</span>
+            <span class="ld-pipe-step done"><i class="bi bi-check-circle-fill"></i> Quote</span>
+            <span class="ld-pipe-step current">Negotiation</span>
+            <button type="button" class="ld-pipe-add" title="Add stage"><i class="bi bi-plus"></i></button>
+            <span class="ld-pipe-step pending">Closure</span>
+            <div class="ld-pipe-ring">
+              <div class="stage-ring" [style.--pct]="l.stagePct" style="width:42px;height:42px;"><span>{{ l.stagePct }}%</span></div>
+            </div>
+          </div>
+
+          <div class="ld-contact-bar">
+            <span class="ld-act-dot"></span>
+            <span><b>{{ l.assigned }}</b> &middot; Created new proposal &nbsp;<a href="javascript:void(0)">New Proposal</a></span>
+            <div class="ld-contact-actions">
+              <button type="button" class="btn btn-sm btn-success"><i class="bi bi-person-check"></i>Convert to customer</button>
+              <button aria-label="Edit" type="button" class="btn btn-icon btn-sm btn-outline-secondary"><i class="bi bi-pencil-square"></i></button>
+              <div class="dropdown">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown">More <i class="bi bi-chevron-down"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="javascript:void(0)"><i class="bi bi-arrow-counterclockwise me-2"></i>Mark as lost</a></li>
+                  <li><a class="dropdown-item" href="javascript:void(0)"><i class="bi bi-x-lg me-2"></i>Mark as junk</a></li>
+                  <li><a class="dropdown-item text-danger" href="javascript:void(0)"><i class="bi bi-x-lg me-2"></i>Delete Lead</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="ld-body-grid">
+            <div class="ld-section">
+              <div class="ld-section-title">Lead Info</div>
+              <div class="ld-info-row"><span class="ld-info-label">Name</span><span class="ld-info-value">{{ l.name }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Position</span><span class="ld-info-value">{{ l.position || '—' }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Email Address</span><span class="ld-info-value"><a [href]="'mailto:' + l.email">{{ l.email || '—' }}</a></span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Phone</span><span class="ld-info-value"><a [href]="'tel:' + l.phone">{{ l.phone }}</a></span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Lead value</span><span class="ld-info-value" style="color:var(--green-400-2);">{{ l.value }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Company</span><span class="ld-info-value">{{ l.company }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Address</span><span class="ld-info-value">{{ l.address || '—' }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Country</span><span class="ld-info-value">{{ l.country }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">State</span><span class="ld-info-value">{{ l.state || '—' }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">City</span><span class="ld-info-value">{{ l.city || '—' }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Zip Code</span><span class="ld-info-value">{{ l.zip || '—' }}</span></div>
+            </div>
+
+            <div class="ld-section">
+              <div class="ld-section-title">General Information</div>
+              <div class="ld-info-row"><span class="ld-info-label">Status</span><span class="ld-info-value"><span class="status-badge">{{ l.status }}</span></span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Source</span><span class="ld-info-value">{{ l.source }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Assigned</span><span class="ld-info-value">{{ l.assigned }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Sourcer</span><span class="ld-info-value">{{ l.sourcer }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Tags</span><span class="ld-info-value"><span class="lead-tag-pill" *ngFor="let t of l.tags">{{ t }}</span></span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Created</span><span class="ld-info-value">{{ l.created }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Last Contact</span><span class="ld-info-value">{{ l.lastContact }}</span></div>
+              <div class="ld-info-row"><span class="ld-info-label">Closure Date</span><span class="ld-info-value">{{ l.closureDate }}</span></div>
+            </div>
+
+            <div class="ld-section">
+              <div class="ld-section-title">Custom Fields</div>
+              <div class="ld-info-row"><span class="ld-info-label">Profession</span><span class="ld-info-value">{{ l.profession }}</span></div>
+            </div>
+          </div>
+
+          <div class="ld-activity">
+            <div class="ld-activity-title">Latest Activity</div>
+            <div style="font-size:12.5px;color:var(--neutral-500-2);">No recent activity recorded.</div>
+          </div>
+        </div>
+
+        <!-- ===== Proposals ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'proposals'">
+          <div class="ld-proposal-actions">
+            <button type="button" class="btn btn-proposal-primary" (click)="newProposal()">
+              <i class="bi bi-plus-lg"></i>New Proposal
+            </button>
+            <button type="button" class="btn btn-proposal-solid" (click)="automaticProposal()">Automatic Proposal</button>
+            <button type="button" class="btn btn-proposal-solid" (click)="manualProposal()">Manual Proposal</button>
+            <button type="button" class="btn btn-proposal-outline" (click)="syncData()">Sync Data</button>
+          </div>
+
+          <app-primedatatable
+            [columns]="proposalColumns"
+            [data]="proposals"
+            [dataKey]="'no'"
+            [rows]="10"
+            searchPlaceholder="Search proposals..."
+            exportFileName="proposals"
+            (rowClick)="onProposalRowClick($event)">
+
+            <ng-template #cellTemplate let-row let-col="col">
+              <ng-container *ngIf="col.field === 'tags'">
+                <span class="lead-tag-pill" *ngFor="let t of row.tags">{{ t }}</span>
+                <span class="text-neutral" *ngIf="!row.tags.length">—</span>
+              </ng-container>
+            </ng-template>
+
+          </app-primedatatable>
+        </div>
+
+        <!-- ===== Appointments ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'appointments'">
+          <table class="table-modern w-100 mb-0">
+            <thead><tr><th>Title</th><th>Date</th><th>With</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let a of appointments"><td>{{ a.title }}</td><td>{{ a.date }}</td><td>{{ a.with }}</td></tr>
+              <tr *ngIf="!appointments.length"><td colspan="3" class="text-center text-neutral py-3">No appointments scheduled.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ===== Tasks ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'tasks'">
+          <table class="table-modern w-100 mb-0">
+            <thead><tr><th></th><th>Title</th><th>Due</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let t of tasks">
+                <td><input type="checkbox" [checked]="t.done"></td>
+                <td>{{ t.title }}</td><td>{{ t.due }}</td>
+              </tr>
+              <tr *ngIf="!tasks.length"><td colspan="3" class="text-center text-neutral py-3">No tasks yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ===== Attachments ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'attachments'">
+          <div class="ld-attach-dropzone mb-3">
+            <i class="bi bi-cloud-upload"></i>
+            <span>Drag &amp; drop files here, or click to browse</span>
+          </div>
+          <ul class="list-unstyled mb-0">
+            <li class="ld-attach-item" *ngFor="let a of attachments">
+              <i class="bi bi-file-earmark"></i> {{ a.name }} <span class="text-neutral">({{ a.size }})</span>
+            </li>
+            <li *ngIf="!attachments.length" class="text-neutral py-3">No attachments.</li>
+          </ul>
+        </div>
+
+        <!-- ===== Reminders ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'reminders'">
+          <table class="table-modern w-100 mb-0">
+            <thead><tr><th>Date</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let r of reminders"><td>{{ r.date }}</td><td>{{ r.note }}</td></tr>
+              <tr *ngIf="!reminders.length"><td colspan="2" class="text-center text-neutral py-3">No reminders set.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ===== Notes ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'notes'">
+          <div class="ld-note" *ngFor="let n of notes">
+            <div class="ld-note-meta"><b>{{ n.author }}</b> &middot; {{ n.date }}</div>
+            <div>{{ n.text }}</div>
+          </div>
+          <div *ngIf="!notes.length" class="text-neutral py-3">No notes yet.</div>
+        </div>
+
+        <!-- ===== Activity Log / Lead Score / Email Log ===== -->
+        <div class="ld-tab-panel" *ngIf="activeTab === 'activity'">
+          <div class="text-neutral py-3">No activity recorded.</div>
+        </div>
+        <div class="ld-tab-panel" *ngIf="activeTab === 'score'">
+          <div class="text-neutral py-3">Lead score breakdown not available.</div>
+        </div>
+        <div class="ld-tab-panel" *ngIf="activeTab === 'emails'">
+          <div class="text-neutral py-3">No emails logged.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

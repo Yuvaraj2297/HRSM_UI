@@ -1,0 +1,248 @@
+<div class="ld-page">
+
+  <!-- =========================================================
+       HEADER — title + period picker
+  ========================================================== -->
+  <div class="ld-header">
+    <div>
+      <h1 class="ld-page-title">Sales Analytics</h1>
+      <nav class="ld-crumbs" aria-label="Breadcrumb">
+        <i class="bi bi-speedometer2"></i><span>Dashboard</span><i class="bi bi-chevron-right"></i><strong>Sales Analytics</strong>
+      </nav>
+    </div>
+
+    <form class="ld-period" (submit)="$event.preventDefault(); applyPeriod()">
+      <i class="bi bi-calendar3"></i>
+      <p-select [options]="monthOptions" [ngModel]="monthInput()" (ngModelChange)="monthInput.set($event)" name="month"
+        optionLabel="label" optionValue="value" ariaLabel="Month" appendTo="body" styleClass="ld-period-select" />
+      <p-select [options]="yearOptions" [ngModel]="yearInput()" (ngModelChange)="yearInput.set($event)" name="year"
+        optionLabel="label" optionValue="value" ariaLabel="Year" appendTo="body" styleClass="ld-period-select" />
+      <button type="submit" class="btn btn-primary btn-sm px-3" [disabled]="loading()">Apply</button>
+    </form>
+  </div>
+
+  @if (error()) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between py-2 px-3 mb-3">
+    <span class="small fw-semibold"><i class="bi bi-x-circle-fill me-2"></i>{{ error() }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Retry</button>
+  </div>
+  }
+
+  @if (data(); as d) {
+  <div [class.ld-dim]="loading()">
+
+    <!-- =========================================================
+         OVERVIEW — spotlight + KPI grid
+    ========================================================== -->
+    <div class="row g-3 mb-3">
+      <div class="col-xl-4 col-lg-5">
+        <app-ld-spotlight [leaders]="d.leaders" [period]="periodLabel()" />
+      </div>
+      <div class="col-xl-8 col-lg-7">
+        <div class="row g-3 h-100">
+          @for (k of d.kpis; track k.label) {
+          <div class="col-xl-4 col-md-6">
+            <app-ld-kpi-card [kpi]="k" [period]="periodLabel()" />
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         SECTION TABS
+    ========================================================== -->
+    <nav class="page-tabs mb-3" role="tablist" aria-label="Dashboard sections">
+      @for (s of sections; track s.key) {
+      <button type="button" role="tab" class="page-tab" [class.active]="section() === s.key"
+        [attr.aria-selected]="section() === s.key" (click)="section.set(s.key)">
+        <i [class]="s.icon"></i> {{ s.label }}
+      </button>
+      }
+    </nav>
+
+    <div class="ld-panel">
+      @switch (section()) {
+
+      <!-- ============ TARGETS & TEAM ============ -->
+      @case ('targets') {
+      <div class="row g-3 mb-3">
+        @for (t of d.targets; track t.title) {
+        <div class="col-lg-6">
+          <app-dash-section [icon]="t.icon" [title]="t.title" [meta]="periodLabel()">
+            <app-ld-target-card [target]="t" [period]="periodLabel()" />
+          </app-dash-section>
+        </div>
+        }
+      </div>
+
+      <app-dash-section icon="bi-person-lines-fill" title="Staff-wise business summary" subtitle="Won deals · business wise">
+        <app-ld-staff-summary [rows]="d.staffSummary" [periods]="summaryPeriods()" />
+      </app-dash-section>
+      }
+
+      <!-- ============ CALLS & PIPELINE ============ -->
+      @case ('activity') {
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <app-dash-section icon="bi-telephone" title="Calls & meeting summary" [meta]="periodLabel()">
+            @if (callsChart(); as c) {
+            <div class="ld-chart"><p-chart type="bar" [data]="c.data" [options]="c.options" height="280px" /></div>
+            }
+          </app-dash-section>
+        </div>
+        <div class="col-lg-5">
+          <app-dash-section icon="bi-pie-chart" title="Pipeline breakdown" [meta]="periodLabel()">
+            <div class="ld-chart sm">
+              @if (pipelineChart(); as c) {
+              <p-chart type="doughnut" [data]="c.data" [options]="c.options" height="220px" />
+              }
+              <div class="ld-donut-center"><span>Net pipeline</span><strong>{{ inr(pipelineNet(), 0) }}</strong></div>
+            </div>
+            <div class="ld-legend">
+              @for (p of pipelineLegend(); track p.label) {
+              <div class="ld-legend-row" [style.--c]="p.color">
+                <i></i>
+                <span class="name">{{ p.label }} <small>({{ p.share }}%)</small></span>
+                <span class="val" [class.neg]="p.value < 0">{{ inr(p.value) }}</span>
+              </div>
+              }
+            </div>
+          </app-dash-section>
+        </div>
+      </div>
+      }
+
+      <!-- ============ SALES & FUNNEL ============ -->
+      @case ('sales') {
+      <app-dash-section icon="bi-graph-up-arrow" title="Sales – proposals / quotations" [subtitle]="periodLabel()">
+        <div section-actions class="ld-seg" role="group" aria-label="Proposal period">
+          @for (p of proposalPeriods; track p.key) {
+          <button type="button" [class.active]="proposalPeriod() === p.key" [attr.aria-pressed]="proposalPeriod() === p.key"
+            (click)="proposalPeriod.set(p.key)">{{ p.label }}</button>
+          }
+        </div>
+
+        <div class="ld-metrics">
+          @for (m of proposalMetrics(); track m.label) {
+          <div class="ld-metric tone-{{ m.tone }}">
+            <div class="ld-metric-label">{{ m.label }}</div>
+            <div class="ld-metric-value">{{ m.value }}</div>
+          </div>
+          }
+        </div>
+        @if (proposalsChart(); as c) {
+        <div class="ld-chart"><p-chart type="bar" [data]="c.data" [options]="c.options" height="280px" /></div>
+        }
+      </app-dash-section>
+
+      <div class="mt-3">
+        <app-dash-section icon="bi-funnel" title="Sales funnel overview" [subtitle]="periodLabel()">
+          <div section-actions class="d-flex align-items-center gap-2 flex-wrap">
+            <p-select [options]="funnelStaffOptions()" [ngModel]="funnelStaff()" (ngModelChange)="onFunnelStaff($event)"
+              optionLabel="label" optionValue="value" ariaLabel="Staff" appendTo="body" styleClass="ld-staff-select" />
+            <div class="ld-seg" role="group" aria-label="Funnel period">
+              @for (p of funnelPeriods; track p.key) {
+              <button type="button" [class.active]="funnelPeriod() === p.key" [attr.aria-pressed]="funnelPeriod() === p.key"
+                (click)="funnelPeriod.set(p.key)">{{ p.label }}</button>
+              }
+            </div>
+          </div>
+
+          <div class="ld-steps">
+            @for (s of funnelSteps(); track s.label; let last = $last) {
+            <div class="ld-step">
+              <div class="ld-step-top"><span class="ld-ico tone-{{ s.tone }}"><i class="bi {{ s.icon }}"></i></span>{{ s.label }}</div>
+              <div class="ld-step-value">{{ s.value }}</div>
+              <div class="ld-step-sub">{{ s.sub || '&nbsp;' }}</div>
+            </div>
+            @if (!last) { <i class="bi bi-chevron-right ld-step-arrow" aria-hidden="true"></i> }
+            }
+          </div>
+          @if (funnelChart(); as c) {
+          <div class="ld-chart"><p-chart type="bar" [data]="c.data" [options]="c.options" height="280px" /></div>
+          }
+        </app-dash-section>
+      </div>
+      }
+
+      <!-- ============ SOURCES & AVERAGES ============ -->
+      @case ('sources') {
+      <div class="row g-3 mb-3">
+        <div class="col-lg-7">
+          <app-primedatatable [modalHeader]="sourceHeader" [columns]="sourceColumns" [data]="sources()" dataKey="name"
+            [inlineToolbar]="true" [rows]="10" searchPlaceholder="Search source..." exportFileName="lead-sources">
+            <ng-template #cellTemplate let-row let-col="col" let-i="index">
+              @switch (col.field) {
+              @case ('name') { <strong>{{ row.name }}</strong> }
+              @case ('leads') {
+              <div class="ld-lead-bar">
+                <b>{{ row.leads }}</b>
+                <div class="bar"><i [style.width.%]="leadBar(row.leads)"></i></div>
+              </div>
+              }
+              }
+            </ng-template>
+          </app-primedatatable>
+        </div>
+        <div class="col-lg-5">
+          <app-dash-section icon="bi-bar-chart" title="Top lead sources" meta="Top 6">
+            @if (sourcesChart(); as c) {
+            <div class="ld-chart"><p-chart type="bar" [data]="c.data" [options]="c.options" height="330px" /></div>
+            }
+          </app-dash-section>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <app-dash-section icon="bi-graph-up" title="Average sales monthly" [subtitle]="periodLabel()">
+            @if (averages(); as a) {
+            <div class="ld-minis">
+              <div class="ld-mini">
+                <div class="ld-mini-top"><span class="ld-ico tone-blue"><i class="bi bi-currency-rupee"></i></span>Revenue</div>
+                <div class="ld-mini-value" [class.neg]="a.revenue < 0">{{ inr(a.revenue) }}</div>
+              </div>
+              <div class="ld-mini">
+                <div class="ld-mini-top"><span class="ld-ico tone-green"><i class="bi bi-stars"></i></span>Quality leads</div>
+                <div class="ld-mini-value">{{ a.qualityLeads }} <small>/ {{ a.totalLeads }}</small></div>
+                <div class="ld-mini-bar"><i [style.width.%]="a.qualityPct > 2 ? a.qualityPct : 2"></i></div>
+              </div>
+              <div class="ld-mini">
+                <div class="ld-mini-top"><span class="ld-ico tone-amber"><i class="bi bi-trophy"></i></span>Win rate</div>
+                <div class="ld-mini-value">{{ a.winRate }}%</div>
+                <div class="ld-mini-sub">Lead : {{ a.winLead }} / Quote : {{ a.winQuote }}</div>
+              </div>
+              <div class="ld-mini">
+                <div class="ld-mini-top"><span class="ld-ico tone-red"><i class="bi bi-hand-thumbs-down"></i></span>Lost rate</div>
+                <div class="ld-mini-value">{{ a.lostRate }}%</div>
+              </div>
+            </div>
+            }
+          </app-dash-section>
+        </div>
+        <div class="col-lg-8">
+          <app-dash-section icon="bi-bar-chart-line" [title]="averageTitle()">
+            <div section-actions class="ld-seg" role="tablist" aria-label="Average sales view">
+              @for (v of averageViews; track v.key) {
+              <button type="button" role="tab" [class.active]="averageView() === v.key"
+                [attr.aria-selected]="averageView() === v.key" (click)="averageView.set(v.key)">{{ v.label }}</button>
+              }
+            </div>
+            @if (averageChart(); as c) {
+            <div class="ld-chart"><p-chart type="bar" [data]="c.data" [options]="c.options" height="340px" /></div>
+            }
+          </app-dash-section>
+        </div>
+      </div>
+      }
+
+      }
+    </div>
+  </div>
+
+  } @else if (loading()) {
+  <div class="ld-loading"><span class="spinner-border spinner-border-sm"></span> Loading sales analytics...</div>
+  }
+
+</div>

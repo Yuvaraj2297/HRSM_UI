@@ -1,0 +1,77 @@
+<div class="chat">
+
+  @if (contact(); as c) {
+  <!-- ===== header ===== -->
+  <div class="chat-head">
+    <button type="button" class="back-btn" aria-label="Back to contacts" (click)="back.emit()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <span class="head-avatar">{{ initials(c.name) }}</span>
+    <div class="head-info">
+      <div class="head-name">{{ c.name }}</div>
+      <div class="head-sub">{{ c.phone }} · <span [class.online]="c.online">{{ status() }}</span></div>
+    </div>
+  </div>
+
+  <!-- ===== messages ===== -->
+  <div class="messages" #scroller aria-live="polite">
+    @for (day of days(); track day.label) {
+    <div class="date-sep">{{ day.label }}</div>
+    @for (m of day.messages; track m.id) {
+    <div class="msg {{ m.dir }}">
+      <span class="bubble">{{ m.text }}</span>
+      <span class="msg-time">
+        {{ formatTime(m.at) }}
+        @if (m.dir === 'out') { <i class="bi bi-check2-all" aria-label="Delivered"></i> }
+      </span>
+    </div>
+    }
+    } @empty {
+    <div class="empty-chat">
+      <div class="ring"><i class="bi bi-chat-left-text"></i></div>
+      <h6>No messages yet</h6>
+      <p>{{ canSend() ? 'Send the first message to ' + c.name + '.' : 'No conversation with ' + c.name + ' yet.' }}</p>
+    </div>
+    }
+  </div>
+
+  <!-- ===== composer ===== -->
+  @if (canSend()) {
+  <form class="composer" (submit)="$event.preventDefault(); submit()">
+    @if (showAttach()) {
+    <button type="button" class="attach-btn" title="Attachments — coming soon" disabled aria-label="Attach file">
+      <i class="bi bi-paperclip"></i>
+    </button>
+    }
+    <div class="input-wrap">
+      <textarea #composer rows="1" [placeholder]="placeholder()" aria-label="Message" [value]="draft()"
+        (input)="onInput($event)" (keydown)="onKeydown($event)"></textarea>
+      @if (showSmsCounter() && draft()) {
+      <span class="sms-count" [class.multi]="sms().parts > 1"
+        [title]="sms().unicode ? 'Unicode message: 70 characters per SMS' : 'Standard message: 160 characters per SMS'">
+        {{ sms().chars }} chars · {{ sms().parts }} SMS{{ sms().unicode ? ' · Unicode' : '' }}
+      </span>
+      }
+    </div>
+    <button type="submit" class="send-btn" title="Send" aria-label="Send" [disabled]="!draft().trim()">
+      <i class="bi bi-send-fill"></i>
+    </button>
+  </form>
+  } @else {
+  <div class="composer-locked">
+    <i class="bi bi-telephone-x"></i>
+    No valid mobile number for {{ c.name }} — add one to the contact to send messages.
+  </div>
+  }
+
+  } @else {
+  <div class="messages">
+    <div class="empty-chat">
+      <div class="ring"><i [class]="emptyIcon()"></i></div>
+      <h6>Select a contact to start chatting</h6>
+      <p>{{ emptyHint() }}</p>
+    </div>
+  </div>
+  }
+
+</div>

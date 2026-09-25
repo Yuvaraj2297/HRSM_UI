@@ -1,0 +1,184 @@
+<div class="modal fade reuse-modal" tabindex="-1" #modalRoot aria-hidden="true" (hidden.bs.modal)="onHidden()">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ mode === 'edit' ? (editTitle || title) : title }}
+        </h5>
+
+        <button type="button" class="btn-close-custom" (click)="onCancel()" aria-label="Close">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+
+      <!-- BODY  (built from the `fields` the parent passes) -->
+      <div class="modal-body">
+        <form [formGroup]="form">
+
+          <div class="row g-3">
+
+            @for (f of fields; track f.key) {
+
+              @if (f.type === 'info') {
+                <div class="col-12">
+                  <div class="field-info-box">
+                    <i class="ti ti-info-circle"></i>
+                    <span>{{ f.label }}</span>
+                  </div>
+                </div>
+              } @else {
+
+              <div [ngClass]="colClass(f)" [class.field-invalid]="isInvalid(f)">
+
+                <label class="form-label" [class.required-label]="f.required"
+                  [attr.for]="f.type === 'file' ? null : 'rm-' + f.key">
+                  @if (f.labelIcon) {
+                    <i [class]="f.labelIcon + ' me-1'"></i>
+                  }
+                  {{ f.label }}
+                  @if (f.labelNote) {
+                    <span class="label-note">{{ f.labelNote }}</span>
+                  }
+                </label>
+
+                @switch (f.type) {
+
+                  @case ('select') {
+                    <p-select
+                      [inputId]="'rm-' + f.key"
+                      [formControlName]="f.key"
+                      [options]="f.options || []"
+                      optionLabel="label"
+                      optionValue="value"
+                      [placeholder]="f.placeholder || 'Select'"
+                      [filter]="!!f.filter"
+                      filterBy="label"
+                      [showClear]="!!f.showClear"
+                      appendTo="body"
+                      styleClass="w-100">
+                    </p-select>
+                  }
+
+                  @case ('date') {
+                    <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+                  }
+
+                  @case ('textarea') {
+                    <textarea
+                      class="form-control"
+                      [id]="'rm-' + f.key"
+                      [rows]="f.rows || 3"
+                      [formControlName]="f.key"
+                      [placeholder]="f.placeholder || ''"></textarea>
+                  }
+
+                  @case ('number') {
+                    <input
+                      type="number"
+                      class="form-control"
+                      [id]="'rm-' + f.key"
+                      [formControlName]="f.key"
+                      [placeholder]="f.placeholder || ''"
+                      [attr.min]="f.min ?? null"
+                      [attr.max]="f.max ?? null"
+                      autocomplete="off">
+                  }
+
+                  @case ('file') {
+
+                    @if (!fileOf(f) && !form.get(f.key)?.value) {
+                      <label
+                        class="upload-dropzone"
+                        [class.is-dragging]="draggingKey === f.key"
+                        (dragover)="onDragOver($event, f)"
+                        (dragleave)="onDragLeave($event)"
+                        (drop)="onDrop($event, f)">
+
+                        <input type="file" hidden [accept]="f.accept || ''" (change)="onFileSelected($event, f)">
+
+                        <div class="upload-icon">
+                          <i class="ti ti-cloud-upload"></i>
+                        </div>
+
+                        <div class="upload-title">{{ f.placeholder || 'Drag & drop your file here' }}</div>
+
+                        <div class="upload-sub">
+                          or <span class="browse-link">browse</span> to choose a file
+                        </div>
+
+                        @if (f.hint) {
+                          <div class="upload-hint">{{ f.hint }}</div>
+                        }
+                      </label>
+                    } @else {
+                      <div class="upload-file-chip">
+                        <div class="chip-icon">
+                          <i class="ti ti-file-check"></i>
+                        </div>
+
+                        <div class="chip-meta">
+                          <div class="chip-name">{{ fileOf(f)?.name || form.get(f.key)?.value }}</div>
+
+                          @if (fileOf(f); as file) {
+                            <div class="chip-size">{{ file.size / 1024 / 1024 | number:'1.2-2' }} MB</div>
+                          }
+                        </div>
+
+                        <button type="button" class="chip-remove" title="Remove" (click)="removeFile($event, f)">
+                          <i class="ti ti-x"></i>
+                        </button>
+                      </div>
+                    }
+                  }
+
+                  @default {
+                    <input
+                      class="form-control"
+                      [type]="f.type"
+                      [id]="'rm-' + f.key"
+                      [formControlName]="f.key"
+                      [placeholder]="f.placeholder || ''"
+                      autocomplete="off">
+                  }
+                }
+
+                @if (isInvalid(f)) {
+                  <div class="field-error">{{ getError(f) }}</div>
+                }
+
+              </div>
+              }
+            }
+
+          </div>
+
+        </form>
+      </div>
+
+      @if (formError) {
+      <div class="form-error-banner" role="alert">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <span>{{ formError }}</span>
+      </div>
+      }
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">
+          {{ cancelLabel }}
+        </button>
+
+        <button type="button" class="btn btn-save" (click)="onSave()">
+          @if (submitIcon) {
+            <i [class]="submitIcon + ' me-1'"></i>
+          }
+          {{ mode === 'add' ? saveLabel : updateLabel }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

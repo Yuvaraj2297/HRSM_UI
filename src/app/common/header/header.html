@@ -1,0 +1,131 @@
+<header class="app-header">
+
+  <!-- ============ LEFT: Logo + Burger ============ -->
+  <div class="header-left">
+
+    <!-- Logo -->
+    <div class="brand-area">
+      <img
+        src="/assets/logo-icon.png"
+        alt="JAILS CORP"
+        class="header-logo"
+      />
+       <img
+        src="/assets/logo-text.png"
+        alt="JAILS CORP"
+        class="header-logo"
+      />
+    </div>
+
+    <!-- Burger -->
+    <button
+      type="button"
+      class="header-toggle"
+      (click)="toggleSidebar()"
+      [attr.aria-label]="isToggled ? 'Open menu' : 'Close menu'"
+      [attr.aria-expanded]="!isToggled"
+    >
+      <i class="ti ti-menu-2"></i>
+    </button>
+
+  </div>
+
+
+  <!-- ============ CENTER: Search ============ -->
+  <div class="header-search">
+
+    <i class="ti ti-search header-search-icon"></i>
+
+    <input
+      type="text"
+      class="header-search-input"
+      [(ngModel)]="searchText"
+      placeholder="Search for employees, logs, files..."
+      name="headerSearch"
+      autocomplete="off"
+    />
+
+    @if (searchText) {
+      <button
+        type="button"
+        class="header-search-clear"
+        (click)="clearSearch()"
+        aria-label="Clear search"
+      >
+        <i class="ti ti-x"></i>
+      </button>
+    }
+
+  </div>
+
+
+  <!-- ============ RIGHT: Actions ============ -->
+  <div class="header-actions">
+
+    <button
+      type="button"
+      class="header-icon-button"
+      (click)="openHistory()"
+      aria-label="Activity history"
+    >
+      <i class="ti ti-clock-hour-4"></i>
+    </button>
+
+    <button
+      type="button"
+      class="header-icon-button"
+      (click)="openHelp()"
+      aria-label="Help"
+    >
+      <i class="ti ti-help"></i>
+    </button>
+
+    <button
+      type="button"
+      class="header-icon-button header-icon-button--bell"
+      (click)="openNotifications()"
+      aria-label="Notifications"
+    >
+      <i class="ti ti-bell"></i>
+      @if (notificationCount > 0) {
+        <span class="header-badge">
+          {{ notificationCount }}
+        </span>
+      }
+    </button>
+
+  <div class="profile-wrapper">
+      <button
+        type="button"
+        class="header-avatar-button"
+        (click)="toggleProfileMenu($event)"
+        [attr.aria-label]="'Account: ' + user.name"
+        [class.active]="isProfileMenuOpen"
+      >
+        <img [src]="user.avatarUrl" [alt]="user.name" class="header-avatar" />
+      </button>
+
+      <!-- DROPDOWN CARD -->
+      @if (isProfileMenuOpen) {
+        <div class="profile-dropdown-card">
+          <div class="dropdown-header">
+            <img [src]="user.avatarUrl" [alt]="user.name" class="dropdown-avatar" />
+            <div class="dropdown-info">
+              <span class="dropdown-name">{{ user.name }}</span>
+              <span class="dropdown-role">{{ user.role }}</span>
+            </div>
+          </div>
+          
+          <div class="dropdown-divider"></div>
+          
+          <button type="button" class="dropdown-logout-btn" (click)="logout()">
+            <i class="ti ti-logout"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      }
+    </div>
+
+  </div>
+
+</header>

@@ -1,0 +1,499 @@
+<div class="table-card-container">
+
+  <!-- header + toolbar: stacked (default) or one row when inlineToolbar = true -->
+  <div class="table-head-area" [class.is-inline]="inlineToolbar">
+
+  <!-- =========================================================
+       CARD HEADER
+  ========================================================== -->
+
+  @if (modalHeader.title) {
+
+  <div class="table-top-header">
+
+    <div class="header-left">
+
+      <div class="header-icon-box">
+        <i [class]="modalHeader.icon"></i>
+      </div>
+
+      <div>
+        <h2 class="header-title mb-0">
+          {{ modalHeader.title }}
+          @if (modalHeader.count !== undefined) {
+          <span class="header-count">({{ modalHeader.count }})</span>
+          }
+        </h2>
+        @if (modalHeader.subtitle) {
+        <div class="header-subtitle text-muted" style="font-size: 12px; margin-top: 2px;">{{ modalHeader.subtitle }}
+        </div>
+        }
+      </div>
+
+    </div>
+
+    <div class="header-right">
+
+      <ng-content select="[table-header-actions]"></ng-content>
+
+      @for (btn of headerButtons; track (btn.id || btn.label)) {
+      @if (btn.routerLink) {
+      <a [routerLink]="btn.routerLink" class="btn-header-custom" [ngClass]="[
+               btn.variant ? 'btn-' + btn.variant : 'btn-outline',
+               btn.class || ''
+             ]" (click)="onHeaderButtonClick(btn)">
+        @if (btn.icon && btn.iconPosition !== 'right') {
+        <i [class]="btn.icon"></i>
+        }
+        <span>{{ btn.label }}</span>
+        @if (btn.icon && btn.iconPosition === 'right') {
+        <i [class]="btn.icon"></i>
+        }
+      </a>
+      } @else {
+      <button type="button" class="btn-header-custom" [ngClass]="[
+                    btn.variant ? 'btn-' + btn.variant : 'btn-outline',
+                    btn.class || ''
+                  ]" [disabled]="btn.disabled" (click)="onHeaderButtonClick(btn)">
+        @if (btn.icon && btn.iconPosition !== 'right') {
+        <i [class]="btn.icon"></i>
+        }
+        <span>{{ btn.label }}</span>
+        @if (btn.icon && btn.iconPosition === 'right') {
+        <i [class]="btn.icon"></i>
+        }
+      </button>
+      }
+      }
+
+      @if (Accessactions.add) {
+      <button type="button" class="btn-add-primary" [class.has-label]="!!resolvedAddLabel" (click)="onAddClick()"
+        [title]="resolvedAddLabel || 'Add'">
+        <i [class]="resolvedAddIcon"></i>
+        @if (resolvedAddLabel) {
+        <span class="btn-add-text">{{ resolvedAddLabel }}</span>
+        }
+      </button>
+      }
+
+    </div>
+
+  </div>
+
+  }
+
+
+
+  <!-- =========================================================
+       ACTION TOOLBAR
+  ========================================================== -->
+
+  @if (showColumnsButton || showExportButton || showGlobalFilter) {
+
+  <div class="table-toolbar-row">
+
+    <div class="toolbar-left">
+
+      @if (showColumnsButton) {
+      <button type="button" class="btn-tool btn-columns" (click)="onColumns()" title="Manage Columns">
+        <i class="ti ti-eye"></i>
+        <span>Columns</span>
+      </button>
+      }
+
+      @if (showExportButton) {
+      <div class="export-wrapper">
+
+        <button type="button" class="btn-tool btn-export" (click)="onExport()" title="Export">
+          <i class="ti ti-download"></i>
+          <span>Export</span>
+          <i class="ti ti-chevron-down caret-icon" [class.rotated]="exportMenuOpen"></i>
+        </button>
+
+        @if (exportMenuOpen) {
+
+        <div class="export-menu-backdrop" (click)="closeExportMenu()"></div>
+
+        <div class="export-menu">
+
+          <button type="button" class="export-menu-item" (click)="onExportCopy()">
+            <i class="ti ti-copy"></i>
+            <span>Copy</span>
+          </button>
+
+          <button type="button" class="export-menu-item" (click)="onExportCSV()">
+            <i class="ti ti-file-type-csv"></i>
+            <span>CSV</span>
+          </button>
+
+          <button type="button" class="export-menu-item" (click)="onExportExcel()">
+            <i class="ti ti-file-spreadsheet"></i>
+            <span>Excel</span>
+          </button>
+
+          <button type="button" class="export-menu-item" (click)="onExportPDF()">
+            <i class="ti ti-file-type-pdf"></i>
+            <span>PDF</span>
+          </button>
+
+          <button type="button" class="export-menu-item" (click)="onExportPrint()">
+            <i class="ti ti-printer"></i>
+            <span>Print</span>
+          </button>
+
+        </div>
+
+        }
+
+      </div>
+      }
+
+      <ng-content select="[table-toolbar-left], [table-toolbar-actions]"></ng-content>
+
+    </div>
+
+    @if (showGlobalFilter) {
+    <div class="toolbar-right">
+      <div class="search-input-box">
+        <i class="ti ti-search search-icon"></i>
+        <input pInputText type="text" [placeholder]="searchPlaceholder"
+          (input)="onGlobalFilter($any($event.target).value)" />
+      </div>
+    </div>
+    }
+
+  </div>
+
+  }
+
+  </div>
+
+  <!-- =========================================================
+       PRIMENG TABLE
+  ========================================================== -->
+
+  <p-table #dt [value]="data" [selection]="selection" (selectionChange)="onSelectionChange($event)"
+    [paginator]="paginator" [rows]="rows" [loading]="loading" [showCurrentPageReport]="false"
+    [globalFilterFields]="filterFields" sortMode="single" [dataKey]="dataKey"
+    [selectionMode]="selectable ? 'multiple' : null" [rowHover]="true" styleClass="p-datatable-sm hrms-custom-table">
+
+    <!-- TABLE HEADER -->
+    <ng-template pTemplate="header">
+
+      <tr>
+
+        @if (selectable) {
+        <th class="th-checkbox" style="width: 48px; text-align: center;">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        }
+
+        @for (col of visibleColumns; track col.field) {
+
+        <th [pSortableColumn]="col.sortable ? col.field : undefined" [pSortableColumnDisabled]="!col.sortable"
+          [style.width]="col.width" class="th-col" [ngClass]="[col.cellClass || '', col.headerClass || '']">
+
+          <div class="th-content">
+
+            @if (customHeaderTemplate) {
+            <ng-container *ngTemplateOutlet="customHeaderTemplate; context: { col: col }"></ng-container>
+            } @else {
+            <span class="th-title">{{ col.header }}</span>
+            }
+
+            @if (col.sortable) {
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            }
+
+          </div>
+
+        </th>
+
+        }
+
+      </tr>
+
+    </ng-template>
+
+    <!-- TABLE BODY -->
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+
+      <tr (click)="onRowClick(row)" class="hrms-table-row">
+
+        @if (selectable) {
+        <td class="td-checkbox" style="width: 48px; text-align: center;" (click)="$event.stopPropagation()">
+          <p-tableCheckbox [value]="row"></p-tableCheckbox>
+        </td>
+        }
+
+        @for (col of visibleColumns; track col.field) {
+
+        <td class="td-col" [ngClass]="col.cellClass || ''" [style.width]="col.width">
+
+          @switch (kind(col)) {
+
+          @case ('sno') {
+          <!-- PrimeNG rowIndex already includes the page offset (first) -->
+          <span class="sno-text">{{ rowIndex + 1 }}</span>
+          }
+
+          @case ('link') {
+          <span class="emp-id-text">{{ row[col.field] }}</span>
+          }
+
+          @case ('avatar') {
+          <div class="d-flex align-items-center gap-2">
+            <img [src]="avatarSrc(col, row)" [alt]="row.name" class="employee-avatar"
+              (error)="$any($event.target).src = fallbackAvatar(row.name)" />
+            <div class="d-flex flex-column lh-sm">
+              <span class="employee-name fw-medium">{{ row[col.field] }}</span>
+              @if (col.subField && row[col.subField]) {
+              <small class="text-muted">{{ row[col.subField] }}</small>
+              }
+            </div>
+          </div>
+          }
+
+          @case ('badge') {
+          <span class="cell-badge" [style.color]="colorFor(col, row) || 'var(--neutral-650)'"
+            [style.background]="'color-mix(in srgb, ' + (colorFor(col, row) || 'var(--neutral-500)') + ' 10%, transparent)'">
+            {{ row[col.field] }}
+          </span>
+          }
+
+          @case ('checkboxText') {
+
+          <div class="checkbox-text-cell" (click)="$event.stopPropagation()">
+
+            <p-checkbox [binary]="true" [ngModel]="row[col.checkboxField || 'completed']" (onChange)="onCheckboxTextChange(
+        row,
+        col.checkboxField || 'completed',
+        $event.checked
+      )">
+            </p-checkbox>
+
+            <span class="checkbox-text" [class.completed]="row[col.checkboxField || 'completed']">
+
+              {{ row[col.field] }}
+
+            </span>
+
+          </div>
+
+          }
+
+          @case ('status') {
+          @if (colorFor(col, row)) {
+          <span class="cell-badge" [style.color]="colorFor(col, row)" [style.background]="'color-mix(in srgb, ' + colorFor(col, row) + ' 10%, transparent)'">
+            {{ row[col.field] }}
+          </span>
+          } @else if (isEnableOrDisable(row[col.field])) {
+          <span class="badge-master-status" [ngClass]="getStatusClass(row[col.field])">
+            {{ row[col.field] }}
+          </span>
+          } @else {
+          <span class="att-status-pill" [ngClass]="getStatusClass(row[col.field])">
+            <span class="dot"></span>{{ row[col.field] }}
+          </span>
+          }
+          }
+
+          @case ('progress') {
+          <div class="whrs-wrap">
+            <div class="whrs-label">{{ row[col.field] }}h / {{ row.hoursExpected }}h</div>
+            <div class="whrs-track">
+              <div class="whrs-fill" [style.width.%]="getProgress(row)"></div>
+            </div>
+          </div>
+          }
+
+          @case ('actions') {
+          <div class="action-pill-group" (click)="$event.stopPropagation()">
+            @if (actionsMode === 'menu' && activeRowActions.length) {
+
+            <button type="button" class="btn-kebab" title="Actions" (click)="toggleMenu($event, row)">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+
+            } @else if (activeRowActions.length) {
+
+            @for (act of activeRowActions; track act.key) {
+            @if (act.key !== 'divider' && (!act.hiddenWhen || !act.hiddenWhen(row))) {
+            <button type="button" class="btn-action-icon" [title]="act.label || act.key"
+              [disabled]="act.disabledWhen ? act.disabledWhen(row) : false" (click)="onAction(act.key, row)">
+              <i [class]="act.icon || 'ti ti-dots'"></i>
+            </button>
+            }
+            }
+
+            } @else {
+            @if (Accessactions.edit) {
+            <button type="button" class="btn-action-icon btn-edit" title="Edit" (click)="onAction('edit', row)">
+              <i class="ti ti-pencil"></i>
+            </button>
+            }
+            @if (Accessactions.delete) {
+            <button type="button" class="btn-action-icon btn-icon-danger btn-delete" title="Delete" (click)="onAction('delete', row)">
+              <i class="ti ti-trash"></i>
+            </button>
+            }
+            }
+          </div>
+          }
+
+          <!-- =================================================
+                 PILL ACTIONS — declarative segmented buttons.
+                 Configure on the column: type:'pill-actions', buttons:[{...}]
+                 No custom template / ::ng-deep needed.
+            ================================================== -->
+          @case ('pill-actions') {
+          <div class="pill-action-group" (click)="$event.stopPropagation()">
+            @for (btn of visibleButtons(col, row); track btn.key) {
+            <button type="button" class="pill-action-seg" [class.icon-only]="!btn.label"
+              [class.is-outline]="btn.variant === 'outline'" [ngStyle]="pillButtonStyle(btn)"
+              [title]="btn.tooltip || btn.label || btn.key"
+              [disabled]="btn.disabledWhen ? btn.disabledWhen(row) : false" (click)="onPillButton(btn, row, $event)">
+              @if (btn.icon) { <i [class]="btn.icon"></i> }
+              @if (btn.label) { <span>{{ btn.label }}</span> }
+            </button>
+            }
+          </div>
+          }
+
+          @case ('shift-name') {
+          <div class="shift-name-cell">
+            <span class="shift-dot" [style.background]="row.dot_color || 'var(--blue-450)'"></span>
+            <span class="shift-name-text">{{ row[col.field] }}</span>
+            @if (row.tag) {
+            <span class="shift-tag" [style.color]="row.tag_color || 'var(--blue-450)'"
+              [style.borderColor]="'color-mix(in srgb, ' + (row.tag_color || 'var(--blue-450)') + ' 20%, transparent)'"
+              [style.background]="'color-mix(in srgb, ' + (row.tag_color || 'var(--blue-450)') + ' 8%, transparent)'">
+              {{ row.tag }}
+            </span>
+            }
+          </div>
+          }
+
+          @case ('day-timing') {
+          <span class="day-timing-cell" [class.flexible]="!row[col.field] || row[col.field] === 'Flexible timing'">
+            {{ row[col.field] || 'Flexible timing' }}
+          </span>
+          }
+
+          @case ('custom') {
+          <ng-container *ngTemplateOutlet="customCellTemplate!; context: { $implicit: row, col: col, index: rowIndex }">
+          </ng-container>
+          }
+
+          @default {
+          <span class="cell-text">{{ row[col.field] }}</span>
+          }
+          }
+
+        </td>
+
+        }
+
+      </tr>
+
+    </ng-template>
+
+    <!-- PAGINATOR LEFT -->
+    <ng-template pTemplate="paginatorleft">
+
+      <div class="paginator-left-info">
+
+        <span class="show-label">Show:</span>
+
+        <select class="show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)">
+          @for (opt of rowsPerPageOptions; track opt) {
+          <option [value]="opt">{{ opt }}</option>
+          }
+        </select>
+
+        <span class="showing-range">
+          Showing {{ getTotal() ? ((dt.first || 0) + 1) : 0 }} - {{ getEndIndex() }} of {{ getTotal() }}
+        </span>
+
+      </div>
+
+    </ng-template>
+
+    <!-- EMPTY MESSAGE -->
+    <ng-template pTemplate="emptymessage">
+
+      <tr>
+        <td [attr.colspan]="visibleColumns.length + (selectable ? 1 : 0)" class="text-center py-5 text-muted">
+          <div class="empty-state">
+            <i class="ti ti-folder-off fs-1 d-block mb-2 text-secondary opacity-50"></i>
+            <span>No records found</span>
+          </div>
+        </td>
+      </tr>
+
+    </ng-template>
+
+  </p-table>
+
+</div>
+
+
+<!-- =========================================================
+     COLUMNS VISIBILITY OFFCANVAS
+========================================================== -->
+
+@if (columnsPanelOpen) {
+
+<div class="columns-offcanvas-backdrop" (click)="closeColumnsPanel()"></div>
+
+<div class="columns-offcanvas-panel">
+
+  <div class="columns-offcanvas-header">
+    <h3 class="columns-offcanvas-title">Columns Visibility</h3>
+    <button type="button" class="columns-offcanvas-close" (click)="closeColumnsPanel()" aria-label="Close">
+      <i class="ti ti-x"></i>
+    </button>
+  </div>
+
+  <div class="columns-offcanvas-body">
+
+    @for (col of columns; track col.field) {
+    <div class="column-visibility-row">
+      <span class="column-visibility-label">{{ col.header }}</span>
+      <button [attr.aria-label]="'Show ' + col.header + ' column'" type="button" class="column-toggle-switch" [class.on]="isColumnVisible(col.field)"
+        (click)="toggleColumnVisibility(col.field)" [attr.aria-pressed]="isColumnVisible(col.field)">
+        <span class="column-toggle-knob"></span>
+      </button>
+    </div>
+    }
+
+    <button type="button" class="btn-restore-all" (click)="restoreAllColumns()">Restore All</button>
+
+  </div>
+
+</div>
+
+}
+
+
+<!-- =========================================================
+     ROW ACTION MENU (kebab dropdown)
+========================================================== -->
+
+@if (menuRow) {
+<div class="row-menu-backdrop" (click)="closeMenu()"></div>
+
+<div class="row-menu" [style.top.px]="menuPos.top" [style.left.px]="menuPos.left">
+  @for (act of activeRowActions; track act.key) {
+  @if (act.key === 'divider') {
+  <div class="row-menu-divider"></div>
+  } @else if (!act.hiddenWhen || !act.hiddenWhen(menuRow)) {
+  <button type="button" class="row-menu-item" [disabled]="act.disabledWhen ? act.disabledWhen(menuRow) : false"
+    (click)="onMenuItem(act, menuRow)">
+    @if (act.icon) { <i [class]="act.icon"></i> }
+    <span>{{ act.label || act.key }}</span>
+  </button>
+  }
+  }
+</div>
+}

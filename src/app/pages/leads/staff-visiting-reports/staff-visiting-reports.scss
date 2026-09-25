@@ -1,0 +1,15 @@
+/* tabs, filter card and stat tiles are global (global-style/classes.scss) */
+
+.sv-page-title {
+  margin: 4px 0 16px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--gh-heading);
+}
+
+@media (max-width: 575.98px) {
+  .sv-page-title {
+    font-size: 22px;
+  }
+}

@@ -1,0 +1,181 @@
+<!-- Title & Action Bar -->
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class="font-display  mb-1" style="font-size:1.7rem;">Lead Management</h1>
+    <nav class="d-flex align-items-center gap-2 text-neutral" style="font-size:13px;">
+      <i class="bi bi-person-lines-fill fs-6"></i>
+      <span>CRM</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class=" text-dark">Leads</span>
+    </nav>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button type="button" class="btn btn-primary" (click)="openNewLead()">
+      <i class="bi bi-plus-lg"></i> New Lead
+    </button>
+    <button type="button" class="btn btn-outline-primary" (click)="openImport()">
+      <i class="bi bi-upload"></i> Import Leads
+    </button>
+    <button type="button" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-repeat"></i> Form Sync
+    </button>
+  </div>
+</div>
+
+<!-- ===== Page view tabs ===== -->
+<div role="tablist" class="lp-tabs">
+  <button role="tab" type="button" class="lp-tab" [class.active]="activeTab === 'leads'" (click)="setTab('leads')" [attr.aria-selected]="activeTab === 'leads'">
+    <i class="bi bi-table"></i>All Leads
+  </button>
+  <button role="tab" type="button" class="lp-tab" [class.active]="activeTab === 'stats'" (click)="setTab('stats')" [attr.aria-selected]="activeTab === 'stats'">
+    <i class="bi bi-grid-3x3-gap-fill"></i>Activity Stats
+  </button>
+</div>
+
+<!-- ===== PANEL: Activity Stats ===== -->
+<div class="lp-panel" [class.active]="activeTab === 'stats'">
+  <div class="card-custom lead-stats-card mb-3">
+    <div class="table-responsive">
+      <table class="lead-stats-table mb-0">
+        <thead>
+          <tr>
+            <th class="grp-activity" rowspan="2">Activity</th>
+            <th class="grp-followup" colspan="3">Follow Up</th>
+            <th class="grp-appointment" colspan="2">Appointment</th>
+            <th class="grp-calls" colspan="2">Calls (Activity)</th>
+            <th class="grp-quote" colspan="3">Quote</th>
+            <th class="grp-closure" colspan="3">Expected Closure</th>
+          </tr>
+          <tr>
+            <th>Today</th><th>Weekly</th><th>Monthly</th>
+            <th>Today</th><th>Weekly</th>
+            <th>Today</th><th>Weekly</th>
+            <th>Today</th><th>Weekly</th><th>Monthly</th>
+            <th>Today</th><th>Weekly</th><th>Monthly</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of statsRows">
+            <td class="row-label-cell">{{ row.label }}</td>
+            <td *ngFor="let v of row.values" [class.stat-danger]="row.danger">{{ v }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PANEL: All Leads ===== -->
+<div class="lp-panel" [class.active]="activeTab === 'leads'">
+
+  <!-- ===== Filters card ===== -->
+  <div class="card-custom mb-3 filters-card d-flex flex-column">
+    <button type="button" class="filters-toggle-btn ms-auto" (click)="filtersOpen = !filtersOpen">
+      <i class="bi bi-funnel"></i>
+      <span>Filter by</span>
+      <i class="bi bi-chevron-down chevron" [class.rotated]="filtersOpen"></i>
+    </button>
+
+    <div class="filters-collapse" [class.show]="filtersOpen">
+      <div class="row g-3">
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">Staff Members</label>
+          <select class="form-select" [(ngModel)]="filters.staff">
+            <option value="">Assigned</option>
+            <option *ngFor="let o of staffOptions" [value]="o">{{ o }}</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">Sourcer</label>
+          <select class="form-select" [(ngModel)]="filters.sourcer">
+            <option value="">Sourcer</option>
+            <option *ngFor="let o of sourcerOptions" [value]="o">{{ o }}</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">Lead Status</label>
+          <select class="form-select" multiple [(ngModel)]="filters.status">
+            <option *ngFor="let o of statusOptions" [value]="o">{{ o }}</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">Lead Score</label>
+          <select class="form-select" [(ngModel)]="filters.source">
+            <option value="">Source</option>
+            <option *ngFor="let o of sourceOptions" [value]="o">{{ o }}</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">From date</label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">To date</label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">Lead Type</label>
+          <select class="form-select" [(ngModel)]="filters.type">
+            <option value="">Additional Filters</option>
+            <option *ngFor="let o of typeOptions" [value]="o">{{ o }}</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <label class="form-label">Closure Date Period</label>
+          <select class="form-select" [(ngModel)]="filters.closurePeriod">
+            <option *ngFor="let o of closurePeriodOptions" [value]="o">{{ o }}</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 align-self-end">
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-reject flex-fill text-nowrap" (click)="clearFilters()">Clear Filters</button>
+            <button type="button" class="btn btn-primary flex-fill text-nowrap">
+              <i class="bi bi-funnel"></i> Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Leads Table (PrimeNG DataTable) ===== -->
+  <app-primedatatable
+    [columns]="leadColumns"
+    [data]="leads"
+    [dataKey]="'id'"
+    [rows]="10"
+    [rowActions]="leadRowActions"
+    actionsMode="inline"
+    searchPlaceholder="Search leads..."
+    exportFileName="leads"
+    (rowClick)="openDetail($event)"
+    (actionClick)="onLeadTableAction($event)">
+
+    <!-- custom cells: stage progress ring + tag pills -->
+    <ng-template #cellTemplate let-row let-col="col">
+      <div class="stage-ring" *ngIf="col.field === 'stagePct'" [style.--pct]="row.stagePct">
+        <span>{{ row.stagePct }}%</span>
+      </div>
+      <ng-container *ngIf="col.field === 'tags'">
+        <span class="lead-tag-pill" *ngFor="let t of row.tags">{{ t }}</span>
+      </ng-container>
+    </ng-template>
+
+  </app-primedatatable>
+
+</div>
+
+<!-- ===== New Lead Modal (shared ReuseModal) ===== -->
+<app-reuse-modal
+  #newLeadModal
+  title="New Lead"
+  [fields]="newLeadFields"
+  saveLabel="Submit"
+  (saved)="onLeadSaved($event)">
+</app-reuse-modal>
+
+<!-- ===== Import Leads Modal ===== -->
+<app-import-leads-modal #importModal></app-import-leads-modal>
+
+<!-- ===== Lead Detail Modal ===== -->
+<app-lead-detail-modal #detailModal></app-lead-detail-modal>

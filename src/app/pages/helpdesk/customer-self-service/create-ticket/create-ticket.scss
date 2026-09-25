@@ -1,0 +1,417 @@
+/* =========================================================
+   CUSTOMER SUPPORT CREATE TICKET STYLES
+========================================================= */
+
+/* Hero banner (blue gradient) */
+.ct-hero {
+  background: linear-gradient(115deg, var(--blue-600) 0%, var(--blue-450) 52%, var(--teal-350) 100%);
+  border-radius: 18px;
+  padding: 22px 28px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 18px rgba(var(--blue-550-rgb), 0.16);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(var(--white-rgb), 0.09);
+    pointer-events: none;
+  }
+
+  &::before {
+    width: 170px;
+    height: 170px;
+    right: -50px;
+    top: -70px;
+  }
+
+  &::after {
+    width: 110px;
+    height: 110px;
+    right: 120px;
+    bottom: -60px;
+    background: rgba(var(--white-rgb), 0.06);
+  }
+
+  .hero-crumb {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: rgba(var(--white-rgb), 0.85);
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 1;
+
+    i {
+      font-size: 14px;
+    }
+  }
+
+  h1 {
+    color: var(--white);
+    font-size: 1.55rem;
+    font-weight: 700;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Step Badges */
+.step-badge {
+  background: var(--blue-50-2);
+  color: var(--blue-600);
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 4px 8px;
+}
+
+.step-title {
+  font-size: 13.5px;
+  color: var(--neutral-850);
+}
+
+/* Form card */
+.ct-form-card {
+  padding: 26px 28px;
+}
+
+.ct-input {
+  border: 1.5px solid var(--bg-muted);
+  background: var(--bg-soft);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 13px;
+  transition: all 0.15s ease;
+  width: 100%;
+  color: var(--neutral-850);
+
+  &:focus {
+    background: var(--white);
+    border-color: var(--blue-450);
+    box-shadow: 0 0 0 3px rgba(var(--blue-450-rgb), 0.12);
+    outline: none;
+  }
+
+  &.err {
+    border-color: var(--red-550) !important;
+    background: var(--red-50) !important;
+  }
+
+  &.has-icon-left {
+    padding-left: 36px;
+  }
+}
+
+.input-icon-left {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--neutral-500-2);
+}
+
+.ct-err {
+  display: none;
+  color: var(--red-550);
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 4px;
+
+  &.show {
+    display: block;
+  }
+}
+
+/* Project Selection Grid */
+.ct-proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.ct-proj {
+  border: 1.5px solid var(--bg-muted);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  background: var(--white);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+
+  &:hover {
+    border-color: var(--blue-200);
+    background: var(--bg-soft);
+  }
+
+  &.selected {
+    border-color: var(--blue-450);
+    background: var(--blue-50-2);
+    box-shadow: 0 0 0 3px rgba(var(--blue-450-rgb), 0.12);
+  }
+
+  .p-ico {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .p-name {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--neutral-900-2);
+    line-height: 1.2;
+  }
+}
+
+/* Issue Type Grid */
+.ct-issue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 8px;
+}
+
+.ct-issue {
+  border: 1.5px solid var(--bg-muted);
+  border-radius: 12px;
+  padding: 10px 8px;
+  cursor: pointer;
+  background: var(--white);
+  transition: all 0.15s ease;
+  text-align: center;
+  user-select: none;
+
+  &:hover {
+    border-color: var(--blue-200);
+    background: var(--bg-soft);
+  }
+
+  &.selected {
+    border-color: var(--blue-450);
+    background: var(--blue-50-2);
+    box-shadow: 0 0 0 3px rgba(var(--blue-450-rgb), 0.12);
+  }
+
+  .i-ico {
+    font-size: 18px;
+  }
+
+  .i-name {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--neutral-900-2);
+    margin-top: 4px;
+    line-height: 1.25;
+  }
+}
+
+/* Priority Pills */
+.ct-prio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ct-prio {
+  border: 1.5px solid var(--bg-muted);
+  border-radius: 99px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  background: var(--white);
+  transition: all 0.15s ease;
+  user-select: none;
+
+  &:hover {
+    border-color: var(--text-faint);
+  }
+
+  &.selected {
+    color: var(--white);
+    border-color: transparent;
+
+    &[data-v="Low"] {
+      background: var(--green-550);
+    }
+
+    &[data-v="Medium"] {
+      background: var(--orange-550);
+    }
+
+    &[data-v="High"] {
+      background: var(--orange-550-3);
+    }
+
+    &[data-v="Critical"] {
+      background: var(--red-550);
+    }
+  }
+}
+
+/* SLA Hint Strip */
+.ct-sla-hint {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  border: 1px dashed var(--blue-200);
+  background: var(--blue-50-4);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue-600);
+
+  &.show {
+    display: flex;
+  }
+}
+
+/* Attachment Drop and Chip */
+.ct-file-drop {
+  border: 1.5px dashed var(--text-faint);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--bg-soft);
+  transition: all 0.15s ease;
+  font-size: 12.5px;
+  color: var(--neutral-500-2);
+
+  &:hover {
+    border-color: var(--blue-450);
+    background: var(--blue-50-4);
+  }
+}
+
+.ct-file-chip {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--bg-muted);
+  background: var(--bg-soft);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+
+  &.show {
+    display: inline-flex;
+    width: 100%;
+  }
+
+  .file-clear-btn {
+    cursor: pointer;
+    font-size: 12px;
+  }
+}
+
+.expected-note {
+  font-size: 10.5px;
+}
+
+/* Submit button */
+.ct-submit-btn {
+
+  &:hover {
+    opacity: 0.92;
+  }
+}
+
+/* Success panel */
+.ct-success {
+  display: none;
+  text-align: center;
+  padding: 30px 10px;
+
+  &.show {
+    display: block;
+  }
+
+  .s-ico {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    color: var(--green-550);
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+    margin: 0 auto 14px;
+  }
+
+  .ticket-id-title {
+    color: var(--neutral-900);
+  }
+
+  .success-msg {
+    font-size: 13px;
+  }
+}
+
+/* Side cards */
+
+.side-card-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--neutral-850);
+}
+
+.sla-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--bg-muted);
+  font-size: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.sla-footnote {
+  font-size: 10.5px;
+}
+
+/* Flow steps */
+.flow-steps {
+  font-size: 12px;
+}
+
+.step-flow-1 { background: var(--accent-blue-soft); color: var(--blue-550); font-size: 9.5px; }
+.step-flow-2 { background: var(--blue-50-3); color: var(--purple-550); font-size: 9.5px; }
+.step-flow-3 { background: var(--orange-50); color: var(--orange-550); font-size: 9.5px; }
+.step-flow-4 { background: var(--pink-50); color: var(--pink-600); font-size: 9.5px; }
+.step-flow-5 { background: var(--primary-soft); color: var(--green-550); font-size: 9.5px; }
+
+/* Tips */
+.tips-icon {
+  color: var(--orange-550);
+}
+
+.tips-list {
+  font-size: 12px;
+  line-height: 1.7;
+
+  .check-green {
+    color: var(--green-550);
+  }
+}

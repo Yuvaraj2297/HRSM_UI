@@ -1,0 +1,219 @@
+<div class="relieving-page">
+
+  <!-- =====================================================
+       TITLE
+  ====================================================== -->
+
+  <div class="ne-section-title relieving-title">
+    Resignation / Relieving Request :-
+  </div>
+
+
+  <!-- =====================================================
+       FORM
+  ====================================================== -->
+
+  <form [formGroup]="relieving" (ngSubmit)="submitRequest()" novalidate>
+
+    <!-- ===================================================
+         ROW 1
+    ==================================================== -->
+
+    <div class="row g-3">
+
+      <!-- Employee Name -->
+
+      <div class="col-lg-4 col-md-6">
+
+        <label class="form-label">
+          Employee Name
+        </label>
+
+        <div class="employee-input-wrapper">
+
+          <input type="text" class="form-control employee-input" [value]="employeeName || '—'" readonly />
+
+          <!-- <i class="bi bi-chevron-down employee-arrow"></i> -->
+
+           <small>
+          Auto-filled from Profile tab
+        </small>
+
+        </div>
+
+       
+
+      </div>
+
+
+      <!-- Relieving Type -->
+
+      <div class="col-lg-4 col-md-6">
+
+        <label class="form-label">
+          Relieving Type
+        </label>
+
+        <p-select formControlName="type" [options]="fs.relievingTypes" optionLabel="label" optionValue="value"
+          placeholder="Select Relieving Type" [showClear]="true" [filter]="true" filterBy="label" styleClass="w-100"
+          appendTo="body" />
+
+        <div class="validation-message" *ngIf="isInvalid('type')">
+          Please select relieving type.
+        </div>
+
+      </div>
+
+
+      <!-- Resignation Date -->
+
+      <div class="col-lg-4 col-md-6">
+
+        <label class="form-label">
+
+          <span class="required-star">*</span>
+
+          Resignation Date
+
+        </label>
+
+        <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+        <div class="validation-message" *ngIf="isInvalid('resignationDate')">
+          Resignation date is required.
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         ROW 2
+    ==================================================== -->
+
+    <div class="row g-3 second-row">
+
+      <!-- Proposed Last Working Date -->
+
+      <div class="col-lg-4 col-md-6">
+
+        <label class="form-label">
+
+          <span class="required-star">*</span>
+
+          Proposed Last Working Date
+
+        </label>
+
+       <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+
+        <div class="validation-message" *ngIf="isInvalid('lastWorkingDay')">
+          Proposed last working date is required.
+        </div>
+
+      </div>
+
+
+      <!-- Notice Period -->
+
+      <div class="col-lg-4 col-md-6">
+
+        <label class="form-label">
+          Notice Period
+        </label>
+
+        <p-select formControlName="noticePeriod" [options]="fs.noticePeriods" optionLabel="label" optionValue="value"
+          placeholder="Select notice period" [showClear]="true" styleClass="w-100" appendTo="body" />
+
+      </div>
+
+
+      <!-- Supporting Document -->
+  
+
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label"> Supporting Document– optional</label>
+          <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" (change)="onFile($event)">
+    
+      <small>
+        Upload resignation letter or any supporting document
+        (PDF, DOC, Images)
+      </small>
+    
+    </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         ROW 3
+    ==================================================== -->
+
+    <div class="row g-3 reason-row">
+
+      <!-- Reason -->
+
+      <div class="col-lg-6">
+
+        <label class="form-label">
+
+          <span class="required-star">*</span>
+
+          Reason for Leaving
+
+        </label>
+
+        <textarea pTextarea class="form-control reason-textarea" rows="4" formControlName="reason"
+          placeholder="Please describe your reason for leaving"></textarea>
+
+        <div class="validation-message" *ngIf="isInvalid('reason')">
+          Reason for leaving is required.
+        </div>
+
+      </div>
+
+
+      <!-- Remarks -->
+
+      <div class="col-lg-6">
+
+        <label class="form-label">
+          Remarks
+        </label>
+
+        <textarea pTextarea class="form-control reason-textarea" rows="4" formControlName="remarks"
+          placeholder="Any additional remarks (optional)"></textarea>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         DIVIDER
+    ==================================================== -->
+
+    <div class="form-divider"></div>
+
+
+    <!-- ===================================================
+         SUBMIT BUTTON
+    ==================================================== -->
+
+    <div class="submit-container text-end mt-3">
+
+      <button type="submit" class="submit-button">
+
+        <i class="bi bi-send"></i>
+
+       Submit Request
+      
+
+      </button>
+
+    </div>
+
+
+  </form>
+
+</div>

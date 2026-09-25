@@ -1,0 +1,40 @@
+<div class="spot">
+  <div class="spot-head">
+    <span class="spot-head-l"><span class="spot-trophy"><i class="bi bi-trophy-fill"></i></span>Revenue by sales rep</span>
+    <span>{{ period() }}</span>
+  </div>
+
+  @if (top(); as t) {
+  <div class="spot-top">
+    <div class="spot-avatar">
+      {{ t.name.charAt(0).toUpperCase() }}
+      <span class="crown"><i class="bi bi-trophy-fill"></i></span>
+    </div>
+    <div>
+      <div class="spot-name">{{ t.name }}</div>
+      <div class="spot-amount">{{ inr(t.amount) }}</div>
+      <span class="spot-tag"><i class="bi bi-patch-check-fill"></i>Top performer</span>
+    </div>
+  </div>
+
+  <ul class="board">
+    @for (l of rows(); track l.name; let i = $index) {
+    <li>
+      <span class="rank">{{ i + 1 }}</span>
+      <div class="who-wrap">
+        <span class="who">{{ l.name }}</span>
+        <span class="bar"><i [style.width.%]="l.width"></i></span>
+      </div>
+      <span class="amt">{{ inr(l.amount) }}</span>
+    </li>
+    }
+  </ul>
+  } @else {
+  <div class="spot-empty">No sales recorded for {{ period() }}.</div>
+  }
+
+  <div class="spot-foot">
+    <span><i class="bi bi-people-fill me-1"></i>Team revenue · {{ leaders().length }} reps</span>
+    <strong>{{ inr(teamTotal()) }}</strong>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="modal fade" #modalRoot tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:18px;border:none;">
+      <div class="modal-header">
+        <h5 class=" mb-0"><i class="bi bi-upload me-2 text-primary"></i>Import Leads</h5>
+        <button aria-label="Close" type="button" class="btn-close" (click)="close()"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="im-field">
+          <label><span class="req">*</span>Choose CSV File</label>
+          <input type="file" class="form-control" accept=".csv,.xlsx,.xls" (change)="onFileSelected($event)">
+        </div>
+
+        <div class="im-field">
+          <label><span class="req">*</span>Status (fallback)</label>
+          <div class="d-flex gap-2">
+            <select class="form-select" [(ngModel)]="status">
+              <option *ngFor="let o of statusOptions" [value]="o">{{ o }}</option>
+            </select>
+            <button type="button" class="im-inline-add" (click)="showAddStatus = !showAddStatus" title="Add new status"><i class="bi bi-plus-lg"></i></button>
+          </div>
+          <div class="im-inline-wrap" [class.show]="showAddStatus">
+            <input type="text" class="form-control form-control-sm" placeholder="New status name" [(ngModel)]="newStatus" (keydown.enter)="saveNewStatus()">
+            <button aria-label="Save status" type="button" class="im-inline-add im-inline-save" (click)="saveNewStatus()"><i class="bi bi-check-lg"></i></button>
+          </div>
+        </div>
+
+        <div class="im-field">
+          <label><span class="req">*</span>Source (fallback)</label>
+          <div class="d-flex gap-2">
+            <select class="form-select" [(ngModel)]="source">
+              <option *ngFor="let o of sourceOptions" [value]="o">{{ o }}</option>
+            </select>
+            <button type="button" class="im-inline-add" (click)="showAddSource = !showAddSource" title="Add new source"><i class="bi bi-plus-lg"></i></button>
+          </div>
+          <div class="im-inline-wrap" [class.show]="showAddSource">
+            <input type="text" class="form-control form-control-sm" placeholder="New source name" [(ngModel)]="newSource" (keydown.enter)="saveNewSource()">
+            <button aria-label="Save source" type="button" class="im-inline-add im-inline-save" (click)="saveNewSource()"><i class="bi bi-check-lg"></i></button>
+          </div>
+        </div>
+
+        <div class="im-field">
+          <label>Responsible (Assignee)</label>
+          <select class="form-select" [(ngModel)]="assignee">
+            <option value="">Non selected</option>
+            <option *ngFor="let o of assigneeOptions" [value]="o">{{ o }}</option>
+          </select>
+        </div>
+
+        <a href="javascript:void(0)" class="im-sample-link" (click)="downloadSample()"><i class="bi bi-download"></i>Download sample</a>
+
+        <div class="im-footer mt-3">
+          <button type="button" class="btn btn-primary" (click)="doImport()"><i class="bi bi-upload"></i>Import</button>
+          <button type="button" class="btn btn-primary" [disabled]="simulating" (click)="simulateImport()">
+            <span class="spinner-border spinner-border-sm" *ngIf="simulating"></span>
+            <i class="bi bi-play-fill" *ngIf="!simulating"></i>{{ simulating ? 'Simulating...' : 'Simulate Import' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

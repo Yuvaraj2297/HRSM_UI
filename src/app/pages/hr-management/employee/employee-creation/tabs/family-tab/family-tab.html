@@ -1,0 +1,64 @@
+<div class="ne-section-title">Family Details :-</div>
+
+<div class="row g-3" [formGroup]="family">
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Father name</label>
+    <input pInputText class="form-control" formControlName="fatherName" placeholder="Enter father name">
+  </div>
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Mother name</label>
+    <input pInputText class="form-control" formControlName="motherName" placeholder="Enter mother name">
+  </div>
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Contact Number</label>
+    <input pInputText class="form-control" formControlName="contactNumber" placeholder="Enter contact number">
+  </div>
+
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Father Occupation</label>
+    <input pInputText class="form-control" formControlName="fatherOccupation" placeholder="Enter father occupation">
+  </div>
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Mother Occupation</label>
+    <input pInputText class="form-control" formControlName="motherOccupation" placeholder="Enter mother occupation">
+  </div>
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Mention If Others(Name)</label>
+    <input pInputText class="form-control" formControlName="otherName" placeholder="Enter name">
+  </div>
+
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Relationship</label>
+    <input pInputText class="form-control" formControlName="relationship" placeholder="Enter relationship">
+  </div>
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Marital status</label>
+    <p-select formControlName="maritalStatus" [options]="fs.maritalStatuses" optionLabel="label" optionValue="value"
+              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+  </div>
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Spouse Name</label>
+    <input pInputText class="form-control" formControlName="spouseName" placeholder="Enter spouse name">
+  </div>
+
+  <ng-container formArrayName="children">
+    <div class="col-lg-4 col-md-6" *ngFor="let c of children.controls; let i = index">
+      <label class="form-label">{{ i + 1 }}. Childrens Name</label>
+      <div class="d-flex gap-2">
+        <input pInputText class="form-control" [formControlName]="i" placeholder="Enter children's name">
+        <button aria-label="Remove child" *ngIf="i > 0" type="button" class="btn-icon btn-icon-danger" (click)="removeChild(i)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="col-lg-4 col-md-6 d-flex align-items-end">
+    <button type="button" class="btn btn-primary" (click)="addChild()">+ Add More</button>
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Address</label>
+    <textarea pTextarea class="form-control" rows="3" formControlName="address" placeholder="Enter address"></textarea>
+  </div>
+</div>

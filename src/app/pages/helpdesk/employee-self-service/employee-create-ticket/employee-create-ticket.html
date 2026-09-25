@@ -1,0 +1,457 @@
+<!-- Page Header & Breadcrumb -->
+<app-breadcrumb title="Create Ticket" parent="Helpdesk / Ticketing" icon="bi bi-life-preserver">
+  <div breadcrumb-actions class="d-flex gap-2">
+    <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-outline-primary">
+      <i class="bi bi-ticket-perforated me-1"></i> My Tickets
+    </a>
+  </div>
+</app-breadcrumb>
+
+<div class="row g-3">
+  <!-- ===== Form Column ===== -->
+  <div class="col-lg-8">
+    <div class="ticket-form-card">
+      <div class="ticket-form-head">
+        <div class="head-icon">
+          <i class="bi bi-life-preserver"></i>
+        </div>
+        <div>
+          <h3>Ticket Details</h3>
+          <p>Fill in the details below — our support team will respond within the SLA time.</p>
+        </div>
+      </div>
+
+      <div class="ticket-form-body">
+        @if (!isSuccess) {
+        <form (ngSubmit)="onSubmit()" novalidate>
+          <!-- Category -->
+          <div class="mb-3" [class.has-error]="isSubmitted && categoryError">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+              <label class="form-label-tkt mb-0">
+                Category <span class="req">*</span>
+              </label>
+              <button type="button" class="btn-add-category" (click)="openCustomCategoryModal(null)">
+                <i class="bi bi-plus-lg"></i> Custom Category
+              </button>
+            </div>
+
+            <div class="category-grid">
+              @for (c of categories; track c.id) {
+              <div class="category-card" [class.selected]="selectedCategory?.id === c.id" [attr.title]="c.example"
+                (click)="selectCategory(c)" role="button" tabindex="0">
+                <span class="cat-actions" (click)="$event.stopPropagation()">
+                  <button type="button" class="cact-edit" (click)="editCategory(c, $event)" title="Edit category">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button type="button" class="cact-del" (click)="deleteCategory(c, $event)" title="Delete category">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </span>
+
+                <span class="cat-ico">{{ c.icon }}</span>
+                <div class="cat-name">{{ c.name }}</div>
+              </div>
+              }
+            </div>
+
+            @if (isSubmitted && categoryError) {
+            <div class="tkt-field-err">Please select a category</div>
+            }
+          </div>
+
+          <!-- Sub Category & Priority Row -->
+          <div class="row g-3">
+            <div class="col-md-6" [class.has-error]="isSubmitted && subCategoryError">
+              <label class="form-label-tkt">
+                Sub Category <span class="req">*</span>
+              </label>
+
+              <!-- PrimeNG p-select instead of normal select -->
+              <p-select [options]="subCategoryOptions" [(ngModel)]="selectedSubCategory" name="subCategory"
+                optionLabel="label" optionValue="value" placeholder="Select Sub Category..."
+                [disabled]="!selectedCategory" appendTo="body" styleClass="w-100 ct-p-select-field"
+                class="w-100 d-block" (onChange)="subCategoryError = false"></p-select>
+
+              @if (isSubmitted && subCategoryError) {
+              <div class="tkt-field-err">Please select a sub category</div>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label-tkt">
+                Priority <span class="req">*</span>
+              </label>
+              <div class="priority-grid">
+                @for (prio of priorities; track prio) {
+                <button type="button" class="priority-pill" [class.p-low]="prio === 'Low'"
+                  [class.p-medium]="prio === 'Medium'" [class.p-high]="prio === 'High'"
+                  [class.p-urgent]="prio === 'Urgent'" [class.selected]="selectedPriority === prio"
+                  (click)="setPriority(prio)">
+                  <i></i> {{ prio }}
+                </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Subject -->
+          <div class="mt-3" [class.has-error]="isSubmitted && subjectError">
+            <label class="form-label-tkt" for="tktSubject">
+              Subject <span class="req">*</span>
+            </label>
+            <input type="text" class="form-control" id="tktSubject" name="subject" maxlength="120"
+              placeholder="One-line summary (e.g. Missing checkout punch)" [(ngModel)]="subject"
+              (input)="subjectError = false" />
+            @if (isSubmitted && subjectError) {
+            <div class="tkt-field-err">Subject is required</div>
+            }
+          </div>
+
+          <!-- Description -->
+          <div class="mt-3" [class.has-error]="isSubmitted && descriptionError">
+            <label class="form-label-tkt" for="tktDescription">
+              Description <span class="req">*</span>
+            </label>
+            <textarea class="form-control" id="tktDescription" name="description" rows="5"
+              placeholder="Describe your issue in detail..." [(ngModel)]="description"
+              (input)="descriptionError = false"></textarea>
+            @if (isSubmitted && descriptionError) {
+            <div class="tkt-field-err">
+              Description is required (min 10 characters)
+            </div>
+            }
+          </div>
+
+          <!-- Attachment & Preferred Contact Row -->
+          <div class="row g-3 mt-0">
+            <div class="col-md-6">
+              <label class="form-label-tkt">Attachment</label>
+
+              @if (!selectedFile) {
+              <div class="tkt-file-drop" (click)="triggerFileInput()" role="button" tabindex="0">
+                <i class="bi bi-cloud-arrow-up"></i>
+                <div class="drop-text">Click to choose a file or drag &amp; drop</div>
+                <div class="drop-hint">PNG, JPG, PDF, DOCX up to 5 MB</div>
+              </div>
+              }
+
+              <input type="file" #fileInput id="tktAttachment" hidden
+                accept=".png,.jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx" (change)="onFileChange($event)" />
+
+              @if (selectedFile) {
+              <div class="tkt-file-chip show">
+                <div class="file-ico">
+                  <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="file-name">{{ selectedFile.name }}</div>
+                  <div class="file-size">{{ selectedFile.sizeText }}</div>
+                </div>
+                <button type="button" class="file-remove" (click)="removeFile()" title="Remove file">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label-tkt">Preferred Contact</label>
+
+              <!-- PrimeNG p-select instead of normal select -->
+              <p-select [options]="contactOptions" [(ngModel)]="preferredContact" name="preferredContact"
+                optionLabel="label" optionValue="value" placeholder="Select Preferred Contact..." appendTo="body"
+                styleClass="w-100 ct-p-select-field" class="w-100"></p-select>
+
+              <div class="mt-3">
+                <div class="sla-hint">
+                  <i class="bi bi-stopwatch"></i>
+                  <span>
+                    Response: <b>{{ currentSla.response }}</b> &nbsp;·&nbsp; Resolution: <b>{{ currentSla.resolution
+                      }}</b>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
+            <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-outline-secondary px-4">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-primary px-4" [disabled]="isSubmitting">
+              @if (isSubmitting) {
+              <span>
+                <span class="spinner-border spinner-border-sm"></span> Submitting...
+              </span>
+              } @else {
+              <span>
+                <i class="bi bi-send"></i> Submit Ticket
+              </span>
+              }
+            </button>
+          </div>
+        </form>
+        }
+
+        <!-- Success State -->
+        @if (isSuccess && createdTicket) {
+        <div class="tkt-success show">
+          <div class="succ-icon">
+            <i class="bi bi-check-lg"></i>
+          </div>
+          <div class="succ-title">Ticket Created Successfully!</div>
+          <div class="tkt-id-chip">{{ createdTicket.id }}</div>
+          <div class="succ-sub">
+            Your ticket has been submitted to the Helpdesk team. You can track its progress from
+            <a routerLink="/helpdesk/employee-my-tickets"><b>My Tickets</b></a>. Estimated first response within
+            <b>{{ currentSla.response }}</b>.
+          </div>
+          <div class="d-flex gap-2 mt-2">
+            <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-primary px-4">
+              View My Tickets
+            </a>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="createAnother()">
+              Create Another
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Right Side Column ===== -->
+  <div class="col-lg-4">
+    <!-- Category Guide -->
+    <div class="ticket-form-card mb-3">
+      <div class="ticket-form-head" style="padding: 14px 20px;">
+        <div class="head-icon guide-icon">
+          <i class="bi bi-tags"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 14px;">Category Guide</h3>
+          <p>Pick the right category for faster resolution</p>
+        </div>
+      </div>
+      <div class="p-3" style="padding-top: 10px !important;">
+        <div class="d-flex flex-column gap-2">
+          @for (c of categories.slice(0, 6); track c.id) {
+          <div class="d-flex align-items-start gap-2 p-2 rounded guide-row">
+            <span style="font-size: 15px;">{{ c.icon }}</span>
+            <div class="min-w-0">
+              <div class=" guide-cat-name">{{ c.name }}</div>
+              <div class="text-muted guide-cat-ex">{{ c.example }}</div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- SLA Matrix -->
+    <div class="ticket-form-card mb-3">
+      <div class="ticket-form-head" style="padding: 14px 20px;">
+        <div class="head-icon sla-matrix-icon">
+          <i class="bi bi-stopwatch"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 14px;">SLA Targets</h3>
+          <p>By priority</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0" style="font-size: 12.5px;">
+          <thead>
+            <tr class="text-muted">
+              <th class="ps-3" style="font-size: 11px;">Priority</th>
+              <th style="font-size: 11px;">Response</th>
+              <th class="pe-3 text-end" style="font-size: 11px;">Resolution</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 600;">
+            <tr>
+              <td class="ps-3">
+                <span class="badge rounded-pill badge-prio-low">Low</span>
+              </td>
+              <td>24 hrs</td>
+              <td class="pe-3 text-end">3 Days</td>
+            </tr>
+            <tr>
+              <td class="ps-3">
+                <span class="badge rounded-pill badge-prio-med">Medium</span>
+              </td>
+              <td>8 hrs</td>
+              <td class="pe-3 text-end">2 Days</td>
+            </tr>
+            <tr>
+              <td class="ps-3">
+                <span class="badge rounded-pill badge-prio-high">High</span>
+              </td>
+              <td>2 hrs</td>
+              <td class="pe-3 text-end">1 Day</td>
+            </tr>
+            <tr>
+              <td class="ps-3 pb-3">
+                <span class="badge rounded-pill badge-prio-urg">Urgent</span>
+              </td>
+              <td class="pb-3">30 mins</td>
+              <td class="pe-3 pb-3 text-end">4 hrs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- What Happens Next -->
+    <div class="ticket-form-card">
+      <div class="ticket-form-head" style="padding: 14px 20px;">
+        <div class="head-icon route-icon">
+          <i class="bi bi-route"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 14px;">What Happens Next?</h3>
+          <p>Your ticket journey</p>
+        </div>
+      </div>
+      <div class="p-3 pt-2 d-flex flex-column gap-3">
+        <div class="d-flex align-items-start gap-3">
+          <span class="wn-step-dot">1</span>
+          <div>
+            <div class="wn-title">Instant ticket ID</div>
+            <div class="wn-sub">You get a tracking ID (TKT-xxxx) as soon as you submit.</div>
+          </div>
+        </div>
+        <div class="d-flex align-items-start gap-3">
+          <span class="wn-step-dot">2</span>
+          <div>
+            <div class="wn-title">Routed to the right team</div>
+            <div class="wn-sub">HR / IT / Payroll / Finance team picks it up within the response SLA.</div>
+          </div>
+        </div>
+        <div class="d-flex align-items-start gap-3">
+          <span class="wn-step-dot">3</span>
+          <div>
+            <div class="wn-title">Resolved &amp; closed</div>
+            <div class="wn-sub">Track progress in My Tickets; reply anytime — reopen if not fixed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     CUSTOM CATEGORY MODAL
+========================================================================== -->
+@if (isCustomCategoryModalOpen) {
+<div class="modal-backdrop-custom" (click)="closeCustomCategoryModal()"></div>
+
+<div class="modal-dialog-custom" role="dialog" aria-modal="true">
+  <div class="modal-content-custom">
+    <div class="modal-header-custom d-flex align-items-center justify-content-between p-3">
+      <div class="d-flex align-items-center gap-2">
+        <div class="head-icon d-flex align-items-center justify-content-center rounded-2 modal-head-icon">
+          <i class="bi bi-tags"></i>
+        </div>
+        <div>
+          <h5 class="modal-title m-0">
+            {{ ccatEditingId ? 'Edit Category' : 'Add Custom Category' }}
+          </h5>
+          <span class="modal-sub">
+            {{ ccatEditingId ? 'Update icon, name & sub categories' : 'Create your own category with icon & sub
+            categories' }}
+          </span>
+        </div>
+      </div>
+      <button type="button" class="btn-close-custom" (click)="closeCustomCategoryModal()" aria-label="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body-custom p-4">
+      <!-- Icon picker -->
+      <label class="form-label-tkt">Icon <span class="req">*</span></label>
+      <div class="ccat-icon-dd" [class.open]="isIconDropdownOpen">
+        <button type="button" class="ccat-icon-toggle" (click)="toggleIconDropdown()">
+          <span class="ccat-icon-preview" [class.empty]="!ccatSelectedIcon">
+            {{ ccatSelectedIcon || '❓' }}
+          </span>
+          <span>
+            {{ ccatSelectedIcon ? ccatSelectedIcon + ' selected' : 'Choose an icon' }}
+          </span>
+          <i class="bi bi-chevron-down ms-auto"></i>
+        </button>
+
+        @if (isIconDropdownOpen) {
+        <div class="ccat-icon-panel">
+          <div class="ccat-icon-grid">
+            @for (ic of ccatIcons; track ic) {
+            <button type="button" class="ccat-icon" [class.selected]="ccatSelectedIcon === ic" (click)="selectIcon(ic)">
+              {{ ic }}
+            </button>
+            }
+          </div>
+        </div>
+        }
+      </div>
+
+      @if (ccatIconError) {
+      <div class="ccat-err show">Please pick an icon</div>
+      }
+
+      <!-- Name -->
+      <div class="mt-3">
+        <label class="form-label-tkt" for="ccatName">
+          Category Name <span class="req">*</span>
+        </label>
+        <input type="text" class="form-control" id="ccatName" maxlength="40" placeholder="e.g. Legal / Compliance"
+          [(ngModel)]="ccatName" (input)="ccatNameError = ''" />
+        @if (ccatNameError) {
+        <div class="ccat-err show">{{ ccatNameError }}</div>
+        }
+      </div>
+
+      <!-- Sub Categories Chips -->
+      <div class="mt-3">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <label class="form-label-tkt mb-0">
+            Sub Category Options <span class="req">*</span>
+          </label>
+          <span class="ccat-count">{{ ccatSubs.length }} added</span>
+        </div>
+
+        <div class="ccat-chips" (click)="subInputRef?.nativeElement?.focus()">
+          @for (s of ccatSubs; track s; let i = $index) {
+          <span class="ccat-chip">
+            {{ s }}
+            <button type="button" (click)="removeCcatSub(i)" title="Remove">&times;</button>
+          </span>
+          }
+
+          <input #subInput type="text" placeholder="Type &amp; press Enter — use commas to add multiple" maxlength="60"
+            [(ngModel)]="ccatSubInputText" (keydown)="onCcatSubKeydown($event)" />
+
+          <button type="button" class="ccat-add-btn" (click)="addCcatSub()" title="Add option">
+            <i class="bi bi-plus-lg"></i>
+          </button>
+        </div>
+
+        @if (ccatSubError) {
+        <div class="ccat-err show">Add at least one sub category option</div>
+        }
+      </div>
+    </div>
+
+    <div class="modal-footer-custom d-flex justify-content-end gap-2 p-3">
+      <button type="button" class="btn btn-outline-secondary px-4" (click)="closeCustomCategoryModal()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-primary px-4" (click)="saveCustomCategory()">
+        <i class="bi bi-check-lg"></i>
+        {{ ccatEditingId ? 'Save Changes' : 'Add Category' }}
+      </button>
+    </div>
+  </div>
+</div>
+}

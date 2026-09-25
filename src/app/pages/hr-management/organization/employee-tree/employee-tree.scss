@@ -1,0 +1,389 @@
+/* =============================================================
+   View toggle
+============================================================= */
+.view-toggle-card {
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  display: inline-flex;
+
+}
+
+/* =============================================================
+   Tree scroll area
+============================================================= */
+.tree-scroll-area {
+  position: relative;
+  overflow: auto;
+  height: calc(100vh - var(--header-height) - 210px);
+  min-height: 420px;
+  padding: 4px 4px 40px 4px;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--radius-sm);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--text-light);
+  }
+}
+
+/* =============================================================
+   Shared
+============================================================= */
+.min-width-0 {
+  min-width: 0;
+}
+
+.d-flex.align-items-stretch {
+  align-items: flex-start !important;
+}
+
+/* =============================================================
+   Department / Employee card
+============================================================= */
+.dept-card {
+  width: 220px;
+  padding: 10px 16px !important;
+  border-radius: var(--radius-lg);
+  border-color: var(--border);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition);
+  box-shadow: var(--shadow-card);
+  align-self: flex-start;
+  flex-shrink: 0;
+  background: var(--white);
+
+  &:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px rgba(var(--primary-rgb), .14);
+    transform: translateY(-2px);
+  }
+
+  &.dept-card-selected {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), .2), 0 4px 20px rgba(var(--primary-rgb), .25);
+  }
+}
+
+.dept-icon {
+  width: 36px;
+  height: 36px;
+}
+
+/* =============================================================
+   Connector — horizontal line between parent card and child trunk.
+   right:0 touches the child column's trunk at its left:0.
+============================================================= */
+.dept-connector {
+  width: 46px;
+  height: 62px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  flex-shrink: 0;
+  isolation: isolate;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 31px;
+    height: 2px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transform-origin: left center;
+    z-index: 1;
+    transition: transform 0.35s cubic-bezier(.22, 1, .36, 1);
+  }
+
+  &.show-line::before {
+    transform: scaleX(1);
+  }
+}
+
+/* Count badge shown on the connector itself */
+.dept-count-badge {
+  position: relative;
+  z-index: 2;
+  background: var(--white) !important;
+  border: 1.5px solid var(--border);
+  color: var(--text-light);
+  font-weight: 700;
+  font-size: .75rem;
+  padding: .35rem .55rem;
+  border-radius: 6px !important;
+  transition: all 0.3s cubic-bezier(.22, 1, .36, 1);
+  min-width: 26px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &.active {
+    background: var(--primary) !important;
+    border-color: var(--primary);
+    color: var(--white);
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(var(--primary-rgb), .3);
+  }
+}
+
+/* =============================================================
+   Trailing child-count badge — right side of every card that
+   has descendants (matches the pill in the reference image).
+============================================================= */
+.dept-child-badge-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  height: 62px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.dept-child-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 28px;
+  padding: 0 9px;
+  font-size: .74rem;
+  font-weight: 700;
+  color: var(--text-light);
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, .04);
+}
+
+/* Children column */
+.dept-employees {
+  position: relative;
+  padding-left: 26px;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  isolation: isolate;
+
+  /* Vertical trunk */
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 31px;
+    bottom: 31px;
+    width: 2px;
+    background: var(--primary);
+    z-index: 1;
+    transform-origin: top center;
+    transform: scaleY(1);
+  }
+
+  &.animating::before {
+    animation: growLineVertical 0.5s cubic-bezier(.22, 1, .36, 1) forwards;
+  }
+}
+
+/* Remove the wrapper-based branch entirely */
+.dept-employees > * {
+  position: relative;
+}
+
+/* Draw the branch on the CARD itself — always at its own vertical center */
+.dept-employees .dept-card::before,
+.dept-employees .emp-card::before {
+  content: '';
+  position: absolute;
+  left: -26px;              /* reaches back to the trunk */
+  top: 50%;                 /* card's own vertical center */
+  width: 26px;
+  height: 2px;
+  background: var(--primary);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+/* Hide collapsed children */
+.emp-children.is-collapsed {
+  display: none !important;
+}
+.dept-employees > * {
+  position: relative;
+}
+
+
+
+/* =============================================================
+   Employee card (flat list view + tree view reuse dept-card)
+============================================================= */
+.emp-card {
+  width: 220px;
+  height: 62px;
+  padding: 10px 16px !important;
+  border-radius: var(--radius-lg);
+  border-color: var(--border);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: var(--transition);
+  box-shadow: var(--shadow-card);
+  z-index: 2;
+  flex-shrink: 0;
+  background: var(--white);
+
+  &:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px rgba(var(--primary-rgb), .14);
+    transform: translateY(-2px);
+  }
+}
+
+.emp-avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+/* =============================================================
+   Animations
+============================================================= */
+@keyframes growLineVertical {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* =============================================================
+   Toolbar buttons
+============================================================= */
+.tool-btn-card {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text-light);
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+
+  &:hover {
+    background-color: var(--primary-soft);
+    color: var(--primary);
+  }
+}
+
+/* Selected employee card (matches panel target) */
+.emp-card-selected {
+  border-color: var(--primary) !important;
+  background: var(--primary-soft) !important;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), .2), 0 4px 20px rgba(var(--primary-rgb), .25) !important;
+}
+
+/* =============================================================
+   Detail panel
+============================================================= */
+.detail-panel {
+  position: fixed;
+  top: var(--header-height);
+  right: 0;
+  bottom: 0;
+  width: 340px;
+  max-width: 90vw;
+  background: var(--white);
+  border-left: 1px solid var(--border);
+  box-shadow: -8px 0 24px rgba(var(--neutral-900-rgb), .08);
+  padding: 24px 22px;
+  overflow-y: auto;
+  z-index: 900;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1);
+
+  &.open {
+    transform: translateX(0);
+  }
+}
+
+.detail-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.detail-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  margin-bottom: 14px;
+  border: 2px solid var(--primary);
+}
+
+.detail-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.detail-id {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 18px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  i {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 15px;
+  }
+}
+
+.detail-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.detail-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}

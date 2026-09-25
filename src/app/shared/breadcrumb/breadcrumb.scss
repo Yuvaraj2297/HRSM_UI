@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.breadcrumb-header {
+  width: 100%;
+}
+
+.page-title {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--neutral-900);
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.page-breadcrumb {
+  font-size: 13.5px;
+  color: var(--neutral-500);
+  margin-top: 4px;
+
+  .icon-breadcrumb {
+    font-size: 14px;
+    color: var(--neutral-500);
+  }
+
+  .separator {
+    font-size: 10px;
+    color: var(--neutral-350);
+  }
+
+  .active-crumb {
+    font-weight: 600;
+    color: var(--neutral-900);
+  }
+}
+
+.breadcrumb-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

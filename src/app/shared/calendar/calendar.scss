@@ -1,0 +1,378 @@
+:host {
+  display: block;
+  --cal-primary: var(--primary);
+  --cal-primary-soft: var(--green-50-2);
+  --cal-primary-dark: var(--primary-dark);
+
+  --att-present-bg: var(--green-50);
+  --att-present-border: var(--green-50-4);
+  --att-present-fg: var(--primary-dark);
+
+  --att-absent-bg: var(--red-50);
+  --att-absent-border: var(--red-150);
+  --att-absent-fg: var(--red-600);
+
+  --att-late-bg: var(--yellow-50-2);
+  --att-late-border: var(--yellow-50-3);
+  --att-late-fg: var(--orange-550-2);
+
+  --att-half-bg: var(--purple-50-2);
+  --att-half-border: var(--purple-100);
+  --att-half-fg: var(--purple-600);
+
+  --att-leave-bg: var(--blue-50-2);
+  --att-leave-border: var(--blue-150);
+  --att-leave-fg: var(--blue-600);
+
+  --att-holiday-bg: var(--bg-soft);
+  --att-holiday-border: var(--border);
+  --att-holiday-fg: var(--neutral-500);
+
+  --border-soft: var(--border);
+  --ink-900: var(--neutral-900);
+  --ink-700: var(--text);
+  --ink-500: var(--neutral-500);
+  --ink-400: var(--neutral-350);
+}
+
+.team-cal-card {
+  padding: 20px;
+}
+
+/* =========================================================
+   P-SELECT FILTER STYLING
+========================================================= */
+::ng-deep {
+  .team-cal-select.p-select {
+    width: 160px;
+
+    .p-select-label {
+      padding: 0.45rem 0.8rem;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-900);
+    }
+
+  }
+
+  .member-cal-select.p-select {
+    width: 250px;
+
+    .p-select-label {
+      padding: 0.45rem 0.8rem;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-900);
+    }
+
+  }
+}
+
+/* =========================================================
+   MONTH NAVIGATOR
+========================================================= */
+.acm-cal-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .month {
+    font-weight: 800;
+    font-size: 15px;
+    min-width: 140px;
+    text-align: center;
+    color: var(--ink-900);
+    user-select: none;
+  }
+
+  .acm-nav-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border-soft);
+    background: var(--white);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-700);
+    font-size: 13px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--cal-primary-soft);
+      color: var(--cal-primary-dark);
+      border-color: var(--cal-primary);
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* =========================================================
+   MAIN BODY (SUMMARY + GRID)
+========================================================= */
+.acm-body {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* Left summary cards column */
+.acm-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 130px;
+  flex-shrink: 0;
+
+  .summary-card {
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(var(--neutral-900-rgb), 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(var(--neutral-900-rgb), 0.07);
+    }
+
+    .n {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.1;
+
+      &.text-present {
+        color: var(--primary);
+      }
+      &.text-absent {
+        color: var(--danger);
+      }
+      &.text-late {
+        color: var(--warning);
+      }
+      &.text-leave {
+        color: var(--blue-450);
+      }
+      &.text-hours {
+        color: var(--ink-900);
+      }
+    }
+
+    .l {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--ink-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 3px;
+    }
+  }
+}
+
+/* Right calendar grid */
+.acm-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  min-width: 680px;
+}
+
+.acm-dow {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.acm-day {
+  height: 82px;
+  min-height: 82px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--black-rgb), 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 7px 9px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+
+  &:not(.empty):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(var(--neutral-900-rgb), 0.08);
+    z-index: 1;
+  }
+
+  &.empty {
+    visibility: hidden;
+  }
+
+  .num {
+    font-size: 12px;
+    font-weight: 700;
+    align-self: flex-start;
+  }
+
+  .tag {
+    align-self: flex-start;
+    font-size: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 1.5px 6px;
+    border-radius: 999px;
+    background: rgba(var(--white-rgb), 0.7);
+  }
+
+  /* Status Colors */
+  &.status-present {
+    background: var(--att-present-bg);
+    border-color: var(--att-present-border);
+    .num {
+      color: var(--att-present-fg);
+    }
+    .tag {
+      color: var(--att-present-fg);
+    }
+  }
+
+  &.status-holiday {
+    background: var(--att-holiday-bg);
+    border-color: var(--att-holiday-border);
+    .num {
+      color: var(--att-holiday-fg);
+    }
+    .tag {
+      color: var(--att-holiday-fg);
+    }
+  }
+
+  &.status-late {
+    background: var(--att-late-bg);
+    border-color: var(--att-late-border);
+    .num {
+      color: var(--att-late-fg);
+    }
+    .tag {
+      color: var(--att-late-fg);
+    }
+  }
+
+  &.status-leave {
+    background: var(--att-leave-bg);
+    border-color: var(--att-leave-border);
+    .num {
+      color: var(--att-leave-fg);
+    }
+    .tag {
+      color: var(--att-leave-fg);
+    }
+  }
+
+  &.status-absent {
+    background: var(--att-absent-bg);
+    border-color: var(--att-absent-border);
+    .num {
+      color: var(--att-absent-fg);
+    }
+    .tag {
+      color: var(--att-absent-fg);
+    }
+  }
+
+  &.status-half {
+    background: var(--att-half-bg);
+    border-color: var(--att-half-border);
+    .num {
+      color: var(--att-half-fg);
+    }
+    .tag {
+      color: var(--att-half-fg);
+    }
+  }
+
+  /* Active/Today cell highlight */
+  &.acm-today {
+    border: 2px solid var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+  }
+}
+
+/* =========================================================
+   BOTTOM LEGEND
+========================================================= */
+.acm-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-soft);
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-500);
+
+    .swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+
+      &.swatch-present {
+        background: var(--primary);
+      }
+      &.swatch-absent {
+        background: var(--danger);
+      }
+      &.swatch-late {
+        background: var(--warning);
+      }
+      &.swatch-half {
+        background: var(--purple-500);
+      }
+      &.swatch-leave {
+        background: var(--blue-450);
+      }
+      &.swatch-holiday {
+        background: var(--neutral-500);
+      }
+    }
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 991px) {
+  .acm-body {
+    flex-direction: column;
+  }
+
+  .acm-summary {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .summary-card {
+      min-width: 110px;
+    }
+  }
+}

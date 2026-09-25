@@ -1,0 +1,142 @@
+<main class="revenue-report-page">
+
+  <!-- Page header -->
+  <header class="page-head">
+    <div>
+      <h1 class="page-title">Employee Revenue Report</h1>
+      <nav class="breadcrumb-text" aria-label="Breadcrumb">
+        <i class="bi bi-graph-up-arrow"></i>
+        <span class="crumb-muted">Reports</span>
+        <i class="bi bi-chevron-right"></i>
+        <span class="crumb-current">Employee Revenue Report</span>
+      </nav>
+    </div>
+
+    <div class="rev-date-range">
+      <i class="bi bi-calendar3"></i>Date: {{ dateRangeLabel() }}
+    </div>
+  </header>
+
+  <!-- Summary cards -->
+  <section class="stat-grid">
+    <div class="stat-card theme-violet">
+      <div class="stat-label">Employees</div>
+      <div class="stat-icon"><i class="bi bi-people"></i></div>
+      <div class="stat-value">{{ summary().employees }}</div>
+      <div class="stat-delta">In this report</div>
+    </div>
+
+    <div class="stat-card theme-green">
+      <div class="stat-label">Success Leads</div>
+      <div class="stat-icon"><i class="bi bi-person-check"></i></div>
+      <div class="stat-value">{{ summary().assign }}</div>
+      <div class="stat-delta">By assign</div>
+    </div>
+
+    <div class="stat-card theme-amber">
+      <div class="stat-label">Sourcer</div>
+      <div class="stat-icon"><i class="bi bi-search"></i></div>
+      <div class="stat-value">{{ summary().sourcer }}</div>
+      <div class="stat-delta">Overall</div>
+    </div>
+
+    <div class="stat-card theme-blue">
+      <div class="stat-label">Total Visits</div>
+      <div class="stat-icon"><i class="bi bi-geo-alt"></i></div>
+      <div class="stat-value">{{ summary().visits }}</div>
+      <div class="stat-delta">Overall</div>
+    </div>
+
+    <div class="stat-card theme-red">
+      <div class="stat-label">Total Kilometers</div>
+      <div class="stat-icon"><i class="bi bi-speedometer2"></i></div>
+      <div class="stat-value">{{ summary().km }}</div>
+      <div class="stat-delta">Travelled</div>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="filters-card">
+    <div class="filter-field filter-search">
+      <label for="revSearch">Name / Mobile / Employee Id</label>
+      <input
+        id="revSearch"
+        class="rev-input"
+        type="text"
+        autocomplete="off"
+        placeholder="Enter Name / Mobile / Employee Id"
+        [(ngModel)]="search"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="filter-field">
+      <label for="revFrom">From Date</label>
+      <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+    </div>
+
+    <div class="filter-field">
+      <label for="revTo">To Date</label>
+     <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="btn-clear" (click)="onClear()">Clear</button>
+      <button type="button" class="btn-search" (click)="onSearch()">
+        <i class="bi bi-search"></i>Search
+      </button>
+    </div>
+  </section>
+
+  <!-- Employee cards -->
+  @if (!cards().length) {
+    <div class="rev-empty">
+      <i class="bi bi-person-x"></i>
+      No employees match your search. Try a different name, mobile or employee ID.
+    </div>
+  } @else {
+    <section class="rev-grid">
+      @for (c of cards(); track c.id) {
+        <article class="rev-card">
+
+          <div class="rev-banner">
+            <svg viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 44 L0 30 C60 6 120 8 190 24 C260 40 320 34 400 12 L400 44 Z" fill="rgba(var(--white-rgb), .28)" />
+              <path d="M0 44 L0 38 C70 20 140 26 210 34 C280 42 340 30 400 24 L400 44 Z" fill="var(--white)" />
+            </svg>
+            <div class="rev-avatar">
+              @if (c.avatar) {
+                <img [src]="c.avatar" [alt]="c.name" />
+              } @else {
+                <i class="bi bi-person-circle"></i>
+              }
+            </div>
+          </div>
+
+          <div class="rev-name" [title]="c.name">{{ c.name }}</div>
+
+          <div class="rev-body">
+            <div class="rev-colhead">Overall / Now</div>
+
+            @for (m of c.metrics; track m.key) {
+              <div class="rev-metric" [class]="'rev-theme-' + m.theme">
+                <span class="rev-icon"><i class="bi" [class]="m.icon"></i></span>
+                <div class="rev-metric-main">
+                  <div class="rev-metric-top">
+                    <span class="rev-label">{{ m.label }}</span>
+                    <span class="rev-value" [class.neg]="m.neg">{{ m.display }}</span>
+                  </div>
+                  <div class="rev-track">
+                    <div class="rev-fill" [class.neg]="m.neg" [style.width.%]="m.pct"></div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+        </article>
+      }
+    </section>
+  }
+
+</main>

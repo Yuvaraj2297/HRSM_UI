@@ -1,0 +1,54 @@
+<div class="ne-section-title">Bank Account Details :-</div>
+
+<div [formGroup]="form">
+  <div formArrayName="bankAccounts">
+    <div class="ne-bank-account-item border rounded p-3 mb-3"
+         *ngFor="let row of accounts.controls; let i = index" [formGroupName]="i">
+      <div class="row g-3">
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label"><span class="text-danger">*</span> Account type</label>
+          <input pInputText class="form-control" formControlName="accountType" placeholder="Enter account type">
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Bank name</label>
+          <input pInputText class="form-control" formControlName="bankName" placeholder="Enter bank name">
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label"><span class="text-danger">*</span> Account number</label>
+          <input pInputText class="form-control" formControlName="accountNumber" placeholder="Enter account number">
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Ifsc code</label>
+          <input pInputText class="form-control" formControlName="ifscCode" placeholder="Enter IFSC code">
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Branch name</label>
+          <input pInputText class="form-control" formControlName="branchName" placeholder="Enter branch name">
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Beneficiary Name</label>
+          <input pInputText class="form-control" formControlName="beneficiaryName" placeholder="Enter beneficiary name">
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Attachment</label>
+          <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" (change)="onFile($event, i)">
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Account Status</label>
+          <p-select formControlName="accountStatus" [options]="fs.accountStatuses" optionLabel="label" optionValue="value"
+                    placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+        </div>
+
+        <div class="col-lg-4 col-md-6 align-self-end mb-1">
+          <button *ngIf="i > 0" type="button" class="btn btn-danger" (click)="remove(i)">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-start">
+  <button type="button" class="btn btn-primary" (click)="add()">+ Add Bank Account</button>
+</div>

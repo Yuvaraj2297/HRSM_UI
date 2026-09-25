@@ -1,0 +1,438 @@
+<div class="ml-page">
+
+    <!-- =========================================================
+       TITLE ROW
+  ========================================================== -->
+    <div class="ml-title-row">
+        <h5><i class="bi bi-person-lines-fill me-2" style="color:var(--green-400-2);"></i>Manage Leads</h5>
+    </div>
+
+    <!-- =========================================================
+       FILTERS CARD
+  ========================================================== -->
+    <div class="card-custom mb-3 filters-card">
+
+        <div class="filters-toggle-row">
+            <span class="fw-semibold" style="font-size:14.5px;color:var(--ink-900);">
+                <i class="bi bi-funnel me-1"></i> Filter Leads
+            </span>
+            <button type="button" class="filters-toggle-btn" [class.open]="filtersOpen" (click)="toggleFilters()">
+                <span>{{ filtersOpen ? 'Hide Filters' : 'Filters' }}</span>
+                <i class="bi bi-chevron-down chevron"></i>
+            </button>
+        </div>
+
+        <div class="filters-collapse" [class.open]="filtersOpen">
+            <div class="row g-3">
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label class="form-label">Search Lead</label>
+                    <input class="form-control" [(ngModel)]="filters.search" placeholder="Name, company or phone">
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" [(ngModel)]="filters.status">
+                        <option value="">All Status</option>
+                        <option *ngFor="let s of statusFilterOptions" [value]="s">{{ s }}</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label class="form-label">Assigned</label>
+                    <select class="form-select" [(ngModel)]="filters.assigned">
+                        <option value="">All Assigned</option>
+                        <option *ngFor="let a of assignedFilterOptions" [value]="a">{{ a }}</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label class="form-label">Lead Source</label>
+                    <select class="form-select" [(ngModel)]="filters.source">
+                        <option value="">All Sources</option>
+                        <option *ngFor="let s of sourceFilterOptions" [value]="s">{{ s }}</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label class="form-label">Year</label>
+                    <select class="form-select" [(ngModel)]="filters.year">
+                        <option value="">All Years</option>
+                        <option *ngFor="let y of yearFilterOptions" [value]="y">{{ y }}</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-4 col-md-6 align-self-end">
+                    <div class="d-flex gap-2 w-100">
+                        <button type="button" class="btn btn-outline-secondary flex-fill w-100"
+                            (click)="clearFilters()">
+                            Clear Filters
+                        </button>
+                        <button type="button" class="btn btn-primary w-100 flex-fill" (click)="applyFilters()">
+                            <i class="bi bi-funnel"></i>Apply Filters
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- =========================================================
+       ACTIVE FILTER CHIPS
+  ========================================================== -->
+    <div class="ml-active-bar" *ngIf="activeFilterChips.length">
+        <span class="ml-active-label"><i class="bi bi-funnel-fill me-1"></i>Active Filters:</span>
+
+        <div class="d-flex flex-wrap gap-2">
+            <span class="mlf-chip" *ngFor="let chip of activeFilterChips">
+                {{ chip.label }}: {{ chip.value }}
+                <button type="button" class="mlf-chip-close" (click)="removeFilterChip(chip.key)">&times;</button>
+            </span>
+        </div>
+
+        <button type="button" class="ml-active-clear" (click)="clearFilters()">Clear All</button>
+    </div>
+
+    <!-- =========================================================
+       BULK SMS TOOLBAR
+  ========================================================== -->
+    <div class="d-flex align-items-center mb-2 mt-3" *ngIf="selectedCount > 0">
+        <button type="button" class="btn btn-outline-secondary"
+            style="font-size:12.5px;font-weight:700;border-radius:8px;padding:6px 16px;" (click)="openBulkSms()">
+            Bulk SMS
+        </button>
+        <span class="ms-2 text-muted" style="font-size:11.5px;">
+            {{ selectedCount }} lead{{ selectedCount > 1 ? 's' : '' }} selected
+        </span>
+    </div>
+
+    <!-- =========================================================
+       TABLE
+  ========================================================== -->
+    <div class="card-custom ml-list-card">
+
+        <app-primedatatable [columns]="columns" [data]="tableData" [searchPlaceholder]="searchPlaceholder"
+         [selectable]="true" dataKey="id" [selection]="selectedLeads"
+            (selectionChange)="onSelectionChange($event)" (actionClick)="onTableAction($event)">
+
+            <ng-template #cellTemplate let-row let-col="col">
+
+                <ng-container [ngSwitch]="col.header">
+
+                    <!-- PHONE -->
+                    <ng-container *ngSwitchCase="'Phone'">
+                        <a *ngIf="row.phone; else noPhone" [href]="'tel:' + row.phone" class="ml-ago-text">{{ row.phone
+                            }}</a>
+                        <ng-template #noPhone><span style="color:var(--neutral-250);">—</span></ng-template>
+                    </ng-container>
+
+                    <!-- ASSIGNED (avatar) -->
+                    <span *ngSwitchCase="'Assigned'" class="ml-avatar" [title]="row.assigned">
+                        {{ initials(row.assigned) }}
+                    </span>
+
+                    <!-- STATUS DROPDOWN -->
+                    <div *ngSwitchCase="'Status'" class="dropdown ml-status-dd">
+                        <button type="button" class="ml-status-btn" [ngClass]="statusClass(row.status)"
+                            data-bs-toggle="dropdown">
+                            {{ row.status }} <i class="bi bi-chevron-down" style="font-size:9px;"></i>
+                        </button>
+                        <ul class="dropdown-menu ml-status-menu">
+                            <li *ngFor="let opt of statusOptions">
+                                <a class="dropdown-item ml-status-item" [class.active]="opt === row.status"
+                                    href="javascript:void(0)" (click)="changeStatus(row, opt)">{{ opt }}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- NEXT FOLLOW UP PILL -->
+                    <ng-container *ngSwitchCase="'Next Follow up'">
+                        <span class="ml-no-pill" *ngIf="row.nextFollow">
+                            {{ row.nextFollow }}
+                        </span>
+                    </ng-container>
+
+                    <!-- DEFAULT -->
+                    <span *ngSwitchDefault>{{ row[col.field] }}</span>
+
+                </ng-container>
+
+            </ng-template>
+
+        </app-primedatatable>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     BULK SMS MODAL
+========================================================== -->
+<div class="ml-modal-overlay" *ngIf="isBulkSmsOpen">
+    <div class="ml-modal ml-modal-sm">
+        <div class="ml-modal-header">
+            <h5>Bulk SMS</h5>
+            <button aria-label="Close" type="button" class="btn-close" (click)="closeBulkSms()"></button>
+        </div>
+        <div class="ml-modal-body">
+            <label>Message</label>
+            <textarea class="form-control" [(ngModel)]="bulkSmsMessage"
+                placeholder="Type your SMS message here..."></textarea>
+        </div>
+        <div class="ml-modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="closeBulkSms()">Close</button>
+            <button type="button" class="btn btn-primary" [disabled]="bulkSmsSending" (click)="confirmBulkSms()">
+                <span *ngIf="bulkSmsSending" class="spinner-border spinner-border-sm"></span>
+                {{ bulkSmsSending ? 'Sending...' : 'Confirm' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     SINGLE SMS MODAL
+========================================================== -->
+<div class="ml-modal-overlay" *ngIf="isSmsOpen && smsTargetLead">
+    <div class="ml-modal ml-modal-sm">
+        <div class="ml-modal-header">
+            <h5>SMS To: #{{ smsTargetLead.id }} {{ smsTargetLead.name ? '- ' + smsTargetLead.name : '' }}</h5>
+            <button aria-label="Close" type="button" class="btn-close" (click)="closeSms()"></button>
+        </div>
+        <div class="ml-modal-body">
+            <label>Message</label>
+            <textarea class="form-control" rows="5" [(ngModel)]="smsMessage"
+                placeholder="Type your message here..."></textarea>
+        </div>
+        <div class="ml-modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="closeSms()">Close</button>
+            <button type="button" class="btn btn-primary" [disabled]="smsSending" (click)="sendSms()">
+                <span *ngIf="smsSending" class="spinner-border spinner-border-sm"></span>
+                {{ smsSending ? 'Sending...' : 'send' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     COMPOSE EMAIL MODAL
+========================================================== -->
+<div class="ml-modal-overlay" *ngIf="isEmailOpen">
+    <div class="ml-modal ml-modal-lg">
+        <div class="ml-modal-header">
+            <h5>Compose Email</h5>
+            <button aria-label="Close" type="button" class="btn-close" (click)="closeComposeEmail()"></button>
+        </div>
+        <div class="ml-modal-body">
+
+            <div class="mce-field">
+                <label style="text-transform:uppercase;">Send email using (SMTP)</label>
+                <select class="form-select" [(ngModel)]="emailSmtp">
+                    <option>USE SYSTEM SMTP ( info@gharuda-hrms.in )</option>
+                </select>
+            </div>
+
+            <div class="mce-field">
+                <label>Templates</label>
+                <select class="form-select" [(ngModel)]="emailTemplate" (ngModelChange)="onEmailTemplateChange()">
+                    <option value="">Non selected</option>
+                    <option value="Standard Quotation">Standard Quotation</option>
+                    <option value="Solar Installation">Solar Installation</option>
+                </select>
+            </div>
+
+            <div class="mce-field">
+                <label>Email To</label>
+                <select class="form-select" [(ngModel)]="emailTo">
+                    <option value="">Non selected</option>
+                    <option *ngFor="let l of emailToOptions" [value]="l.email">{{ l.name }} ( {{ l.email }} )</option>
+                </select>
+            </div>
+
+            <div class="mce-field">
+                <label>Email CC</label>
+                <input type="email" class="form-control" [(ngModel)]="emailCc">
+            </div>
+
+            <div class="mce-field">
+                <label>Email Subject</label>
+                <input type="text" class="form-control" [(ngModel)]="emailSubject">
+            </div>
+
+            <div class="mce-field">
+                <label>Email Content</label>
+                <textarea class="form-control" rows="8" [(ngModel)]="emailBody"
+                    placeholder="Write your email here..."></textarea>
+            </div>
+
+
+            <div class="mce-field">
+                <label>Attachment</label>
+                <div class="mce-attach-row">
+                    <input #emailAttachmentInput type="file" class="form-control" id="mlCeAttachment" multiple
+                        (change)="onEmailAttachmentsSelected($event)">
+                    <button type="button" class="mce-add-file" title="Add more attachments"
+                        (click)="emailAttachmentInput.click()">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                </div>
+                <div class="mce-file-list mt-2" *ngIf="emailAttachments.length">
+                    <div class="mce-file-item" *ngFor="let attachment of emailAttachments; let i = index">
+                        <span class="mce-file-name" [title]="attachment.name">
+                            <i class="bi bi-paperclip me-1"></i>{{ attachment.name }}
+                        </span>
+                        <button type="button" class="mce-remove-file" title="Remove attachment"
+                            (click)="removeEmailAttachment(i)">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="ml-modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="closeComposeEmail()">Close</button>
+            <button type="button" class="btn btn-primary" [disabled]="emailSending" (click)="sendEmail()">
+                <span *ngIf="emailSending" class="spinner-border spinner-border-sm"></span>
+                {{ emailSending ? 'Sending...' : 'send' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     ADD REMARK MODAL
+========================================================== -->
+<div class="ml-modal-overlay" *ngIf="isRemarkOpen">
+    <div class="ml-modal ml-modal-sm">
+        <div class="ml-modal-header">
+            <h5>Add Remark {{ remarkTargetLead ? '— #' + remarkTargetLead.id + (remarkTargetLead.name ? ' ' +
+                remarkTargetLead.name : '') : '' }}</h5>
+            <button aria-label="Close" type="button" class="btn-close" (click)="closeRemark()"></button>
+        </div>
+        <div class="ml-modal-body">
+            <div class="mb-3">
+                <label>Message</label>
+                <textarea class="form-control" [(ngModel)]="remarkMessage"
+                    placeholder="Type your remark here..."></textarea>
+            </div>
+            <div>
+                <label>Next Follow up</label>
+                <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+            </div>
+        </div>
+        <div class="ml-modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="closeRemark()">Close</button>
+            <button type="button" class="btn btn-primary" [disabled]="remarkSaving" (click)="saveRemark()">
+                <span *ngIf="remarkSaving" class="spinner-border spinner-border-sm"></span>
+                {{ remarkSaving ? 'Saving...' : 'Save' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     REMARKS VIEW MODAL
+========================================================== -->
+<div class="ml-modal-overlay" *ngIf="isRemarksViewOpen && remarksViewLead">
+    <div class="ml-modal ml-modal-lg">
+        <div class="ml-modal-header">
+            <h5>Remarks — #{{ remarksViewLead.id }} {{ remarksViewLead.name }}</h5>
+            <button aria-label="Close" type="button" class="btn-close" (click)="closeRemarksView()"></button>
+        </div>
+        <div class="ml-modal-body ml-modal-body-tinted">
+
+            <div class="mrv-timeline" *ngIf="remarksViewItems.length; else mrvEmpty">
+                <div class="mrv-card" *ngFor="let item of remarksViewItems">
+                    <span class="mrv-dot"><i class="bi bi-sticky-fill"></i></span>
+                    <div class="mrv-row">
+                        <span class="mrv-label"><i class="bi bi-chat-left-quote-fill"></i>REMARK</span>
+                        <span class="mrv-text">{{ item.text }}</span>
+                    </div>
+                    <div class="mrv-foot">
+                        <span class="mrv-when">{{ item.when }}</span>
+                        <span class="mrv-by">
+                            <span class="ml-avatar">{{ initials(item.by) }}</span>
+                            <span class="by-name">{{ item.by }}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #mrvEmpty>
+                <div class="mrv-empty">
+                    <i class="bi bi-chat-left-text"></i>
+                    <div>No remarks added yet.</div>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     LEAD VIEW MODAL — TABS + ACTIVITY TIMELINE
+========================================================== -->
+<div class="ml-modal-overlay" *ngIf="isViewLeadOpen && viewLead">
+    <div class="ml-modal ml-modal-xl">
+
+        <div class="ml-modal-header">
+            <h5>#{{ viewLead.id }} {{ viewLead.name ? '- ' + viewLead.name : '' }}</h5>
+            <button aria-label="Close" type="button" class="btn-close" (click)="closeViewLead()"></button>
+        </div>
+
+        <div role="tablist" class="mlv-tabs">
+            <button role="tab" type="button" *ngFor="let tab of viewTabs" class="mlv-tab"
+                [class.active]="viewActiveTab === tab.key" (click)="setViewTab(tab.key)" [attr.aria-selected]="viewActiveTab === tab.key">
+                {{ tab.label }} <span class="page-tab-count">{{ tabCount(tab.key) }}</span>
+            </button>
+        </div>
+
+        <div class="ml-modal-body ml-modal-body-tinted">
+
+            <div class="mlv-timeline" *ngIf="filteredActivities.length; else mlvEmpty">
+                <div class="mlv-act-card" *ngFor="let act of filteredActivities"
+                    [style.--tlc]="activityColor(act.type)">
+                    <span class="mlv-act-dot"><i class="bi" [ngClass]="activityIcon(act.type)"></i></span>
+
+                    <div class="mlv-act-top">
+                        <span class="mlv-act-label">
+                            <i class="bi" [ngClass]="activityIcon(act.type)"></i>{{ act.label }}
+                        </span>
+                        <span class="mlv-act-text">{{ act.text }}</span>
+                        <span class="mlv-act-meta">
+                            <span class="mlv-chip" [ngClass]="act.direction === 'Incoming' ? 'c-blue' : 'c-green'">
+                                <i class="bi bi-arrow-left-right"></i>Direction : {{ act.direction }}
+                            </span>
+                            <span class="mlv-chip" [ngClass]="act.recorded === 'Yes' ? 'c-green' : 'c-grey'">
+                                <i class="bi bi-mic"></i>Recorded : {{ act.recorded }}
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="mlv-act-when">{{ act.when }}</div>
+                    <div class="mlv-act-by">
+                        <span class="ml-avatar">GHR</span>
+                        <span class="by-name">{{ act.by }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #mlvEmpty>
+                <div class="mlv-empty">
+                    <i class="bi bi-inbox"></i>
+                    <div>No activities found for this tab.</div>
+                </div>
+            </ng-template>
+
+        </div>
+
+    </div>
+</div>

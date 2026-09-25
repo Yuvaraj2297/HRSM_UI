@@ -1,0 +1,700 @@
+<!-- Page header -->
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class="page-title">Payroll Processing</h1>
+    <nav class="breadcrumb-nav">
+      <i class="bi bi-cash-stack"></i>
+      <span>Payroll Management</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class="crumb-current">Payroll Report</span>
+    </nav>
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btn btn-primary" type="button" (click)="openRunPayrollModal()">
+      <i class="bi bi-play-circle-fill"></i> Run Payroll
+    </button>
+    <button class="btn btn-outline-primary" type="button" (click)="openAddSalaryModal()">
+      <i class="bi bi-plus-circle"></i> Add Salary Structure
+    </button>
+  </div>
+</div>
+
+<!-- KPI cards -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-xl-3">
+    <div class="payroll-kpi d-flex align-items-center gap-3">
+      <div class="icon kpi-icon kpi-icon-green"><i class="bi bi-people"></i></div>
+      <div>
+        <div class="label">Employees Processed</div>
+        <div class="value">{{ kpis.employeesProcessed }}</div>
+        <div class="sub">of {{ kpis.activeEmployees }} active employees</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="payroll-kpi d-flex align-items-center gap-3">
+      <div class="icon kpi-icon kpi-icon-blue"><i class="bi bi-wallet2"></i></div>
+      <div>
+        <div class="label">Gross Payroll</div>
+        <div class="value">{{ formatINR(kpis.grossPayroll) }}</div>
+        <div class="sub">{{ kpis.grossCycle }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="payroll-kpi d-flex align-items-center gap-3">
+      <div class="icon kpi-icon kpi-icon-amber"><i class="bi bi-receipt"></i></div>
+      <div>
+        <div class="label">Total Deductions</div>
+        <div class="value">{{ formatINR(kpis.totalDeductions) }}</div>
+        <div class="sub">PF, ESI, TDS &amp; loans</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="payroll-kpi d-flex align-items-center gap-3">
+      <div class="icon kpi-icon kpi-icon-red"><i class="bi bi-hourglass-split"></i></div>
+      <div>
+        <div class="label">Pending Review</div>
+        <div class="value">{{ kpis.pendingReview }}</div>
+        <div class="sub">Require approval</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filters card -->
+<div class="card-custom mb-3 filters-card">
+  <div class="filters-toggle-row">
+    <span class="filter-title-text">
+      <i class="bi bi-funnel me-1"></i> Filter Payroll
+    </span>
+    <button type="button" class="filters-toggle-btn" [class.open]="filtersOpen" (click)="toggleFilters()">
+      <span>Filters</span>
+      <i class="bi bi-chevron-down chevron"></i>
+    </button>
+  </div>
+
+  <div class="filters-collapse" [class.open]="filtersOpen">
+    <div class="row g-3">
+      <div class="col-lg-2 col-md-3 col-sm-6">
+        <label class="form-label">Search Employee</label>
+        <input type="text" class="form-control" placeholder="Name or ID" [(ngModel)]="filterEmployee">
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-6">
+        <label class="form-label">Department</label>
+        <select class="form-select" [(ngModel)]="filterDept">
+          <option>All Departments</option>
+          <option *ngFor="let d of departments">{{ d }}</option>
+        </select>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-6">
+        <label class="form-label">Pay Period</label>
+        <select class="form-select" [(ngModel)]="filterPeriod">
+          <option>All Periods</option>
+          <option *ngFor="let p of payPeriods">{{ p }}</option>
+        </select>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-6">
+        <label class="form-label">Status</label>
+        <select class="form-select" [(ngModel)]="filterStatus">
+          <option>All Status</option>
+          <option *ngFor="let s of statusOptions">{{ s }}</option>
+        </select>
+      </div>
+      <div class="col-lg-4 col-md-6 align-self-end">
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-reject flex-fill" (click)="clearFilters()">Clear Filters</button>
+          <button type="button" class="btn btn-primary flex-fill" (click)="applyFilters()">
+            <i class="bi bi-funnel"></i> Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Active filters bar -->
+<div class="active-filters-bar" [class.show]="activeFilters.length">
+  <span class="active-filters-label" *ngIf="activeFilters.length">Active filters:</span>
+  <span class="filter-chip" *ngFor="let chip of activeFilters">
+    <span class="chip-key">{{ chip.label }}:</span> {{ chip.value }}
+    <button type="button" class="chip-close" (click)="removeFilterChip(chip.key)">&times;</button>
+  </span>
+  <button type="button" class="active-filters-clear" *ngIf="activeFilters.length" (click)="clearFilters()">
+    Clear all
+  </button>
+</div>
+
+<!-- Payroll table: hidden until Run Payroll -> View Result -->
+<div id="payrollContentArea" *ngIf="contentVisible">
+  <div class="card-custom p-0 mb-3">
+    <div class="table-responsive table-modern-wrap overflow-auto">
+      <table class="table-modern w-100">
+        <thead>
+          <tr>
+            <th rowspan="2">S.No</th>
+            <th rowspan="2">Employee</th>
+            <th rowspan="2">Department</th>
+            <th rowspan="2">Pay Period</th>
+            <th rowspan="2">Present</th>
+            <th rowspan="2">Absent</th>
+            <th colspan="6" class="earning-col-th text-center">Earning Components</th>
+            <th rowspan="2">Gross Salary</th>
+            <th colspan="4" class="deduction-col-th text-center">Deduction Components</th>
+            <th rowspan="2">Net Pay</th>
+            <th rowspan="2">Action</th>
+          </tr>
+          <tr>
+            <th class="earning-col-th">Basic</th>
+            <th class="earning-col-th">HRA</th>
+            <th class="earning-col-th">DA</th>
+            <th class="earning-col-th">Convey.</th>
+            <th class="earning-col-th">Medical</th>
+            <th class="earning-col-th">Special</th>
+            <th class="deduction-col-th">PF</th>
+            <th class="deduction-col-th">ESI</th>
+            <th class="deduction-col-th">Prof Tax</th>
+            <th class="deduction-col-th">TDS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows">
+            <td>{{ row.sno }}</td>
+            <td>
+               <div>
+                 <div class="primary-green">{{ row.employeeId }}</div>
+              <div class="fw-semibold">{{ row.employeeName }}</div>
+              <div>
+                 <img class="avatar" [src]="avatarSrc()" alt="" width="30" height="30" />
+              </div>
+               </div>
+              
+            </td>
+            <td>{{ row.department }}</td>
+            <td>{{ row.payPeriod }}</td>
+            <td>{{ row.present }}</td>
+            <td>{{ row.absent }}</td>
+            <td>{{ formatINR(row.basic) }}</td>
+            <td>{{ formatINR(row.hra) }}</td>
+            <td>{{ formatINR(row.da) }}</td>
+            <td>{{ formatINR(row.convey) }}</td>
+            <td>{{ formatINR(row.medical) }}</td>
+            <td>{{ formatINR(row.special) }}</td>
+            <td class="salary-stack">
+              <div class="amount">{{ formatINR(row.gross) }}</div>
+            </td>
+            <td>{{ formatINR(row.pf) }}</td>
+            <td>{{ formatINR(row.esi) }}</td>
+            <td>{{ formatINR(row.profTax) }}</td>
+            <td>{{ formatINR(row.tds) }}</td>
+            <td class="">{{ formatINR(row.netPay) }}</td>
+            <td>
+              <span class="payroll-status" [ngClass]="row.status">
+                <i class="bi bi-circle-fill"></i> {{ statusLabel(row.status) }}
+              </span>
+              <button aria-label="Edit" type="button" class="btn btn-icon btn-sm btn-outline-primary ms-2" (click)="openEditModal(row)">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="!rows.length">
+            <td colspan="18" class="text-center text-muted py-4">No payroll records match the current filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Run Payroll Modal ===================== -->
+<div class="app-modal-backdrop" *ngIf="showRunModal" (click)="closeRunPayrollModal()">
+  <div class="app-modal-dialog" (click)="$event.stopPropagation()">
+    <div class="app-modal-content">
+      <div class="modal-intro">
+        <div class="modal-intro-icon"><i class="bi bi-cash-stack"></i></div>
+        <h5 class=" mb-1">Run Payroll</h5>
+        <p class="text-muted mb-0">Choose how you want to process payroll</p>
+      </div>
+
+      <div class="p-4">
+        <!-- Step 1: choose type -->
+        <div *ngIf="runStep === 1">
+          <div class="row g-3">
+            <div class="col-4">
+              <div class="rp-type-card rp-type-compact" [class.selected]="selectedType === 'bulk'" (click)="selectRunType('bulk')">
+                <div class="rp-type-icon" style="background:var(--neutral-50);color:var(--green-500);"><i class="bi bi-people-fill"></i></div>
+                <div class="rp-type-name">Bulk</div>
+                <div class="rp-type-desc">Process payroll for all 186 employees at once</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="rp-type-card rp-type-compact" [class.selected]="selectedType === 'department'" (click)="selectRunType('department')">
+                <div class="rp-type-icon" style="background:var(--warning-soft);color:var(--orange-500);"><i class="bi bi-diagram-3-fill"></i></div>
+                <div class="rp-type-name">Department</div>
+                <div class="rp-type-desc">Process payroll for all employees in a selected department</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="rp-type-card rp-type-compact" [class.selected]="selectedType === 'individual'" (click)="selectRunType('individual')">
+                <div class="rp-type-icon" style="background:var(--accent-blue-soft);color:var(--blue-550);"><i class="bi bi-person-fill"></i></div>
+                <div class="rp-type-name">Individual</div>
+                <div class="rp-type-desc">Process payroll for a single selected employee</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Bulk -->
+        <div *ngIf="runStep === 2 && selectedType === 'bulk'">
+          <div class="mb-3">
+            <label class="form-label  small">Pay Period</label>
+            <select class="form-select" [(ngModel)]="rpBulkPeriod">
+              <option value="">Select month...</option>
+              <option *ngFor="let p of payPeriods" [value]="p">{{ p }}</option>
+            </select>
+          </div>
+          <div class="summary-box mb-3">
+            <div class="summary-row"><span>Pay Period</span><strong>{{ rpBulkPeriod || '—' }}</strong></div>
+            <div class="summary-row"><span>Employees</span><strong>186 employees</strong></div>
+            <div class="summary-row"><span>Estimated Gross</span><strong>₹24.86L</strong></div>
+            <div class="summary-row"><span>Estimated Deductions</span><strong class="text-danger">₹3.42L</strong></div>
+          </div>
+          <div class="info-box">
+            <i class="bi bi-info-circle"></i>
+            <span>Payroll will be processed based on attendance records for the selected period.</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Department -->
+        <div *ngIf="runStep === 2 && selectedType === 'department'">
+          <div class="mb-3">
+            <label class="form-label  small">Select Department</label>
+            <select class="form-select" [(ngModel)]="rpDeptSelected">
+              <option value="">Choose a department...</option>
+              <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label  small">Pay Period</label>
+            <select class="form-select" [(ngModel)]="rpDeptPeriod">
+              <option value="">Select month...</option>
+              <option *ngFor="let p of payPeriods" [value]="p">{{ p }}</option>
+            </select>
+          </div>
+          <div class="summary-box mb-3">
+            <div class="summary-row"><span>Department</span><strong>{{ rpDeptSelected || '—' }}</strong></div>
+            <div class="summary-row"><span>Employees</span><strong>{{ deptSummary ? deptSummary.count + ' employees' : '—' }}</strong></div>
+            <div class="summary-row"><span>Estimated Gross</span><strong>{{ deptSummary ? formatINR(deptSummary.gross) : '—' }}</strong></div>
+            <div class="summary-row"><span>Estimated Deductions</span><strong class="text-danger">{{ deptSummary ? formatINR(deptSummary.ded) : '—' }}</strong></div>
+          </div>
+          <div class="info-box">
+            <i class="bi bi-info-circle"></i>
+            <span>Payroll will be processed for all employees in the selected department.</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Individual -->
+        <div *ngIf="runStep === 2 && selectedType === 'individual'">
+          <div class="mb-3">
+            <label class="form-label  small">Select Employee</label>
+            <select class="form-select" [(ngModel)]="rpEmpSelected">
+              <option value="">Choose an employee...</option>
+              <option *ngFor="let e of employees" [value]="e.id">{{ e.name }} ({{ e.id }})</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label  small">Pay Period</label>
+            <select class="form-select" [(ngModel)]="rpIndPeriod">
+              <option value="">Select month...</option>
+              <option *ngFor="let p of payPeriods" [value]="p">{{ p }}</option>
+            </select>
+          </div>
+          <div class="info-box">
+            <i class="bi bi-info-circle"></i>
+            <span>Payroll will be processed for the selected employee only.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-row">
+        <button type="button" class="btn btn-reject flex-fill" *ngIf="runStep === 2" (click)="runBack()">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn btn-reject flex-fill" *ngIf="runStep === 1" (click)="closeRunPayrollModal()">Cancel</button>
+        <button type="button" class="btn btn-primary flex-fill" *ngIf="runStep === 1" [disabled]="!selectedType" (click)="runNext()">
+          <i class="bi bi-arrow-right"></i> Next
+        </button>
+        <button type="button" class="btn btn-primary flex-fill" *ngIf="runStep === 2" [disabled]="!canProcess" (click)="processPayroll()">
+          <i class="bi bi-play-circle"></i> Process Payroll
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Progress Modal ===================== -->
+<div class="app-modal-backdrop" *ngIf="showProgressModal">
+  <div class="app-modal-dialog" (click)="$event.stopPropagation()">
+    <div class="app-modal-content text-center p-4">
+      <div class="progress-icon" *ngIf="!progressDone">
+        <div class="spinner"></div>
+      </div>
+      <div class="progress-icon" *ngIf="progressDone">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <h5 class=" mb-1">{{ progressTitle }}</h5>
+      <p class="text-muted mb-3 small">{{ progressSub }}</p>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="progressPct"></div>
+      </div>
+      <span class="progress-pct">{{ progressPct }}%</span>
+
+      <div class="mt-4" *ngIf="progressDone">
+        <button type="button" class="btn btn-primary px-4" (click)="viewResult()">
+          <i class="bi bi-eye"></i> View Result
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Edit Salary Structure Modal ===================== -->
+<div class="app-modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="app-modal-dialog app-modal-lg" (click)="$event.stopPropagation()">
+    <div class="app-modal-content">
+      <div class="edit-modal-header">
+        <div>
+          <h5 class=" mb-0">Edit Salary Structure</h5>
+          <p class="mb-0 small" *ngIf="editRow">{{ editRow.employeeName }} ({{ editRow.employeeId }})</p>
+        </div>
+        <button type="button" class="modal-close-btn" (click)="closeEditModal()">&times;</button>
+      </div>
+
+      <div class="edit-modal-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="section-heading">
+              <i class="bi bi-plus-circle section-heading-icon-green"></i>
+              <span class="section-heading-text">Earning Components</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">Basic Salary</label>
+            <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.basic">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">HRA</label>
+            <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.hra">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">Dearness Allowance</label>
+            <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.da">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">Conveyance</label>
+            <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.convey">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">Medical</label>
+            <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.medical">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">Special Allowance</label>
+            <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.special">
+            </div>
+          </div>
+
+          <div class="col-12"><hr class="divider"></div>
+          <div class="col-12">
+            <div class="section-heading">
+              <i class="bi bi-dash-circle section-heading-icon-red"></i>
+              <span class="section-heading-text">Deduction Components</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold form-label-sm">PF</label>
+            <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.pf">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold form-label-sm">ESI</label>
+            <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.esi">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold form-label-sm">Prof Tax</label>
+            <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.profTax">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold form-label-sm">TDS</label>
+            <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+              <input type="number" class="form-control form-input" [(ngModel)]="edit.tds">
+            </div>
+          </div>
+
+          <div class="col-12"><hr class="divider"></div>
+          <div class="col-12">
+            <div class="section-heading">
+              <i class="bi bi-calendar-check section-heading-icon-green"></i>
+              <span class="section-heading-text">Attendance</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">Present Days</label>
+            <input type="number" class="form-control form-input" min="0" max="28" [(ngModel)]="edit.present">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold form-label-sm">Absent Days</label>
+            <input type="number" class="form-control form-input" min="0" max="28" [(ngModel)]="edit.absent">
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <div class="net-pay-box">
+              <div class="net-pay-label">Net Pay</div>
+              <div class=" net-pay-value">{{ formatINR(editNetPay) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="edit-modal-footer">
+        <button type="button" class="btn btn-reject" (click)="closeEditModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="saveEdit()">
+          <i class="bi bi-check-lg"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Add Salary Structure Modal ===================== -->
+<div class="app-modal-backdrop" *ngIf="showAddModal" (click)="closeAddSalaryModal()">
+  <div class="app-modal-dialog app-modal-lg" (click)="$event.stopPropagation()">
+    <div class="app-modal-content">
+      <div class="edit-modal-header">
+        <div>
+          <h5 class=" mb-0">Add Salary Structure</h5>
+          <p class="mb-0 small">Create salary structure for an employee</p>
+        </div>
+        <button type="button" class="modal-close-btn" (click)="closeAddSalaryModal()">&times;</button>
+      </div>
+
+      <div class="edit-modal-body">
+        <!-- Stepper -->
+        <!-- Stepper -->
+<div class="d-flex align-items-center mb-4">
+  <div class="as-step" [class.active]="addStep === 1" [class.completed]="addStep > 1">
+    <span class="as-step-dot">1</span><span class="as-step-text">Employee</span>
+  </div>
+  <div class="as-step-line" [class.done]="addStep > 1"></div>
+  <div class="as-step" [class.active]="addStep === 2" [class.completed]="addStep > 2">
+    <span class="as-step-dot">2</span><span class="as-step-text">Earnings</span>
+  </div>
+  <div class="as-step-line" [class.done]="addStep > 2"></div>
+  <div class="as-step" [class.active]="addStep === 3">
+    <span class="as-step-dot">3</span><span class="as-step-text">Deductions &amp; Review</span>
+  </div>
+</div>
+
+        <!-- Step 1: Employee -->
+        <div *ngIf="addStep === 1">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label fw-semibold form-label-sm">Select Employee</label>
+              <select class="form-select" [(ngModel)]="add.employeeId">
+                <option value="">Choose an employee...</option>
+                <option *ngFor="let e of employees" [value]="e.id">{{ e.name }} ({{ e.id }})</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <div class="info-box">
+                <i class="bi bi-info-circle"></i>
+                <span>Choose the employee for whom you want to create a salary structure. You can define earnings in the next step.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Earnings -->
+        <div *ngIf="addStep === 2">
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="section-heading">
+                <i class="bi bi-plus-circle section-heading-icon-green"></i>
+                <span class="section-heading-text">Earning Components</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold form-label-sm">Basic Salary</label>
+              <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.basic">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold form-label-sm">HRA</label>
+              <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.hra">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold form-label-sm">Dearness Allowance</label>
+              <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.da">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold form-label-sm">Conveyance</label>
+              <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.convey">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold form-label-sm">Medical</label>
+              <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.medical">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold form-label-sm">Special Allowance</label>
+              <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.special">
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="info-box">
+                <i class="bi bi-info-circle"></i>
+                <span>Monthly gross earnings before deductions. Values are pre-filled with defaults — adjust as needed.</span>
+              </div>
+            </div>
+
+            <!-- Custom earnings -->
+            <div class="col-12">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="custom-list-label">CUSTOM EARNINGS (OPTIONAL)</span>
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="addCustomEarning()">
+                  <i class="bi bi-plus-lg"></i>Add Custom Earning
+                </button>
+              </div>
+              <div class="as-custom-row mb-2" *ngFor="let earn of customEarnings">
+                <div class="flex-fill">
+                  <label class="form-label">Label</label>
+                  <input type="text" class="form-control" placeholder="e.g. Bonus" [(ngModel)]="earn.label">
+                </div>
+                <div class="flex-fill">
+                  <label class="form-label">Amount</label>
+                  <div class="input-group"><span class="input-prefix input-prefix-green">₹</span>
+                    <input type="number" class="form-control form-input" [(ngModel)]="earn.amount">
+                  </div>
+                </div>
+                <button aria-label="Remove earning" type="button" class="as-custom-remove" (click)="removeCustomEarning(earn.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Deductions + Review -->
+        <div *ngIf="addStep === 3">
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="section-heading">
+                <i class="bi bi-dash-circle section-heading-icon-red"></i>
+                <span class="section-heading-text">Deduction Components</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold form-label-sm">PF</label>
+              <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.pf">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold form-label-sm">ESI</label>
+              <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.esi">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold form-label-sm">Prof Tax</label>
+              <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.profTax">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold form-label-sm">TDS</label>
+              <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+                <input type="number" class="form-control form-input" [(ngModel)]="add.tds">
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="net-pay-box" style="height:100%;">
+                <div class="net-pay-label">Net Pay Preview</div>
+                <div class=" net-pay-value">{{ formatINR(addNetPreview) }}</div>
+              </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <div class="info-box w-100">
+                <i class="bi bi-eye"></i>
+                <span>Review everything, then save.</span>
+              </div>
+            </div>
+
+            <!-- Custom deductions -->
+            <div class="col-12">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="custom-list-label">CUSTOM DEDUCTIONS (OPTIONAL)</span>
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="addCustomDeduction()">
+                  <i class="bi bi-plus-lg"></i>Add Custom Deduction
+                </button>
+              </div>
+              <div class="as-custom-row mb-2" *ngFor="let ded of customDeductions">
+                <div class="flex-fill">
+                  <label class="form-label">Label</label>
+                  <input type="text" class="form-control" placeholder="e.g. Loan EMI" [(ngModel)]="ded.label">
+                </div>
+                <div class="flex-fill">
+                  <label class="form-label">Amount</label>
+                  <div class="input-group"><span class="input-prefix input-prefix-red">₹</span>
+                    <input type="number" class="form-control form-input" [(ngModel)]="ded.amount">
+                  </div>
+                </div>
+                <button aria-label="Remove deduction" type="button" class="as-custom-remove" (click)="removeCustomDeduction(ded.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="edit-modal-footer">
+        <button type="button" class="btn btn-reject" (click)="closeAddSalaryModal()">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" *ngIf="addStep > 1" (click)="addBack()">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn btn-primary" *ngIf="addStep < 3" [disabled]="addStep === 1 && !add.employeeId" (click)="addNext()">
+          <i class="bi bi-arrow-right"></i> Next
+        </button>
+        <button type="button" class="btn btn-primary" *ngIf="addStep === 3" (click)="saveAddSalary()">
+          <i class="bi bi-check-lg"></i> Save Salary Structure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

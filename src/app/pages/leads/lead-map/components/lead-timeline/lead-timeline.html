@@ -1,0 +1,42 @@
+<div class="timeline-box">
+
+  <div class="timeline-head">
+    <i class="bi bi-clock-history"></i>
+    <span>Timeline</span>
+    <span class="count-pill">{{ activities().length }}</span>
+  </div>
+
+  @if (loading()) {
+  <div class="tl-empty">
+    <span class="spinner-border spinner-border-sm"></span>
+    Loading activity...
+  </div>
+  } @else {
+  <ul class="timeline-list">
+    @for (it of activities(); track $index) {
+    <li class="tl-item activity-{{ it.type }}" [class.active]="activeIndex() === $index" [attr.data-index]="$index"
+      role="button" tabindex="0" (click)="activitySelect.emit($index)" (keydown.enter)="activitySelect.emit($index)">
+
+      <div class="tl-icon">
+        <i class="bi {{ meta[it.type].icon }}"></i>
+      </div>
+
+      <div class="tl-card">
+        <div class="tl-top">
+          <span class="tl-title">{{ it.title }}</span>
+          <span class="tl-time">{{ it.time }}</span>
+        </div>
+        <div class="tl-area"><i class="bi bi-geo-alt"></i> {{ it.area }}</div>
+        <div class="tl-meta">{{ it.note }}</div>
+      </div>
+    </li>
+    } @empty {
+    <li class="tl-empty">
+      <i class="bi bi-inbox"></i>
+      No activity found for this user.
+    </li>
+    }
+  </ul>
+  }
+
+</div>

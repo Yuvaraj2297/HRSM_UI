@@ -1,0 +1,15 @@
+/* stat tiles, date-cell and weekday-chip are global (global-style/classes.scss) */
+
+:host {
+  display: block;
+}
+
+.km-cell {
+  font-weight: 600;
+  color: var(--gh-heading);
+
+  &.is-zero {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+}

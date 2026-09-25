@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+
+  &.cat-loan {
+    background: var(--blue-50);
+    color: var(--blue-450-2);
+  }
+
+  &.cat-advance {
+    background: var(--yellow-50);
+    color: var(--orange-400);
+  }
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+
+  &.status-approved {
+    background: var(--primary-soft);
+    color: var(--green-350);
+
+    &:hover {
+      background: var(--green-350);
+      color: var(--white);
+    }
+  }
+
+  &.status-rejected {
+    background: var(--red-100);
+    color: var(--danger);
+
+    &:hover {
+      background: var(--danger);
+      color: var(--white);
+    }
+  }
+}

@@ -1,0 +1,180 @@
+<!-- =========================================================
+     PERMISSIONS HEADER
+========================================================= -->
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+
+  <div class="ne-section-title mb-0">
+    Permissions :-
+  </div>
+
+  <div style="
+      font-size:12px;
+      color:var(--aw-ink-500,var(--neutral-450));
+    ">
+
+    <a href="javascript:void(0)" class="fw-semibold" style="color:var(--primary);" (click)="selectAll()">
+      Select All
+    </a>
+
+    <span class="mx-1">|</span>
+
+    <a href="javascript:void(0)" class="fw-semibold text-muted" (click)="deselectAll()">
+      Deselect All
+    </a>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     ROLE
+========================================================= -->
+
+<div class="row g-3 mb-3" [formGroup]="permissions">
+
+  <!-- ROLE -->
+  <div class="col-lg-4 col-md-6">
+
+    <label class="form-label">
+
+      <span class="ne-req">*</span>
+
+      Role
+
+    </label>
+
+    <p-select formControlName="role" [options]="fs.roles" optionLabel="label" optionValue="value" [filter]="true"
+      filterBy="label" [showClear]="true" styleClass="w-100" appendTo="body" (onChange)="applyRole($event.value)" />
+
+  </div>
+
+
+  <!-- ROLE DESCRIPTION -->
+  <div class="col-lg-8 col-md-6 d-flex align-items-end">
+
+    @if (roleDescription) {
+
+    <div class="ne-role-badge mb-1" [ngClass]="badgeClass">
+
+      <i class="bi bi-info-circle me-1"></i>
+
+      <span>
+        {{ roleDescription }}
+      </span>
+
+    </div>
+
+    }
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     PERMISSION TABLE
+========================================================= -->
+
+<div class="ne-perm-wrapper">
+
+
+  <!-- =======================================================
+       TABLE HEADER
+  ======================================================== -->
+
+  <div class="ne-perm-header">
+
+    <div>
+      Module
+    </div>
+
+    <div>
+      Capabilities
+    </div>
+
+    <div class="text-center">
+      All
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       PERMISSION GROUPS
+  ======================================================== -->
+
+  @for (group of groups; track group.key) {
+
+  <!-- GROUP TITLE -->
+
+  <div class="ne-perm-group-label">
+
+    <i [class]="group.icon"></i>
+
+    {{ group.label }}
+
+  </div>
+
+
+  <!-- =====================================================
+         MODULE ROWS
+    ====================================================== -->
+
+  @for (mod of group.modules; track mod.feature) {
+
+  <div class="ne-perm-row">
+
+
+    <!-- MODULE NAME -->
+
+    <div class="ne-perm-col-feature">
+
+      {{ mod.feature }}
+
+    </div>
+
+
+    <!-- CAPABILITIES -->
+
+    <div class="ne-perm-col-caps">
+
+      @for (cap of mod.caps; track cap.value) {
+
+      <label class="ne-perm-check">
+
+        <input type="checkbox" [checked]="has(cap.value)" (change)="toggle(cap.value)">
+
+        {{ cap.label }}
+
+      </label>
+
+      }
+
+    </div>
+
+
+    <!-- SELECT ALL -->
+
+    <div class="text-center">
+
+      <span class="ne-perm-check-all" (click)="toggleModule(mod)">
+
+        {{
+        allChecked(mod)
+        ? 'Deselect All'
+        : 'Select All'
+        }}
+
+      </span>
+
+    </div>
+
+  </div>
+
+  }
+
+  }
+
+</div>

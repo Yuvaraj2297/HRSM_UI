@@ -1,0 +1,153 @@
+<!-- Title & Action Bar -->
+<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class=" mb-1" style="font-size:1.7rem;">Job Openings & Requisitions</h1>
+    <nav class="d-flex align-items-center gap-2 text-muted" style="font-size:13px;">
+      <i class="bi bi-briefcase fs-6"></i>
+      <span>Recruitment</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class=" text-dark">Job Openings</span>
+    </nav>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="btn btn-outline-secondary" type="button" (click)="viewSocialApplicants()">
+      <i class="bi bi-share-fill"></i> Social & Web Applicants
+    </button>
+    <a routerLink="/candidates" class="btn btn-outline-success">
+      <i class="bi bi-people-fill me-1"></i> View Candidates ATS
+    </a>
+    <button class="btn btn-success" type="button" (click)="openCreateModal()">
+      <i class="bi bi-plus-lg"></i> Post New Job
+    </button>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-xl-3">
+    <div class="job-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--neutral-50);color:var(--green-500);"><i class="bi bi-briefcase"></i></div>
+      <div>
+        <div class="label">Active Open Positions</div>
+        <div class="value">{{ activeOpenPositions }}</div>
+        <div class="sub">Across {{ activeDepartmentCount }} departments</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="job-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--accent-blue-soft);color:var(--blue-550);"><i class="bi bi-person-lines-fill"></i></div>
+      <div>
+        <div class="label">Total Applicants</div>
+        <div class="value">{{ totalApplicants }}</div>
+        <div class="sub">28 this week</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="job-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--warning-soft);color:var(--orange-500);"><i class="bi bi-calendar-event"></i></div>
+      <div>
+        <div class="label">Interviews Scheduled</div>
+        <div class="value">{{ interviewsScheduled }}</div>
+        <div class="sub">Next 7 days</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="job-kpi d-flex align-items-center gap-3">
+      <div class="icon" style="background:var(--purple-50);color:var(--purple-550-2);"><i class="bi bi-file-earmark-check"></i></div>
+      <div>
+        <div class="label">Offers Released</div>
+        <div class="value">{{ offersReleased }}</div>
+        <div class="sub">{{ offersAccepted }} accepted, {{ offersPending }} pending</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Job Openings Table -->
+<app-primedatatable
+  [columns]="columns"
+  [data]="jobs"
+  [rows]="10"
+  [paginator]="true"
+  [dataKey]="'id'"
+  [searchPlaceholder]="'Search employee...'"
+  [exportFileName]="'job-openings-report'"
+  [rowActions]="rowActions"
+  (actionClick)="onTableAction($event)"
+>
+  <ng-template #cellTemplate let-row let-col="col">
+    <ng-container [ngSwitch]="col.field">
+      <ng-container *ngSwitchCase="'code'">
+        <span class="job-code-text">{{ row.code }}</span>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'title'">
+        <div class="job-title-cell">
+          <div class="job-title-text">{{ row.title }}</div>
+          <div class="job-title-sub">Exp: {{ row.exp }} • Posted {{ row.posted }}</div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'dept'">
+        <span class="badge bg-light text-dark border">{{ row.dept }}</span>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'location'">
+        <div class="job-loc-cell">
+          <div class="job-loc-text">{{ row.location }}</div>
+          <div class="job-type-text">{{ row.type }}</div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'openings'">
+        <span class="job-openings-text">{{ row.openings }}</span>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'applicants'">
+        <button type="button" class="applicants-pill" (click)="$event.stopPropagation(); goToPipeline(row)">
+          <i class="bi bi-people-fill me-1"></i>{{ row.applicants }} Applicants
+        </button>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'budget'">
+        <span class="job-budget-text">{{ row.budget }}</span>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'priority'">
+        <span class="priority-pill" [ngClass]="priorityClass(row.priority)">{{ row.priority }}</span>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'postedPortals'">
+        <div class="portal-pill-group">
+          <span class="portal-pill" [ngClass]="portalClass(portal)" *ngFor="let portal of row.postedPortals">
+            <i [class]="portalIcon(portal)"></i>{{ portal }}
+          </span>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'status'">
+        <span [ngClass]="statusBadgeClass(row.status)">
+          <i class="bi bi-circle-fill" style="font-size:7px;"></i> {{ row.status }}
+        </span>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>{{ row[col.field] }}</ng-container>
+    </ng-container>
+  </ng-template>
+</app-primedatatable>
+
+<!-- Add / Edit Job Opening — single reusable modal instance -->
+<app-reuse-modal
+  #jobModal
+  [fields]="jobFields"
+  title="Post New Job Requisition"
+  editTitle="Edit Job Opening"
+  saveLabel="Publish Job"
+  updateLabel="Save Changes"
+  submitIcon="ti ti-check"
+  (saved)="onJobModalSave($event)"
+  (cancelled)="onJobModalCancel()"
+></app-reuse-modal>

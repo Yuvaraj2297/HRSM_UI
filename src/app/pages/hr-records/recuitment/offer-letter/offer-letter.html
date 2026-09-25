@@ -1,0 +1,46 @@
+<app-primedatatable
+  [columns]="columns"
+  [data]="data"
+  [modalHeader]="modalHeader"
+  [Accessactions]="Accessactions"
+  [rowActions]="rowActions"
+  dataKey="id"
+  searchPlaceholder="Search candidate, job title..."
+  exportFileName="offer-letters-report"
+  (addClicked)="onAddClicked()"
+  (actionClick)="onAction($event)"
+>
+  <!--
+    IMPORTANT: once ANY #cellTemplate is projected, primedatatable routes every
+    column without a special `type` (employee/status/progress/actions/...)
+    through THIS template instead of its own plain-text fallback. So we must
+    handle the default text case ourselves (@else) or those columns render blank.
+  -->
+  <ng-template #cellTemplate let-row let-col="col">
+    @if (col.field === 'status') {
+      <span class="offer-status-badge" [ngClass]="statusClass(row.status)">
+        <i class="ti ti-point-filled"></i>
+        {{ row.status }}
+      </span>
+    } @else {
+      <span class="cell-text">{{ row[col.field] }}</span>
+    }
+  </ng-template>
+</app-primedatatable>
+
+<!-- Generate Offer Letter — bespoke modal (grouped cards + live CTC breakdown) -->
+<app-generate-offer-modal
+  #generateOfferModal
+  [candidates]="candidateOptions"
+  (generated)="onOfferGenerated($event)"
+></app-generate-offer-modal>
+
+<!-- Send Offer (WhatsApp / Email) still uses the generic reuse-modal -->
+<app-reuse-modal
+  #sendOfferModal
+  [fields]="sendFields"
+  title="Send Official Offer Letter"
+  saveLabel="Dispatch Offer"
+  submitIcon="ti ti-send"
+  (saved)="onSendOfferSaved($event)"
+></app-reuse-modal>

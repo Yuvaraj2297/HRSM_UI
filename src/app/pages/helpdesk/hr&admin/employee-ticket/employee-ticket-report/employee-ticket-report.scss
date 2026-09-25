@@ -1,0 +1,159 @@
+:host {
+  display: block;
+}
+
+/* ===== Report KPI ===== */
+.tr-kpi {
+  border: 1.5px solid var(--border-soft, var(--bg-muted));
+  border-radius: 14px;
+  background: var(--white);
+  padding: 16px 18px;
+  height: 100%;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(var(--neutral-950-rgb), 0.08);
+  }
+
+  .k-val {
+    font: 800 24px var(--font-family-display);
+    color: var(--ink-900, var(--neutral-900-2));
+    line-height: 1;
+  }
+
+  .k-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink-500, var(--neutral-500-2));
+    margin-top: 5px;
+  }
+
+  .k-ico {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 19px;
+    flex-shrink: 0;
+  }
+}
+
+/* ===== Report Cards ===== */
+.tr-card {
+  overflow: hidden;
+  height: 100%;
+
+  .tr-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-soft, var(--bg-muted));
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: 700 13.5px var(--font-family-display);
+    color: var(--ink-900, var(--neutral-900-2));
+
+    i {
+      color: var(--blue-550);
+    }
+  }
+
+  .tr-body {
+    padding: 14px 18px;
+  }
+}
+
+/* ===== Horizontal Bar Rows ===== */
+.tr-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .b-label {
+    width: 140px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink-700, var(--neutral-650));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .b-track {
+    flex: 1;
+    height: 10px;
+    background: var(--bg-muted);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .b-fill {
+    height: 100%;
+    border-radius: 99px;
+    min-width: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .b-val {
+    width: 32px;
+    text-align: right;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--ink-900, var(--neutral-900-2));
+    flex-shrink: 0;
+  }
+}
+
+/* ===== Mini Table ===== */
+.tr-mini-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+
+  th {
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-500, var(--neutral-500-2));
+    padding: 8px 12px;
+    border-bottom: 1.5px solid var(--border-soft, var(--bg-muted));
+    background: var(--bg-soft);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 12px;
+    font-weight: 600;
+    color: var(--ink-900, var(--neutral-900-2));
+    border-bottom: 1px solid var(--bg-muted);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  flex-shrink: 0;
+}

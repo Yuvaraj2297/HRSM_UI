@@ -1,0 +1,426 @@
+:host {
+  display: block;
+
+  // Fallback design tokens (override globally if your app already defines these)
+  --primary-light: var(--neutral-50);
+  --accent-red: var(--danger);
+  --ink-900: var(--neutral-950);
+  --ink-500: var(--neutral-450);
+  --ink-100: var(--bg-muted);
+  --border-soft: var(--border);
+}
+
+/* ===== Page header ===== */
+.page-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-500);
+
+  .crumb-current {
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+}
+
+/* ===== KPI cards ===== */
+.payroll-kpi {
+  min-height: 112px;
+  padding: 18px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), 0.04);
+
+  .label { color: var(--ink-500); font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+  .value { color: var(--ink-900); font-size: 20px; font-weight: 800; }
+  .sub { color: var(--ink-500); font-size: 11px; margin-top: 3px; }
+}
+
+.kpi-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: grid; place-items: center; font-size: 18px;
+}
+.kpi-icon-green { background: var(--neutral-50); color: var(--green-500); }
+.kpi-icon-blue  { background: var(--accent-blue-soft); color: var(--blue-550); }
+.kpi-icon-amber { background: var(--warning-soft); color: var(--orange-500); }
+.kpi-icon-red   { background: var(--danger-soft); color: var(--red-500-2); }
+
+/* ===== Generic card ===== */
+.card-custom {
+  padding: 16px;
+
+  &.p-0 { padding: 0; }
+}
+
+/* ===== Filters ===== */
+.filters-card { position: relative; z-index: 50; }
+
+.filters-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-title-text { font-size: 14.5px; color: var(--ink-900); font-weight: 600; }
+
+.filters-toggle-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--primary-light); color: var(--primary-dark);
+  border: none; font-weight: 600; font-size: 13.5px;
+  padding: 9px 16px; border-radius: 10px; cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover { background: var(--green-100-2); }
+
+  .chevron { transition: transform 0.35s cubic-bezier(.4, 0, .2, 1); font-size: 12px; }
+  &.open .chevron { transform: rotate(180deg); }
+}
+
+.filters-collapse {
+  max-height: 0; opacity: 0; overflow: hidden;
+  transform: translateY(-8px);
+  transition: max-height 0.45s cubic-bezier(.4, 0, .2, 1),
+              opacity 0.35s ease,
+              transform 0.4s cubic-bezier(.34, 1.1, .64, 1),
+              margin 0.45s ease;
+  margin-top: 0;
+
+  &.open {
+    max-height: 600px; opacity: 1; transform: translateY(0);
+    margin-top: 16px;
+  }
+}
+/* In payroll-processing.scss */
+.edit-modal-body {
+  .input-group {
+    flex-wrap: nowrap; /* Forces the prefix and input to stay on the same line */
+  }
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+/* ===== Active filter chips ===== */
+.active-filters-bar {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+  background: var(--white); border: 1px solid var(--ink-100);
+  border-radius: 14px; padding: 0 14px; margin-bottom: 0;
+  box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.04);
+  max-height: 0; opacity: 0; overflow: hidden; border-width: 0;
+  transform: translateY(-6px);
+  transition: max-height 0.4s cubic-bezier(.4, 0, .2, 1),
+              opacity 0.3s ease,
+              transform 0.35s cubic-bezier(.34, 1.2, .64, 1),
+              padding 0.4s ease, margin 0.4s ease, border-width 0.3s ease;
+
+  &.show {
+    max-height: 200px; opacity: 1; padding: 12px 14px;
+    margin-bottom: 12px; border-width: 1px; transform: translateY(0);
+  }
+}
+
+.active-filters-label {
+  font-size: 12.5px; font-weight: 600; color: var(--ink-500);
+  white-space: nowrap; margin-right: 2px;
+}
+
+.filter-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--primary-light); color: var(--primary-dark);
+  font-size: 12.5px; font-weight: 600;
+  padding: 6px 8px 6px 12px; border-radius: 999px;
+
+  .chip-key { font-weight: 500; color: var(--ink-500); }
+
+  .chip-close {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(var(--black-rgb), 0.06); color: inherit; cursor: pointer;
+    border: none; font-size: 11px; line-height: 1;
+    transition: background 0.15s ease, transform 0.15s ease;
+
+    &:hover { background: rgba(var(--black-rgb), 0.14); transform: rotate(90deg); }
+  }
+}
+
+.active-filters-clear {
+  margin-left: auto; font-size: 12.5px; font-weight: 600;
+  color: var(--accent-red); background: transparent; border: none; cursor: pointer;
+  white-space: nowrap;
+
+  &:hover { text-decoration: underline; }
+}
+
+/* ===== Table ===== */
+.table-modern {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+
+  th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--ink-100);
+    white-space: nowrap;
+  }
+
+  thead th {
+    background: var(--bg-soft);
+    color: var(--ink-500);
+    font-weight: 700;
+    text-align: left;
+  }
+}
+
+.earning-col-th { border-bottom: 1px solid var(--white) !important; font-weight: 700 !important; }
+.deduction-col-th { border-bottom: 1px solid var(--white) !important; font-weight: 700 !important; }
+
+.salary-stack {
+  min-width: 110px;
+  .amount { font-weight: 800; color: var(--ink-900); }
+}
+
+.payroll-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 99px; padding: 5px 10px; font-size: 11px; font-weight: 800;
+
+  i { font-size: 8px; }
+
+  &.paid { color: var(--green-550); background: var(--primary-soft); }
+  &.processing { color: var(--orange-550); background: var(--orange-50); }
+  &.hold { color: var(--red-550); background: var(--danger-soft); }
+  &.draft { color: var(--neutral-500-2); background: var(--bg-muted); }
+}
+
+/* ===== Buttons (framework-agnostic minimal styling) ===== */
+
+.btn-primary:disabled { opacity: 0.55; }
+
+/* ===== Form controls ===== */
+.form-label { margin-bottom: 6px; display: block; }
+.form-control, .form-select {
+  width: 100%;
+}
+.input-group { 
+  display: flex; 
+  align-items: stretch; // Ensures both the prefix and input take the full height of the container
+  width: 100%;          // Ensures the group fills its parent column
+}
+
+.input-prefix {
+  display: flex; 
+  align-items: center; 
+  justify-content: center; // Centers the ₹ symbol horizontally within its box
+  padding: 0 12px;         // Slightly increased padding for better visual balance
+  border-radius: 10px 0 0 10px; 
+  font-weight: 700; 
+  font-size: 13px;
+  border: 1px solid var(--border-soft); 
+  border-right: none;
+  flex-shrink: 0;          // Prevents the prefix box from squishing on smaller screens
+}
+.input-prefix-green { background: var(--primary-light); color: var(--primary-dark); }
+.input-prefix-red { background: var(--danger-soft); color: var(--red-550); }
+.form-input { border-radius: 0 10px 10px 0; font-size: 13px; }
+
+/* ===== Modal shell (custom, no Bootstrap JS dependency) ===== */
+.app-modal-backdrop {
+  position: fixed; inset: 0; z-index: 1050;
+  background: rgba(var(--neutral-950-2-rgb), 0.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.app-modal-dialog {
+  width: 100%;
+  max-width: 480px;
+  animation: modalIn 0.2s ease;
+}
+.app-modal-lg { max-width: 720px; }
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.app-modal-content {
+  background: var(--white);
+  border-radius: 18px;
+  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-intro {
+  padding: 28px 28px 0;
+  text-align: center;
+
+  .modal-intro-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--primary-light);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 14px; font-size: 28px; color: var(--primary);
+  }
+}
+
+.modal-footer-row {
+  padding: 0 28px 24px; display: flex; gap: 10px; margin-top: 16px;
+}
+
+/* Run Payroll type cards */
+.rp-type-card {
+  border: 2px solid var(--border-soft); border-radius: 14px;
+  padding: 20px; text-align: center; cursor: pointer;
+  transition: all 0.2s ease; background: var(--white);
+
+  &:hover { border-color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
+  &.selected { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 0 0 3px rgba(var(--green-400-rgb), 0.12); }
+
+  .rp-type-icon { width: 44px; height: 44px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 10px; }
+  .rp-type-name { font-size: 14px; font-weight: 700; color: var(--ink-900); margin-bottom: 4px; }
+  .rp-type-desc { font-size: 11.5px; color: var(--ink-500); line-height: 1.4; }
+}
+.rp-type-compact { padding: 14px 8px; }
+
+.summary-box {
+  background: var(--primary-light); border-radius: 12px; padding: 16px;
+}
+.summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; margin-bottom: 8px;
+  span { color: var(--ink-500); font-weight: 600; }
+  strong { color: var(--ink-900); }
+  &:last-child { margin-bottom: 0; }
+}
+
+.info-box {
+  background: var(--bg-soft); border-radius: 10px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--ink-500);
+}
+
+/* Progress modal */
+.progress-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--primary-light);
+  display: inline-flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 32px; color: var(--primary);
+
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border-soft);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.progress-track {
+  height: 6px; background: var(--bg-muted); border-radius: 999px;
+  overflow: hidden; margin-bottom: 8px;
+}
+.progress-fill {
+  height: 100%; background: var(--primary); border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.progress-pct { font-size: 12px; font-weight: 600; color: var(--ink-500); }
+
+/* Edit / Add salary modal */
+.edit-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--white); padding: 18px 24px;
+}
+.edit-modal-body { padding: 24px; }
+.edit-modal-footer {
+  padding: 16px 24px; border-top: 1px solid var(--border-soft);
+  display: flex; justify-content: flex-end; gap: 10px;
+}
+.modal-close-btn {
+  border: none; background: rgba(var(--white-rgb), 0.2); color: var(--white);
+  font-size: 18px; width: 32px; height: 32px; border-radius: 8px;
+  display: grid; place-items: center; cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: rgba(var(--white-rgb), 0.35); }
+}
+
+.section-heading {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+
+  .section-heading-icon-green { color: var(--primary); font-size: 14px; }
+  .section-heading-icon-red { color: var(--accent-red); font-size: 14px; }
+  .section-heading-text { font-size: 13px; font-weight: 700; color: var(--ink-900); }
+}
+
+.net-pay-box {
+  padding: 10px; background: var(--primary-light); border-radius: 10px;
+  text-align: center; width: 100%;
+
+  .net-pay-label { font-size: 11px; font-weight: 600; color: var(--ink-500); }
+  .net-pay-value { font-size: 18px; font-weight: 800; color: var(--primary-dark); }
+}
+
+.divider { border-color: var(--border-soft); margin-top: 4px; }
+
+/* Salary structure stepper */
+.as-step {
+  display: flex; align-items: center; gap: 8px;
+
+  .as-step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; background: var(--bg-muted); color: var(--ink-500);
+    border: 2px solid var(--border-soft); transition: all 0.25s ease; flex-shrink: 0;
+  }
+  .as-step-text { font-size: 12.5px; font-weight: 700; color: var(--ink-500); white-space: nowrap; }
+
+  /* Active State (Current Step) */
+  &.active .as-step-dot { background: var(--primary); border-color: var(--primary); color: var(--white); }
+  &.active .as-step-text { color: var(--primary-dark); }
+
+  /* Completed State (Previous Steps) */
+  &.completed .as-step-dot { 
+    background: var(--primary); 
+    border-color: var(--primary); 
+    color: var(--white); 
+  }
+  &.completed .as-step-text { 
+    color: var(--primary-dark); 
+  }
+}
+.as-step-line {
+  flex: 1; height: 2px; background: var(--border-soft); margin: 0 12px;
+  border-radius: 2px; position: relative; overflow: hidden;
+
+  &::after {
+    content: ''; position: absolute; inset: 0; background: var(--primary);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+  }
+  &.done::after { transform: scaleX(1); }
+}
+
+.custom-list-label { font-size: 12.5px; font-weight: 700; color: var(--ink-500); }
+
+.as-custom-row {
+  display: flex; align-items: flex-end; gap: 10px;
+
+  .as-custom-remove {
+    border: 1px solid var(--border-soft); background: var(--white); color: var(--accent-red);
+    width: 38px; height: 38px; border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.15s ease; flex-shrink: 0;
+
+    &:hover { background: var(--danger-soft); border-color: var(--red-150); }
+  }
+}

@@ -1,0 +1,320 @@
+<!-- Page Header & Breadcrumb -->
+<app-breadcrumb title="Ticket Reports" parent="HR / Admin" icon="bi bi-clipboard-data">
+  <div breadcrumb-actions class="d-flex gap-2">
+    <button class="btn btn-outline-primary btn-sm" type="button" (click)="exportCsv()">
+      <i class="bi bi-download"></i> Export Report
+    </button>
+    <a routerLink="/helpdesk/ticket-dashboard" class="btn btn-primary btn-sm">
+      <i class="bi bi-speedometer2 me-1"></i> Ticket Dashboard
+    </a>
+  </div>
+</app-breadcrumb>
+
+<!-- Summary KPIs -->
+<div class="row g-3 mb-3">
+  <div class="col-6 col-xl-2">
+    <div class="tr-kpi d-flex align-items-center gap-3">
+      <div class="k-ico" style="background: var(--accent-blue-soft); color: var(--blue-550);">
+        <i class="bi bi-ticket-perforated"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpi.total }}</div>
+        <div class="k-label">Total Tickets</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl-2">
+    <div class="tr-kpi d-flex align-items-center gap-3">
+      <div class="k-ico" style="background: var(--orange-50); color: var(--orange-550);">
+        <i class="bi bi-inbox"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpi.pending }}</div>
+        <div class="k-label">Pending Tickets</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl-2">
+    <div class="tr-kpi d-flex align-items-center gap-3">
+      <div class="k-ico" style="background: var(--primary-soft); color: var(--green-550);">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpi.resolved }}</div>
+        <div class="k-label">Resolved Tickets</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl-2">
+    <div class="tr-kpi d-flex align-items-center gap-3">
+      <div class="k-ico" style="background: var(--orange-50-2); color: var(--orange-550-3);">
+        <i class="bi bi-arrow-counterclockwise"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpi.reopened }}</div>
+        <div class="k-label">Reopened Tickets</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl-2">
+    <div class="tr-kpi d-flex align-items-center gap-3">
+      <div class="k-ico" style="background: var(--danger-soft); color: var(--red-550);">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpi.breached }}</div>
+        <div class="k-label">SLA Breached</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-xl-2">
+    <div class="tr-kpi d-flex align-items-center gap-3">
+      <div class="k-ico" style="background: var(--blue-50-3); color: var(--purple-550);">
+        <i class="bi bi-stopwatch"></i>
+      </div>
+      <div>
+        <div class="k-val">{{ kpi.avgResolution }}</div>
+        <div class="k-label">Avg. Resolution Time</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row 1: Category & Priority -->
+<div class="row g-3 mb-3">
+  <!-- Category-wise -->
+  <div class="col-lg-6">
+    <div class="tr-card">
+      <div class="tr-head">
+        <i class="bi bi-tags"></i> Category-wise Tickets
+      </div>
+      <div class="tr-body">
+        @if (categoryBars.length === 0) {
+        <div class="text-center text-muted py-3">No category data</div>
+        } @else {
+        @for (item of categoryBars; track item.label) {
+        <div class="tr-bar-row">
+          <span class="b-label" [title]="item.label">
+            {{ item.icon }} {{ item.label }}
+          </span>
+          <div class="b-track">
+            <div class="b-fill" [style.width.%]="item.pct" [style.background]="item.color"></div>
+          </div>
+          <span class="b-val">{{ item.value }}</span>
+        </div>
+        }
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Priority-wise -->
+  <div class="col-lg-6">
+    <div class="tr-card">
+      <div class="tr-head">
+        <i class="bi bi-flag"></i> Priority-wise Tickets
+      </div>
+      <div class="tr-body">
+        @for (item of priorityBars; track item.label) {
+        <div class="tr-bar-row">
+          <span class="b-label">
+            <span class="dot" [style.background]="item.color"></span>{{ item.label }}
+          </span>
+          <div class="b-track">
+            <div class="b-fill" [style.width.%]="item.pct" [style.background]="item.color"></div>
+          </div>
+          <span class="b-val">{{ item.value }}</span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row 2: Department & Status -->
+<div class="row g-3 mb-3">
+  <!-- Department-wise -->
+  <div class="col-lg-6">
+    <div class="tr-card">
+      <div class="tr-head">
+        <i class="bi bi-building"></i> Department-wise Tickets
+      </div>
+      <div class="tr-body">
+        @for (item of deptBars; track item.label) {
+        <div class="tr-bar-row">
+          <span class="b-label">
+            <span class="dot" [style.background]="item.color"></span>{{ item.label }}
+          </span>
+          <div class="b-track">
+            <div class="b-fill" [style.width.%]="item.pct" [style.background]="item.color"></div>
+          </div>
+          <span class="b-val">{{ item.value }}</span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Distribution -->
+  <div class="col-lg-6">
+    <div class="tr-card">
+      <div class="tr-head">
+        <i class="bi bi-diagram-2"></i> Status Distribution
+      </div>
+      <div class="tr-body">
+        @if (statusBars.length === 0) {
+        <div class="text-center text-muted py-3">No status data</div>
+        } @else {
+        @for (item of statusBars; track item.label) {
+        <div class="tr-bar-row">
+          <span class="b-label">
+            <span class="dot" [style.background]="item.color"></span>{{ item.label }}
+          </span>
+          <div class="b-track">
+            <div class="b-fill" [style.width.%]="item.pct" [style.background]="item.color"></div>
+          </div>
+          <span class="b-val">{{ item.value }}</span>
+        </div>
+        }
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tables Row: Employee-wise & SLA Breached -->
+<div class="row g-3 mb-3">
+  <!-- Employee-wise -->
+  <div class="col-lg-6">
+    <div class="tr-card">
+      <div class="tr-head">
+        <i class="bi bi-people"></i> Employee-wise Tickets
+      </div>
+      <div class="tr-body p-0">
+        <table class="tr-mini-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th class="num">Tickets</th>
+              <th class="num">Open</th>
+              <th class="num">Resolved</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (employeeRows.length === 0) {
+            <tr>
+              <td colspan="4" class="text-center text-muted py-3">No data available</td>
+            </tr>
+            } @else {
+            @for (r of employeeRows; track r.emp) {
+            <tr>
+              <td>
+                {{ r.name }} <span class="text-muted" style="font-size: 10.5px;">({{ r.emp }})</span>
+              </td>
+              <td class="num ">{{ r.total }}</td>
+              <td class="num" style="color: var(--orange-550);">{{ r.open }}</td>
+              <td class="num" style="color: var(--green-550);">{{ r.resolved }}</td>
+            </tr>
+            }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLA Breach Table -->
+  <div class="col-lg-6">
+    <div class="tr-card">
+      <div class="tr-head">
+        <i class="bi bi-exclamation-triangle" style="color: var(--red-550);"></i> SLA Breached Tickets
+      </div>
+      <div class="tr-body p-0">
+        <table class="tr-mini-table">
+          <thead>
+            <tr>
+              <th>Ticket</th>
+              <th>Priority</th>
+              <th>Created</th>
+              <th class="num">Overdue By</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (slaBreachedRows.length === 0) {
+            <tr>
+              <td colspan="4" class="text-center text-muted py-3">No SLA breaches 🎉</td>
+            </tr>
+            } @else {
+            @for (t of slaBreachedRows; track t.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/helpdesk/ticket-dashboard']" [queryParams]="{ ticket: t.id }"
+                  class="text-primary  text-decoration-none">
+                  {{ t.id }}
+                </a>
+                <div class="text-muted text-truncate" style="font-size: 10.5px; max-width: 220px;">
+                  {{ t.subject }}
+                </div>
+              </td>
+              <td>
+                <span class="badge rounded-pill"
+                  [style.background]="ticketService.priorityMeta(t.priority).bg"
+                  [style.color]="ticketService.priorityMeta(t.priority).color" style="font-size: 10px;">
+                  {{ t.priority }}
+                </span>
+              </td>
+              <td style="font-size: 11.5px;">{{ t.createdDate }}</td>
+              <td class="num " style="color: var(--red-550);">{{ t.overdueHrs }} hrs</td>
+            </tr>
+            }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly Summary Report -->
+<div class="tr-card mb-3">
+  <div class="tr-head">
+    <i class="bi bi-calendar-month"></i> Monthly Ticket Report
+  </div>
+  <div class="tr-body p-0">
+    <table class="tr-mini-table">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th class="num">Created</th>
+          <th class="num">Resolved</th>
+          <th class="num">Reopened</th>
+          <th class="num">SLA Breached</th>
+          <th class="num">Avg. Resolution (hrs)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (monthlyRows.length === 0) {
+        <tr>
+          <td colspan="6" class="text-center text-muted py-3">No monthly data available</td>
+        </tr>
+        } @else {
+        @for (m of monthlyRows; track m.label) {
+        <tr>
+          <td class="fw-semibold">{{ m.label }}</td>
+          <td class="num ">{{ m.created }}</td>
+          <td class="num" style="color: var(--green-550);">{{ m.resolved }}</td>
+          <td class="num" style="color: var(--orange-550-3);">{{ m.reopened }}</td>
+          <td class="num" style="color: var(--red-550);">{{ m.breached }}</td>
+          <td class="num fw-semibold">{{ m.avgHours }}</td>
+        </tr>
+        }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

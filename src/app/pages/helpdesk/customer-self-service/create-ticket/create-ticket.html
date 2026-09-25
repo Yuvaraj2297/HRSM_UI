@@ -1,0 +1,341 @@
+<!-- Hero -->
+<div class="ct-hero d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+  <div>
+    <div class="hero-crumb">
+      <i class="bi bi-headset"></i>
+      <span>Customer Self Service</span>
+      <i class="bi bi-chevron-right" style="font-size: 10px;"></i>
+      <span class=" text-white">Create Ticket</span>
+    </div>
+    <h1>Create Support Ticket</h1>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- ===== Main Form / Success Column ===== -->
+  <div class="col-lg-8">
+    <div class="ct-form-card">
+      @if (!showSuccess) {
+        <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Step 1: Project -->
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge rounded-pill step-badge">STEP 1</span>
+            <span class=" step-title">Select Project</span>
+          </div>
+
+          <div class="ct-proj-grid mb-1">
+            @for (p of projects; track p.id) {
+              <div
+                class="ct-proj"
+                [class.selected]="selectedProject?.id === p.id"
+                (click)="selectProject(p)"
+                role="button"
+                tabindex="0"
+                (keydown.enter)="selectProject(p)"
+              >
+                <span class="p-ico" [style.background]="p.bg">{{ p.icon }}</span>
+                <span class="p-name">{{ p.name }}</span>
+              </div>
+            }
+          </div>
+
+          @if (showProjectError && !selectedProject) {
+            <div class="ct-err show">Please select a project</div>
+          }
+
+          <hr class="my-4" />
+
+          <!-- Step 2: Issue Details -->
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="badge rounded-pill step-badge">STEP 2</span>
+            <span class=" step-title">Issue Details</span>
+          </div>
+
+          <!-- Issue Type -->
+          <div class="mb-3">
+            <span class="ct-form-label">Issue Type <span class="req">*</span></span>
+            <div class="ct-issue-grid">
+              @for (issue of issueTypes; track issue.id) {
+                <div
+                  class="ct-issue"
+                  [class.selected]="selectedIssue?.id === issue.id"
+                  (click)="selectIssue(issue)"
+                  role="button"
+                  tabindex="0"
+                  (keydown.enter)="selectIssue(issue)"
+                >
+                  <div class="i-ico">{{ issue.icon }}</div>
+                  <div class="i-name">{{ issue.name }}</div>
+                </div>
+              }
+            </div>
+
+            @if (showIssueError && !selectedIssue) {
+              <div class="ct-err show">Please select an issue type</div>
+            }
+          </div>
+
+          <!-- Priority -->
+          <div class="mb-3">
+            <span class="ct-form-label">Priority <span class="req">*</span></span>
+            <div class="ct-prio-row">
+              @for (prio of priorities; track prio) {
+                <span
+                  class="ct-prio"
+                  [class.selected]="selectedPriority === prio"
+                  [attr.data-v]="prio"
+                  (click)="selectPriority(prio)"
+                  role="button"
+                  tabindex="0"
+                  (keydown.enter)="selectPriority(prio)"
+                >
+                  {{ prio }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Subject -->
+          <div class="mb-3">
+            <label class="ct-form-label" for="ctSubject">Subject <span class="req">*</span></label>
+            <input
+              type="text"
+              class="ct-input"
+              id="ctSubject"
+              formControlName="subject"
+              maxlength="120"
+              placeholder="One-line summary (e.g. Case creation page not loading)"
+              [class.err]="isSubmitted && ticketForm.controls.subject.invalid"
+            />
+            @if (isSubmitted && ticketForm.controls.subject.invalid) {
+              <div class="ct-err show">Subject is required</div>
+            }
+          </div>
+
+          <!-- Contact Person & Phone -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="ct-form-label" for="ctContactPerson">Contact Person <span class="req">*</span></label>
+              <input
+                type="text"
+                class="ct-input"
+                id="ctContactPerson"
+                formControlName="contactPerson"
+                maxlength="80"
+                placeholder="Person to contact about this ticket"
+                [class.err]="isSubmitted && ticketForm.controls.contactPerson.invalid"
+              />
+              @if (isSubmitted && ticketForm.controls.contactPerson.invalid) {
+                <div class="ct-err show">Contact person is required</div>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label class="ct-form-label" for="ctPhone">Phone Number <span class="req">*</span></label>
+              <div class="position-relative">
+                <span class="input-icon-left">
+                  <i class="bi bi-telephone"></i>
+                </span>
+                <input
+                  type="tel"
+                  class="ct-input has-icon-left"
+                  id="ctPhone"
+                  formControlName="phone"
+                  maxlength="10"
+                  placeholder="10-digit mobile number"
+                  inputmode="numeric"
+                  (input)="onPhoneInput($event)"
+                  [class.err]="isSubmitted && ticketForm.controls.phone.invalid"
+                />
+              </div>
+              @if (isSubmitted && ticketForm.controls.phone.invalid) {
+                <div class="ct-err show">Enter a valid 10-digit phone number</div>
+              }
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3 mt-3">
+            <label class="ct-form-label" for="ctDesc">Description <span class="req">*</span></label>
+            <textarea
+              class="ct-input"
+              id="ctDesc"
+              formControlName="description"
+              rows="4"
+              placeholder="Describe the issue — what happened, where, and since when?"
+              [class.err]="isSubmitted && ticketForm.controls.description.invalid"
+            ></textarea>
+            @if (isSubmitted && ticketForm.controls.description.invalid) {
+              <div class="ct-err show">Description is required</div>
+            }
+          </div>
+
+          <!-- Attachment & Expected Resolution Date -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="ct-form-label" for="ctFileInput">Attachment</label>
+
+              @if (!fileName) {
+                <div class="ct-file-drop" (click)="triggerFileInput()" role="button" tabindex="0">
+                  <i class="bi bi-cloud-arrow-up me-1"></i> Click to attach a screenshot or file
+                </div>
+              }
+
+              <input
+                type="file"
+                #fileInput
+                id="ctFileInput"
+                hidden
+                (change)="onFileSelected($event)"
+              />
+
+              @if (fileName) {
+                <div class="ct-file-chip mt-2 show">
+                  <i class="bi bi-paperclip"></i>
+                  <span>{{ fileName }}</span>
+                  <i
+                    class="bi bi-x-lg ms-auto text-danger file-clear-btn"
+                    (click)="clearFile()"
+                    role="button"
+                    tabindex="0"
+                    title="Remove file"
+                  ></i>
+                </div>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label class="ct-form-label" for="ctExpected">Expected Resolution Date</label>
+             <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+              <div class="text-muted mt-1 expected-note">
+                Optional — as per your support agreement
+              </div>
+            </div>
+          </div>
+
+          <!-- SLA Hint Strip -->
+          @if (slaHintText) {
+            <div class="ct-sla-hint mt-3 show">
+              <i class="bi bi-lightning-charge-fill"></i>
+              <span>{{ slaHintText }}</span>
+            </div>
+          }
+
+          <!-- Form Buttons -->
+          <div class="d-flex gap-2 mt-4">
+            <button
+              type="button"
+              class="btn btn-secondary flex-fill"
+              (click)="createAnother()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn flex-fill text-white ct-submit-btn"
+            >
+              <i class="bi bi-send"></i> Submit Ticket
+            </button>
+          </div>
+        </form>
+      }
+
+      <!-- ===== Success State ===== -->
+      @if (showSuccess) {
+        <div class="ct-success show">
+          <div class="s-ico">
+            <i class="bi bi-check-lg"></i>
+          </div>
+          <h4 class=" ticket-id-title">
+            {{ createdTicket?.id }}
+          </h4>
+          <p class="text-muted mb-4 success-msg">
+            Ticket submitted. Our support team will respond within the SLA window.
+          </p>
+
+          <div class="d-flex gap-2 justify-content-center mt-3">
+            <button type="button" class="btn btn-primary" (click)="viewMyTickets()">
+              View My Tickets
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="createAnother()">
+              Create Another
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ===== Right Side Column ===== -->
+  <div class="col-lg-4">
+    <!-- SLA Response Targets -->
+    <div class="card-custom p-3 mb-3">
+      <div class="side-card-title mb-2">
+        <i class="bi bi-speedometer2 text-primary"></i> SLA Response Targets
+      </div>
+      <div>
+        @for (item of sideSlaList; track item.id) {
+          <div class="sla-row">
+            <span class="">{{ item.icon }} {{ item.name }}</span>
+            <span class="text-muted" style="font-size: 11px;">
+              {{ item.sla.response }} / {{ item.sla.resolution }}
+            </span>
+          </div>
+        }
+      </div>
+      <div class="text-muted mt-2 sla-footnote">
+        Response / Resolution targets at Medium priority. High &amp; Critical get faster windows.
+      </div>
+    </div>
+
+    <!-- How Your Ticket Moves -->
+    <div class="card-custom p-3 mb-3">
+      <div class="side-card-title mb-2">
+        <i class="bi bi-diagram-3 text-primary"></i> How Your Ticket Moves
+      </div>
+      <div class="text-muted flow-steps">
+        <div class="d-flex align-items-center gap-2 py-1">
+          <span class="badge rounded-pill step-flow-1">1</span>
+          New — we received your ticket
+        </div>
+        <div class="d-flex align-items-center gap-2 py-1">
+          <span class="badge rounded-pill step-flow-2">2</span>
+          Assigned — routed to the right team
+        </div>
+        <div class="d-flex align-items-center gap-2 py-1">
+          <span class="badge rounded-pill step-flow-3">3</span>
+          In Progress — team is working on it
+        </div>
+        <div class="d-flex align-items-center gap-2 py-1">
+          <span class="badge rounded-pill step-flow-4">4</span>
+          Waiting for Customer — your confirmation
+        </div>
+        <div class="d-flex align-items-center gap-2 py-1">
+          <span class="badge rounded-pill step-flow-5">5</span>
+          Resolved — verify &amp; close
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips for Faster Resolution -->
+    <div class="card-custom p-3">
+      <div class="side-card-title mb-2">
+        <i class="bi bi-lightbulb tips-icon"></i> Tips for Faster Resolution
+      </div>
+      <div class="text-muted tips-list">
+        <div class="py-1">
+          <i class="bi bi-check2 me-2 check-green"></i>Attach a screenshot of the error
+        </div>
+        <div class="py-1">
+          <i class="bi bi-check2 me-2 check-green"></i>Mention the exact page / module name
+        </div>
+        <div class="py-1">
+          <i class="bi bi-check2 me-2 check-green"></i>Tell us since when it happens
+        </div>
+        <div class="py-1">
+          <i class="bi bi-check2 me-2 check-green"></i>For login issues, include your user ID
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

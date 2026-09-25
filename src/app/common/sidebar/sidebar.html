@@ -1,0 +1,222 @@
+<!-- phone drawer backdrop (hidden on desktop by CSS) -->
+@if (isDrawerOpen) {
+  <div class="sidebar-backdrop" (click)="closeDrawer()" aria-hidden="true"></div>
+}
+
+<div
+  class="sidebar-area"
+  [class.active]="isToggled"
+
+  [attr.style]="hostStyle"
+>
+
+
+  <div class="sidebar-body">
+
+    <aside class="module-rail">
+
+      <div
+        class="module-list"
+        #iconRail
+      >
+
+        @for (menu of menuList; track menu.key) {
+          <div
+            class="module-item"
+            [class.active]="activeMenu === menu.key"
+            (click)="toggleMenu(menu.key)"
+            (keydown.enter)="toggleMenu(menu.key)"
+            (keydown.space)="
+              $event.preventDefault();
+              toggleMenu(menu.key)
+            "
+            role="button"
+            tabindex="0"
+            [attr.aria-label]="menu.title"
+            [pTooltip]="menu.title"
+            tooltipPosition="right"
+            tooltipStyleClass="sidebar-tooltip"
+            [tooltipDisabled]="activeMenu === menu.key"
+          >
+
+            <!-- Icon -->
+            <div class="module-icon">
+
+              @if (menu.railIcon) {
+                <i [class]="menu.railIcon"></i>
+              } @else {
+                <span class="module-short-icon">
+                  {{ menu.short }}
+                </span>
+              }
+
+            </div>
+
+            <!-- Active indicator / connector to the open panel -->
+            <span
+              class="module-active-dot"
+              aria-hidden="true"
+            ></span>
+
+          </div>
+        }
+
+      </div>
+
+
+      <!-- Bottom settings action -->
+
+      <div class="rail-footer">
+
+        <button
+          type="button"
+          class="rail-settings-button"
+          (click)="settings()"
+          [pTooltip]="'Settings'"
+          tooltipPosition="right"
+          tooltipStyleClass="sidebar-tooltip"
+          aria-label="Settings"
+        >
+
+          <i class="ti ti-settings"></i>
+
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <section class="navigation-panel">
+
+
+      <div class="navigation-body">
+
+        <div class="navigation-list">
+
+
+          <!-- Section heading -->
+
+          <div class="navigation-section-header">
+
+            <span>
+              {{ currentPanel?.title }}
+            </span>
+
+          </div>
+
+
+          <!-- =================================================
+               MENU ITEMS
+          ================================================== -->
+
+          @for (item of filteredItems; track item.title) {
+            <div class="navigation-item-wrapper">
+
+              <!-- Parent Item (with children) -->
+              @if (item.children && item.children.length > 0) {
+
+                <a
+                  class="navigation-item accordion-header"
+                  [class.expanded]="isExpanded(item.title)"
+                  (click)="toggleAccordion(item.title)"
+                  role="button"
+                  tabindex="0"
+                >
+                  <!-- Icon -->
+                  <span class="navigation-item-icon">
+                    <i [class]="item.icon || 'ti ti-circle'"></i>
+                  </span>
+
+                  <!-- Text -->
+                  <span class="navigation-item-text">
+                    {{ item.title }}
+                  </span>
+
+                  <!-- Chevron (rotates when expanded) -->
+                  <span class="navigation-item-arrow accordion-arrow">
+                    <i class="ti ti-chevron-down"></i>
+                  </span>
+                </a>
+
+                <!-- Children (Accordion Content) -->
+                @if (isExpanded(item.title)) {
+                  <div class="accordion-content">
+                    <div class="accordion-line"></div>
+
+                    @for (child of item.children; track child.route) {
+                      <a
+                        class="navigation-item child-item"
+                        [routerLink]="child.route"
+                        routerLinkActive="active-menu"
+
+                        (click)="onMenuItemClick()"
+                        role="link"
+                        tabindex="0"
+                      >
+                        <span class="navigation-item-text">
+                          {{ child.title }}
+                        </span>
+                      </a>
+                    }
+                  </div>
+                }
+
+              } @else {
+
+                <!-- Leaf Item (no children) -->
+                <a
+                  class="navigation-item"
+                  [routerLink]="item.route"
+                  routerLinkActive="active-menu"
+
+                  (click)="onMenuItemClick()"
+                  role="link"
+                  tabindex="0"
+                >
+                  <span class="navigation-item-icon">
+                    <i [class]="item.icon || 'ti ti-circle'"></i>
+                  </span>
+                  <span class="navigation-item-text">
+                    {{ item.title }}
+                  </span>
+                  <!-- <span class="navigation-item-arrow">
+                    <i class="ti ti-chevron-right"></i>
+                  </span> -->
+                </a>
+
+              }
+
+            </div>
+          }
+
+
+          <!-- =================================================
+               EMPTY STATE
+          ================================================== -->
+
+          @if (!filteredItems.length) {
+            <div class="navigation-empty">
+
+              <div class="empty-icon">
+
+                <i class="ti ti-search-off"></i>
+
+              </div>
+
+              <span>
+                No matching items
+              </span>
+
+            </div>
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>

@@ -1,0 +1,117 @@
+:root {
+
+  /* =====================================================
+     COLOR — single source of truth for the whole app.
+     Change a color here only; every component should
+     reference these variables instead of hardcoding a hex.
+     (This file previously defined the brand green twice —
+     --gh-primary: #077702 and --primary: #1a9c53 — so global
+     buttons, links and icons drifted between two different
+     greens depending on which one a component happened to
+     reference. --primary is now the one true value; the
+     --gh-* names below are kept as aliases so nothing that
+     already references them breaks.)
+
+     IMPORTANT: the literal hex values below must stay literal.
+     Do not replace them with var(--same-name)) — a custom
+     property can't reference itself; that silently makes the
+     token resolve to nothing everywhere it's used.
+  ===================================================== */
+
+  /* ===== BRAND — PRIMARY (GREEN) ===== */
+  --primary: #1a9c53;
+  --primary-dark: #0f7a3d;
+  --primary-darker: #0b5c2e;
+  --primary-light: #34c774;
+  --primary-soft: #eafbf1;
+  --primary-rgb: 26, 156, 83;
+
+  /* ===== BRAND — SECONDARY (NAVY) ===== */
+  --secondary: #0f1f38;
+  --secondary-mid: #142a47;
+  --secondary-light: #1e3a5f;
+
+  /* ===== TEXT ===== */
+  --gh-heading: #1a1d35; /* strong heading color — its own role, not a primary/text duplicate */
+  --text: #2c3e50;
+  --text-light: #5c6f82;
+  --text-muted: #9aa2ad;
+  --text-faint: #c7ccd6;
+
+  /* ink scale — shared default for pages that use --ink-* without defining it */
+  --ink-900: var(--neutral-900);
+  --ink-700: var(--text);
+  --ink-500: var(--neutral-500);
+
+  /* ===== SURFACES ===== */
+  --white: #ffffff;
+  --bg-soft: #fafbfd;
+  --bg-muted: #f4f6f8;
+
+  /* ===== BORDERS ===== */
+  --border: #e8ecf1;
+  --border-strong: #d1d5da;
+  --border-soft: var(--border);
+  --gh-input-border: #e2e5f2;
+
+  /* ===== FEEDBACK ===== */
+  --danger: #e5484d;
+  --danger-dark: #be3035;
+  --danger-soft: #fdecec;
+  --warning: #f5a524;
+  --warning-soft: #fff4e0;
+  --warning-dark: #92400e;
+  --success: var(--primary);
+
+  /* ===== ACCENT (secondary status colors) ===== */
+  --accent-blue: #2f6fed;
+  --accent-blue-soft: #eaf1fe;
+
+  /* ===== LEGACY ALIASES (--gh-* naming from the PHP conversion) =====
+     Same values as above, different name. Prefer the names above in
+     new code; these exist only so old references keep working. */
+  --gh-primary: var(--primary);
+  --gh-primary-2: var(--primary-dark);
+  --gh-primary-rgb: var(--primary-rgb);
+  --gh-body: var(--text);
+  --gh-muted: var(--text-muted);
+  --gh-border: var(--border);
+  --gh-card: var(--white);
+  --gh-input-bg: var(--bg-soft);
+  --gh-glow: 0 0 0 6px rgba(var(--primary-rgb), 0.18);
+  --gh-grad-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+
+  /* =====================================================
+     FONT FAMILY — single source of truth for the whole app.
+     Loaded via @fontsource/inter + @fontsource/sora (see
+     angular.json "styles": inter 400/500/600/700/800/900,
+     sora 700/800). Change a font here only; components should
+     use these variables instead of hardcoding a font name.
+       --font-family-base    body copy (everything inherits this)
+       --font-family-display headings / titles / emphasis (bold only)
+       --font-family-mono    codes, IDs, tokens
+  ===================================================== */
+  --font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-family-display: 'Sora', var(--font-family-base);
+  --font-family-mono: 'Consolas', 'SFMono-Regular', Menlo, Monaco, 'Courier New', monospace;
+
+  /* back-compat alias: some components already reference --font-display */
+  --font-display: var(--font-family-display);
+
+  display: block;
+  font-family: var(--font-family-base);
+
+  /* ===== RADIUS / SHADOW ===== */
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-sm: 10px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, .04), 0 1px 3px rgba(16, 24, 40, .06);
+  --gh-radius-lg: 22px;
+  --gh-shadow-lg: 0 22px 50px rgba(26, 29, 53, 0.14);
+
+  /* ===== LAYOUT ===== */
+  --header-height: 64px;
+  --sidebar-width: 300px;
+  --sidebar-collapsed-width: 60px;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}

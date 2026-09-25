@@ -1,0 +1,92 @@
+{
+  "filters": {
+    "brands": ["PhD Assistance", "Thesis Writing", "Journal Support", "Publication"],
+    "products": ["Thesis Writing", "Journal Publication", "PhD Assistance"],
+    "sources": ["Indiamart", "Website", "Direct", "Google"]
+  },
+
+  "kpis": [
+    { "key": "leads", "label": "Total Leads", "sub": "All sources", "value": 150, "format": "number", "delta": 16.8, "tone": "blue", "icon": "bi-people-fill" },
+    { "key": "conversion", "label": "Conversion Rate", "sub": "Converted customers", "value": 17.3, "format": "percent", "delta": 17.3, "tone": "amber", "icon": "bi-graph-up-arrow" },
+    { "key": "revenue", "label": "Monthly Revenue", "sub": "Current month", "value": 3356047, "format": "currency", "delta": 9.0, "tone": "green", "icon": "bi-currency-rupee" },
+    { "key": "outstanding", "label": "Outstanding Balance", "sub": "Across all brands", "value": 12638319, "format": "currency", "delta": 3.2, "tone": "red", "icon": "bi-wallet2" }
+  ],
+
+  "revenueTrend": [0, 120000, 280000, 152000, 48000, 204000, 0, 2000, 8000, 0, 0, 0],
+
+  "target": { "achieved": 40800, "goal": 60000 },
+
+  "customerInsight": [
+    { "label": "New Customers", "value": 72 },
+    { "label": "Repeat Customers", "value": 28 }
+  ],
+
+  "leadsByDate": [4, 7, 6, 9, 8, 5, 3, 6, 8, 7, 10, 12, 9, 6, 8, 11, 9, 7, 12, 16, 10, 8, 9, 7, 6, 9, 11, 14, 87, 12],
+
+  "leadsBySource": [
+    { "label": "Consultant/Referral", "value": 2 },
+    { "label": "Email", "value": 3 },
+    { "label": "Exhibition", "value": 5 },
+    { "label": "Text", "value": 8 },
+    { "label": "Insta", "value": 6 },
+    { "label": "LinkedIn", "value": 4 },
+    { "label": "Direct", "value": 12 },
+    { "label": "Website", "value": 9 },
+    { "label": "Telegram", "value": 3 },
+    { "label": "Indiamart", "value": 122 },
+    { "label": "Facebook", "value": 5 },
+    { "label": "Google", "value": 4 }
+  ],
+
+  "conversion": {
+    "day": [0.2, 0.4, 0.3, 0.5, 0.6, 0.4, 0.3, 0.5, 0.7, 0.6, 0.8, 0.7, 0.9, 0.8, 0.6, 0.7, 0.5, 0.6, 0.4, 0.5, 0.3, 0.4, 0.2, 0.3],
+    "week": [0.5, 0.6, 0.55, 0.65, 0.7, 0.6, 0.75],
+    "month": [0.42, 0.5, 0.61, 0.48, 0.72, 0.66, 0.58, 0.7, 0.64, 0.75, 0.69, 0.8]
+  },
+
+  "qualification": [
+    { "label": "SQL", "value": 62 },
+    { "label": "MQL", "value": 23 },
+    { "label": "UQL", "value": 15 }
+  ],
+
+  "brandConversion": [
+    { "label": "PhD Assistance", "value": 17.3 },
+    { "label": "Thesis Writing", "value": 14.1 },
+    { "label": "Journal Support", "value": 11.8 },
+    { "label": "Publication", "value": 9.6 }
+  ],
+
+  "countrySales": [
+    { "flag": "🇮🇳", "country": "India", "revenue": 3332310.44, "share": 82 },
+    { "flag": "🇺🇸", "country": "United States", "revenue": 412000.0, "share": 9 },
+    { "flag": "🇬🇧", "country": "United Kingdom", "revenue": 185500.0, "share": 4 },
+    { "flag": "🇦🇺", "country": "Australia", "revenue": 121400.0, "share": 3 },
+    { "flag": "🇩🇪", "country": "Germany", "revenue": 86000.0, "share": 2 }
+  ],
+
+  "products": [
+    { "label": "Full", "value": 1 },
+    { "label": "Catalise", "value": 1 },
+    { "label": "Adenine", "value": 1 },
+    { "label": "Adenoglycinth 2%", "value": 1 },
+    { "label": "Adenoglycinth 5%", "value": 1 },
+    { "label": "Adenoglycinth 10%", "value": 1 },
+    { "label": "Adenoglycinth 3%", "value": 1 },
+    { "label": "Membrana", "value": 3 },
+    { "label": "IWB Panel", "value": 1 },
+    { "label": "1.6 x 115", "value": 2 },
+    { "label": "SPM", "value": 1 },
+    { "label": "Micro Thread", "value": 1 },
+    { "label": "1.6 x 122", "value": 3 },
+    { "label": "1.6 x 127", "value": 1 },
+    { "label": "B-Lead Material", "value": 1 },
+    { "label": "Machine", "value": 1 },
+    { "label": "Kit Top", "value": 1 },
+    { "label": "BX000", "value": 2 },
+    { "label": "BX400", "value": 1 },
+    { "label": "BX900", "value": 10 },
+    { "label": "Full XL", "value": 92 },
+    { "label": "Misc", "value": 1 }
+  ]
+}

@@ -1,0 +1,49 @@
+<div class="ne-section-title">Education Details :-</div>
+
+<div [formGroup]="form">
+  <div formArrayName="education">
+    <div class="ne-education-item" *ngFor="let row of education.controls; let i = index" [formGroupName]="i">
+      <div class="row g-3">
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Institution name</label>
+          <input pInputText class="form-control" formControlName="institutionName" placeholder="Enter institution name">
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Qualification</label>
+          <input pInputText class="form-control" formControlName="qualification" placeholder="Enter qualification">
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Field of study</label>
+          <input pInputText class="form-control" formControlName="fieldOfStudy" placeholder="Enter field of study">
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">From date</label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">To date</label>
+         <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Percentage</label>
+          <input pInputText type="number" min="0" max="100" class="form-control" formControlName="percentage" placeholder="Enter percentage">
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label">Certificate</label>
+          <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" (change)="onFile($event, i)">
+        </div>
+
+        <div class="col-lg-4 col-md-6 align-self-end mb-1">
+          <button *ngIf="i > 0" type="button" class="btn btn-danger" (click)="remove(i)">Delete</button>
+        </div>
+      </div>
+      <hr class="mt-3 mb-3">
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-start">
+  <button type="button" class="btn btn-primary" (click)="add()">+ Add Education</button>
+</div>

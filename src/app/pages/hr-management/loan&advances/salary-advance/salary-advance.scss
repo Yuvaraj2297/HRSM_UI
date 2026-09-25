@@ -1,0 +1,315 @@
+:host {
+  display: block;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+.page-main-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--neutral-900);
+  letter-spacing: -0.02em;
+}
+
+/* =========================================================
+   KPI CARDS
+========================================================= */
+.kpi-card {
+  min-height: 104px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.07) !important;
+  }
+}
+
+.kpi-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-500);
+  margin-bottom: 2px;
+}
+
+.kpi-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--neutral-900);
+  line-height: 1.2;
+}
+
+.kpi-sub {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+/* =========================================================
+   FILTERS CARD
+========================================================= */
+.filter-header-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  color: var(--green-350);
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   CATEGORY BADGES
+========================================================= */
+.badge-loan-cat {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+
+  &.badge-cat-personal {
+    background: var(--blue-50);
+    color: var(--blue-450-2);
+    border: 1px solid var(--blue-100-2);
+  }
+
+  &.badge-cat-advance {
+    background: var(--yellow-50);
+    color: var(--orange-400);
+    border: 1px solid var(--yellow-100);
+  }
+
+  &.badge-cat-medical {
+    background: var(--red-100);
+    color: var(--red-500);
+    border: 1px solid var(--red-150);
+  }
+
+  &.badge-cat-education {
+    background: var(--purple-50);
+    color: var(--purple-550-2);
+    border: 1px solid var(--purple-100);
+  }
+}
+
+/* =========================================================
+   TABLE ROW ACTIONS
+========================================================= */
+.btn-icon-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+/* =========================================================
+   MODAL STYLES
+========================================================= */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(var(--neutral-900-rgb), 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-custom {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--white);
+  border-radius: 16px;
+  z-index: 1055;
+  width: 92%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.modal-md {
+    max-width: 540px;
+  }
+
+  &.modal-xl {
+    max-width: 1040px;
+  }
+}
+
+.modal-icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.btn-modal-close {
+  display: grid;
+  place-items: center;
+
+}
+
+.modal-hero-header {
+  background: linear-gradient(135deg, var(--bg-soft) 0%, var(--bg-muted) 100%);
+}
+
+.modal-kpi-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.05);
+  }
+}
+
+/* Nav Tabs in Hub Modal */
+
+.tab-nav-btn {
+  display: inline-flex;
+  align-items: center;
+
+}
+
+.btn-sched-pill {
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--neutral-500);
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: var(--bg-muted);
+    color: var(--neutral-900);
+  }
+
+  &.active {
+    background: var(--green-400);
+    color: var(--white);
+    border-color: var(--green-400);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* =========================================================
+   LOAN APPLY FORM (from loan-apply.php - inline view)
+========================================================= */
+.loan-apply-form {
+  max-width: 740px;
+  margin: 0 auto;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.form-section {
+  padding: 22px;
+}
+
+.eligibility-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.eligibility-card {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(var(--black-rgb), 0.03);
+  }
+
+  .val {
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+
+  .lbl {
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-top: 3px;
+  }
+}
+
+.btn-quick-amt {
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--text-faint);
+  background: var(--white);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: var(--primary-soft);
+    border-color: var(--green-350);
+    color: var(--green-550-2);
+  }
+}
+
+.summary-box {
+  background: var(--green-50);
+  border: 1px solid rgba(var(--green-400-rgb), 0.25);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13.5px;
+
+  &.total {
+    border-top: 1px solid rgba(var(--green-400-rgb), 0.25);
+  }
+}
+

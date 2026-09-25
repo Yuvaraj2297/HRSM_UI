@@ -1,0 +1,114 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div class="ne-section-title mb-0">CTC Report :-</div>
+  <div style="font-size:12px;color:var(--aw-ink-500,var(--neutral-450));">
+    Annual CTC: <span class=" text-dark">{{ annualCtc | currency:'INR':'symbol':'1.0-0' }}</span>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="ne-kyc-table-wrapper">
+      <table class="ne-kyc-table">
+        <thead>
+          <tr>
+            <th style="width:50%;">Earnings</th>
+            <th class="text-end">Monthly (₹)</th>
+            <th class="text-end">Annual (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of earnings">
+            <td>{{ l.label }}</td>
+            <td class="text-end">{{ l.monthly | number:'1.0-0' }}</td>
+            <td class="text-end">{{ l.monthly * 12 | number:'1.0-0' }}</td>
+          </tr>
+          <tr class="" style="background:var(--bg-soft);">
+            <td>Gross Earnings</td>
+            <td class="text-end">{{ grossMonthly | number:'1.0-0' }}</td>
+            <td class="text-end">{{ grossMonthly * 12 | number:'1.0-0' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="ne-kyc-table-wrapper">
+      <table class="ne-kyc-table">
+        <thead>
+          <tr>
+            <th style="width:50%;">Deductions</th>
+            <th class="text-end">Monthly (₹)</th>
+            <th class="text-end">Annual (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of deductions">
+            <td>{{ l.label }}</td>
+            <td class="text-end">{{ l.monthly | number:'1.0-0' }}</td>
+            <td class="text-end">{{ l.monthly * 12 | number:'1.0-0' }}</td>
+          </tr>
+          <tr class="" style="background:var(--bg-soft);">
+            <td>Total Deductions</td>
+            <td class="text-end">{{ deductionsMonthly | number:'1.0-0' }}</td>
+            <td class="text-end">{{ deductionsMonthly * 12 | number:'1.0-0' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ne-kyc-table-wrapper mt-3">
+      <table class="ne-kyc-table">
+        <thead>
+          <tr>
+            <th style="width:50%;">Employer Contributions</th>
+            <th class="text-end">Monthly (₹)</th>
+            <th class="text-end">Annual (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of employer">
+            <td>{{ l.label }}</td>
+            <td class="text-end">{{ l.monthly | number:'1.0-0' }}</td>
+            <td class="text-end">{{ l.monthly * 12 | number:'1.0-0' }}</td>
+          </tr>
+          <tr class="" style="background:var(--bg-soft);">
+            <td>Total Employer Cost</td>
+            <td class="text-end">{{ employerMonthly | number:'1.0-0' }}</td>
+            <td class="text-end">{{ employerMonthly * 12 | number:'1.0-0' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="ne-review-section mt-3">
+  <h6><i class="bi bi-file-earmark-bar-graph"></i> CTC Summary</h6>
+  <div class="ne-review-grid">
+    <div class="ne-review-item">
+      <div class="k">Gross Monthly Salary</div>
+      <div class="v">{{ grossMonthly | currency:'INR':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="ne-review-item">
+      <div class="k">Total Monthly Deductions</div>
+      <div class="v">{{ deductionsMonthly | currency:'INR':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="ne-review-item">
+      <div class="k">Net Take Home (Monthly)</div>
+      <div class="v" style="color:var(--primary-dark);">{{ netMonthly | currency:'INR':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="ne-review-item">
+      <div class="k">Employer Cost (Monthly)</div>
+      <div class="v">{{ employerMonthly | currency:'INR':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="ne-review-item">
+      <div class="k">Gross Annual CTC</div>
+      <div class="v">{{ grossMonthly * 12 | currency:'INR':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="ne-review-item">
+      <div class="k">Net Annual CTC (incl. employer cost)</div>
+      <div class="v" style="color:var(--primary);font-weight:800;">{{ annualCtc | currency:'INR':'symbol':'1.0-0' }}</div>
+    </div>
+  </div>
+</div>

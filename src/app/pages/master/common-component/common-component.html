@@ -1,0 +1,20 @@
+<div class="row">
+
+    <div class="col-12">
+
+        <app-primedatatable [modalHeader]="header" [columns]="columns" [data]="tableData"
+            [searchPlaceholder]="searchPlaceholder" [Accessactions]="actions" (addClicked)="openCreateModal()"
+            (actionClick)="onTableAction($event)">
+        </app-primedatatable>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     COMMON MASTER MODAL
+========================================================= -->
+
+<app-master-modal #masterModal (saveClicked)="onModalSave($event)">
+</app-master-modal>

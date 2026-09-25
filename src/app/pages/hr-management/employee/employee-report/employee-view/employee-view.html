@@ -1,0 +1,182 @@
+<div class="d-flex align-items-center justify-content-between mb-4">
+
+  <div>
+
+    <h1 class=" mb-1">
+      Employee Details
+    </h1>
+
+    <div class="text-muted">
+      Employee Management / View Employee
+    </div>
+
+  </div>
+
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    (click)="goBack()">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back
+
+  </button>
+
+</div>
+
+
+@if (employee) {
+
+  <div class="card">
+
+    <div class="card-body">
+
+      <div class="d-flex align-items-center gap-3 mb-4">
+
+        <img
+          [src]="employee.avatar"
+          [alt]="employee.name"
+          class="rounded-circle"
+          width="70"
+          height="70"
+        />
+
+        <div>
+
+          <h4 class="mb-1">
+            {{ employee.name }}
+          </h4>
+
+          <div class="text-muted">
+            {{ employee.empId }}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="row g-4">
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Employee ID
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.empId }}
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Name
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.name }}
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Department
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.dept }}
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Position
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.position }}
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Office
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.office }}
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Team
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.team }}
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Status
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.status }}
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <label class="text-muted small">
+            Date of Joining
+          </label>
+
+          <div class="fw-semibold">
+            {{ employee.joined }}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
+@else {
+
+  <div class="text-center py-5 text-muted">
+
+    <i class="bi bi-person-x fs-1 d-block mb-2"></i>
+
+    Employee not found.
+
+  </div>
+
+}

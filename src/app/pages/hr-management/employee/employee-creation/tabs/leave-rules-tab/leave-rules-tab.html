@@ -1,0 +1,59 @@
+<div class="ne-section-title">Leave Auto-Update Rules :-</div>
+
+<div class="row g-3 mb-2">
+  <div class="col-lg-4 col-md-6">
+    <label class="form-label">Leave Type</label>
+    <p-select
+      [options]="availableLeaveTypes"
+      [(ngModel)]="pendingType"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Select Leave Type"
+      styleClass="w-100"
+      appendTo="body"
+      (onChange)="addLeaveType($event.value)">
+    </p-select>
+    <small class="rules-hint2">
+      <i class="bi bi-info-circle me-1"></i> Select a leave type to add it to the rules table.
+    </small>
+  </div>
+</div>
+
+<div class="ne-kyc-table-wrapper" [formGroup]="form">
+  <table class="ne-kyc-table" formArrayName="leaveRules">
+    <thead>
+      <tr>
+        <th style="width:22%;">&nbsp;</th>
+        <th class="text-center">Trainee</th>
+        <th class="text-center">Probation</th>
+        <th class="text-center">Confirmation</th>
+        <th class="text-center">No. of Days</th>
+        <th style="width:40px;">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of rules.controls; let i = index" [formGroupName]="i">
+        <td class="">{{ row.value.type }}</td>
+
+        <td class="text-center">
+          <p-toggleswitch formControlName="trainee" (onChange)="cascade(i, 'trainee')" />
+        </td>
+        <td class="text-center">
+          <p-toggleswitch formControlName="probation" (onChange)="cascade(i, 'probation')" />
+        </td>
+        <td class="text-center">
+          <p-toggleswitch formControlName="confirmation" (onChange)="cascade(i, 'confirmation')" />
+        </td>
+
+        <td class="text-center">
+          <input pInputText type="number" min="0" class="form-control days-input" formControlName="days" placeholder="Days">
+        </td>
+
+      </tr>
+
+      <tr *ngIf="!rules.controls.length">
+        <td colspan="6" class="text-center rules-empty">No leave types added yet. Use the dropdown above to add one.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

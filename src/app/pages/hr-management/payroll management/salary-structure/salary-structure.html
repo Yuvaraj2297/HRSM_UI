@@ -1,0 +1,179 @@
+<!-- Page header -->
+<header class="page-head">
+  <h1 class="page-title">Salary Structure</h1>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <bi-icon class="crumb-icon" name="cash-stack" />
+    <span>Payroll Management</span>
+    <bi-icon name="chevron-right" />
+    <span class="crumb-current" aria-current="page">Salary Structure</span>
+  </nav>
+</header>
+
+<!-- KPI cards -->
+<section class="kpis" aria-label="Salary structure summary">
+  <article class="kpi">
+    <span class="kpi-icon kpi-green"><bi-icon name="plus-circle" /></span>
+    <div class="kpi-text">
+      <div class="kpi-label">Earnings</div>
+      <div class="kpi-value">{{ earningRows().length }}</div>
+      <div class="kpi-sub">Active components</div>
+    </div>
+  </article>
+
+  <article class="kpi">
+    <span class="kpi-icon kpi-red"><bi-icon name="dash-circle" /></span>
+    <div class="kpi-text">
+      <div class="kpi-label">Deductions</div>
+      <div class="kpi-value">{{ deductionRows().length }}</div>
+      <div class="kpi-sub">Active components</div>
+    </div>
+  </article>
+
+  <article class="kpi">
+    <span class="kpi-icon kpi-blue"><bi-icon name="percent" /></span>
+    <div class="kpi-text">
+      <div class="kpi-label">Total Deduction %</div>
+      <div class="kpi-value">{{ deductionPct() }}</div>
+      <div class="kpi-sub">Of gross salary</div>
+    </div>
+  </article>
+
+  <article class="kpi">
+    <span class="kpi-icon kpi-amber"><bi-icon name="shield-check" /></span>
+    <div class="kpi-text">
+      <div class="kpi-label">Statutory</div>
+      <div class="kpi-value">{{ statutoryCount() }}</div>
+      <div class="kpi-sub" [title]="statutoryNames()">{{ statutoryNames() }}</div>
+    </div>
+  </article>
+</section>
+
+<!-- Base CTC -->
+<section class="base-ctc" aria-label="Base CTC and totals">
+  <label class="ctc-label" for="baseCtc"><bi-icon name="cash-stack" /> Base CTC (Monthly)</label>
+  <input id="baseCtc" class="ctc-input" type="number" min="0" step="1000" [value]="ctcRaw()" (input)="onCtc($event)" />
+
+  <div class="ctc-total">
+    <div class="lbl">Total Earnings</div>
+    <div class="val">{{ inr(totalEarnings()) }}</div>
+  </div>
+  <div class="ctc-total">
+    <div class="lbl">Total Deductions</div>
+    <div class="val val-red">{{ inr(totalDeductions()) }}</div>
+  </div>
+  <div class="ctc-total">
+    <div class="lbl">Net Salary</div>
+    <div class="val">{{ inr(netSalary()) }}</div>
+  </div>
+</section>
+
+<!-- Earnings + Deductions -->
+<div class="structure-grid">
+  @for (g of groups(); track g.kind) {
+    <section class="structure-card" [attr.aria-labelledby]="'title-' + g.kind">
+      <div class="card-head">
+        <h2 class="card-title" [id]="'title-' + g.kind">
+          <bi-icon class="title-icon" [class]="g.kind" [name]="g.icon" />
+          {{ g.title }}
+        </h2>
+        <button type="button" class="btn-add" (click)="openModal(g.kind, $event)">
+          <bi-icon name="plus-lg" /> Add
+        </button>
+      </div>
+
+      <ul class="items">
+        @for (r of g.rows; track r.id) {
+          <li class="item">
+            <div class="item-name"><bi-icon [name]="r.icon" /> <span>{{ r.name }}</span></div>
+            <div class="item-type" [class]="g.kind">{{ r.category }}</div>
+            <div class="item-pct">
+              <span class="pct-label">{{ r.pctLabel }}</span>
+              <span class="pct-amount">{{ r.subLabel }}</span>
+            </div>
+          </li>
+        } @empty {
+          <li class="items-empty">No {{ g.kind }} components yet. Use Add to create one.</li>
+        }
+      </ul>
+    </section>
+  }
+</div>
+
+<!-- Add component modal -->
+@if (modalOpen()) {
+  <div class="modal-backdrop" (click)="onBackdrop($event)">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="compModalTitle">
+      <div class="modal-head">
+        <h2 id="compModalTitle">{{ modalTitle() }}</h2>
+        <button type="button" class="modal-close" aria-label="Close" (click)="closeModal()"><bi-icon name="x-lg" /></button>
+      </div>
+
+      <form class="modal-body" novalidate (submit)="onSubmit($event)">
+        <div class="field">
+          <label for="compName">Component Name <span class="req" aria-hidden="true">*</span></label>
+          <input
+            #nameInput
+            id="compName"
+            type="text"
+            class="form-control"
+            placeholder="e.g. Travel Allowance"
+            autocomplete="off"
+            [value]="draft().name"
+            [attr.aria-invalid]="nameError()"
+            [attr.aria-describedby]="nameError() ? 'compNameError' : null"
+            (input)="patch({ name: value($event) })"
+          />
+          @if (nameError()) {
+            <p class="field-error" id="compNameError">Enter a component name.</p>
+          }
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="compType">Type</label>
+            <select id="compType" class="form-select" (change)="patch({ kind: $any(value($event)) })">
+              <option value="earning" [selected]="draft().kind === 'earning'">Earning</option>
+              <option value="deduction" [selected]="draft().kind === 'deduction'">Deduction</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="compCategory">Category</label>
+            <select id="compCategory" class="form-select" (change)="patch({ category: $any(value($event)) })">
+              @for (c of categories; track c) {
+                <option [value]="c" [selected]="draft().category === c">{{ c }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="compPct">Percentage (%)</label>
+          <div class="input-group">
+            <input
+              id="compPct"
+              type="number"
+              class="form-control"
+              placeholder="e.g. 5"
+              min="0"
+              max="100"
+              step="0.1"
+              [value]="draft().pct"
+              [attr.aria-invalid]="pctError()"
+              [attr.aria-describedby]="pctError() ? 'compPctError' : null"
+              (input)="patch({ pct: value($event) })"
+            />
+            <span class="addon">%</span>
+          </div>
+          @if (pctError()) {
+            <p class="field-error" id="compPctError">Enter a percentage between 0 and 100.</p>
+          }
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn-primary"><bi-icon name="check-lg" /> Save Component</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

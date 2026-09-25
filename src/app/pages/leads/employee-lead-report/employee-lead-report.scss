@@ -1,0 +1,155 @@
+$ink-900: var(--neutral-900);
+$ink-700: var(--text);
+$ink-500: var(--neutral-350);
+$primary: var(--green-550);
+$primary-dark: var(--green-600);
+
+:host {
+  display: block;
+}
+
+.lead-report-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---------- Page header ---------- */
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-title {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 800;
+  color: $ink-900;
+  letter-spacing: -0.5px;
+}
+
+.breadcrumb-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+
+  i {
+    color: $ink-500;
+  }
+
+  .crumb-muted {
+    color: var(--neutral-500);
+  }
+
+  .crumb-current {
+    font-weight: 700;
+    color: $ink-900;
+  }
+}
+
+.lead-date-range {
+  align-self: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: $ink-700;
+  white-space: nowrap;
+
+  i {
+    color: $primary;
+    margin-right: 6px;
+  }
+}
+
+/* ---------- Filters ---------- */
+.filters-card {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.35fr) minmax(160px, 1fr) minmax(160px, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  padding: 24px 30px;
+}
+
+.filter-field {
+  min-width: 0;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: $ink-900;
+  }
+}
+
+.lead-input,
+.lead-datepicker ::ng-deep input {
+  width: 100%;
+
+}
+
+.lead-datepicker {
+  display: block;
+  width: 100%;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 12px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 38px;
+    white-space: nowrap;
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+/* ---------- Table cells (rendered from this component's #cellTemplate) ---------- */
+.person-name {
+  font-weight: 700;
+  color: $ink-900;
+}
+
+.lead-count {
+  font-weight: 800;
+  color: $ink-900;
+
+  &.zero {
+    font-weight: 600;
+    color: $ink-500;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 991px) {
+  .filters-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filter-search {
+    grid-column: 1 / -1;
+  }
+
+  .filter-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 575px) {
+  .filters-card {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+}

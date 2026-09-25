@@ -1,0 +1,835 @@
+<main class="attendance-report-page">
+  <!-- =========================================================
+       PAGE TITLE & BREADCRUMB
+  ========================================================== -->
+  <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
+    <div>
+      <h1 class="font-display  mb-1 page-title">Attendance Report</h1>
+      <nav class="d-flex align-items-center gap-2 text-neutral text-nowrap breadcrumb-text">
+        <i class="bi bi-clock-history"></i>
+        <span>Attendance Management</span>
+        <i class="bi bi-chevron-right"></i>
+        <span class=" text-dark">Attendance Reports</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       STATUS KPI CARDS (6 CARDS ROW)
+  ========================================================== -->
+  <div class="row g-3 mb-3">
+    <!-- 1. Total Employees -->
+    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
+      <div
+        class="stat-card stat-theme-violet d-flex align-items-center gap-3 att-summary-card"
+        [class.active]="activeKpiStatus === 'all'"
+        (click)="toggleKpiFilter('all')"
+        role="button"
+        tabindex="0"
+        title="Click to view all employees">
+        <div class="stat-icon stat-icon-lg"><i class="bi bi-people"></i></div>
+        <div>
+          <div class="label stat-label">Total Employees</div>
+          <div class="value">{{ totalEmployeesCount }}</div>
+          <div class="delta text-neutral">Active workforce</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Present Today -->
+    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
+      <div
+        class="stat-card stat-theme-primary d-flex align-items-center gap-3 att-summary-card"
+        [class.active]="activeKpiStatus === 'present'"
+        (click)="toggleKpiFilter('present')"
+        role="button"
+        tabindex="0"
+        title="Click to filter present today">
+        <div class="stat-icon stat-icon-lg stat-pulse" style="color: var(--green-400-2);">
+          <i class="bi bi-person-check"></i>
+        </div>
+        <div>
+          <div class="label stat-label">Present Today</div>
+          <div class="value">{{ presentTodayCount }}</div>
+          <div class="delta text-up">{{ presentPercentage }}% present</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Late Arrivals (Active in screenshot) -->
+    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
+      <div
+        class="stat-card stat-theme-amber d-flex align-items-center gap-3 att-summary-card"
+        [class.active]="activeKpiStatus === 'late'"
+        (click)="toggleKpiFilter('late')"
+        role="button"
+        tabindex="0"
+        title="Click to filter late arrivals">
+        <div class="stat-icon stat-icon-lg"><i class="bi bi-alarm"></i></div>
+        <div>
+          <div class="label stat-label">Late Arrivals</div>
+          <div class="value">{{ lateArrivalsCount }}</div>
+          <div class="delta text-down" style="color: var(--danger);">{{ latePercentage }}% of total</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. On Leave -->
+    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
+      <div
+        class="stat-card stat-theme-blue d-flex align-items-center gap-3 att-summary-card"
+        [class.active]="activeKpiStatus === 'leave'"
+        (click)="toggleKpiFilter('leave')"
+        role="button"
+        tabindex="0"
+        title="Click to filter on leave">
+        <div class="stat-icon stat-icon-lg"><i class="bi bi-calendar-x"></i></div>
+        <div>
+          <div class="label stat-label">On Leave</div>
+          <div class="value">{{ onLeaveCount }}</div>
+          <div class="delta text-neutral">Approved leaves</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Absent Today -->
+    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
+      <div
+        class="stat-card att-summary-card"
+        [class.active]="activeKpiStatus === 'absent'"
+        (click)="toggleKpiFilter('absent')"
+        style="background: var(--accent-red-soft, var(--danger-soft));"
+        role="button"
+        tabindex="0"
+        title="Click to filter absent today">
+        <div class="d-flex align-items-center gap-3">
+          <div class="stat-icon stat-icon-lg" style="background: var(--white); color: var(--accent-red, var(--danger));">
+            <i class="bi bi-person-x"></i>
+          </div>
+          <div>
+            <div class="label stat-label" style="color: var(--accent-red, var(--danger));">Absent Today</div>
+            <div class="value" style="color: var(--accent-red, var(--danger));">{{ absentTodayCount }}</div>
+            <div class="delta" style="color: var(--accent-red, var(--danger));">{{ absentPercentage }}% absent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Overtime (OT) -->
+    <div class="col-sm-6 col-md-4 col-xl text-nowrap">
+      <div
+        class="stat-card att-summary-card"
+        [class.active]="activeKpiStatus === 'overtime'"
+        (click)="toggleKpiFilter('overtime')"
+        style="background: var(--accent-violet-soft, var(--purple-50-2));"
+        role="button"
+        tabindex="0"
+        title="Click to filter overtime records">
+        <div class="d-flex align-items-center gap-3">
+          <div class="stat-icon stat-icon-lg" style="background: var(--white); color: var(--purple-600);">
+            <i class="bi bi-clock"></i>
+          </div>
+          <div>
+            <div class="label stat-label" style="color: var(--purple-600);">Overtime (OT)</div>
+            <div class="value" style="color: var(--purple-600);">{{ overtimeHoursTotal }} hrs</div>
+            <div class="delta" style="color: var(--ink-700, var(--text));">
+              <i class="bi bi-clock me-1"></i> {{ overtimeEmployeesCount }} OT Employees
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       FILTER ATTENDANCE CARD (COLLAPSIBLE)
+  ========================================================== -->
+  <div class="card-custom mb-3 filters-card">
+    <div
+      class="filters-toggle-row d-flex align-items-center justify-content-between p-3"
+      (click)="toggleFilters()"
+      role="button"
+      tabindex="0"
+      title="Click to toggle filters">
+      <span class="fw-semibold" style="font-size: 14.5px; color: var(--ink-900);">
+        <i class="bi bi-funnel me-1"></i> Filter Attendance
+      </span>
+      <button
+        type="button"
+        class="filters-toggle-btn"
+        [class.open]="filtersExpanded"
+        (click)="$event.stopPropagation(); toggleFilters()">
+        <span>Filters</span>
+        <i class="bi bi-chevron-down chevron" [class.rotated]="filtersExpanded"></i>
+      </button>
+    </div>
+
+    @if (filtersExpanded) {
+    <div class="filters-collapse open p-3 pt-0">
+      <div class="row g-3">
+        <!-- Search Employee -->
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <label class="form-label">Search Employee</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Name or ID"
+            [(ngModel)]="searchFilter"
+            (keyup.enter)="applyFilters()" />
+        </div>
+
+        <!-- Department (PrimeNG p-select) -->
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <label class="form-label">Department</label>
+          <p-select
+            [options]="departmentOptions"
+            [(ngModel)]="selectedDepartment"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-100"
+            appendTo="body"
+            placeholder="Department">
+          </p-select>
+        </div>
+
+        <!-- Status (PrimeNG p-select) -->
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <label class="form-label">Status</label>
+          <p-select
+            [options]="statusOptions"
+            [(ngModel)]="selectedStatus"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-100"
+            appendTo="body"
+            placeholder="Status">
+          </p-select>
+        </div>
+
+        <!-- Shift (PrimeNG p-select) -->
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <label class="form-label">Shift</label>
+          <p-select
+            [options]="shiftOptions"
+            [(ngModel)]="selectedShift"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-100"
+            appendTo="body"
+            placeholder="Shift">
+          </p-select>
+        </div>
+
+        <!-- Office (PrimeNG p-select) -->
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <label class="form-label">Office</label>
+          <p-select
+            [options]="officeOptions"
+            [(ngModel)]="selectedOffice"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-100"
+            appendTo="body"
+            placeholder="Office">
+          </p-select>
+        </div>
+
+        <!-- Date Range -->
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <label class="form-label">Date Range</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="From date — To date"
+            [(ngModel)]="selectedDateRange"
+            (keyup.enter)="applyFilters()" />
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="align-self-end col-md-6 d-flex gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary flex-fill flex-lg-grow-0"
+            (click)="clearFilters()">
+            Clear Filters
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary flex-fill flex-lg-grow-0"
+            (click)="applyFilters()">
+            <i class="bi bi-funnel"></i> Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- =========================================================
+       ACTIVE FILTERS BAR (ANIMATED CHIPS)
+  ========================================================== -->
+  @if (activeFilterChips.length > 0) {
+  <div class="active-filters-bar mb-3 show">
+    <span class="active-filters-label">
+      <i class="bi bi-funnel-fill me-1"></i>Active Filters:
+    </span>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      @for (chip of activeFilterChips; track chip.key) {
+      <span class="filter-chip">
+        <span class="chip-key">{{ chip.label }}:</span> {{ chip.displayValue }}
+        <button
+          type="button"
+          class="chip-close"
+          (click)="removeFilterChip(chip.key)"
+          aria-label="Remove filter">
+          &times;
+        </button>
+      </span>
+      }
+      <button
+        type="button"
+        class="active-filters-clear"
+        (click)="clearFilters()">
+        Clear All
+      </button>
+    </div>
+  </div>
+  }
+
+  <!-- =========================================================
+       REPORT TABLE CARD (WITH COLUMNS, EXPORT & DATE NAV)
+  ========================================================== -->
+  <div class="card-custom p-0 js-report-table" id="attendanceTableWrap">
+    <!-- Top Table Toolbar -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom">
+      <!-- Left Controls: Columns & Export -->
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <button type="button" class="btn columns-btn" (click)="triggerToast('Column selection panel')">
+          <i class="bi bi-eye"></i>Columns
+        </button>
+
+        <div class="mt-export-menu position-relative">
+          <button
+            type="button"
+            class="btn export-btn-pdf"
+            (click)="$event.stopPropagation(); exportDropdownOpen = !exportDropdownOpen">
+            <i class="bi bi-download"></i>Export
+            <i class="bi bi-chevron-down" style="font-size: 10px;"></i>
+          </button>
+          @if (exportDropdownOpen) {
+          <div class="mt-export-dropdown shadow show" role="menu">
+            <button type="button" class="mt-export-item" (click)="exportCSV()"><i class="bi bi-filetype-csv me-2"></i>CSV</button>
+            <button type="button" class="mt-export-item" (click)="exportExcel()"><i class="bi bi-filetype-xlsx me-2"></i>Excel</button>
+            <button type="button" class="mt-export-item" (click)="exportPDF()"><i class="bi bi-filetype-pdf me-2"></i>PDF</button>
+            <button type="button" class="mt-export-item" (click)="printTable()"><i class="bi bi-printer me-2"></i>Print</button>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Controls: Date Navigation -->
+      <div class="month-nav ms-auto" aria-label="Attendance date navigation">
+        <button
+          type="button"
+          class="month-arrow previews"
+          (click)="prevDate()"
+          aria-label="Previous date"
+          title="Previous Date">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <label class="month-select-wrap mb-0">
+          <input
+            type="text"
+            class="date-input form-control"
+            [value]="selectedDateNav"
+            readonly
+            aria-label="Choose attendance date" />
+        </label>
+        <button
+          type="button"
+          class="month-arrow next"
+          (click)="nextDate()"
+          aria-label="Next date"
+          title="Next Date">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Table Responsive View -->
+    <div class="table-responsive table-modern-wrap">
+      <table class="table table-modern align-middle mb-0">
+        <thead>
+          <tr>
+            <th style="width: 75px;" class="text-nowrap">
+              <div class="d-flex align-items-center gap-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [checked]="allSelected"
+                  (change)="toggleSelectAll($event)">
+                <span>S.NO</span>
+              </div>
+            </th>
+            <th style="width: 140px;" class="text-nowrap">EMPLOYEE ID</th>
+            <th style="min-width: 160px;" class="text-nowrap"></th>
+            <th style="width: 130px;" class="text-nowrap">DEPARTMENT</th>
+            <th style="width: 130px;" class="text-nowrap">DATE</th>
+            <th style="width: 120px;" class="text-nowrap">CHECK-IN</th>
+            <th style="width: 120px;" class="text-nowrap">CHECK-OUT</th>
+            <th style="width: 160px;" class="text-nowrap">WORKING HOURS</th>
+            <th style="min-width: 190px;" class="text-nowrap">OVERTIME (OT)</th>
+            <th style="width: 120px;" class="text-nowrap">STATUS</th>
+            <th style="width: 90px;" class="text-center text-nowrap">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody id="pgBody">
+          @for (row of filteredRecords; track row.id) {
+          <tr class="att-row" [class.selected]="row.selected">
+            <!-- S.No & Checkbox -->
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="row.selected"
+                  (change)="checkSelectionState()">
+                <span class="sno-value">{{ row.sno }}</span>
+              </div>
+            </td>
+
+            <!-- Employee ID (Click opens monthly calendar) -->
+            <td>
+              <span
+                class="emp-id-link fw-semibold"
+                (click)="openMonthlyCalendar(row.empId)"
+                title="View Monthly Calendar">
+                {{ row.empId }}
+              </span>
+            </td>
+
+            <!-- Employee Avatar & Name -->
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <img
+                  [src]="row.avatar"
+                  class="avatar-sm rounded-circle"
+                  style="width: 34px; height: 34px; object-fit: cover;"
+                  alt="Avatar" />
+                <span class=" text-dark">{{ row.name }}</span>
+              </div>
+            </td>
+
+            <!-- Department -->
+            <td>{{ row.department }}</td>
+
+            <!-- Date -->
+            <td class="text-neutral">{{ row.date }}</td>
+
+            <!-- Check-in -->
+            <td>{{ row.checkIn }}</td>
+
+            <!-- Check-out -->
+            <td>{{ row.checkOut }}</td>
+
+            <!-- Working Hours with Progress Bar -->
+            <td>
+              <div class="whrs-wrap">
+                <span class="whrs-label">{{ row.workingHoursFormatted }}</span>
+                <div class="whrs-track">
+                  <div class="whrs-fill" [style.width.%]="row.workPercent"></div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Overtime (OT) -->
+            <td>
+              @if (row.overtimeHours) {
+              <span class="ot-pending-pill">
+                <i class="bi bi-clock me-1"></i>{{ row.overtimeHours }} hrs (Pending Approval)
+              </span>
+              } @else if (row.statusKey === 'late') {
+              <span class="ot-pending-pill">
+                (Pending Approval)
+              </span>
+              } @else {
+              <span class="text-muted">—</span>
+              }
+            </td>
+
+            <!-- Status Pill -->
+            <td>
+              <span
+                class="att-status-pill"
+                [ngClass]="{
+                  'status-present': row.statusKey === 'present',
+                  'status-absent': row.statusKey === 'absent',
+                  'status-late': row.statusKey === 'late',
+                  'status-half': row.statusKey === 'half',
+                  'status-leave': row.statusKey === 'leave'
+                }">
+                <span class="dot"></span>
+                {{ row.statusLabel }}
+              </span>
+            </td>
+
+            <!-- Actions (3-dots dropdown) -->
+            <td class="text-center position-relative">
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn btn-action-dots"
+                  (click)="toggleActionDropdown(row.id, $event)"
+                  title="Actions">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+
+                @if (activeActionRowId === row.id) {
+                <div class="dropdown-menu show action-dropdown-menu shadow" (click)="$event.stopPropagation()">
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    (click)="openMonthlyCalendar(row.empId); activeActionRowId = null;">
+                    View Monthly
+                  </button>
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    (click)="openTimeline(row); activeActionRowId = null;">
+                    <i class="bi bi-clock me-2"></i> Overtime Details
+                  </button>
+                </div>
+                }
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="11" class="text-center py-4 text-muted">
+              <i class="bi bi-inbox fs-2 opacity-50 d-block mb-1"></i>
+              No attendance records found matching filters.
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table Footer with Show entries & count -->
+    <div class="d-flex justify-content-between align-items-center report-footer p-3 border-top">
+      <div class="d-flex gap-2 align-items-center">
+        <span class="small text-muted text-nowrap">Show:</span>
+        <select class="form-select form-select-sm" style="width: auto;">
+          <option selected>10</option>
+          <option>25</option>
+          <option>50</option>
+          <option>100</option>
+        </select>
+        <span class="small text-muted text-nowrap">
+          Showing <strong>1</strong>&ndash;<strong>{{ filteredRecords.length }}</strong> of <strong>{{ filteredRecords.length }}</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- =========================================================
+     MODAL 1: MONTHLY ATTENDANCE CALENDAR MODAL (SHARED CALENDAR)
+========================================================== -->
+@if (calendarModalOpen) {
+<div class="modal-backdrop-custom" (click)="closeMonthlyCalendar()"></div>
+<div class="modal-custom-dialog-wrap">
+  <div class="modal-dialog modal-dialog-centered modal-custom-content calendar-modal-dialog">
+    <div class="modal-content calendar-modal-content">
+      <div class="modal-header d-flex align-items-center justify-content-between p-3 border-bottom">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-calendar3 text-primary fs-5"></i>
+          <div>
+            <h5 class="modal-title  fs-6 mb-0">Monthly Attendance Calendar</h5>
+            <span class="text-muted small">{{ selectedEmpForCalendar.name }} ({{ selectedCalendarEmpId }})</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn-close-custom"
+          (click)="closeMonthlyCalendar()"
+          aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="modal-body p-3 calendar-modal-body">
+        <app-calendar
+          [initialYear]="calCurrentYear"
+          [initialMonth]="calCurrentMonth"
+          [selectedMemberId]="selectedCalendarEmpId"
+          [employees]="calendarEmployees"
+          [teamOptions]="calendarTeamOptions"
+          [showFilters]="true"
+          [showSummaryCards]="true"
+          [showLegend]="true">
+        </app-calendar>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     MODAL 2: PUNCH TIMELINE MODAL
+========================================================== -->
+@if (timelineModalOpen && selectedRecordForTimeline) {
+<div class="modal-backdrop-custom" (click)="closeTimeline()"></div>
+<div class="modal-custom-dialog-wrap">
+  <div class="modal-dialog modal-dialog-centered modal-custom-content" style="max-width: 680px;">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="atl-header">
+        <img
+          [src]="selectedRecordForTimeline.avatar"
+          alt="avatar" />
+        <div class="info">
+          <div class="name">{{ selectedRecordForTimeline.name }}</div>
+          <div class="sub">{{ selectedRecordForTimeline.empId }} &middot; {{ selectedRecordForTimeline.department }}</div>
+        </div>
+        <div class="atl-date-pill">
+          <i class="bi bi-calendar3 me-1"></i>{{ selectedRecordForTimeline.date }}
+        </div>
+        <button
+          type="button"
+          class="atl-close"
+          (click)="closeTimeline()"
+          aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Summary Row -->
+      <div class="atl-summary">
+        <div class="card">
+          <div class="n">{{ timelineTotalHours }}</div>
+          <div class="l">Total Hours</div>
+        </div>
+        <div class="card">
+          <div class="n">{{ timelineBreakTime }}</div>
+          <div class="l">Break Time</div>
+        </div>
+        <div class="card">
+          <div class="n">{{ timelineLunchTime }}</div>
+          <div class="l">Lunch Time</div>
+        </div>
+        <div class="card">
+          <div class="n">{{ timelineStatusText }}</div>
+          <div class="l">Status</div>
+        </div>
+      </div>
+
+      <!-- Timeline Body -->
+      <div class="atl-body">
+        @if (timelinePunches.length > 0) {
+        <div class="atl-timeline">
+          @for (item of timelinePunches; track item.key) {
+          <div class="atl-item">
+            <div
+              class="atl-node"
+              [ngClass]="{
+                'node-present': item.color === 'present',
+                'node-half': item.color === 'half',
+                'node-leave': item.color === 'leave'
+              }">
+              <i class="bi {{ item.icon }}"></i>
+            </div>
+            <div class="atl-card">
+              <div>
+                <div class="label">{{ item.label }}</div>
+                <div class="meta">{{ item.meta }}</div>
+              </div>
+              <div class="time">{{ item.time }}</div>
+            </div>
+          </div>
+          @if (item.gapBadge) {
+          <div class="atl-gap-badge" [class.long]="item.gapBadge.isLong">
+            <i class="bi bi-hourglass-split me-1"></i> {{ item.gapBadge.text }}
+          </div>
+          }
+          }
+        </div>
+        } @else {
+        <div class="text-center py-5 text-muted">
+          <i class="bi bi-calendar-x fs-1 opacity-50 mb-2 d-block"></i>
+          <div class="">No punches recorded for this day</div>
+          <div class="small">Employee was marked {{ selectedRecordForTimeline.statusLabel }}.</div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     MODAL 3: MARK ATTENDANCE (ADMIN CHECK-IN WIZARD)
+========================================================== -->
+@if (markModalOpen) {
+<div class="modal-backdrop-custom" (click)="closeMarkAttendance()"></div>
+<div class="modal-custom-dialog-wrap">
+  <div class="modal-dialog modal-dialog-centered modal-custom-content" style="max-width: 600px;">
+    <div class="modal-content">
+      <!-- Wizard Header -->
+      <div class="atl-header">
+        <div
+          class="rounded-3 d-flex align-items-center justify-content-center me-2"
+          style="width: 44px; height: 44px; background: rgba(var(--white-rgb), 0.2); font-size: 20px;">
+          <i class="bi bi-clock-history text-white"></i>
+        </div>
+        <div class="info">
+          <div class="name">Admin Check-in</div>
+          <div class="sub">
+            @if (markCurrentStep === 1) { Step 1 of 2 &mdash; Select Employee &amp; Date }
+            @else { Step 2 of 2 &mdash; Punch Entry Review }
+          </div>
+        </div>
+        <button
+          type="button"
+          class="atl-close"
+          (click)="closeMarkAttendance()"
+          aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Step 1 -->
+      @if (markCurrentStep === 1) {
+      <div class="p-4">
+        <div class="mb-3">
+          <label class="form-label required-label">Select Employee</label>
+          <select
+            class="form-select"
+            [(ngModel)]="markSelectedEmpId">
+            @for (emp of employees; track emp.empId) {
+            <option [value]="emp.empId">{{ emp.name }} &mdash; {{ emp.empId }} ({{ emp.dept }})</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label required-label">Date</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="markDate" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Shift</label>
+          <select
+            class="form-select"
+            [(ngModel)]="markShift">
+            <option value="General">General (09:00 AM - 06:00 PM)</option>
+            <option value="Morning">Morning (06:00 AM - 03:00 PM)</option>
+            <option value="Night">Night (09:00 PM - 06:00 AM)</option>
+          </select>
+        </div>
+      </div>
+      }
+
+      <!-- Step 2 -->
+      @if (markCurrentStep === 2) {
+      <div class="p-4">
+        <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 mb-3">
+          <img
+            [src]="selectedMarkEmp.avatar"
+            class="avatar-sm rounded-circle"
+            style="width: 40px; height: 40px; object-fit: cover;"
+            alt="avatar" />
+          <div>
+            <div class="">{{ selectedMarkEmp.name }}</div>
+            <div class="text-muted small">{{ selectedMarkEmp.empId }} &middot; {{ selectedMarkEmp.dept }}</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label">Check-in Time</label>
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="markCheckInTime" />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Check-out Time</label>
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="markCheckOutTime" />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Attendance Status</label>
+          <select
+            class="form-select"
+            [(ngModel)]="markStatus">
+            <option value="present">Present</option>
+            <option value="late">Late Arrival</option>
+            <option value="half">Half Day</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Notes / Remarks</label>
+          <textarea
+            class="form-control"
+            rows="2"
+            placeholder="Add any administrative notes..."
+            [(ngModel)]="markNotes"></textarea>
+        </div>
+      </div>
+      }
+
+      <!-- Wizard Footer -->
+      <div class="modal-footer">
+        @if (markCurrentStep === 2) {
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="prevMarkStep()">
+          <i class="bi bi-chevron-left"></i> Back
+        </button>
+        }
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="closeMarkAttendance()">
+          Cancel
+        </button>
+        @if (markCurrentStep === 1) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="nextMarkStep()">
+          Next <i class="bi bi-chevron-right"></i>
+        </button>
+        } @else {
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="submitMarkAttendance()">
+          <i class="bi bi-check2"></i> Record Attendance
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- =========================================================
+     TOAST NOTIFICATION
+========================================================== -->
+@if (showToast) {
+<div class="perm-report-toast">
+  <i class="bi bi-check-circle-fill me-2"></i>
+  <span>{{ toastMessage }}</span>
+</div>
+}

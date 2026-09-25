@@ -1,0 +1,24 @@
+<section class="dash-section">
+  <div class="dash-section-head">
+    <div class="dash-section-title-wrap">
+      <div class="dash-section-icon"><i class="bi {{ icon() }}"></i></div>
+      <div>
+        <h3 class="dash-section-title">{{ title() }}</h3>
+        @if (subtitle()) {
+        <div class="dash-section-sub">{{ subtitle() }}</div>
+        }
+      </div>
+    </div>
+
+    <div class="dash-section-actions">
+      <ng-content select="[section-actions]" />
+      @if (meta()) {
+      <span class="dash-section-meta">
+        @if (metaIcon()) { <i class="bi {{ metaIcon() }} me-1"></i> }{{ meta() }}
+      </span>
+      }
+    </div>
+  </div>
+
+  <ng-content />
+</section>

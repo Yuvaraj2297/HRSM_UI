@@ -1,0 +1,791 @@
+/* ---------- Workflow Stepper Bar ---------- */
+.journey-stepper-card {
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+
+.journey-header-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary, var(--green-550));
+    color: var(--white);
+    font-size: 13px;
+}
+
+.journey-header-title {
+    font-size: 14px;
+}
+
+.journey-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow-x: auto;
+    padding: 10px 4px 14px 4px;
+    gap: 10px;
+}
+
+.journey-step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 90px;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    transition: transform .2s ease;
+}
+
+.journey-step-item:hover {
+    transform: translateY(-2px);
+}
+
+.journey-step-bubble {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    background: var(--bg-muted);
+    color: var(--neutral-500);
+    border: 2px solid var(--text-faint);
+    margin-bottom: 6px;
+    transition: all .25s ease;
+}
+
+.journey-step-item.active .journey-step-bubble {
+    background: var(--primary, var(--green-550));
+    color: var(--white);
+    border-color: var(--primary, var(--green-550));
+    box-shadow: 0 0 0 4px rgba(var(--green-550-rgb), .15);
+}
+
+.journey-step-item.completed .journey-step-bubble {
+    background: var(--primary-soft);
+    color: var(--green-550);
+    border-color: var(--green-150);
+}
+
+.journey-step-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--neutral-650);
+    line-height: 1.25;
+    max-width: 88px;
+}
+
+.journey-step-item.active .journey-step-title {
+    color: var(--primary, var(--green-550));
+}
+
+.journey-connector {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin-top: -24px;
+    min-width: 14px;
+    position: relative;
+}
+
+.journey-connector.completed {
+    background: var(--green-150);
+}
+
+/* ---------- Decision Fork Branch ---------- */
+.branch-fork-box {
+    background: linear-gradient(135deg, var(--bg-soft) 0%, var(--bg-muted) 100%);
+    border: 1px dashed var(--text-faint);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.branch-fork-title {
+    font-size: 12.5px;
+}
+
+.branch-fork-sub {
+    font-size: 11px;
+}
+
+.fork-badge-no {
+    background: var(--orange-50);
+    color: var(--orange-500);
+    border: 1px solid var(--orange-100);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.fork-badge-yes {
+    background: var(--primary-soft);
+    color: var(--green-550);
+    border: 1px solid var(--green-100);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ---------- KPI Metric Cards ---------- */
+.ori-kpi {
+    min-height: 100px;
+    padding: 18px;
+    border: 1px solid var(--border-soft, var(--border));
+    border-radius: 14px;
+    background: var(--white, var(--white));
+    box-shadow: 0 4px 16px rgba(var(--neutral-900-3-rgb), .04);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.ori-kpi:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--neutral-900-3-rgb), .08);
+}
+
+.ori-kpi .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.ori-kpi .label {
+    color: var(--ink-500, var(--neutral-500));
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.ori-kpi .value {
+    color: var(--ink-900, var(--neutral-900));
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.ori-kpi .sub {
+    color: var(--ink-500, var(--neutral-500));
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.kpi-icon-joiners {
+    background: var(--blue-50);
+    color: var(--blue-600-2);
+}
+
+.kpi-icon-scheduled {
+    background: var(--yellow-50);
+    color: var(--orange-550-2);
+}
+
+.kpi-icon-pending {
+    background: var(--orange-50);
+    color: var(--orange-500);
+    border: 1px solid var(--orange-100);
+}
+
+.kpi-icon-certified {
+    background: var(--primary-soft);
+    color: var(--green-550);
+    border: 1px solid var(--green-100);
+}
+
+/* ---------- Segmented Navigation Tabs ---------- */
+.segmented-nav-wrap {
+    display: inline-flex;
+}
+
+.segmented-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.segmented-hint {
+    font-size: 12.5px;
+}
+
+/* ---------- Filter Toolbar ---------- */
+.filter-toolbar-card {
+    padding: 16px 20px;
+}
+
+.clearance-rule-note {
+    font-size: 12px;
+}
+
+/* ---------- Clearance Table ---------- */
+.clearance-cell-sub {
+    font-size: 11px;
+}
+
+.clearance-progress-cell {
+    min-width: 130px;
+}
+
+.clearance-progress-text {
+    font-size: 12px;
+}
+
+.progress-bar-thin {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--neutral-50-6);
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress-bar-thin span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    transition: width .4s ease;
+}
+
+/* ---------- Shared modal chrome ---------- */
+.modal-content-rounded {
+    border-radius: 16px;
+}
+
+.modal-header-soft {
+    background: var(--bg-soft);
+}
+
+.modal-subtitle {
+    font-size: 13px;
+}
+
+.modal-icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--primary, var(--green-550));
+    color: var(--white);
+    font-weight: 700;
+}
+
+.modal-icon-circle-md {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+}
+
+.btn-brand {
+
+    &:hover,
+    &:focus {
+        filter: brightness(.94);
+    }
+}
+
+/* ---------- Certificate Modal ---------- */
+.clearance-cert-frame {
+    border: 2px dashed var(--green-550);
+    background: var(--neutral-50-2);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+}
+
+.cert-seal {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    border: 2px solid var(--green-550);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green-550);
+    font-size: 28px;
+}
+
+.cert-desc {
+    font-size: 13px;
+}
+
+.cert-divider {
+    border-color: var(--green-100);
+    margin: 16px 0;
+}
+
+.cert-emp-meta {
+    font-size: 13px;
+}
+
+.cert-footer-row {
+    font-size: 12px;
+}
+
+/* ---------- Pending Sessions Modal ---------- */
+.pending-modal-header {
+    background: var(--orange-50);
+}
+
+.pending-icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--yellow-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange-550-2);
+    font-size: 16px;
+}
+
+.pending-header-sub {
+    font-size: 12px;
+}
+
+.pending-intro {
+    font-size: 13px;
+}
+
+.pending-item-text {
+    font-size: 12.5px;
+}
+
+/* ---------- View Session Modal ---------- */
+.view-block-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.view-block-sub {
+    font-size: 12px;
+}
+
+.view-field-label {
+    font-size: 12px;
+}
+
+/* ---------- Schedule / Execute Modal form blocks ---------- */
+.schedule-step-box {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+}
+
+.schedule-notify-box {
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+}
+
+.schedule-field-label {
+    font-size: 12px;
+}
+
+.exec-session-banner {
+    background: var(--green-50-3);
+    border: 1px solid var(--green-100-2);
+}
+
+.exec-session-sub {
+    font-size: 12px;
+}
+
+.exec-feedback-label {
+    font-size: 12.5px;
+}
+
+.exec-complete-box {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+}
+
+/* ---------- Help Modal ---------- */
+.help-flow {
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   SEND INVITE MODAL — polished design
+========================================================= */
+.invite-modal-content {
+    border-radius: 18px;
+}
+
+.invite-modal-header {
+    background: var(--bg-soft);
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    padding: 22px 26px 14px 26px;
+}
+
+.invite-header-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 20px;
+    background: linear-gradient(135deg, var(--green-550) 0%, var(--green-350) 100%);
+    box-shadow: 0 2px 8px rgba(var(--black-rgb), .08);
+}
+
+.invite-header-sub {
+    font-size: 13px;
+}
+
+.invite-badge-live {
+    background: rgba(var(--green-350-rgb), .15);
+    color: var(--green-350);
+    border: 1px solid rgba(var(--green-350-rgb), .3);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 99px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.invite-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green-350);
+    box-shadow: 0 0 0 0 rgba(var(--green-350-rgb), .7);
+    animation: invite-pulse-dot 1.8s infinite;
+}
+
+@keyframes invite-pulse-dot {
+    0% {
+        transform: scale(.95);
+        box-shadow: 0 0 0 0 rgba(var(--green-350-rgb), .7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(var(--green-350-rgb), 0);
+    }
+
+    100% {
+        transform: scale(.95);
+        box-shadow: 0 0 0 0 rgba(var(--green-350-rgb), 0);
+    }
+}
+
+.invite-context-banner {
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+}
+
+.invite-target-initial {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--green-550);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    border: 1px solid rgba(var(--green-550-rgb), .2);
+}
+
+.invite-emp-id-badge {
+    font-size: 11px;
+}
+
+.invite-context-meta {
+    font-size: 12.5px;
+}
+
+.invite-ref-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    margin-bottom: 4px;
+}
+
+.invite-context-datetime {
+    font-size: 12.5px;
+}
+
+.invite-section-label {
+    font-size: 13px;
+}
+
+.invite-token-badge {
+    font-size: 10.5px;
+}
+
+.invite-link-box {
+    background: var(--bg-soft);
+    border: 1.5px dashed var(--text-faint);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.invite-link-input {
+    font-family: var(--font-family-mono);
+    font-size: 12.5px;
+    color: var(--neutral-900);
+    background: transparent;
+    border: none;
+    width: 100%;
+    outline: none;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.invite-link-meta {
+    font-size: 12px;
+}
+
+.invite-channel-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+    padding: 14px 16px;
+    transition: all .2s ease;
+}
+
+.invite-channel-card:hover {
+    border-color: var(--text-faint);
+    box-shadow: 0 4px 14px rgba(var(--black-rgb), .04);
+}
+
+.invite-channel-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 16px;
+}
+
+.invite-channel-icon-whatsapp {
+    /* WhatsApp's own official brand green — intentionally not tokenized */
+    background: #25D366;
+}
+
+.invite-channel-icon-email {
+    background: var(--blue-550);
+}
+
+.invite-channel-title {
+    font-size: 13px;
+}
+
+.invite-channel-sub {
+    font-size: 11.5px;
+}
+
+.invite-channel-options {
+    font-size: 11.5px;
+}
+
+.invite-preview-card {
+    background: linear-gradient(145deg, var(--green-800) 0%, var(--green-750) 100%);
+    border-radius: 16px;
+    padding: 20px;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(var(--green-550-rgb), .2);
+}
+
+.invite-preview-heading {
+    font-size: 13px;
+    letter-spacing: .4px;
+}
+
+.invite-official-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+}
+
+.invite-preview-inner {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 18px;
+    color: var(--neutral-850);
+    box-shadow: 0 4px 12px rgba(var(--black-rgb), .06);
+}
+
+.invite-company-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: var(--green-550);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.invite-company-name {
+    font-size: 12.5px;
+}
+
+.invite-topic-badge {
+    font-size: 10.5px;
+}
+
+.invite-preview-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.invite-preview-details {
+    font-size: 12px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.invite-material-badge {
+    font-size: 10.5px;
+}
+
+.invite-cta-btn {
+    background: var(--primary, var(--green-550));
+    border: none;
+    box-shadow: 0 2px 6px rgba(var(--green-550-rgb), .2);
+}
+
+.invite-cta-note {
+    font-size: 10.5px;
+}
+
+.invite-modal-footer {
+    background: var(--bg-soft);
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    padding: 16px 26px;
+}
+
+.invite-whatsapp-btn {
+    /* WhatsApp's own official brand green — intentionally not tokenized */
+    background: #25D366;
+    border-color: #25D366;
+    color: var(--white);
+}
+
+/* =========================================================
+   PrimeNG p-select overrides to match Bootstrap form-control look
+========================================================= */
+::ng-deep app-induction-orientation {
+    .p-select {
+        width: 100%;
+        align-items: center;
+
+    }
+
+    .p-select-label {
+        padding: 8px 12px;
+        font-size: 14px;
+        color: var(--neutral-850-2);
+    }
+
+    .p-select-label.p-placeholder {
+        color: var(--neutral-500-2);
+    }
+
+    .p-select-dropdown {
+        width: 2.5rem;
+        color: var(--neutral-500-2);
+    }
+
+    .p-select-overlay {
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(var(--neutral-900-rgb), .12);
+        border: 1px solid var(--border);
+    }
+
+    .p-select-option {
+        font-size: 13.5px;
+        padding: 8px 12px;
+
+        &.p-select-option-selected {
+            background: var(--neutral-50);
+            color: var(--primary, var(--green-550));
+        }
+
+        &:not(.p-select-option-selected):not(.p-disabled).p-focus {
+            background: var(--bg-soft);
+        }
+    }
+
+    .p-select-filter {
+        border-radius: 6px;
+    }
+}
+
+/* =========================================================
+   Pill-style action buttons (actions column: type 'pill-actions')
+========================================================= */
+.pill-action-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pill-action-seg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    background: var(--white);
+    cursor: pointer;
+    transition: all .15s ease;
+
+    i {
+        font-size: 13px;
+    }
+
+    &:hover {
+        filter: brightness(.95);
+        transform: translateY(-1px);
+    }
+
+    &:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
