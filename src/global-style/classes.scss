@@ -1979,6 +1979,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   --table-head-text: var(--gh-heading);
   --table-text: var(--text);
   --table-border: var(--border);
+  --table-head-divider: var(--border-strong); /* vertical lines between header cells */
   --table-row-border: var(--bg-muted);
   --table-row-hover: rgba(var(--primary-rgb), 0.035);
   --table-row-stripe: var(--bg-soft);
@@ -2019,6 +2020,11 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
     border: 0;
     border-bottom: 1px solid var(--table-border);
     box-shadow: none;
+  }
+
+  /* column dividers in the header row (as in the design reference) */
+  > thead > tr > :is(th, td):not(:last-child) {
+    border-right: 1px solid var(--table-head-divider);
   }
 
   > tbody > tr > :is(td, th) {
