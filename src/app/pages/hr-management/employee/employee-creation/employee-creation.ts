@@ -29,6 +29,14 @@ interface WizardTab {
   icon: string;
 }
 
+/** parent tab: a group of wizard steps */
+interface WizardGroup {
+  key: string;
+  label: string;
+  icon: string;
+  steps: number[];
+}
+
 @Component({
   selector: 'app-employee-creation',
   standalone:true,
@@ -64,14 +72,27 @@ export class EmployeeCreation implements AfterViewInit {
     { step: 14, label: 'Review', icon: 'bi bi-clipboard-check' },
   ];
 
+  /** Parent tabs. Steps run in this order (Next / Back follow it). */
+  groups: WizardGroup[] = [
+    { key: 'personal', label: 'Personal', icon: 'bi bi-person-vcard', steps: [1, 2, 3, 4, 5] },
+    { key: 'finance', label: 'Finance & Documents', icon: 'bi bi-wallet2', steps: [6, 7, 9, 10] },
+    { key: 'approvals', label: 'Approvals & Rules', icon: 'bi bi-shield-check', steps: [11, 12, 13] },
+    { key: 'exit', label: 'Exit & Review', icon: 'bi bi-flag', steps: [8, 14] },
+  ];
+
+  /** every step in wizard order */
+  get sequence(): number[] {
+    return this.groups.flatMap(g => g.steps);
+  }
+
   current = 1;
   
 
   get total(): number {
-    return this.tabs.length;
+    return this.sequence.length;
   }
   get isLast(): boolean {
-    return this.current === this.total;
+    return this.position === this.total;
   }
 
 
@@ -92,16 +113,57 @@ export class EmployeeCreation implements AfterViewInit {
   }
 
   goToStep(step: number): void {
-    if (step < 1 || step > this.total) return;
+    if (!this.sequence.includes(step)) return;
     this.current = step;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   next(): void {
-    this.goToStep(this.current + 1);
+    const seq = this.sequence;
+    this.goToStep(seq[seq.indexOf(this.current) + 1]);
   }
   prev(): void {
-    this.goToStep(this.current - 1);
+    const seq = this.sequence;
+    this.goToStep(seq[seq.indexOf(this.current) - 1]);
+  }
+
+  cancel(): void {
+    this.router.navigateByUrl('/employee/employee-report');
+  }
+
+  // ---- parent / child tab helpers ----
+  /** 1-based position of the current step in the wizard order */
+  get position(): number {
+    return this.sequence.indexOf(this.current) + 1;
+  }
+
+  get progress(): number {
+    return Math.round((this.position / this.total) * 100);
+  }
+
+  get activeGroup(): WizardGroup {
+    return this.groups.find(g => g.steps.includes(this.current)) ?? this.groups[0];
+  }
+
+  get activeGroupTabs(): WizardTab[] {
+    return this.activeGroup.steps.map(step => this.tabOf(step));
+  }
+
+  get currentTab(): WizardTab {
+    return this.tabOf(this.current);
+  }
+
+  tabOf(step: number): WizardTab {
+    return this.tabs.find(t => t.step === step)!;
+  }
+
+  /** a step is done when it comes before the current one in wizard order */
+  isStepDone(step: number): boolean {
+    return this.sequence.indexOf(step) < this.sequence.indexOf(this.current);
+  }
+
+  isGroupDone(group: WizardGroup): boolean {
+    return group.steps.every(step => this.isStepDone(step));
   }
 
   // ---- verification stepper helpers ----

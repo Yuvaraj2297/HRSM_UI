@@ -1,79 +1,98 @@
 <!-- ===== Page header ===== -->
+<div class="ne-page-head">
+  <app-breadcrumb></app-breadcrumb>
 
-
-<div class="d-flex  justify-content-between w-100">
-
-  <!-- Left: Breadcrumb -->
-  <div>
-    <app-breadcrumb></app-breadcrumb>
-  </div>
-
-  <!-- Right: Buttons -->
-  <div class="d-flex align-items-start gap-2">
-
-    <a href="assets/excel/HRMS Title Data.xlsx" download class="btn btn-outline-primary  btn-sm px-3">
-      <i class="bi bi-download me-1"></i>
-      Sample Excel
+  <div class="ne-page-actions">
+    <a href="assets/excel/HRMS Title Data.xlsx" download class="btn btn-outline-primary btn-sm">
+      <i class="bi bi-download"></i> Sample Excel
     </a>
-
-    <button type="button" class="btn btn-primary  btn-sm px-3" (click)="add()">
-      <i class="bi bi-upload"></i>
-      Bulk Upload
+    <button type="button" class="btn btn-primary btn-sm" (click)="add()">
+      <i class="bi bi-upload"></i> Bulk Upload
     </button>
-
   </div>
-
 </div>
 
-<!-- ===== Tab bar ===== -->
-<div role="tablist" class="ne-tabs">
-  <button role="tab" type="button"
-    *ngFor="let t of tabs"
-    class="ne-tab"
-    [class.active]="current === t.step"
-    [class.completed]="t.step < current"
-    (click)="goToStep(t.step)" [attr.aria-selected]="current === t.step">
-    <i [class]="t.icon"></i> {{ t.label }}
+<!-- ===== Parent tabs: the four sections of the wizard ===== -->
+<nav class="ne-groups" role="tablist" aria-label="Employee sections">
+  @for (g of groups; track g.key; let gi = $index) {
+  <button type="button" role="tab" class="ne-group"
+    [class.active]="g === activeGroup" [class.done]="isGroupDone(g)"
+    [attr.aria-selected]="g === activeGroup" (click)="goToStep(g.steps[0])">
+    <span class="ne-group-num" aria-hidden="true">
+      @if (isGroupDone(g)) { <i class="bi bi-check-lg"></i> } @else { {{ gi + 1 }} }
+    </span>
+    <span class="ne-group-text">
+      <span class="ne-group-label"><i [class]="g.icon"></i> {{ g.label }}</span>
+      <span class="ne-group-meta">{{ g.steps.length }} {{ g.steps.length === 1 ? 'step' : 'steps' }}</span>
+    </span>
   </button>
-</div>
+  }
+</nav>
 
 <!-- ===== Wizard card ===== -->
-<div class="card-custom">
+<div class="card-custom ne-card">
+
+  <!-- Child tabs: the steps of the selected section (global .page-tabs look) -->
+  <nav class="page-tabs page-tabs-sm ne-steps" role="tablist" [attr.aria-label]="activeGroup.label + ' steps'">
+    @for (t of activeGroupTabs; track t.step) {
+    <button type="button" role="tab" class="page-tab"
+      [class.active]="current === t.step" [class.completed]="isStepDone(t.step)"
+      [attr.aria-selected]="current === t.step" (click)="goToStep(t.step)">
+      <i [class]="isStepDone(t.step) ? 'bi bi-check-lg' : t.icon"></i> {{ t.label }}
+    </button>
+    }
+  </nav>
+
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
 
-    @switch (current) {
-      @case (1) { <app-profile-tab /> }
-     @case (2) { <app-permission-tab /> }
-     @case (3) { <app-family-tab /> }
-       @case (4) { <app-education-tab /> }
-      @case (5) { <app-experience-tab /> }
-      @case (6) { <app-bank-tab /> }
-    @case (7) { <app-kyc-tab /> }
-       @case (8) { <app-relieving-tab /> }
-       @case (9) { <app-ctc-report-tab /> }
-     @case (10) { <app-document-tab /> }
-      @case (11) { <app-leave-tab /> }
-      @case (12) { <app-ot-approval-tab /> }
-       @case (13) { <app-leave-rules-tab /> }
-      @case (14) { <app-review-tab /> } 
-    }
-
-    <!-- ===== Footer navigation ===== -->
-    <div class="ne-footer-nav">
-      <a routerLink="/employees" class="btn btn-reject ne-spacer">Cancel</a>
-
-      <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="current === 1" (click)="prev()">
-        <i class="bi bi-arrow-left"></i> Back
-      </button>
-
-      <button *ngIf="!isLast" type="button" class="btn btn-primary btn-sm" (click)="next()">
-        Save &amp; Continue <i class="bi bi-arrow-right"></i>
-      </button>
-
-      <button *ngIf="isLast" type="submit" class="btn btn-primary">
-        <i class="bi bi-check-lg"></i> Create Employee
-      </button>
+    <div class="ne-body">
+      @switch (current) {
+        @case (1) { <app-profile-tab /> }
+        @case (2) { <app-permission-tab /> }
+        @case (3) { <app-family-tab /> }
+        @case (4) { <app-education-tab /> }
+        @case (5) { <app-experience-tab /> }
+        @case (6) { <app-bank-tab /> }
+        @case (7) { <app-kyc-tab /> }
+        @case (8) { <app-relieving-tab /> }
+        @case (9) { <app-ctc-report-tab /> }
+        @case (10) { <app-document-tab /> }
+        @case (11) { <app-leave-tab /> }
+        @case (12) { <app-ot-approval-tab /> }
+        @case (13) { <app-leave-rules-tab /> }
+        @case (14) { <app-review-tab /> }
+      }
     </div>
+
+    <!-- ===== Footer: stays at the bottom of the screen while the form scrolls ===== -->
+    <footer class="ne-footer">
+      <div class="ne-footer-status">
+        <div class="ne-footer-step">
+          Step {{ position }} of {{ total }} · <strong>{{ currentTab.label }}</strong>
+        </div>
+        <div class="ne-progress" role="progressbar" [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100">
+          <span [style.width.%]="progress"></span>
+        </div>
+      </div>
+
+      <div class="ne-footer-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+
+        <button type="button" class="btn btn-outline-primary" [disabled]="position === 1" (click)="prev()">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+
+        @if (!isLast) {
+        <button type="button" class="btn btn-primary" (click)="next()">
+          Save &amp; Continue <i class="bi bi-arrow-right"></i>
+        </button>
+        } @else {
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check-lg"></i> Create Employee
+        </button>
+        }
+      </div>
+    </footer>
   </form>
 </div>
 
