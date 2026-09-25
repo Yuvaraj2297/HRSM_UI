@@ -1,29 +1,29 @@
-<!-- Page Header & Breadcrumb -->
-<app-breadcrumb title="Create Ticket" parent="Helpdesk / Ticketing" icon="bi bi-life-preserver">
-  <div breadcrumb-actions class="d-flex gap-2">
-    <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-outline-primary">
-      <i class="bi bi-ticket-perforated me-1"></i> My Tickets
-    </a>
+<!-- Page header -->
+<div class="et-head">
+  <div>
+    <h1 class="page-title">Create Ticket</h1>
+    <p class="et-head-sub">Raise a request with HR, IT, Payroll or Finance.</p>
   </div>
-</app-breadcrumb>
+  <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-outline-primary">
+    <i class="bi bi-ticket-perforated"></i> My Tickets
+  </a>
+</div>
 
 <div class="row g-3">
   <!-- ===== Form Column ===== -->
   <div class="col-lg-8">
-    <div class="ticket-form-card">
-      <div class="ticket-form-head">
-        <div class="head-icon">
-          <i class="bi bi-life-preserver"></i>
+    <section class="card-custom et-form-card">
+      <header class="card-custom-header">
+        <span class="card-header-icon"><i class="bi bi-life-preserver"></i></span>
+        <div class="et-title-wrap">
+          <h3 class="card-custom-title">Ticket Details</h3>
+          <p class="et-title-sub">Our support team will respond within the SLA time.</p>
         </div>
-        <div>
-          <h3>Ticket Details</h3>
-          <p>Fill in the details below — our support team will respond within the SLA time.</p>
-        </div>
-      </div>
+      </header>
 
-      <div class="ticket-form-body">
-        @if (!isSuccess) {
-        <form (ngSubmit)="onSubmit()" novalidate>
+      @if (!isSuccess) {
+      <form (ngSubmit)="onSubmit()" novalidate>
+        <div class="card-custom-body">
           <!-- Category -->
           <div class="mb-3" [class.has-error]="isSubmitted && categoryError">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
@@ -77,7 +77,7 @@
               }
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 et-prio-field">
               <label class="form-label-tkt">
                 Priority <span class="req">*</span>
               </label>
@@ -123,7 +123,7 @@
           </div>
 
           <!-- Attachment & Preferred Contact Row -->
-          <div class="row g-3 mt-0">
+          <div class="row g-3 mt-1">
             <div class="col-md-6">
               <label class="form-label-tkt">Attachment</label>
 
@@ -162,7 +162,7 @@
                 optionLabel="label" optionValue="value" placeholder="Select Preferred Contact..." appendTo="body"
                 styleClass="w-100 ct-p-select-field" class="w-100"></p-select>
 
-              <div class="mt-3">
+              <div class="mt-2">
                 <div class="sla-hint">
                   <i class="bi bi-stopwatch"></i>
                   <span>
@@ -174,28 +174,25 @@
             </div>
           </div>
 
-          <!-- Buttons -->
-          <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
-            <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-outline-secondary px-4">
-              Cancel
-            </a>
-            <button type="submit" class="btn btn-primary px-4" [disabled]="isSubmitting">
-              @if (isSubmitting) {
-              <span>
-                <span class="spinner-border spinner-border-sm"></span> Submitting...
-              </span>
-              } @else {
-              <span>
-                <i class="bi bi-send"></i> Submit Ticket
-              </span>
-              }
-            </button>
-          </div>
-        </form>
-        }
+        </div>
 
-        <!-- Success State -->
-        @if (isSuccess && createdTicket) {
+        <!-- Footer: frozen at the bottom of the screen while the form scrolls -->
+        <footer class="et-footer">
+          <span class="et-footer-note">Fields marked <span class="req">*</span> are required</span>
+          <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+            @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm"></span> Submitting...
+            } @else {
+            <i class="bi bi-send"></i> Submit Ticket
+            }
+          </button>
+        </footer>
+      </form>
+      }
+
+      @if (isSuccess && createdTicket) {
+      <div class="card-custom-body">
         <div class="tkt-success show">
           <div class="succ-icon">
             <i class="bi bi-check-lg"></i>
@@ -208,135 +205,86 @@
             <b>{{ currentSla.response }}</b>.
           </div>
           <div class="d-flex gap-2 mt-2">
-            <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-primary px-4">
+            <a routerLink="/helpdesk/employee-my-tickets" class="btn btn-primary">
               View My Tickets
             </a>
-            <button type="button" class="btn btn-outline-secondary px-4" (click)="createAnother()">
+            <button type="button" class="btn btn-outline-secondary" (click)="createAnother()">
               Create Another
             </button>
           </div>
         </div>
-        }
       </div>
-    </div>
+      }
+    </section>
   </div>
 
   <!-- ===== Right Side Column ===== -->
   <div class="col-lg-4">
-    <!-- Category Guide -->
-    <div class="ticket-form-card mb-3">
-      <div class="ticket-form-head" style="padding: 12px 20px;">
-        <div class="head-icon guide-icon">
-          <i class="bi bi-tags"></i>
-        </div>
-        <div>
-          <h3 style="font-size: 14px;">Category Guide</h3>
-          <p>Pick the right category for faster resolution</p>
-        </div>
-      </div>
-      <div class="p-3" style="padding-top: 10px !important;">
-        <div class="d-flex flex-column gap-2">
+    <div class="et-side">
+      <!-- Category Guide -->
+      <section class="card-custom">
+        <header class="card-custom-header et-side-head">
+          <h3 class="card-custom-title"><i class="bi bi-tags"></i> Category Guide</h3>
+        </header>
+        <div class="card-custom-body et-side-body et-guide">
           @for (c of categories.slice(0, 6); track c.id) {
-          <div class="d-flex align-items-start gap-2 p-2 rounded guide-row">
-            <span style="font-size: 15px;">{{ c.icon }}</span>
+          <div class="guide-row">
+            <span class="guide-ico">{{ c.icon }}</span>
             <div class="min-w-0">
-              <div class=" guide-cat-name">{{ c.name }}</div>
-              <div class="text-muted guide-cat-ex">{{ c.example }}</div>
+              <div class="guide-cat-name">{{ c.name }}</div>
+              <div class="guide-cat-ex">{{ c.example }}</div>
             </div>
           </div>
           }
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- SLA Matrix -->
-    <div class="ticket-form-card mb-3">
-      <div class="ticket-form-head" style="padding: 12px 20px;">
-        <div class="head-icon sla-matrix-icon">
-          <i class="bi bi-stopwatch"></i>
+      <!-- SLA Matrix -->
+      <section class="card-custom">
+        <header class="card-custom-header et-side-head">
+          <h3 class="card-custom-title"><i class="bi bi-stopwatch"></i> SLA Targets</h3>
+          <span class="et-side-meta">By priority</span>
+        </header>
+        <div class="card-custom-body et-side-body">
+          <div class="sla-grid">
+            <span class="sla-h">Priority</span><span class="sla-h">Response</span><span class="sla-h text-end">Resolution</span>
+            <span><span class="prio-badge p-low">Low</span></span><span>24 hrs</span><span class="text-end">3 Days</span>
+            <span><span class="prio-badge p-medium">Medium</span></span><span>8 hrs</span><span class="text-end">2 Days</span>
+            <span><span class="prio-badge p-high">High</span></span><span>2 hrs</span><span class="text-end">1 Day</span>
+            <span><span class="prio-badge p-urgent">Urgent</span></span><span>30 mins</span><span class="text-end">4 hrs</span>
+          </div>
         </div>
-        <div>
-          <h3 style="font-size: 14px;">SLA Targets</h3>
-          <p>By priority</p>
-        </div>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-sm align-middle mb-0">
-          <thead>
-            <tr class="text-muted">
-              <th class="ps-3" style="font-size: 11px;">Priority</th>
-              <th style="font-size: 11px;">Response</th>
-              <th class="pe-3 text-end" style="font-size: 11px;">Resolution</th>
-            </tr>
-          </thead>
-          <tbody style="font-weight: 600;">
-            <tr>
-              <td class="ps-3">
-                <span class="badge rounded-pill badge-prio-low">Low</span>
-              </td>
-              <td>24 hrs</td>
-              <td class="pe-3 text-end">3 Days</td>
-            </tr>
-            <tr>
-              <td class="ps-3">
-                <span class="badge rounded-pill badge-prio-med">Medium</span>
-              </td>
-              <td>8 hrs</td>
-              <td class="pe-3 text-end">2 Days</td>
-            </tr>
-            <tr>
-              <td class="ps-3">
-                <span class="badge rounded-pill badge-prio-high">High</span>
-              </td>
-              <td>2 hrs</td>
-              <td class="pe-3 text-end">1 Day</td>
-            </tr>
-            <tr>
-              <td class="ps-3 pb-3">
-                <span class="badge rounded-pill badge-prio-urg">Urgent</span>
-              </td>
-              <td class="pb-3">30 mins</td>
-              <td class="pe-3 pb-3 text-end">4 hrs</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      </section>
 
-    <!-- What Happens Next -->
-    <div class="ticket-form-card">
-      <div class="ticket-form-head" style="padding: 12px 20px;">
-        <div class="head-icon route-icon">
-          <i class="bi bi-route"></i>
-        </div>
-        <div>
-          <h3 style="font-size: 14px;">What Happens Next?</h3>
-          <p>Your ticket journey</p>
-        </div>
-      </div>
-      <div class="p-3 pt-2 d-flex flex-column gap-3">
-        <div class="d-flex align-items-start gap-3">
-          <span class="wn-step-dot">1</span>
-          <div>
-            <div class="wn-title">Instant ticket ID</div>
-            <div class="wn-sub">You get a tracking ID (TKT-xxxx) as soon as you submit.</div>
-          </div>
-        </div>
-        <div class="d-flex align-items-start gap-3">
-          <span class="wn-step-dot">2</span>
-          <div>
-            <div class="wn-title">Routed to the right team</div>
-            <div class="wn-sub">HR / IT / Payroll / Finance team picks it up within the response SLA.</div>
-          </div>
-        </div>
-        <div class="d-flex align-items-start gap-3">
-          <span class="wn-step-dot">3</span>
-          <div>
-            <div class="wn-title">Resolved &amp; closed</div>
-            <div class="wn-sub">Track progress in My Tickets; reply anytime — reopen if not fixed.</div>
-          </div>
-        </div>
-      </div>
+      <!-- What Happens Next -->
+      <section class="card-custom">
+        <header class="card-custom-header et-side-head">
+          <h3 class="card-custom-title"><i class="bi bi-signpost-split"></i> What Happens Next?</h3>
+        </header>
+        <ol class="card-custom-body et-side-body et-next">
+          <li>
+            <span class="wn-step-dot">1</span>
+            <div>
+              <div class="wn-title">Instant ticket ID</div>
+              <div class="wn-sub">You get a tracking ID (TKT-xxxx) as soon as you submit.</div>
+            </div>
+          </li>
+          <li>
+            <span class="wn-step-dot">2</span>
+            <div>
+              <div class="wn-title">Routed to the right team</div>
+              <div class="wn-sub">HR / IT / Payroll / Finance team picks it up within the response SLA.</div>
+            </div>
+          </li>
+          <li>
+            <span class="wn-step-dot">3</span>
+            <div>
+              <div class="wn-title">Resolved &amp; closed</div>
+              <div class="wn-sub">Track progress in My Tickets; reply anytime — reopen if not fixed.</div>
+            </div>
+          </li>
+        </ol>
+      </section>
     </div>
   </div>
 </div>
