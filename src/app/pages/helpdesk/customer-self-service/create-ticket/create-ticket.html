@@ -1,29 +1,23 @@
-<!-- Hero -->
-<div class="ct-hero d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
-  <div>
-    <div class="hero-crumb">
-      <i class="bi bi-headset"></i>
-      <span>Customer Self Service</span>
-      <i class="bi bi-chevron-right" style="font-size: 10px;"></i>
-      <span class=" text-white">Create Ticket</span>
-    </div>
-    <h1>Create Support Ticket</h1>
-  </div>
+<!-- Page header -->
+<div class="ct-head">
+  <h1 class="page-title">Create Support Ticket</h1>
+  <p class="ct-head-sub">Tell us what went wrong — we'll route it to the right team.</p>
 </div>
 
 <div class="row g-3">
   <!-- ===== Main Form / Success Column ===== -->
   <div class="col-lg-8">
-    <div class="ct-form-card">
+    <div class="card-custom ct-form-card">
       @if (!showSuccess) {
         <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" novalidate>
+          <div class="card-custom-body">
           <!-- Step 1: Project -->
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="badge rounded-pill step-badge">STEP 1</span>
-            <span class=" step-title">Select Project</span>
+          <div class="ct-step">
+            <span class="ct-step-num">1</span>
+            <span class="ct-step-title">Select Project</span>
           </div>
 
-          <div class="ct-proj-grid mb-1">
+          <div class="ct-proj-grid">
             @for (p of projects; track p.id) {
               <div
                 class="ct-proj"
@@ -43,12 +37,10 @@
             <div class="ct-err show">Please select a project</div>
           }
 
-          <hr class="my-4" />
-
           <!-- Step 2: Issue Details -->
-          <div class="d-flex align-items-center gap-2 mb-3">
-            <span class="badge rounded-pill step-badge">STEP 2</span>
-            <span class=" step-title">Issue Details</span>
+          <div class="ct-step ct-step-sep">
+            <span class="ct-step-num">2</span>
+            <span class="ct-step-title">Issue Details</span>
           </div>
 
           <!-- Issue Type -->
@@ -207,7 +199,7 @@
             <div class="col-md-6">
               <label class="ct-form-label" for="ctExpected">Expected Resolution Date</label>
              <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
-              <div class="text-muted mt-1 expected-note">
+              <div class="ct-hint">
                 Optional — as per your support agreement
               </div>
             </div>
@@ -221,22 +213,18 @@
             </div>
           }
 
+          </div>
+
           <!-- Form Buttons -->
-          <div class="d-flex gap-2 mt-4">
-            <button
-              type="button"
-              class="btn btn-secondary flex-fill"
-              (click)="createAnother()"
-            >
+          <footer class="card-custom-footer">
+            <span class="card-footer-note">Fields marked <span class="req">*</span> are required</span>
+            <button type="button" class="btn btn-secondary" (click)="createAnother()">
               Cancel
             </button>
-            <button
-              type="submit"
-              class="btn flex-fill text-white ct-submit-btn"
-            >
+            <button type="submit" class="btn btn-primary">
               <i class="bi bi-send"></i> Submit Ticket
             </button>
-          </div>
+          </footer>
         </form>
       }
 
@@ -246,14 +234,14 @@
           <div class="s-ico">
             <i class="bi bi-check-lg"></i>
           </div>
-          <h4 class=" ticket-id-title">
+          <h4 class="ticket-id-title">
             {{ createdTicket?.id }}
           </h4>
-          <p class="text-muted mb-4 success-msg">
+          <p class="success-msg">
             Ticket submitted. Our support team will respond within the SLA window.
           </p>
 
-          <div class="d-flex gap-2 justify-content-center mt-3">
+          <div class="d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-primary" (click)="viewMyTickets()">
               View My Tickets
             </button>
@@ -268,74 +256,51 @@
 
   <!-- ===== Right Side Column ===== -->
   <div class="col-lg-4">
-    <!-- SLA Response Targets -->
-    <div class="card-custom p-3 mb-3">
-      <div class="side-card-title mb-2">
-        <i class="bi bi-speedometer2 text-primary"></i> SLA Response Targets
-      </div>
-      <div>
-        @for (item of sideSlaList; track item.id) {
-          <div class="sla-row">
-            <span class="">{{ item.icon }} {{ item.name }}</span>
-            <span class="text-muted" style="font-size: 11px;">
-              {{ item.sla.response }} / {{ item.sla.resolution }}
-            </span>
-          </div>
-        }
-      </div>
-      <div class="text-muted mt-2 sla-footnote">
-        Response / Resolution targets at Medium priority. High &amp; Critical get faster windows.
-      </div>
-    </div>
+    <div class="ct-side">
+      <!-- SLA Response Targets -->
+      <section class="card-custom">
+        <header class="card-custom-header ct-side-head">
+          <h3 class="card-custom-title"><i class="bi bi-speedometer2"></i> SLA Response Targets</h3>
+        </header>
+        <div class="card-custom-body ct-side-body">
+          @for (item of sideSlaList; track item.id) {
+            <div class="sla-row">
+              <span>{{ item.icon }} {{ item.name }}</span>
+              <span class="sla-time">{{ item.sla.response }} / {{ item.sla.resolution }}</span>
+            </div>
+          }
+          <p class="ct-hint">
+            Response / resolution targets at Medium priority. High &amp; Critical get faster windows.
+          </p>
+        </div>
+      </section>
 
-    <!-- How Your Ticket Moves -->
-    <div class="card-custom p-3 mb-3">
-      <div class="side-card-title mb-2">
-        <i class="bi bi-diagram-3 text-primary"></i> How Your Ticket Moves
-      </div>
-      <div class="text-muted flow-steps">
-        <div class="d-flex align-items-center gap-2 py-1">
-          <span class="badge rounded-pill step-flow-1">1</span>
-          New — we received your ticket
-        </div>
-        <div class="d-flex align-items-center gap-2 py-1">
-          <span class="badge rounded-pill step-flow-2">2</span>
-          Assigned — routed to the right team
-        </div>
-        <div class="d-flex align-items-center gap-2 py-1">
-          <span class="badge rounded-pill step-flow-3">3</span>
-          In Progress — team is working on it
-        </div>
-        <div class="d-flex align-items-center gap-2 py-1">
-          <span class="badge rounded-pill step-flow-4">4</span>
-          Waiting for Customer — your confirmation
-        </div>
-        <div class="d-flex align-items-center gap-2 py-1">
-          <span class="badge rounded-pill step-flow-5">5</span>
-          Resolved — verify &amp; close
-        </div>
-      </div>
-    </div>
+      <!-- How Your Ticket Moves -->
+      <section class="card-custom">
+        <header class="card-custom-header ct-side-head">
+          <h3 class="card-custom-title"><i class="bi bi-diagram-3"></i> How Your Ticket Moves</h3>
+        </header>
+        <ol class="card-custom-body ct-side-body ct-flow">
+          <li><span class="ct-flow-num">1</span><span><strong>New</strong> — we received your ticket</span></li>
+          <li><span class="ct-flow-num">2</span><span><strong>Assigned</strong> — routed to the right team</span></li>
+          <li><span class="ct-flow-num">3</span><span><strong>In Progress</strong> — team is working on it</span></li>
+          <li><span class="ct-flow-num">4</span><span><strong>Waiting for Customer</strong> — your confirmation</span></li>
+          <li><span class="ct-flow-num">5</span><span><strong>Resolved</strong> — verify &amp; close</span></li>
+        </ol>
+      </section>
 
-    <!-- Tips for Faster Resolution -->
-    <div class="card-custom p-3">
-      <div class="side-card-title mb-2">
-        <i class="bi bi-lightbulb tips-icon"></i> Tips for Faster Resolution
-      </div>
-      <div class="text-muted tips-list">
-        <div class="py-1">
-          <i class="bi bi-check2 me-2 check-green"></i>Attach a screenshot of the error
-        </div>
-        <div class="py-1">
-          <i class="bi bi-check2 me-2 check-green"></i>Mention the exact page / module name
-        </div>
-        <div class="py-1">
-          <i class="bi bi-check2 me-2 check-green"></i>Tell us since when it happens
-        </div>
-        <div class="py-1">
-          <i class="bi bi-check2 me-2 check-green"></i>For login issues, include your user ID
-        </div>
-      </div>
+      <!-- Tips for Faster Resolution -->
+      <section class="card-custom">
+        <header class="card-custom-header ct-side-head">
+          <h3 class="card-custom-title"><i class="bi bi-lightbulb"></i> Tips for Faster Resolution</h3>
+        </header>
+        <ul class="card-custom-body ct-side-body ct-tips">
+          <li><i class="bi bi-check2"></i> Attach a screenshot of the error</li>
+          <li><i class="bi bi-check2"></i> Mention the exact page / module name</li>
+          <li><i class="bi bi-check2"></i> Tell us since when it happens</li>
+          <li><i class="bi bi-check2"></i> For login issues, include your user ID</li>
+        </ul>
+      </section>
     </div>
   </div>
 </div>
