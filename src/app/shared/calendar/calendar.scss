@@ -65,7 +65,7 @@
   .acm-nav-btn {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-soft);
     background: var(--white);
     cursor: pointer;
@@ -105,7 +105,7 @@
   .summary-card {
     background: var(--white);
     border: 1px solid var(--border-soft);
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     padding: 12px 10px;
     text-align: center;
     box-shadow: 0 2px 8px rgba(var(--neutral-900-rgb), 0.03);
@@ -176,7 +176,7 @@
 .acm-day {
   height: 82px;
   min-height: 82px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(var(--black-rgb), 0.04);
   display: flex;
   flex-direction: column;

@@ -43,7 +43,7 @@
   flex: 0 0 auto;
   width: 46px;
   height: 46px;
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +74,7 @@
 
 .bwr-hero-btn {
   padding: 8px 14px;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 700;
   color: var(--white);
@@ -185,7 +185,7 @@
 .bwr-btn-search {
   padding: 0 18px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 800;
   color: var(--primary-dark);
@@ -254,7 +254,7 @@
   flex: 0 0 auto;
   width: 36px;
   height: 36px;
-  border-radius: 11px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -324,7 +324,7 @@
   align-items: center;
   gap: 12px;
   padding: 9px 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
 
   &:hover { background: var(--primary-soft); }
   & + & { border-top: 1px dashed var(--border); }
@@ -332,7 +332,7 @@
   .rank {
     flex: 0 0 26px;
     height: 26px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;

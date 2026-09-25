@@ -124,7 +124,7 @@ h4 {
 .alert-danger {
   background: rgba(var(--red-450-rgb), 0.1);
   color: var(--red-450);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.85rem;
   font-size: 0.8rem;
   margin-bottom: 1rem;

@@ -151,7 +151,7 @@
 }
 
 .workflow-card {
-    border-radius: 12px;
+    border-radius: var(--card-radius);
 }
 
 .workflow-card-title {
@@ -159,7 +159,7 @@
 }
 
 .view-detail-card {
-    border-radius: 12px;
+    border-radius: var(--card-radius);
 }
 
 .view-detail-grid {

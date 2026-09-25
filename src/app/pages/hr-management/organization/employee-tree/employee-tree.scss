@@ -164,7 +164,7 @@
   color: var(--text-light);
   background: var(--white);
   border: 1.5px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 1px 3px rgba(16, 24, 40, .04);
 }
 

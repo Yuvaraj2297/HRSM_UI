@@ -74,7 +74,7 @@
   position: relative; z-index: 1;
   display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
   background: var(--white); border: 1px solid var(--ink-100);
-  border-radius: 14px; padding: 0 14px; margin-bottom: 0;
+  border-radius: var(--card-radius); padding: 0 14px; margin-bottom: 0;
   box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.04);
   max-height: 0; opacity: 0; overflow: hidden; border-width: 0;
   transform: translateY(-6px);
@@ -155,7 +155,7 @@
   align-items: center; 
   justify-content: center; // Centers the ₹ symbol horizontally within its box
   padding: 0 12px;         // Slightly increased padding for better visual balance
-  border-radius: 10px 0 0 10px; 
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm); 
   font-weight: 700; 
   font-size: 13px;
   border: 1px solid var(--border-soft); 
@@ -185,7 +185,7 @@
 }
 .app-modal-content {
   background: var(--white);
-  border-radius: 18px;
+  border-radius: var(--card-radius);
   overflow: hidden;
   max-height: 90vh;
   overflow-y: auto;

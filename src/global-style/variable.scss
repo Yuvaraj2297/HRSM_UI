@@ -102,16 +102,16 @@
   font-family: var(--font-family-base);
 
   /* ===== RADIUS / SHADOW ===== */
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-sm: 10px;
+  /* corner radius scale — every card, control and panel reads these */
+  --radius-xs: 4px;   /* chips, tiny badges */
+  --radius-sm: 6px;   /* inputs, dropdowns, buttons, tabs */
+  --radius-md: 8px;   /* cards, dropdown panels, tables */
+  --radius-lg: 10px;  /* modals, drawers */
+  --radius-xl: 12px;
   --shadow-card: 0 1px 2px rgba(16, 24, 40, .04), 0 1px 3px rgba(16, 24, 40, .06);
-  --gh-radius-lg: 22px;
+  --gh-radius-lg: var(--radius-lg);
   --gh-shadow-lg: 0 22px 50px rgba(26, 29, 53, 0.14);
 
-  /* ===== RADIUS SCALE (layout chrome) ===== */
-  --radius-xs: 8px;
-  --radius-md: 12px;
   --radius-pill: 999px;
 
   /* ===== MOTION ===== */
@@ -131,12 +131,13 @@
 
   /* ===== CONTROL SIZES — every field, dropdown and button reads these =====
      One place to make the whole app denser or roomier. */
-  --control-h: 46px;
-  --control-h-sm: 36px;
-  --control-h-lg: 52px;
-  --control-font: 15px;
-  --control-radius: 10px;
-  --label-font: 14px;
+  --control-h: 38px;
+  --control-h-sm: 32px;
+  --control-h-lg: 44px;
+  --control-font: 14px;
+  --control-radius: var(--radius-sm);
+  --label-font: 13.5px;
+  --card-radius: var(--radius-md);
 
   /* ===== CHROME — semantic colors for header / sidebar / page shell =====
      Components use ONLY these (never a palette shade or a hex), so

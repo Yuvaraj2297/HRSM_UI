@@ -11,7 +11,7 @@
   height: 100%;
   padding: 16px 16px 44px;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: var(--card-radius);
   background: var(--white);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
@@ -47,7 +47,7 @@
   flex: 0 0 auto;
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;

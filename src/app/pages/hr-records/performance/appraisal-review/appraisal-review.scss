@@ -80,7 +80,7 @@
   position: relative;
   z-index: 1;
   padding: 8px 8px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   cursor: pointer;
   transition: all 0.2s ease;
   border: 2px solid transparent;

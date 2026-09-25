@@ -55,7 +55,7 @@
   margin-bottom: 12px;
   padding: 11px 14px;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   font-size: 13.5px;
   font-weight: 700;
   color: var(--white);
@@ -79,7 +79,7 @@
   width: 100%;
   padding: 9px 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   text-align: left;
@@ -151,7 +151,7 @@
   width: 32px;
   height: 32px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   color: var(--text);
   background: var(--bg-muted);
 

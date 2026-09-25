@@ -6,7 +6,7 @@
 .team-card {
   background: var(--white, var(--white));
   border: 1px solid var(--border-soft, var(--orange-100-2));
-  border-radius: 16px;
+  border-radius: var(--card-radius);
   padding: 24px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -28,7 +28,7 @@
 .team-card-icon {
   width: 52px;
   height: 52px;
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,7 +99,7 @@
 
 .employee-modal {
   background: var(--white);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   width: min(1200px, 95vw);
   max-height: 90vh;
   display: flex;
@@ -141,7 +141,7 @@
 .employee-modal-avatar {
   width: 96px;
   height: 96px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   object-fit: cover;
   border: 2px solid var(--green-400);
 }
@@ -222,7 +222,7 @@
 .info-card {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 16px;
   height: 100%;
 }

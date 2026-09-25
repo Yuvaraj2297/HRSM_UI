@@ -203,7 +203,7 @@
 /* Dept routing row */
 .dm-row {
   border: 1px solid var(--bg-muted);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   padding: 10px 12px;
   transition: all 0.15s ease;
 
@@ -222,7 +222,7 @@
   .dm-ico {
     width: 30px;
     height: 30px;
-    border-radius: 9px;
+    border-radius: var(--radius-sm);
     display: grid;
     place-items: center;
     font-size: 14px;
@@ -273,7 +273,7 @@
   gap: 10px;
   padding: 8px 10px;
   border: 1px solid var(--bg-muted);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
   background: var(--white);
@@ -391,7 +391,7 @@
 
 .am-desc {
   background: var(--bg-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 11px 13px;
   font-size: 12.5px;
   font-weight: 500;
@@ -478,7 +478,7 @@
   }
 
   .am-bubble {
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     padding: 8px 12px;
     font-size: 12.5px;
     line-height: 1.45;
@@ -509,7 +509,7 @@
 
   .am-composer {
     border: 1px solid var(--bg-muted);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     background: var(--bg-soft);
     transition: all 0.15s ease;
 
@@ -566,7 +566,7 @@
   background: var(--neutral-900-3);
   color: var(--white);
   padding: 12px 18px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   display: flex;
   align-items: center;
   gap: 10px;

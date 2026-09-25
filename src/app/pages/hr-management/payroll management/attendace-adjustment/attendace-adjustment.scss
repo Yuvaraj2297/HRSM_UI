@@ -63,7 +63,7 @@ button {
   place-items: center;
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--adj-primary-soft);
   color: var(--adj-primary-dark);
 }
@@ -151,7 +151,7 @@ button {
   min-width: 280px;
   height: 40px;
   padding: 0 6px;
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   background: var(--neutral-50-3);
 }
 
@@ -214,7 +214,7 @@ button {
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: rgba(var(--white-rgb), 0.24);
   font-size: 11px;
   font-weight: 800;
@@ -243,7 +243,7 @@ button {
   min-width: 180px;
   padding: 6px;
   border: 1px solid var(--adj-border);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--white);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.12);
 }
@@ -282,7 +282,7 @@ button {
   margin-left: auto;
   padding: 0 14px;
   border: 1px solid var(--adj-border);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   background: var(--white);
   color: var(--adj-ink-500);
 
@@ -302,7 +302,7 @@ button {
 .adj-table-wrap {
   overflow: auto;
   border-top: 1px solid var(--adj-border);
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
 }
 
 .adj-table {
@@ -501,7 +501,7 @@ button {
   min-width: 68px;
   padding: 4px;
   border: 1px solid var(--adj-border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--white);
   box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.12);
 }
@@ -552,7 +552,7 @@ button {
   span {
     display: block;
     padding: 10px 16px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     background: var(--adj-ink-900);
     color: var(--white);
     font-size: 13px;

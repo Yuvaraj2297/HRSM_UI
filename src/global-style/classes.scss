@@ -64,7 +64,7 @@
 $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-card, .cm-card, .am-card, .cv-card, .form-section, .adj-card, .req-card, .structure-card, .journey-stepper-card, .filter-toolbar-card, .content-hub-card, .topbar-card, .tr-card, .dash-section, .emp-perm-card, .table-card-container, .mbx-side, .mbx-main, .org-dept-panel, .ml-list-card';
 
 :root :is(#{$card}, .card):not(.bg-light):not(.border-start):not(.card-plain) {
-  --card-radius: 16px;
+  --card-radius: var(--radius-md);
   color: var(--text);
   background: var(--white) !important;
   border: 1px solid var(--border) !important;
@@ -93,13 +93,13 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px 16px;
-  padding: 16px 24px;
+  gap: 10px 14px;
+  padding: 12px 20px;
   color: var(--gh-heading);
   background: transparent !important;
   border: 0 !important;
   border-bottom: 1px solid var(--border) !important;
-  border-radius: 16px 16px 0 0 !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
 }
 
 /* icon tile before a card / section title — filled brand gradient */
@@ -107,12 +107,12 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   display: inline-grid;
   place-items: center;
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: var(--white);
-  font-size: 20px;
+  font-size: 18px;
   box-shadow: 0 6px 14px rgba(var(--primary-rgb), 0.28);
 }
 
@@ -142,7 +142,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
 }
 
 :root :is(.card-custom-body, .card-body) {
-  padding: 24px;
+  padding: 20px;
 }
 
 :root :is(.card-custom-footer, .card-footer) {
@@ -150,12 +150,12 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 12px;
-  padding: 16px 24px;
+  gap: 10px;
+  padding: 12px 20px;
   background: var(--white) !important;
   border: 0 !important;
   border-top: 1px solid var(--border) !important;
-  border-radius: 0 0 16px 16px !important;
+  border-radius: 0 0 var(--radius-md) var(--radius-md) !important;
 }
 
 /* muted text at the start of a footer ("Step 1 of 4 · Basic Details") */
@@ -217,7 +217,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   padding: 8px 14px;
   background: var(--white);
   border: 1px solid var(--text-faint);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
   min-height: 38px;
@@ -276,7 +276,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   right: 0;
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 12px 32px rgba(var(--neutral-900-rgb), 0.14);
   padding: 12px;
   z-index: 1050;
@@ -307,7 +307,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
     gap: 8px;
     padding: 8px 10px;
     border: 2px solid transparent;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.12s ease;
     background: transparent;
@@ -352,7 +352,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   min-width: 270px;
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 14px;
   z-index: 1060;
   box-shadow: 0 12px 30px rgba(var(--neutral-900-rgb), 0.12);
@@ -497,14 +497,14 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 /* ---------- base: size, shape, type (also for aliases used without .btn) ---------- */
 :root :is(.btn, #{$btn-standalone}) {
-  --bs-btn-padding-x: 20px;
-  --bs-btn-padding-y: 9px;
+  --bs-btn-padding-x: 16px;
+  --bs-btn-padding-y: 6px;
   --bs-btn-font-family: var(--font-family-base);
-  --bs-btn-font-size: 14.5px;
+  --bs-btn-font-size: 14px;
   --bs-btn-font-weight: 600;
   --bs-btn-line-height: 1.25;
   --bs-btn-border-width: 1px;
-  --bs-btn-border-radius: 10px;
+  --bs-btn-border-radius: var(--radius-sm);
   --bs-btn-box-shadow: none;
   --bs-btn-focus-box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.22);
   --bs-btn-disabled-opacity: 0.55;
@@ -513,7 +513,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: var(--btn-h, var(--control-h, 46px));
+  min-height: var(--btn-h, var(--control-h, 38px));
   padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
   font-family: var(--bs-btn-font-family);
   font-size: var(--bs-btn-font-size);
@@ -586,25 +586,25 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 /* ---------- sizes ---------- */
 :root :is(.btn-sm, .btn-group-sm > .btn) {
-  --btn-h: var(--control-h-sm, 36px);
-  --bs-btn-padding-x: 14px;
+  --btn-h: var(--control-h-sm, 32px);
+  --bs-btn-padding-x: 12px;
   --bs-btn-padding-y: 6px;
   --bs-btn-font-size: 13px;
-  --bs-btn-border-radius: 8px;
+  --bs-btn-border-radius: var(--radius-sm);
 }
 :root .btn-xs {
   --btn-h: 30px;
   --bs-btn-padding-x: 10px;
   --bs-btn-padding-y: 4px;
   --bs-btn-font-size: 12px;
-  --bs-btn-border-radius: 7px;
+  --bs-btn-border-radius: var(--radius-sm);
 }
 :root :is(.btn-lg, .btn-group-lg > .btn) {
-  --btn-h: var(--control-h-lg, 52px);
-  --bs-btn-padding-x: 26px;
-  --bs-btn-padding-y: 11px;
-  --bs-btn-font-size: 16px;
-  --bs-btn-border-radius: 12px;
+  --btn-h: var(--control-h-lg, 44px);
+  --bs-btn-padding-x: 22px;
+  --bs-btn-padding-y: 9px;
+  --bs-btn-font-size: 15px;
+  --bs-btn-border-radius: var(--radius-md);
 }
 
 /* ---------- icon-only ---------- */
@@ -623,16 +623,16 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-disabled-color: var(--text-muted);
   --bs-btn-disabled-bg: var(--white);
   --bs-btn-disabled-border-color: var(--border);
-  --btn-h: 36px;
-  width: 36px;
-  height: 36px;
+  --btn-h: 32px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   font-size: 15px;
 
   &.btn-sm,
   &.btn-icon-sm {
-    --btn-h: 30px;
-    --bs-btn-border-radius: 8px;
+    --btn-h: 28px;
+    --bs-btn-border-radius: var(--radius-sm);
     width: 30px;
     height: 30px;
     font-size: 13.5px;
@@ -776,10 +776,10 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  height: var(--field-h, var(--control-h, 46px));
+  height: var(--field-h, var(--control-h, 38px));
   padding: 0 16px;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-family-base);
   font-size: 13.5px;
   font-weight: 600;
@@ -816,10 +816,10 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 36px;
-  padding: 0 14px;
+  height: var(--control-h-sm, 32px);
+  padding: 0 12px;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--primary-soft);
   color: var(--primary-dark);
   font-family: var(--font-family-base);
@@ -857,7 +857,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   height: 32px;
   padding: 0;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-muted);
   color: var(--text-light);
   font-size: 13px;
@@ -890,7 +890,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   height: 32px;
   padding: 0;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background-size: 11px;
   background-color: var(--bg-muted);
   opacity: 0.75;
@@ -907,7 +907,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
     width: 26px;
     height: 26px;
     background-size: 9px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
   &.btn-close-white {
     background-color: rgba(var(--white-rgb), 0.12);
@@ -922,8 +922,8 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 ============================================================= */
 .p-select {
   width: 100%;
-  min-height: var(--field-h, var(--control-h, 46px)) !important;
-  border-radius: var(--field-radius, var(--control-radius, 10px)) !important;
+  min-height: var(--field-h, var(--control-h, 38px)) !important;
+  border-radius: var(--field-radius, var(--control-radius, var(--radius-sm))) !important;
   border: 1px solid var(--border-strong) !important;
   background-color: var(--white) !important;
   display: flex;
@@ -946,10 +946,10 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   }
 
   .p-select-label {
-    font-size: var(--field-font, var(--control-font, 15px)) !important;
+    font-size: var(--field-font, var(--control-font, 14px)) !important;
     font-weight: 500;
     color: var(--gh-heading) !important;
-    padding: 0 var(--field-px, 14px) !important;
+    padding: 0 var(--field-px, 12px) !important;
     display: flex;
     align-items: center;
 
@@ -985,7 +985,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 .p-popover {
   background: var(--white) !important;
   border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
+  border-radius: var(--radius-sm) !important;
   box-shadow: 0 12px 32px rgba(var(--neutral-900-rgb), 0.18) !important;
   z-index: 99999 !important;
 
@@ -993,8 +993,8 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
     padding: 8px 10px !important;
     background: var(--bg-soft) !important;
     border-bottom: 1px solid var(--bg-muted) !important;
-    border-top-left-radius: 10px !important;
-    border-top-right-radius: 10px !important;
+    border-top-left-radius: var(--radius-sm) !important;
+    border-top-right-radius: var(--radius-sm) !important;
   }
 
   .p-select-filter-container {
@@ -1007,7 +1007,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
       padding: 6px 12px 6px 32px !important;
       font-size: 13.5px !important;
       border: 1px solid var(--text-faint) !important;
-      border-radius: 6px !important;
+      border-radius: var(--radius-xs) !important;
       background: var(--white) !important;
 
       &:focus {
@@ -1051,7 +1051,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
     font-size: 13.5px !important;
     font-weight: 500 !important;
     color: var(--neutral-850) !important;
-    border-radius: 6px !important;
+    border-radius: var(--radius-xs) !important;
     margin-bottom: 2px !important;
     cursor: pointer !important;
     transition: all 0.12s ease !important;
@@ -1105,10 +1105,10 @@ $field: '.form-control, .form-select, select:not([class]), .p-inputtext, .p-inpu
 $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
 
 @mixin field-look {
-  --field-h: var(--control-h, 46px);
-  --field-px: 14px;
-  --field-py: 10px;
-  --field-radius: var(--control-radius, 10px);
+  --field-h: var(--control-h, 38px);
+  --field-px: 12px;
+  --field-py: 7px;
+  --field-radius: var(--control-radius, var(--radius-sm));
   --field-font: var(--control-font, 15px);
 
   display: block;
@@ -1194,7 +1194,7 @@ $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
 /* textarea: same box, but it grows vertically instead of centering text */
 textarea.form-control,
 textarea[pTextarea] {
-  min-height: 90px;
+  min-height: 76px;
   height: auto;
   padding-top: var(--field-py);
   resize: vertical;
@@ -1245,17 +1245,17 @@ input[type='file']:is(.form-control, :not([class])) {
 
 /* sizes (p-select: add .p-select-sm via styleClass; .ct-p-select-sm is a legacy alias) */
 :is(.form-control-sm, .form-select-sm, .p-select-sm, .ct-p-select-sm) {
-  --field-h: var(--control-h-sm, 36px);
+  --field-h: var(--control-h-sm, 32px);
   --field-px: 10px;
-  --field-py: 6px;
-  --field-radius: 8px;
+  --field-py: 5px;
+  --field-radius: var(--radius-sm);
   --field-font: 13px;
 }
 :is(.form-control-lg, .form-select-lg) {
   --field-h: 46px;
   --field-px: 16px;
   --field-py: 11px;
-  --field-radius: 12px;
+  --field-radius: var(--radius-md);
   --field-font: 15px;
 }
 
@@ -1348,11 +1348,11 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
     &:first-child {
       border-right: 0;
-      border-radius: var(--field-radius, 10px) 0 0 var(--field-radius, 10px);
+      border-radius: var(--field-radius, var(--radius-sm)) 0 0 var(--field-radius, var(--radius-sm));
     }
     &:last-child {
       border-left: 0;
-      border-radius: 0 var(--field-radius, 10px) var(--field-radius, 10px) 0;
+      border-radius: 0 var(--field-radius, var(--radius-sm)) var(--field-radius, var(--radius-sm)) 0;
     }
   }
 }
@@ -1377,7 +1377,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   width: 92%;
   max-width: 530px;
   background: var(--white);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   z-index: 10005;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
@@ -1409,7 +1409,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     .change-icon-circle {
       width: 36px;
       height: 36px;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       background: var(--primary-soft);
       color: var(--green-350);
       display: inline-flex;
@@ -1449,8 +1449,8 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
    are legacy aliases and render identically.) */
 :root .modal {
   --bs-modal-border-width: 0;
-  --bs-modal-border-radius: 20px;
-  --bs-modal-inner-border-radius: 20px;
+  --bs-modal-border-radius: var(--radius-lg);
+  --bs-modal-inner-border-radius: var(--radius-lg);
   --bs-modal-box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
 }
 
@@ -1459,7 +1459,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   flex-direction: column;
   background: var(--white);
   border: 0;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
   overflow: hidden;
 
@@ -1512,7 +1512,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 .modal-summary-banner {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -1544,7 +1544,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   .shift-box,
   .comparison-box {
     flex: 1;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     padding: 12px 14px;
 
     .box-caption {
@@ -1604,7 +1604,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 .modal-dashed-card {
   background: var(--green-50);
   border: 1.5px dashed var(--green-150);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   padding: 10px 14px;
   display: flex;
   align-items: center;
@@ -1746,7 +1746,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   .header-icon-box {
     width: 38px;
     height: 38px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     background: var(--primary-soft);
     color: var(--green-350);
     display: flex;
@@ -1801,7 +1801,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
   .shift-requests-card {
     background: var(--white);
-    border-radius: 14px;
+    border-radius: var(--radius-md);
     border: 1px solid var(--border);
     box-shadow: 0 4px 20px rgba(var(--neutral-900-rgb), 0.05);
     flex: 1;
@@ -1869,7 +1869,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     color: var(--blue-650-3);
     background: var(--accent-blue-soft);
     padding: 3px 8px;
-    border-radius: 6px;
+    border-radius: var(--radius-xs);
     border: 1px solid var(--blue-100-3);
   }
 
@@ -1885,7 +1885,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     font-size: 11px;
     font-weight: 700;
     padding: 3px 8px;
-    border-radius: 6px;
+    border-radius: var(--radius-xs);
 
     &.current {
       background: var(--bg-muted);
@@ -1981,9 +1981,9 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
 }
 
 :root :is(#{$table}) {
-  --table-cell-px: 18px;
-  --table-cell-py: 16px;
-  --table-font: 14.5px;
+  --table-cell-px: 16px;
+  --table-cell-py: 12px;
+  --table-font: 14px;
   --table-align: center;
   --bs-table-bg: transparent;
   --bs-table-color: var(--table-text);
@@ -2069,13 +2069,13 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
    classes carry high specificity), so feed those variables from the
    table tokens instead of fighting its selectors. */
 :root .p-datatable {
-  --p-datatable-header-cell-padding: 14px 18px;
-  --p-datatable-header-cell-sm-padding: 14px 18px;
-  --p-datatable-header-cell-lg-padding: 16px 20px;
-  --p-datatable-body-cell-padding: 14px 18px;
-  --p-datatable-body-cell-sm-padding: 14px 18px;
-  --p-datatable-body-cell-lg-padding: 16px 20px;
-  --p-datatable-footer-cell-padding: 14px 18px;
+  --p-datatable-header-cell-padding: 11px 16px;
+  --p-datatable-header-cell-sm-padding: 11px 16px;
+  --p-datatable-header-cell-lg-padding: 13px 18px;
+  --p-datatable-body-cell-padding: 11px 16px;
+  --p-datatable-body-cell-sm-padding: 11px 16px;
+  --p-datatable-body-cell-lg-padding: 13px 18px;
+  --p-datatable-footer-cell-padding: 11px 16px;
   --p-datatable-header-cell-background: var(--table-head-bg);
   --p-datatable-header-cell-color: var(--table-head-text);
   --p-datatable-header-cell-border-color: var(--table-border);
@@ -2126,7 +2126,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   width: 100%;
   overflow-x: auto;
   border: 1px solid var(--table-border);
-  border-radius: var(--radius-md, 12px);
+  border-radius: var(--radius-md, var(--radius-md));
   background: var(--white);
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
@@ -2173,11 +2173,11 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 8px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 6px;
     border: 0;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     background: transparent;
     color: var(--text-light);
     font-size: 15px;
@@ -2402,7 +2402,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   display: inline-block;
   min-width: 22px;
   padding: 1px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--primary);
   color: var(--white);
   font-size: 11px;
@@ -2514,10 +2514,10 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   container-type: inline-size;
   display: block;
   height: 100%;
-  padding: 16px 20px;
+  padding: 14px 16px;
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
@@ -2683,7 +2683,7 @@ app-stat-card {
   .p-select,
   .p-datepicker-input {
     min-height: 44px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
   }
 
   p-datepicker.is-invalid .p-datepicker-input {
@@ -2697,7 +2697,7 @@ app-stat-card {
 
   .btn {
     min-height: 44px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     white-space: nowrap;
   }
 }
@@ -2810,7 +2810,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   list-style: none;
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -2898,11 +2898,11 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 
 /* ---------- tab: shared base (both families) ---------- */
 :is(#{$tab}) {
-  --tab-px: 18px;
-  --tab-py: 10px;
-  --tab-font: 15px;
-  --tab-radius: 10px;
-  --tab-height: 48px;
+  --tab-px: 14px;
+  --tab-py: 6px;
+  --tab-font: 14px;
+  --tab-radius: var(--radius-sm);
+  --tab-height: 38px;
 
   position: relative;
   display: inline-flex;
@@ -3043,7 +3043,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   --tab-px: 12px;
   --tab-py: 6px;
   --tab-font: 12.5px;
-  --tab-radius: 8px;
+  --tab-radius: var(--radius-sm);
   --tab-height: 34px;
   --tab-icon: 22px;
 }
@@ -3088,14 +3088,14 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   margin: 0;
   border: 0;
   border-bottom: 1px solid var(--border);
-  border-radius: 16px 16px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   box-shadow: none;
 }
 
 /* a tab bar sitting right above a card joins it into one card */
 :root :is(#{$tab-bar}):has(> :is(#{$tab-underline})):has(+ :is(#{$card}, .card, app-primedatatable)) {
   margin-bottom: 0 !important;
-  border-radius: 16px 16px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   box-shadow: none;
 }
 
@@ -3151,7 +3151,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 .weekday-chip {
   font-size: 11px;
   padding: 1px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-muted);
   color: var(--text-light);
 
@@ -3231,7 +3231,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   position: absolute;
   z-index: 1000;
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   padding: 16px;
   font-family: inherit;
@@ -3268,7 +3268,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   align-items: center;
   gap: 4px;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #72da88;
   cursor: pointer;
   font-weight: 500;
@@ -3284,7 +3284,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   max-height: 200px;
   overflow-y: auto;
   background: #fff;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   z-index: 10;
   min-width: 80px;
@@ -3320,7 +3320,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 .common-calendar .day {
   text-align: center;
   padding: 8px 0;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 .common-calendar .day:hover {

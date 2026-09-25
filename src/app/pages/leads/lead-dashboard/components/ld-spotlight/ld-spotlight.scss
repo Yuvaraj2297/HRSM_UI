@@ -11,7 +11,7 @@
   min-height: 300px;
   padding: 22px;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: var(--card-radius);
   color: var(--white);
   background: linear-gradient(150deg, var(--secondary) 0%, var(--primary-dark) 55%, var(--primary) 100%);
   box-shadow: 0 14px 30px rgba(var(--green-600-2-rgb), 0.25);
@@ -51,7 +51,7 @@
 .spot-trophy {
   width: 26px;
   height: 26px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;

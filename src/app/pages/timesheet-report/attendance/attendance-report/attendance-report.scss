@@ -38,7 +38,7 @@
   border: 1.5px solid var(--green-400);
   font-weight: 600;
   font-size: 13.5px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 7px 18px;
   display: inline-flex;
   align-items: center;
@@ -71,7 +71,7 @@
   justify-content: space-between;
   cursor: pointer;
   user-select: none;
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   transition: background-color 0.15s ease;
 
   &:hover {
@@ -106,7 +106,7 @@
   gap: 8px;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   padding: 10px 14px;
   box-shadow: 0 2px 8px rgba(var(--neutral-900-rgb), 0.03);
 
@@ -257,7 +257,7 @@
   z-index: 1050;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 6px;
   min-width: 140px;
   box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.1);
@@ -290,7 +290,7 @@
   align-items: center;
   background: var(--bg-soft);
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 2px 6px;
   gap: 4px;
 
@@ -379,7 +379,7 @@
   z-index: 1050;
   background: var(--white);
   border: 1px solid var(--border-soft);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   padding: 6px;
   min-width: 170px;
   box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.08), 0 2px 6px rgba(var(--black-rgb), 0.04);
@@ -393,7 +393,7 @@
     font-size: 12.5px;
     font-weight: 600;
     color: var(--ink-700);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -492,7 +492,7 @@
   img {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     object-fit: cover;
     border: 2px solid rgba(var(--white-rgb), 0.6);
   }
@@ -524,7 +524,7 @@
   .atl-close {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border: none;
     background: rgba(var(--white-rgb), 0.18);
     color: var(--white);
@@ -639,7 +639,7 @@
     gap: 8px;
     background: var(--white);
     border: 1px solid var(--border-soft);
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     padding: 10px 14px;
 
     .label {
@@ -736,7 +736,7 @@
   background: var(--neutral-900);
   color: var(--white);
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   font-size: 13.5px;
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.25);

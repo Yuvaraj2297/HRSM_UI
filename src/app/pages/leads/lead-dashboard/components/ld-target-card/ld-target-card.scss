@@ -58,7 +58,7 @@
   justify-content: space-between;
   gap: 10px;
   padding: 8px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-soft);
   font-size: 12.5px;
 
@@ -87,7 +87,7 @@
 .note {
   margin-top: 14px;
   padding: 8px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   color: var(--text-light);
   background: var(--bg-muted);

@@ -14,7 +14,7 @@
   .head-icon {
     width: 42px;
     height: 42px;
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     background: var(--accent-blue-soft);
     color: var(--blue-550);
     display: inline-flex;
@@ -71,7 +71,7 @@
 .category-card {
   position: relative;
   border: 1.5px solid var(--bg-muted);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   background: var(--bg-soft);
   padding: 12px 10px;
   text-align: center;
@@ -237,7 +237,7 @@
   font-weight: 600;
   color: var(--neutral-500-2);
   background: var(--bg-muted);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 6px 12px;
 
   i {
@@ -248,7 +248,7 @@
 /* Attachment */
 .tkt-file-drop {
   border: 1.5px dashed var(--border-strong);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   background: var(--bg-soft);
   padding: 16px;
   text-align: center;
@@ -285,7 +285,7 @@
   align-items: center;
   gap: 10px;
   border: 1px solid var(--bg-muted);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--white);
   padding: 8px 12px;
   margin-top: 10px;
@@ -297,7 +297,7 @@
   .file-ico {
     width: 34px;
     height: 34px;
-    border-radius: 9px;
+    border-radius: var(--radius-sm);
     background: var(--accent-blue-soft);
     color: var(--blue-550);
     display: inline-flex;
@@ -329,7 +329,7 @@
     color: var(--red-550);
     width: 26px;
     height: 26px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -355,7 +355,7 @@
 
   .category-grid {
     border: 1.5px solid var(--danger) !important;
-    border-radius: 12px;
+    border-radius: var(--card-radius);
     padding: 6px;
   }
 }
@@ -390,7 +390,7 @@
     font: 800 14px var(--font-family-display);
     color: var(--blue-550);
     background: var(--accent-blue-soft);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     padding: 6px 16px;
   }
 
@@ -533,7 +533,7 @@
   gap: 10px;
   background: var(--bg-soft);
   border: 1px solid var(--bg-muted);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 7px 12px;
   font-size: 13px;
   font-weight: 600;
@@ -560,7 +560,7 @@
 .ccat-icon-preview {
   width: 34px;
   height: 34px;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   background: var(--white);
   border: 1px solid var(--bg-muted);
   display: inline-flex;
@@ -582,7 +582,7 @@
   z-index: 1060;
   background: var(--white);
   border: 1px solid var(--bg-muted);
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   box-shadow: 0 10px 28px rgba(var(--neutral-900-3-rgb), 0.13);
   padding: 10px;
 }
@@ -600,7 +600,7 @@
   width: 100%;
   aspect-ratio: 1;
   border: 1.5px solid var(--bg-muted);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-soft);
   font-size: 19px;
   cursor: pointer;
@@ -627,7 +627,7 @@
   flex-wrap: wrap;
   gap: 8px;
   border: 1px solid var(--bg-muted);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-soft);
   padding: 8px 10px;
   min-height: 46px;
@@ -684,7 +684,7 @@
   color: var(--white);
   width: 30px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;

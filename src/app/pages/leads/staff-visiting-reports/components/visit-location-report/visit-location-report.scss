@@ -52,7 +52,7 @@
 .lv-type {
   display: inline-block;
   padding: 3px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
@@ -78,7 +78,7 @@
   align-items: center;
   gap: 5px;
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   font-size: 12px;
   font-weight: 700;
   white-space: nowrap;

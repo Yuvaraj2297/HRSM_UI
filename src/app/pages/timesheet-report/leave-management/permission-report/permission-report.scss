@@ -68,7 +68,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
@@ -231,7 +231,7 @@
   align-items: center;
   background: var(--bg-soft);
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
   font-size: 13px;
 
@@ -326,7 +326,7 @@
     .ep-head-icon {
       width: 42px;
       height: 42px;
-      border-radius: 12px;
+      border-radius: var(--card-radius);
       background: var(--neutral-50);
       color: var(--green-400-2);
       display: inline-flex;
@@ -382,7 +382,7 @@
     width: 60px;
     height: 60px;
     margin: 0 auto 12px;
-    border-radius: 16px;
+    border-radius: var(--card-radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -400,7 +400,7 @@
   background: var(--neutral-900);
   color: var(--white);
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   font-size: 13.5px;
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.25);
