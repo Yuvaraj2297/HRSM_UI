@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
 import {
   DEPT_COLORS,
@@ -55,7 +55,7 @@ export class EmployeeReport implements OnInit {
   ======================================================== */
 
   header = {
-    title: 'Employees',
+    title: 'Employee Reports',
     icon: 'ti ti-users',
   };
 
