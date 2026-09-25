@@ -1,65 +1,52 @@
-<!-- Page Header & Breadcrumb -->
-<app-breadcrumb title="My Tickets" parent="Helpdesk / Ticketing" icon="bi bi-life-preserver">
-  <div breadcrumb-actions class="d-flex gap-2">
-    <button type="button" class="btn btn-icon btn-outline-primary" (click)="resetDemoData()" title="Reset demo data">
-      <i class="bi bi-arrow-counterclockwise"></i>
-    </button>
-    <a routerLink="/helpdesk/ticketing" class="btn btn-primary">
-      <i class="bi bi-plus-lg me-1"></i> Create Ticket
-    </a>
-  </div>
-</app-breadcrumb>
+<!-- Page header -->
+<div class="mt-head">
+  <h1 class="page-title">My Tickets</h1>
+  <p class="mt-head-sub">Track your helpdesk requests and reply to the support team.</p>
+</div>
 
 <!-- KPI filter strip -->
-<div class="row g-3 mb-3">
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="All Tickets" value="{{ kpiCounts.all }}" icon="bi bi-ticket-perforated" tone="primary" [clickable]="true" (click)="setKpiFilter('all')" [active]="activeKpiFilter === 'all'" />
-  </div>
-
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="Open / Pending" value="{{ kpiCounts.open }}" icon="bi bi-inbox" tone="primary" [clickable]="true" (click)="setKpiFilter('open')" [active]="activeKpiFilter === 'open'" />
-  </div>
-
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="In Progress / Waiting" value="{{ kpiCounts.progress }}" icon="bi bi-hourglass-split" tone="primary" [clickable]="true" (click)="setKpiFilter('progress')" [active]="activeKpiFilter === 'progress'" />
-  </div>
-
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="Resolved / Closed" value="{{ kpiCounts.resolved }}" icon="bi bi-check-circle" tone="primary" [clickable]="true" (click)="setKpiFilter('resolved')" [active]="activeKpiFilter === 'resolved'" />
-  </div>
+<div class="stat-grid mt-kpis">
+  <app-stat-card label="All Tickets" value="{{ kpiCounts.all }}" icon="bi bi-ticket-perforated" tone="primary" [clickable]="true" (click)="setKpiFilter('all')" [active]="activeKpiFilter === 'all'" />
+  <app-stat-card label="Open / Pending" value="{{ kpiCounts.open }}" icon="bi bi-inbox" tone="primary" [clickable]="true" (click)="setKpiFilter('open')" [active]="activeKpiFilter === 'open'" />
+  <app-stat-card label="In Progress / Waiting" value="{{ kpiCounts.progress }}" icon="bi bi-hourglass-split" tone="primary" [clickable]="true" (click)="setKpiFilter('progress')" [active]="activeKpiFilter === 'progress'" />
+  <app-stat-card label="Resolved / Closed" value="{{ kpiCounts.resolved }}" icon="bi bi-check-circle" tone="primary" [clickable]="true" (click)="setKpiFilter('resolved')" [active]="activeKpiFilter === 'resolved'" />
 </div>
 
 <!-- Main Table Card -->
-<div class="card-custom p-0 overflow-hidden">
-  <!-- Toolbar: PrimeNG Select Filters + Search -->
-  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3">
-    <div class="row g-2 align-items-center">
-      <!-- Category Filter -->
-      <div class="col-6">
-        <p-select [options]="categoryOptions" [(ngModel)]="filterCategory" (onChange)="onFilterChange()"
-          optionLabel="label" optionValue="value" placeholder="All Categories" appendTo="body"
-          styleClass="ct-p-select w-100" class="w-100"></p-select>
+<section class="card-custom mt-card">
+  <header class="card-custom-header">
+    <span class="card-header-icon"><i class="bi bi-ticket-perforated"></i></span>
+    <h3 class="card-custom-title">
+      All My Tickets
+      <span class="mt-count">{{ filteredTickets.length }}</span>
+    </h3>
+    <div class="card-header-actions mt-head-actions">
+      <div class="mt-search-wrap">
+        <i class="bi bi-search mt-search-icon"></i>
+        <input type="text" class="mt-search-input" placeholder="Search subject / ticket #..."
+          [(ngModel)]="searchTerm" (input)="onFilterChange()" aria-label="Search tickets" />
       </div>
-
-      <!-- Status Filter -->
-      <div class="col-6">
-        <p-select [options]="statusOptions" [(ngModel)]="filterStatus" (onChange)="onFilterChange()" optionLabel="label"
-          optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="ct-p-select w-100"
-          class="w-100"></p-select>
-      </div>
+      <button type="button" class="btn-tool" (click)="resetDemoData()" title="Reset demo data" aria-label="Reset demo data">
+        <i class="bi bi-arrow-counterclockwise"></i>
+      </button>
+      <a routerLink="/helpdesk/ticketing" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Create Ticket
+      </a>
     </div>
+  </header>
 
-    <!-- Search wrap -->
-    <div class="mt-search-wrap">
-      <i class="bi bi-search mt-search-icon"></i>
-      <input type="text" class="form-control mt-search-input" placeholder="Search subject / ticket #..."
-        [(ngModel)]="searchTerm" (input)="onFilterChange()" />
-    </div>
+  <!-- Filters -->
+  <div class="mt-filters">
+    <p-select [options]="categoryOptions" [(ngModel)]="filterCategory" (onChange)="onFilterChange()"
+      optionLabel="label" optionValue="value" placeholder="All Categories" appendTo="body"
+      styleClass="w-100" class="w-100"></p-select>
+    <p-select [options]="statusOptions" [(ngModel)]="filterStatus" (onChange)="onFilterChange()" optionLabel="label"
+      optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="w-100" class="w-100"></p-select>
   </div>
 
   <!-- Table -->
-  <div class="table-responsive table-modern-wrap overflow-auto column-border">
-    <table class="table-modern w-100 mb-0">
+  <div class="table-responsive table-modern-wrap column-border mt-table-wrap">
+    <table class="table-modern w-100 mb-0 mt-table">
       <thead>
         <tr>
           <th class="text-nowrap">Ticket ID</th>
@@ -76,18 +63,18 @@
       <tbody>
         @if (paginatedTickets.length === 0) {
         <tr>
-          <td colspan="9">
+          <td colspan="9" class="mt-cell-empty">
             <div class="mtk-empty">
               <div class="empty-icon">
                 <i class="bi bi-ticket-perforated"></i>
               </div>
-              <div class=" empty-title">No tickets found</div>
+              <div class="empty-title">No tickets found</div>
               <div class="empty-sub">
                 Create a ticket and it will appear here.
               </div>
               <div class="mt-3">
                 <a routerLink="/helpdesk/ticketing" class="btn btn-primary btn-sm">
-                  <i class="bi bi-plus-lg me-1"></i> Create Ticket
+                  <i class="bi bi-plus-lg"></i> Create Ticket
                 </a>
               </div>
             </div>
@@ -95,52 +82,50 @@
         </tr>
         } @else {
         @for (t of paginatedTickets; track t.id) {
-        <tr>
-          <td>
-            <button type="button" class="btn btn-link p-0  text-primary text-decoration-none tkt-link"
-              (click)="openTicket(t)">
-              {{ t.id }}
-            </button>
+        <tr class="ctv-row" (click)="openTicket(t)">
+          <td data-label="Ticket" class="mt-cell-id">
+            <span class="ticket-id">{{ t.id }}</span>
+            <span class="ticket-date-sub mt-only-mobile">{{ t.createdDate }}</span>
           </td>
-          <td>
-            <span class="me-1">{{ t.categoryIcon }}</span>
-            <span class="fw-semibold" style="font-size: 12.5px;">{{ t.category }}</span>
+          <td data-label="Category">
+            <span class="mt-ico">{{ t.categoryIcon }}</span>
+            <span class="fw-semibold">{{ t.category }}</span>
           </td>
-          <td style="max-width: 220px;" class="text-truncate fw-semibold" [title]="t.subject">
+          <td data-label="Subject" class="mt-cell-subject fw-semibold" [title]="t.subject">
             {{ t.subject }}
           </td>
-          <td>
+          <td data-label="Priority">
             <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(t.priority).bg"
               [style.color]="ticketService.priorityMeta(t.priority).color">
               {{ t.priority }}
             </span>
           </td>
-          <td style="font-size: 12.5px;">
+          <td data-label="Assigned To">
             @if (t.assignedTo) {
             <span>{{ t.assignedTo }}</span>
             } @else {
-            <span class="text-muted">—</span>
+            <span class="text-muted">Unassigned</span>
             }
           </td>
-          <td>
+          <td data-label="SLA">
             @if (ticketService.slaState(t) === 'breached') {
-            <span class="badge rounded-pill badge-sla-breached">Breached</span>
+            <span class="sla-badge sla-breached">Breached</span>
             } @else if (ticketService.slaState(t) === 'at-risk') {
-            <span class="badge rounded-pill badge-sla-risk">At Risk</span>
+            <span class="sla-badge sla-risk">At Risk</span>
             } @else {
-            <span class="badge rounded-pill badge-sla-ok">On Track</span>
+            <span class="sla-badge sla-ok">On Track</span>
             }
           </td>
-          <td>
+          <td data-label="Status">
             <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(t.status).bg"
               [style.color]="ticketService.statusMeta(t.status).color">
               <i [class]="'bi ' + ticketService.statusMeta(t.status).icon"></i>
               {{ t.status }}
             </span>
           </td>
-          <td style="font-size: 12.5px;">{{ t.createdDate }}</td>
-          <td class="text-center">
-            <button type="button" class="btn btn-action-icon btn-outline-primary btn-sm" (click)="openTicket(t)"
+          <td data-label="Created" class="mt-hide-mobile">{{ t.createdDate }}</td>
+          <td class="text-center mt-cell-action" (click)="$event.stopPropagation()">
+            <button type="button" class="btn btn-action-icon" (click)="openTicket(t)"
               title="View Ticket">
               <i class="bi bi-eye"></i>
             </button>
@@ -153,12 +138,13 @@
   </div>
 
   <!-- Pagination Footer -->
-  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 report-footer p-3">
-    <div class="d-flex gap-2 align-items-center">
-      <span class="small text-muted text-nowrap">Show:</span>
-      <p-select [options]="pageSizeOptions" [(ngModel)]="pageSize" (onChange)="onPageSizeChange($event.value)"
-        optionLabel="label" optionValue="value" appendTo="body" styleClass="ct-p-select-sm"></p-select>
-      <span class="small text-muted text-nowrap">
+  <footer class="card-custom-footer mt-footer">
+    <div class="mt-footer-info">
+      <span class="text-nowrap">Show</span>
+      <p-select [options]="pageSizeOptions" [ngModel]="'' + pageSize" (onChange)="onPageSizeChange($event.value)"
+        optionLabel="label" optionValue="value" appendTo="body" styleClass="mt-page-size"
+        aria-label="Rows per page"></p-select>
+      <span class="text-nowrap">
         Showing <strong>{{ startIndex }}</strong>–<strong>{{ endIndex }}</strong> of <strong>{{ filteredTickets.length
           }}</strong>
       </span>
@@ -191,8 +177,8 @@
       </ul>
     </nav>
     }
-  </div>
-</div>
+  </footer>
+</section>
 
 <!-- =========================================================================
      FULLSCREEN / MODAL TICKET VIEW
@@ -221,11 +207,11 @@
               {{ selectedTicket.priority }}
             </span>
             @if (currentTicketSlaState === 'breached') {
-            <span class="badge rounded-pill badge-sla-breached">SLA Breached</span>
+            <span class="sla-badge sla-breached">SLA Breached</span>
             } @else if (currentTicketSlaState === 'at-risk') {
-            <span class="badge rounded-pill badge-sla-risk">SLA At Risk</span>
+            <span class="sla-badge sla-risk">SLA At Risk</span>
             } @else {
-            <span class="badge rounded-pill badge-sla-ok">SLA On Track</span>
+            <span class="sla-badge sla-ok">SLA On Track</span>
             }
           </div>
           <div class="tkt-fs-subject text-truncate" [title]="selectedTicket.subject">
@@ -234,7 +220,7 @@
         </div>
       </div>
 
-      <button type="button" class="btn btn-outline-secondary btn-sm px-3 btn-close-custom" (click)="closeModal()">
+      <button type="button" class="btn btn-outline-secondary btn-sm btn-close-custom" (click)="closeModal()">
         <i class="bi bi-x-lg"></i> Close
       </button>
     </div>
