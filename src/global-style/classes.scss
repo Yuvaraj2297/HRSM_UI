@@ -1980,7 +1980,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   --table-text: var(--text);
   --table-border: var(--border);
   --table-head-divider: var(--border-strong); /* vertical lines between header cells */
-  --table-row-border: var(--bg-muted);
+  --table-row-border: var(--border);
   --table-row-hover: rgba(var(--primary-rgb), 0.035);
   --table-row-stripe: var(--bg-soft);
   --table-row-selected: var(--primary-soft);
@@ -2020,6 +2020,11 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
     border: 0;
     border-bottom: 1px solid var(--table-border);
     box-shadow: none;
+  }
+
+  /* column dividers in the body rows (lighter than the header's) */
+  > tbody > tr > :is(td, th):not(:last-child) {
+    border-right: 1px solid var(--table-row-border);
   }
 
   /* column dividers in the header row (as in the design reference) */
@@ -2171,8 +2176,8 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
-  padding: 16px 0 0;
+  gap: 2px;
+  padding: 10px 0 0;
   background: transparent;
   border: 0;
 
@@ -2184,14 +2189,14 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 34px;
-    height: 34px;
+    min-width: 30px;
+    height: 30px;
     padding: 0 6px;
     border: 0;
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--text-light);
-    font-size: 15px;
+    font-size: 13px;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
 
