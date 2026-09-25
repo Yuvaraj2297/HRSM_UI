@@ -29,6 +29,20 @@ interface WizardTab {
 }
 
 /** parent tab: a group of wizard steps */
+type VaStageState = 'done' | 'current' | 'todo' | 'rejected';
+
+interface VaStage {
+  title: string;
+  icon: string;
+  state: VaStageState;
+  note?: string;
+  assignee?: string;
+  doneLabel?: string;
+  doneBy?: string;
+  pending?: string;
+  remarks?: string;
+}
+
 interface WizardGroup {
   key: string;
   label: string;
@@ -103,7 +117,6 @@ export class EmployeeCreation implements AfterViewInit {
   }
   /** verification widget state — set from the API once known */
   vaStatus: 'pending' | 'verified' | 'approved' | 'rejected' = 'pending';
-  private vaOrder = ['pending', 'verified', 'approved'];
 
   constructor(public fs:EmployeeFormFacade , private router: Router) {}
 
@@ -165,25 +178,49 @@ export class EmployeeCreation implements AfterViewInit {
     return group.steps.every(step => this.isStepDone(step));
   }
 
-  // ---- verification stepper helpers ----
-  vaStepClass(step: string): string {
-    if (this.vaStatus === 'rejected') {
-      if (step === 'pending') return 'is-done';
-      if (step === 'rejected') return 'is-rejected';
-      return '';
-    }
-    const idx = Math.max(0, this.vaOrder.indexOf(this.vaStatus));
-    const keyIdx = this.vaOrder.indexOf(step);
-    if (keyIdx === -1) return '';
-    if (keyIdx < idx) return 'is-done';
-    if (keyIdx === idx) return 'is-current';
-    return '';
+  // ---- verification & approval workflow ----
+  /** people + remarks per stage — set from the API once known */
+  va = {
+    verifier: 'Gharuda Tester',
+    verifiedBy: '',
+    verifyRemarks: '',
+    approver: 'Gharuda Software',
+    approvedBy: '',
+    approveRemarks: '',
+    rejectedBy: '',
+    rejectRemarks: '',
+  };
+
+  get vaStages(): VaStage[] {
+    const order = ['pending', 'verified', 'approved'];
+    // stage now being worked on: pending → 1 (verification), verified → 2, approved → 3 (all done)
+    const reached = order.indexOf(this.vaStatus) + 1;
+    const rejected = this.vaStatus === 'rejected';
+    // a rejection stops the flow at verification unless it was already verified
+    const rejectedAt = rejected ? (this.va.verifiedBy ? 2 : 1) : -1;
+
+    const state = (i: number): VaStageState => {
+      if (i === rejectedAt) return 'rejected';
+      if (rejected) return i < rejectedAt ? 'done' : 'todo';
+      if (i < reached) return 'done';
+      if (i === reached) return 'current';
+      return 'todo';
+    };
+
+    return [
+      { title: 'Submitted', icon: 'bi bi-send', state: 'done',
+        note: 'Record saved and sent for verification' },
+      { title: 'Verification', icon: 'bi bi-check2-circle', state: state(1),
+        assignee: this.va.verifier, doneLabel: 'Verified by',
+        doneBy: this.va.verifiedBy, pending: 'Not yet verified', remarks: this.va.verifyRemarks },
+      { title: 'Approval', icon: 'bi bi-patch-check', state: state(2),
+        assignee: this.va.approver, doneLabel: 'Approved by',
+        doneBy: this.va.approvedBy, pending: 'Not yet approved', remarks: this.va.approveRemarks },
+    ];
   }
 
-  get vaProgress(): string {
-    if (this.vaStatus === 'rejected') return '100%';
-    const idx = Math.max(0, this.vaOrder.indexOf(this.vaStatus));
-    return (idx / (this.vaOrder.length - 1)) * 100 + '%';
+  vaStateLabel(state: VaStageState): string {
+    return { done: 'Completed', current: 'In progress', todo: 'Waiting', rejected: 'Rejected' }[state];
   }
 
   // ---- submit ----

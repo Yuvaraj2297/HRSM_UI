@@ -95,67 +95,62 @@
 </div>
 
 <!-- ===== Verification & Approval Status ===== -->
-<div class="card-custom ne-va-card">
-  <div class="ne-va-head">
-    <div>
-      <h5><i class="bi bi-patch-check"></i> Verification &amp; Approval Status</h5>
-      <p>Track this employee record through verification and approval before it goes live.</p>
+<section class="card-custom ne-va-card" aria-labelledby="neVaTitle">
+  <header class="ne-va-head">
+    <span class="ne-va-head-icon"><i class="bi bi-shield-check"></i></span>
+    <div class="ne-va-head-text">
+      <h2 id="neVaTitle">Verification &amp; Approval</h2>
+      <p>The record goes live once it is verified and approved.</p>
     </div>
     <span class="ne-va-badge" [ngClass]="'status-' + vaStatus">
-      <span class="dot"></span>
-      <span>{{ vaStatus | titlecase }}</span>
+      <span class="dot"></span>{{ vaStatus | titlecase }}
     </span>
-  </div>
+  </header>
 
-  <div class="ne-va-info">
-    <div class="ne-va-info-item">
-      <div class="k"><i class="bi bi-person-badge"></i> Assigned Verifier</div>
-      <div class="v">Gharuda Tester</div>
-    </div>
-    <div class="ne-va-info-item">
-      <div class="k"><i class="bi bi-check2-circle"></i> Verified By</div>
-      <div class="v muted">Not yet verified</div>
-      <div class="r">Remarks: —</div>
-    </div>
-    <div class="ne-va-info-item">
-      <div class="k"><i class="bi bi-person-check"></i> Assigned Approver</div>
-      <div class="v link">Gharuda Software</div>
-    </div>
-    <div class="ne-va-info-item">
-      <div class="k"><i class="bi bi-patch-check-fill"></i> Approved By</div>
-      <div class="v muted">Not yet approved</div>
-      <div class="r">Remarks: —</div>
-    </div>
-    <div class="ne-va-info-item">
-      <div class="k"><i class="bi bi-x-octagon"></i> Rejected By</div>
-      <div class="v muted">Not yet rejected</div>
-      <div class="r">Remarks: —</div>
-    </div>
-  </div>
+  <ol class="ne-va-flow">
+    @for (st of vaStages; track st.title; let i = $index) {
+    <li class="ne-va-stage" [ngClass]="'is-' + st.state">
+      <div class="ne-va-marker" aria-hidden="true">
+        @switch (st.state) {
+          @case ('done') { <i class="bi bi-check-lg"></i> }
+          @case ('rejected') { <i class="bi bi-x-lg"></i> }
+          @default { {{ i + 1 }} }
+        }
+      </div>
 
-  <div class="ne-va-stepper">
-    <div class="ne-va-track" [class.is-rejected]="vaStatus === 'rejected'" [style.--ne-va-progress]="vaProgress"></div>
+      <div class="ne-va-stage-body">
+        <div class="ne-va-stage-head">
+          <span class="ne-va-stage-title"><i [class]="st.icon"></i> {{ st.title }}</span>
+          <span class="ne-va-state">{{ vaStateLabel(st.state) }}</span>
+        </div>
 
-    <div class="ne-va-step" [ngClass]="vaStepClass('pending')">
-      <div class="ne-va-step-circle">1</div>
-      <div class="ne-va-step-label">Pending</div>
-    </div>
-    <div class="ne-va-step" [ngClass]="vaStepClass('verified')">
-      <div class="ne-va-step-circle">2</div>
-      <div class="ne-va-step-label">Verified</div>
-    </div>
-    <div class="ne-va-step" [ngClass]="vaStepClass('approved')">
-      <div class="ne-va-step-circle">3</div>
-      <div class="ne-va-step-label">Approved</div>
-    </div>
-    <div class="ne-va-step" [ngClass]="vaStepClass('rejected')">
-      <div class="ne-va-step-circle"><i class="bi bi-x-lg"></i></div>
-      <div class="ne-va-step-label">Rejected</div>
+        @if (st.note) {
+          <p class="ne-va-note">{{ st.note }}</p>
+        } @else {
+          <dl class="ne-va-meta">
+            <dt>Assigned to</dt>
+            <dd>{{ st.assignee || '—' }}</dd>
+            <dt>{{ st.doneLabel }}</dt>
+            <dd [class.muted]="!st.doneBy">{{ st.doneBy || st.pending }}</dd>
+            <dt>Remarks</dt>
+            <dd [class.muted]="!st.remarks">{{ st.remarks || '—' }}</dd>
+          </dl>
+        }
+      </div>
+    </li>
+    }
+  </ol>
+
+  @if (vaStatus === 'rejected') {
+  <div class="ne-va-rejected" role="alert">
+    <i class="bi bi-x-octagon"></i>
+    <div>
+      <strong>Rejected{{ va.rejectedBy ? ' by ' + va.rejectedBy : '' }}</strong>
+      <span>{{ va.rejectRemarks || 'No remarks given.' }}</span>
     </div>
   </div>
-</div>
-
-
+  }
+</section>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" #Offcanvas>
     <div class="offcanvas-header">
