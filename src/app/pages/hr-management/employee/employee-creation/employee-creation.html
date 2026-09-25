@@ -1,6 +1,6 @@
 <!-- ===== Page header ===== -->
 <div class="ne-page-head">
-  <app-breadcrumb></app-breadcrumb>
+  <h1 class="page-title ne-title">Add New Employee</h1>
 
   <div class="ne-page-actions">
     <a href="assets/excel/HRMS Title Data.xlsx" download class="btn btn-outline-primary btn-sm">
@@ -21,10 +21,8 @@
     <span class="ne-group-num" aria-hidden="true">
       @if (isGroupDone(g)) { <i class="bi bi-check-lg"></i> } @else { {{ gi + 1 }} }
     </span>
-    <span class="ne-group-text">
-      <span class="ne-group-label"><i [class]="g.icon"></i> {{ g.label }}</span>
-      <span class="ne-group-meta">{{ g.steps.length }} {{ g.steps.length === 1 ? 'step' : 'steps' }}</span>
-    </span>
+    <span class="ne-group-label"><i [class]="g.icon"></i> {{ g.label }}</span>
+    <span class="ne-group-meta">{{ g.steps.length }}</span>
   </button>
   }
 </nav>

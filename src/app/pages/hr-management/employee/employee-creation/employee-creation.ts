@@ -17,7 +17,6 @@ import { OtApprovalTab } from './tabs/ot-approval-tab/ot-approval-tab';
 import { LeaveRulesTab } from './tabs/leave-rules-tab/leave-rules-tab';
 import { ReviewTab } from './tabs/review-tab/review-tab';
 import { PermissionsTab } from './tabs/permission-tab/permission-tab';
-import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 
 declare var bootstrap: any;
 
@@ -41,7 +40,7 @@ interface WizardGroup {
   selector: 'app-employee-creation',
   standalone:true,
   imports: [CommonModule,ReactiveFormsModule,ProfileTab,FormsModule,FamilyTab,EducationTab,ExperienceTab,BankTab,KycTab,RelievingTab,
-    CtcReportTab,DocumentTab,LeaveTab,OtApprovalTab,LeaveRulesTab,ReviewTab,PermissionsTab,Breadcrumb
+    CtcReportTab,DocumentTab,LeaveTab,OtApprovalTab,LeaveRulesTab,ReviewTab,PermissionsTab
   ],
   templateUrl: './employee-creation.html',
   styleUrl: './employee-creation.scss',
