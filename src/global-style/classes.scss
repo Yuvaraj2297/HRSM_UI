@@ -1,34 +1,3 @@
-.app-content {
-  margin-left: 290px;
-  margin-top: 64px;
-  min-height: calc(100vh - 64px);
-  padding: 24px;
-  box-sizing: border-box;
-  transition: margin-left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.app-content.collapsed {
-  margin-left: 70px;
-}
-
-@media (max-width: 1100px) {
-  :root {
-    --sidebar-width: 270px;
-  }
-}
-
-@media (max-width: 800px) {
-  :root {
-    --sidebar-width: 250px;
-  }
-}
-
-@media (max-width: 600px) {
-  :root {
-    --sidebar-width: 230px;
-  }
-}
-
 /* =============================================================
    CARD CUSTOM & CARD STYLES (GLOBAL)
 ============================================================= */
@@ -2738,4 +2707,31 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 
 .date-error {
   border-color: #dc3545 !important;
+}
+
+
+/* =============================================================
+   SIDEBAR RAIL TOOLTIP — PrimeNG appends it to <body>, so it is
+   styled globally here (tooltipStyleClass="sidebar-tooltip").
+============================================================= */
+
+.sidebar-tooltip.p-tooltip {
+  --sidebar-tooltip-bg: var(--secondary);
+  z-index: 3000 !important;
+
+  .p-tooltip-text {
+    padding: 6px 10px !important;
+    border-radius: var(--radius-xs) !important;
+    background: var(--sidebar-tooltip-bg) !important;
+    color: var(--white) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    box-shadow: var(--chrome-popover-shadow) !important;
+  }
+
+  .p-tooltip-arrow {
+    border-right-color: var(--sidebar-tooltip-bg) !important;
+    border-left-color: var(--sidebar-tooltip-bg) !important;
+  }
 }

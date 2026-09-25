@@ -6,8 +6,6 @@
 <div
   class="sidebar-area"
   [class.active]="isToggled"
-
-  [attr.style]="hostStyle"
 >
 
 
@@ -120,8 +118,11 @@
                   class="navigation-item accordion-header"
                   [class.expanded]="isExpanded(item.title)"
                   (click)="toggleAccordion(item.title)"
+                  (keydown.enter)="toggleAccordion(item.title)"
+                  (keydown.space)="$event.preventDefault(); toggleAccordion(item.title)"
                   role="button"
                   tabindex="0"
+                  [attr.aria-expanded]="isExpanded(item.title)"
                 >
                   <!-- Icon -->
                   <span class="navigation-item-icon">
@@ -142,7 +143,6 @@
                 <!-- Children (Accordion Content) -->
                 @if (isExpanded(item.title)) {
                   <div class="accordion-content">
-                    <div class="accordion-line"></div>
 
                     @for (child of item.children; track child.route) {
                       <a

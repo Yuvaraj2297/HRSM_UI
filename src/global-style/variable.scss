@@ -109,9 +109,88 @@
   --gh-radius-lg: 22px;
   --gh-shadow-lg: 0 22px 50px rgba(26, 29, 53, 0.14);
 
-  /* ===== LAYOUT ===== */
+  /* ===== RADIUS SCALE (layout chrome) ===== */
+  --radius-xs: 8px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+
+  /* ===== MOTION ===== */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 0.18s;
+  --duration: 0.28s;
+  --transition: all 0.25s var(--ease);
+
+  /* ===== LAYOUT — the one place the app shell is sized =====
+     header.scss, sidebar.scss and layout.scss all read these, so the
+     header, the sidebar and the content offset can never drift apart.
+     --sidebar-width shrinks at smaller breakpoints (see bottom of file). */
   --header-height: 64px;
   --sidebar-width: 300px;
-  --sidebar-collapsed-width: 60px;
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-collapsed-width: 64px;   /* = icon rail width */
+  --content-gutter: 24px;            /* space between chrome and page content */
+
+  /* ===== CHROME — semantic colors for header / sidebar / page shell =====
+     Components use ONLY these (never a palette shade or a hex), so
+     re-theming the shell means changing this block, nothing else.
+     A dark variant is defined below (.dark-theme / .header-dark / .sidebar-dark). */
+  --page-bg: var(--neutral-50-2);
+  --chrome-bg: var(--white);
+  --chrome-bg-muted: var(--bg-muted);
+  --chrome-border: var(--border);
+  --chrome-text: var(--text);
+  --chrome-text-strong: var(--gh-heading);
+  --chrome-text-muted: var(--text-light);
+  --chrome-text-faint: var(--text-muted);
+  --chrome-icon: var(--neutral-350-3);
+  --chrome-hover-bg: rgba(var(--primary-rgb), 0.07);
+  --chrome-active-bg: var(--primary-soft);
+  --chrome-active-text: var(--primary-dark);
+  --chrome-accent: var(--primary);
+  --chrome-shadow: 0 1px 2px rgba(var(--secondary-rgb), 0.04), 0 4px 16px rgba(var(--secondary-rgb), 0.04);
+  --chrome-popover-shadow: 0 12px 36px rgba(var(--secondary-rgb), 0.14);
+  --chrome-overlay: rgba(var(--secondary-rgb), 0.38);
+  --chrome-scrollbar: rgba(var(--primary-rgb), 0.28);
+  --focus-ring: 0 0 0 3px rgba(var(--primary-rgb), 0.28);
+}
+
+@media (max-width: 1100px) {
+  :root { --sidebar-width: 270px; --content-gutter: 20px; }
+}
+
+@media (max-width: 800px) {
+  :root { --sidebar-width: 250px; --sidebar-collapsed-width: 58px; }
+}
+
+@media (max-width: 767.98px) {
+  :root { --content-gutter: 16px; --header-height: 60px; }
+}
+
+/* =====================================================
+   DARK CHROME — toggled by CustomizerSettingsService:
+   .dark-theme (body, whole shell), .header-dark / .sidebar-dark
+   (layout wrapper, only that part). Only tokens change here.
+===================================================== */
+%chrome-dark {
+  --chrome-bg: var(--secondary);
+  --chrome-bg-muted: var(--secondary-mid);
+  --chrome-border: rgba(var(--white-rgb), 0.08);
+  --chrome-text: rgba(var(--white-rgb), 0.86);
+  --chrome-text-strong: var(--white);
+  --chrome-text-muted: rgba(var(--white-rgb), 0.62);
+  --chrome-text-faint: rgba(var(--white-rgb), 0.42);
+  --chrome-icon: rgba(var(--white-rgb), 0.55);
+  --chrome-hover-bg: rgba(var(--white-rgb), 0.06);
+  --chrome-active-bg: rgba(var(--primary-rgb), 0.18);
+  --chrome-active-text: var(--primary-light);
+  --chrome-accent: var(--primary-light);
+  --chrome-shadow: 0 1px 2px rgba(var(--black-rgb), 0.3);
+  --chrome-popover-shadow: 0 12px 36px rgba(var(--black-rgb), 0.45);
+  --chrome-scrollbar: rgba(var(--white-rgb), 0.18);
+}
+
+.dark-theme app-header,
+.dark-theme app-sidebar,
+.header-dark app-header,
+.sidebar-dark app-sidebar {
+  @extend %chrome-dark;
 }

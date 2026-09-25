@@ -10,10 +10,10 @@
         alt="JAILS CORP"
         class="header-logo"
       />
-       <img
+      <img
         src="/assets/logo-text.png"
-        alt="JAILS CORP"
-        class="header-logo"
+        alt=""
+        class="header-logo header-logo--text"
       />
     </div>
 
@@ -64,7 +64,7 @@
 
     <button
       type="button"
-      class="header-icon-button"
+      class="header-icon-button header-icon-button--secondary"
       (click)="openHistory()"
       aria-label="Activity history"
     >
@@ -73,7 +73,7 @@
 
     <button
       type="button"
-      class="header-icon-button"
+      class="header-icon-button header-icon-button--secondary"
       (click)="openHelp()"
       aria-label="Help"
     >
@@ -82,7 +82,7 @@
 
     <button
       type="button"
-      class="header-icon-button header-icon-button--bell"
+      class="header-icon-button"
       (click)="openNotifications()"
       aria-label="Notifications"
     >
@@ -94,20 +94,22 @@
       }
     </button>
 
-  <div class="profile-wrapper">
+    <div class="profile-wrapper">
       <button
         type="button"
         class="header-avatar-button"
         (click)="toggleProfileMenu($event)"
         [attr.aria-label]="'Account: ' + user.name"
         [class.active]="isProfileMenuOpen"
+        [attr.aria-expanded]="isProfileMenuOpen"
+        aria-haspopup="menu"
       >
         <img [src]="user.avatarUrl" [alt]="user.name" class="header-avatar" />
       </button>
 
       <!-- DROPDOWN CARD -->
       @if (isProfileMenuOpen) {
-        <div class="profile-dropdown-card">
+        <div class="profile-dropdown-card" role="menu">
           <div class="dropdown-header">
             <img [src]="user.avatarUrl" [alt]="user.name" class="dropdown-avatar" />
             <div class="dropdown-info">
@@ -117,8 +119,8 @@
           </div>
           
           <div class="dropdown-divider"></div>
-          
-          <button type="button" class="dropdown-logout-btn" (click)="logout()">
+
+          <button type="button" class="dropdown-item-btn dropdown-item-btn--danger" role="menuitem" (click)="logout()">
             <i class="ti ti-logout"></i>
             <span>Logout</span>
           </button>

@@ -42,10 +42,6 @@ export class Sidebar implements OnInit, OnDestroy {
   isToggled = false;
   private routerSub?: Subscription;
 
-  get hostStyle(): string {
-    return `width:${this.isToggled ? 70 : 300}px !important;`;
-  }
-
   activeMenu = 'DAS'; // Default, will be overwritten by route detection
   searchText = '';
   showSearch = false;
