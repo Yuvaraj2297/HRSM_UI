@@ -16,7 +16,7 @@
   }
 
   input {
-    padding-left: 34px;
+    padding-left: 32px;
     width: 100%;
 
   }
@@ -120,7 +120,7 @@
   width: 30px;
   height: 30px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   color: var(--text-muted);
   background: transparent;
@@ -131,7 +131,7 @@
 }
 
 .empty {
-  padding: 60px 16px;
+  padding: 56px 16px;
   text-align: center;
   font-weight: 600;
   color: var(--text-light);

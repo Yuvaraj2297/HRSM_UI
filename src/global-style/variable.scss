@@ -44,7 +44,9 @@
   --ink-500: var(--neutral-500);
 
   /* ===== SURFACES ===== */
-  --white: #ffffff;
+  --white: #ffffff;              /* the colour white — text on green buttons, icons on badges */
+  --surface: var(--white);       /* card / panel / field / modal background — flips in dark mode */
+  --surface-inverse: var(--neutral-900); /* dark toasts & chips — stays dark in both modes */
   --bg-soft: #fafbfd;
   --bg-muted: #f4f6f8;
 
@@ -83,17 +85,16 @@
 
   /* =====================================================
      FONT FAMILY — single source of truth for the whole app.
-     Loaded via @fontsource/inter + @fontsource/sora (see
-     angular.json "styles": inter 400/500/600/700/800/900,
-     sora 700/800). Change a font here only; components should
+     Loaded via @fontsource/inter (see angular.json "styles":
+     400/500/600/700/800/900). Inter is the ONLY font in the app. Change a font here only; components should
      use these variables instead of hardcoding a font name.
        --font-family-base    body copy (everything inherits this)
        --font-family-display headings / titles / emphasis (bold only)
        --font-family-mono    codes, IDs, tokens
   ===================================================== */
   --font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-family-display: 'Sora', var(--font-family-base);
-  --font-family-mono: 'Consolas', 'SFMono-Regular', Menlo, Monaco, 'Courier New', monospace;
+  --font-family-display: var(--font-family-base); /* one font app-wide: titles use Inter too */
+  --font-family-mono: var(--font-family-base); /* codes / IDs use Inter too (one font app-wide) */
 
   /* back-compat alias: some components already reference --font-display */
   --font-display: var(--font-family-display);
@@ -102,16 +103,270 @@
   font-family: var(--font-family-base);
 
   /* ===== RADIUS / SHADOW ===== */
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-sm: 10px;
+  /* corner radius scale — every card, control and panel reads these */
+  --radius-xs: 4px;   /* chips, tiny badges */
+  --radius-sm: 6px;   /* inputs, dropdowns, buttons, tabs */
+  --radius-md: 8px;   /* cards, dropdown panels, tables */
+  --radius-lg: 10px;  /* modals, drawers */
+  --radius-xl: 12px;
   --shadow-card: 0 1px 2px rgba(16, 24, 40, .04), 0 1px 3px rgba(16, 24, 40, .06);
-  --gh-radius-lg: 22px;
+  --gh-radius-lg: var(--radius-lg);
   --gh-shadow-lg: 0 22px 50px rgba(26, 29, 53, 0.14);
 
-  /* ===== LAYOUT ===== */
+  --radius-pill: 999px;
+
+  /* ===== MOTION ===== */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 0.18s;
+  --duration: 0.28s;
+  --transition: all 0.25s var(--ease);
+
+  /* ===== LAYOUT — the one place the app shell is sized =====
+     header.scss, sidebar.scss and layout.scss all read these, so the
+     header, the sidebar and the content offset can never drift apart.
+     --sidebar-width shrinks at smaller breakpoints (see bottom of file). */
   --header-height: 64px;
   --sidebar-width: 300px;
-  --sidebar-collapsed-width: 60px;
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-collapsed-width: 64px;   /* = icon rail width */
+  --content-gutter: 24px;            /* space between chrome and page content */
+
+  /* ===== CONTROL SIZES — every field, dropdown and button reads these =====
+     One place to make the whole app denser or roomier. */
+  --control-h: 38px;
+  --control-h-sm: 32px;
+  --control-h-lg: 44px;
+  --control-font: 14px;
+  --control-radius: var(--radius-sm);
+  --label-font: 13.5px;
+  --card-radius: var(--radius-md);
+
+  /* ===== CHROME — semantic colors for header / sidebar / page shell =====
+     Components use ONLY these (never a palette shade or a hex), so
+     re-theming the shell means changing this block, nothing else.
+     A dark variant is defined below (.dark-theme / .header-dark / .sidebar-dark). */
+  --page-bg: var(--neutral-50-2);
+  --chrome-bg: var(--white);
+  --chrome-bg-muted: var(--bg-muted);
+  --chrome-border: var(--border);
+  --chrome-text: var(--text);
+  --chrome-text-strong: var(--gh-heading);
+  --chrome-text-muted: var(--text-light);
+  --chrome-text-faint: var(--text-muted);
+  --chrome-icon: var(--neutral-350-3);
+  --chrome-hover-bg: rgba(var(--primary-rgb), 0.07);
+  --chrome-active-bg: var(--primary-soft);
+  --chrome-active-text: var(--primary-dark);
+  --chrome-accent: var(--primary);
+  --chrome-shadow: 0 1px 2px rgba(var(--secondary-rgb), 0.04), 0 4px 16px rgba(var(--secondary-rgb), 0.04);
+  --chrome-popover-shadow: 0 12px 36px rgba(var(--secondary-rgb), 0.14);
+  --chrome-overlay: rgba(var(--secondary-rgb), 0.38);
+  --chrome-scrollbar: rgba(var(--primary-rgb), 0.28);
+  --focus-ring: 0 0 0 3px rgba(var(--primary-rgb), 0.28);
+}
+
+@media (max-width: 1100px) {
+  :root { --sidebar-width: 270px; --content-gutter: 20px; }
+}
+
+@media (max-width: 800px) {
+  :root { --sidebar-width: 250px; --sidebar-collapsed-width: 58px; }
+}
+
+@media (max-width: 767.98px) {
+  :root { --content-gutter: 16px; --header-height: 60px; }
+}
+
+/* =====================================================
+   DARK CHROME — toggled by CustomizerSettingsService:
+   .dark-theme (body, whole shell), .header-dark / .sidebar-dark
+   (layout wrapper, only that part). Only tokens change here.
+===================================================== */
+%chrome-dark {
+  --chrome-bg: var(--secondary);
+  --chrome-bg-muted: var(--secondary-mid);
+  --chrome-border: rgba(var(--white-rgb), 0.08);
+  --chrome-text: rgba(var(--white-rgb), 0.86);
+  --chrome-text-strong: var(--white);
+  --chrome-text-muted: rgba(var(--white-rgb), 0.62);
+  --chrome-text-faint: rgba(var(--white-rgb), 0.42);
+  --chrome-icon: rgba(var(--white-rgb), 0.55);
+  --chrome-hover-bg: rgba(var(--white-rgb), 0.06);
+  --chrome-active-bg: rgba(var(--primary-rgb), 0.18);
+  --chrome-active-text: var(--primary-light);
+  --chrome-accent: var(--primary-light);
+  --chrome-shadow: 0 1px 2px rgba(var(--black-rgb), 0.3);
+  --chrome-popover-shadow: 0 12px 36px rgba(var(--black-rgb), 0.45);
+  --chrome-scrollbar: rgba(var(--white-rgb), 0.18);
+}
+
+.dark-theme app-header,
+.dark-theme app-sidebar,
+.header-dark app-header,
+.sidebar-dark app-sidebar {
+  @extend %chrome-dark;
+}
+
+/* =====================================================
+   DARK MODE — the whole app (header toggle → body.dark-theme).
+   Only tokens change: surfaces, text, borders, soft tints and the
+   neutral grey scale flip; brand / status colours stay the same, and
+   --white stays white so text on green buttons is still readable.
+   Bootstrap follows via <html data-bs-theme="dark">, PrimeNG via its
+   darkModeSelector (app.config.ts) — both set by CustomizerSettingsService.
+===================================================== */
+body.dark-theme {
+  color-scheme: dark; /* native scrollbars, date pickers, autofill */
+
+  /* surfaces */
+  --page-bg: #0b1220;
+  --surface: #131c2e;
+  --surface-inverse: #2a3852;
+  --bg-soft: #172236;
+  --bg-muted: #1c2840;
+
+  /* text */
+  --gh-heading: #eef2f8;
+  --text: #cfd8e3;
+  --text-light: #a3b0c2;
+  --text-muted: #7c8aa0;
+  --text-faint: #4f5d74;
+
+  /* borders */
+  --border: #26344d;
+  --border-strong: #34455f;
+  --gh-input-border: #2d3c57;
+
+  /* soft tints behind pills / alerts (brand hues kept, darkened) */
+  --primary-soft: #12352a;
+  --primary-dark: #4ad08a; /* used as text on soft-green → needs to be light here */
+  --danger-soft: #3b1e24;
+  --warning-soft: #3a2c12;
+  --accent-blue-soft: #16284a;
+
+  /* neutral grey scale, mirrored: light shades are backgrounds/borders,
+     dark shades are text — so each side swaps */
+  --neutral-50: #16302a;   --neutral-50-2: #0b1220;  --neutral-50-3: #1c2840;
+  --neutral-50-4: #16302a; --neutral-50-5: #1c2840;  --neutral-50-6: #172236;
+  --neutral-50-7: #16302a; --neutral-50-8: #1c2840;  --neutral-50-9: #1c2840;
+  --neutral-100: #223047;  --neutral-100-2: #223047; --neutral-100-3: #2a2a4a;
+  --neutral-150: #2c3b55;  --neutral-150-2: #2c3b55;
+  --neutral-250: #56657c;  --neutral-250-2: #56657c;
+  --neutral-350: #7d8ba0;  --neutral-350-2: #7d8ba0; --neutral-350-3: #7d8ba0;
+  --neutral-400: #8e9bb0;  --neutral-400-2: #8e9bb0;
+  --neutral-450: #97a3b6;  --neutral-450-2: #97a3b6;
+  --neutral-500: #a3afc0;  --neutral-500-2: #a3afc0; --neutral-500-3: #a3b89a;
+  --neutral-550: #aab4c4;  --neutral-550-2: #aab4c4;
+  --neutral-600: #b4bfcd;  --neutral-600-2: #b4bfcd;
+  --neutral-650: #c3cdd9;  --neutral-650-2: #c3cdd9; --neutral-650-3: #c3cdd9; --neutral-650-4: #c3cdd9;
+  --neutral-700: #cfd8e3;  --neutral-700-2: #cfd8e3; --neutral-700-3: #cfd8e3;
+  --neutral-750: #d7dfe8;
+  --neutral-800: #e1e7ef;  --neutral-800-2: #e1e7ef; --neutral-800-3: #d7f0e0; --neutral-800-4: #e1e7ef;
+  --neutral-850: #e6ebf2;  --neutral-850-2: #e6ebf2; --neutral-850-3: #d7f0e0;
+  --neutral-900: #eef2f8;  --neutral-900-2: #eef2f8; --neutral-900-3: #eef2f8;
+  --neutral-900-4: #eef2f8; --neutral-900-5: #eef2f8; --neutral-900-6: #eef2f8;
+  --neutral-950: #f4f6fa;  --neutral-950-2: #f4f6fa;
+  /* light colour tints (the -50 / -100 / -150 shades pages use as pill, row and
+     banner backgrounds) → the same hue mixed into the dark surface.
+     50 ≈ faint wash, 100 ≈ light fill, 150 ≈ stronger fill. */
+  --tint-red: var(--danger);
+  --tint-orange: #f97316;
+  --tint-yellow: var(--warning);
+  --tint-green: var(--primary);
+  --tint-teal: #14b8a6;
+  --tint-blue: var(--accent-blue);
+  --tint-violet: #8b5cf6;
+  --tint-purple: #a855f7;
+  --tint-pink: #ec4899;
+
+  --red-50: color-mix(in srgb, var(--tint-red) 12%, var(--surface));
+  --red-50-2: var(--red-50); --red-50-3: var(--red-50);
+  --red-100: color-mix(in srgb, var(--tint-red) 20%, var(--surface));
+  --red-100-2: var(--red-100);
+  --red-150: color-mix(in srgb, var(--tint-red) 30%, var(--surface));
+
+  --orange-50: color-mix(in srgb, var(--tint-orange) 12%, var(--surface));
+  --orange-50-2: var(--orange-50); --orange-50-3: var(--orange-50); --orange-50-4: var(--orange-50);
+  --orange-50-5: var(--orange-50); --orange-50-6: var(--orange-50); --orange-50-7: var(--orange-50);
+  --orange-100: color-mix(in srgb, var(--tint-orange) 20%, var(--surface));
+  --orange-100-2: var(--orange-100); --orange-100-3: var(--orange-100);
+
+  --yellow-50: color-mix(in srgb, var(--tint-yellow) 12%, var(--surface));
+  --yellow-50-2: var(--yellow-50); --yellow-50-3: var(--yellow-50); --yellow-50-4: var(--yellow-50);
+  --yellow-50-5: var(--yellow-50); --yellow-50-6: var(--yellow-50);
+  --yellow-100: color-mix(in srgb, var(--tint-yellow) 20%, var(--surface));
+  --yellow-100-2: var(--yellow-100);
+  --yellow-150: color-mix(in srgb, var(--tint-yellow) 30%, var(--surface));
+
+  --green-50: color-mix(in srgb, var(--tint-green) 12%, var(--surface));
+  --green-50-2: var(--green-50); --green-50-3: var(--green-50); --green-50-4: var(--green-50);
+  --green-50-5: var(--green-50);
+  --green-100: color-mix(in srgb, var(--tint-green) 20%, var(--surface));
+  --green-100-2: var(--green-100); --green-100-3: var(--green-100); --green-100-4: var(--green-100);
+  --green-100-5: var(--green-100);
+  --green-150: color-mix(in srgb, var(--tint-green) 30%, var(--surface));
+
+  --teal-50: color-mix(in srgb, var(--tint-teal) 12%, var(--surface));
+
+  --blue-50: color-mix(in srgb, var(--tint-blue) 12%, var(--surface));
+  --blue-50-2: var(--blue-50); --blue-50-4: var(--blue-50); --blue-50-7: var(--blue-50);
+  --blue-50-8: var(--blue-50); --blue-50-9: var(--blue-50);
+  --blue-100: color-mix(in srgb, var(--tint-blue) 20%, var(--surface));
+  --blue-100-2: var(--blue-100); --blue-100-4: var(--blue-100);
+  --blue-150: color-mix(in srgb, var(--tint-blue) 30%, var(--surface));
+  --blue-150-3: var(--blue-150);
+  /* the violet-leaning "blue" shades */
+  --blue-50-3: color-mix(in srgb, var(--tint-violet) 12%, var(--surface));
+  --blue-50-5: var(--blue-50-3); --blue-50-6: var(--blue-50-3);
+  --blue-100-3: color-mix(in srgb, var(--tint-violet) 20%, var(--surface));
+  --blue-150-2: color-mix(in srgb, var(--tint-violet) 30%, var(--surface));
+
+  --purple-50: color-mix(in srgb, var(--tint-purple) 12%, var(--surface));
+  --purple-50-2: var(--purple-50); --purple-50-3: var(--purple-50);
+  --purple-100: color-mix(in srgb, var(--tint-purple) 20%, var(--surface));
+
+  --pink-50: color-mix(in srgb, var(--tint-pink) 12%, var(--surface));
+  --pink-50-2: var(--pink-50); --pink-50-3: var(--pink-50);
+
+  /* aliases declared on :root as var(...) resolve there with the LIGHT values,
+     so every one of them is re-declared here to pick up the dark tokens above */
+  --ink-900: var(--neutral-900);
+  --ink-700: var(--text);
+  --ink-500: var(--neutral-500);
+  --border-soft: var(--border);
+  --gh-body: var(--text);
+  --gh-muted: var(--text-muted);
+  --gh-border: var(--border);
+  --gh-card: var(--surface);
+  --gh-input-bg: var(--bg-soft);
+  --chrome-bg: var(--surface);
+  --chrome-bg-muted: var(--bg-muted);
+  --chrome-border: var(--border);
+  --chrome-text: var(--text);
+  --chrome-text-strong: var(--gh-heading);
+  --chrome-text-muted: var(--text-light);
+  --chrome-text-faint: var(--text-muted);
+  --chrome-icon: var(--neutral-350-3);
+  --chrome-active-bg: var(--primary-soft);
+  --chrome-active-text: var(--primary-dark);
+  --table-head-bg: var(--bg-muted);
+  --table-head-text: var(--gh-heading);
+  --table-text: var(--text);
+  --table-border: var(--border);
+  --table-head-divider: var(--border-strong);
+  --table-row-border: var(--border);
+  --table-row-hover: rgba(var(--white-rgb), 0.03);
+  --table-row-stripe: var(--bg-soft);
+  --table-row-selected: var(--primary-soft);
+
+  /* the page shell itself */
+  background: var(--page-bg);
+  color: var(--text);
+
+  /* Bootstrap utilities that hard-code light colours */
+  .bg-white { background-color: var(--surface) !important; }
+  .bg-light { background-color: var(--bg-soft) !important; }
+  .text-dark, .text-black { color: var(--gh-heading) !important; }
+  .table-light { --bs-table-bg: var(--bg-muted); --bs-table-color: var(--gh-heading); }
+  .btn-light { --bs-btn-bg: var(--bg-soft); --bs-btn-border-color: var(--border); --bs-btn-color: var(--text); }
+  .border-light, .border,.border-top, .border-bottom, .border-start, .border-end { border-color: var(--border) !important; }
 }

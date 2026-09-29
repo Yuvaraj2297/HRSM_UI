@@ -1,6 +1,5 @@
 import { Component, computed, effect, input, output, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 
 import {
   ChatBrand,
@@ -14,6 +13,7 @@ import {
 } from '../chat.model';
 import { initials, lastActivity, lastMessage, relativeTime, timeOf } from '../chat.utils';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 /**
  * Chat sidebar (WhatsApp / SMS): brand header, search, reply filter,
  * contact-type tabs and the contact list.
@@ -21,7 +21,7 @@ import { initials, lastActivity, lastMessage, relativeTime, timeOf } from '../ch
 @Component({
   selector: 'app-chat-contact-list',
   standalone: true,
-  imports: [FormsModule, SelectModule],
+  imports: [AppSelect, FormsModule],
   templateUrl: './chat-contact-list.html',
   styleUrl: './chat-contact-list.scss',
   host: { '[class.variant-sms]': "variant() === 'sms'" },

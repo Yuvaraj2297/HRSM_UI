@@ -1,32 +1,33 @@
-.app-content {
-  margin-left: 290px;
-  margin-top: 64px;
-  min-height: calc(100vh - 64px);
-  padding: 24px;
-  box-sizing: border-box;
-  transition: margin-left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+/* =============================================================
+   PAGE HEADER — the one page title + breadcrumb design.
+     <h1 class="page-title">Leave Report</h1>
+     <nav class="page-breadcrumb">…</nav>   (or use <app-breadcrumb>)
+   Pages never set a title's size, weight, font or colour themselves.
+============================================================= */
+:root .page-title {
+  margin: 0 0 4px;
+  color: var(--gh-heading);
+  font-family: var(--font-family-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
-.app-content.collapsed {
-  margin-left: 70px;
+.page-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-light);
+
+  .icon-breadcrumb { font-size: 14px; }
+  .separator { font-size: 10px; color: var(--text-muted); }
+  .active-crumb { font-weight: 600; color: var(--gh-heading); }
 }
 
-@media (max-width: 1100px) {
-  :root {
-    --sidebar-width: 270px;
-  }
-}
-
-@media (max-width: 800px) {
-  :root {
-    --sidebar-width: 250px;
-  }
-}
-
-@media (max-width: 600px) {
-  :root {
-    --sidebar-width: 230px;
-  }
+@media (max-width: 767.98px) {
+  :root .page-title { font-size: 1.3rem; }
 }
 
 /* =============================================================
@@ -56,16 +57,17 @@
    Header / body / footer are optional; a card with none of them is
    just a padded-by-you container (p-3, p-0 + overflow-hidden for a
    table…). Bootstrap's .card / .card-header / .card-body /
-   .card-footer render the same. The page-specific card names below
-   are legacy aliases from the PHP conversion.
+   .card-footer render the same. Always put .card-custom on the element —
+   page-specific names (filters-card, dash-section …) may be added next to
+   it for layout, but never re-draw the card themselves.
 ============================================================= */
 
-$card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-card, .cm-card, .am-card, .cv-card, .form-section, .adj-card, .req-card, .structure-card, .journey-stepper-card, .filter-toolbar-card, .content-hub-card, .topbar-card, .tr-card, .dash-section, .emp-perm-card, .table-card-container, .mbx-side, .mbx-main, .org-dept-panel, .ml-list-card';
+$card: '.card-custom';
 
 :root :is(#{$card}, .card):not(.bg-light):not(.border-start):not(.card-plain) {
-  --card-radius: 16px;
+  --card-radius: var(--radius-md);
   color: var(--text);
-  background: var(--white) !important;
+  background: var(--surface) !important;
   border: 1px solid var(--border) !important;
   border-radius: var(--card-radius) !important;
   box-shadow: var(--shadow-card) !important;
@@ -76,26 +78,73 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.08) !important;
 }
 
-/* ---------- header / body / footer ---------- */
+/* a clickable card that is the current choice */
+:root :is(.card-custom, .card).is-selected:not(.bg-light):not(.border-start):not(.card-plain) {
+  border-color: var(--primary) !important;
+  background: var(--primary-soft) !important;
+}
+
+/* ---------- header / body / footer ----------
+     <header class="card-custom-header">
+       <span class="card-header-icon"><i class="bi bi-people"></i></span>
+       <h3 class="card-custom-title">Employee Reports</h3>
+       <div class="card-header-actions">…buttons…</div>
+     </header>
+     <div class="card-custom-body">…</div>
+     <footer class="card-custom-footer">
+       <span class="card-footer-note">Step 1 of 4 · Basic Details</span>
+       …buttons…
+     </footer> */
 :root :is(.card-custom-header, .card-header) {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
-  padding: 14px 20px;
+  gap: 10px 12px;
+  padding: 12px 20px;
   color: var(--gh-heading);
   background: transparent !important;
   border: 0 !important;
   border-bottom: 1px solid var(--border) !important;
-  border-radius: 16px 16px 0 0 !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
 }
 
-.card-custom-title {
+/* icon tile before a card / section title — filled brand gradient */
+:root :is(.card-header-icon, .icon-chip) {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--white);
+  font-size: 18px;
+  box-shadow: 0 6px 14px rgba(var(--primary-rgb), 0.28);
+}
+
+/* title + actions: title grows, actions sit at the end */
+.card-custom-header > :is(.card-custom-title, .card-title) {
+  margin-right: auto;
+}
+.card-custom-header > .card-header-icon + :is(.card-custom-title, .card-title) {
+  margin-left: -4px;
+}
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
+:root :is(.card-custom-title, .card-title) {
   margin: 0;
-  font-size: 15px;
+  color: var(--primary-dark);
+  font-family: var(--font-family-display);
+  font-size: 1.2rem;
   font-weight: 700;
-  color: var(--gh-heading);
+  line-height: 1.3;
   letter-spacing: -0.01em;
 }
 
@@ -109,20 +158,52 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 14px 20px;
-  background: var(--bg-soft) !important;
+  padding: 12px 20px;
+  background: var(--surface) !important;
   border: 0 !important;
   border-top: 1px solid var(--border) !important;
-  border-radius: 0 0 16px 16px !important;
+  border-radius: 0 0 var(--radius-md) var(--radius-md) !important;
 }
 
+/* muted text at the start of a footer ("Step 1 of 4 · Basic Details") */
+.card-footer-note {
+  margin-right: auto;
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 500;
+}
 
-.card-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--gh-heading, var(--neutral-900));
-  letter-spacing: -0.01em;
-  margin: 0;
+/* ---------- form section title inside a card ----------
+     <div class="form-section-title"><span class="form-section-icon"><i class="bi bi-person"></i></span> Personal Details</div> */
+:root :is(.form-section-title, .ne-section-title) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--gh-heading);
+  font-family: var(--font-family-base);
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* stacked sections inside one form get room between them */
+:root :is(.form-section-title, .ne-section-title):not(:first-child) {
+  margin-top: 32px;
+}
+
+.form-section-icon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 16px;
 }
 
 .card-head {
@@ -131,17 +212,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   justify-content: space-between;
 }
 
-.icon-chip {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: var(--primary-soft);
-  color: var(--green-350);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
+
 
 /* =============================================================
    COLOR PICKER COMPONENT (GLOBAL)
@@ -155,10 +226,10 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 8px 14px;
-  background: var(--white);
+  padding: 8px 12px;
+  background: var(--surface);
   border: 1px solid var(--text-faint);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
   min-height: 38px;
@@ -215,9 +286,9 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 12px 32px rgba(var(--neutral-900-rgb), 0.14);
   padding: 12px;
   z-index: 1050;
@@ -248,7 +319,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
     gap: 8px;
     padding: 8px 10px;
     border: 2px solid transparent;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.12s ease;
     background: transparent;
@@ -291,10 +362,10 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   top: calc(100% + 6px);
   left: 0;
   min-width: 270px;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
+  border-radius: var(--radius-md);
+  padding: 12px;
   z-index: 1060;
   box-shadow: 0 12px 30px rgba(var(--neutral-900-rgb), 0.12);
   animation: fadeInDown 0.15s ease;
@@ -323,7 +394,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 14px;
+  padding: 4px 12px;
   border-radius: 999px;
   font-size: 12.5px;
   font-weight: 700;
@@ -419,6 +490,11 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
    links and form accents use the brand colours too. (:root:root
    outranks Bootstrap's :root, which loads after this file.) */
 :root:root {
+  /* Bootstrap sets body { font-family: var(--bs-body-font-family) } (system fonts)
+     and loads after this file — point it at the app font so every element is Inter */
+  --bs-body-font-family: var(--font-family-base);
+  --bs-font-sans-serif: var(--font-family-base);
+  --bs-font-monospace: var(--font-family-mono);
   --bs-primary: var(--primary);
   --bs-primary-rgb: var(--primary-rgb);
   --bs-success: var(--primary);
@@ -438,14 +514,14 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 /* ---------- base: size, shape, type (also for aliases used without .btn) ---------- */
 :root :is(.btn, #{$btn-standalone}) {
-  --bs-btn-padding-x: 18px;
-  --bs-btn-padding-y: 9px;
+  --bs-btn-padding-x: 16px;
+  --bs-btn-padding-y: 6px;
   --bs-btn-font-family: var(--font-family-base);
-  --bs-btn-font-size: 13.5px;
+  --bs-btn-font-size: 14px;
   --bs-btn-font-weight: 600;
   --bs-btn-line-height: 1.25;
   --bs-btn-border-width: 1px;
-  --bs-btn-border-radius: 10px;
+  --bs-btn-border-radius: var(--radius-sm);
   --bs-btn-box-shadow: none;
   --bs-btn-focus-box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.22);
   --bs-btn-disabled-opacity: 0.55;
@@ -453,7 +529,8 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  min-height: var(--btn-h, var(--control-h, 38px));
   padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
   font-family: var(--bs-btn-font-family);
   font-size: var(--bs-btn-font-size);
@@ -526,22 +603,25 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 /* ---------- sizes ---------- */
 :root :is(.btn-sm, .btn-group-sm > .btn) {
+  --btn-h: var(--control-h-sm, 32px);
   --bs-btn-padding-x: 12px;
   --bs-btn-padding-y: 6px;
-  --bs-btn-font-size: 12.5px;
-  --bs-btn-border-radius: 8px;
+  --bs-btn-font-size: 13px;
+  --bs-btn-border-radius: var(--radius-sm);
 }
 :root .btn-xs {
-  --bs-btn-padding-x: 9px;
+  --btn-h: 30px;
+  --bs-btn-padding-x: 10px;
   --bs-btn-padding-y: 4px;
-  --bs-btn-font-size: 11.5px;
-  --bs-btn-border-radius: 7px;
+  --bs-btn-font-size: 12px;
+  --bs-btn-border-radius: var(--radius-sm);
 }
 :root :is(.btn-lg, .btn-group-lg > .btn) {
-  --bs-btn-padding-x: 24px;
-  --bs-btn-padding-y: 11px;
+  --btn-h: var(--control-h-lg, 44px);
+  --bs-btn-padding-x: 20px;
+  --bs-btn-padding-y: 8px;
   --bs-btn-font-size: 15px;
-  --bs-btn-border-radius: 12px;
+  --bs-btn-border-radius: var(--radius-md);
 }
 
 /* ---------- icon-only ---------- */
@@ -549,7 +629,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-padding-x: 0;
   --bs-btn-padding-y: 0;
   --bs-btn-color: var(--text-light);
-  --bs-btn-bg: var(--white);
+  --bs-btn-bg: var(--surface);
   --bs-btn-border-color: var(--border);
   --bs-btn-hover-color: var(--primary-dark);
   --bs-btn-hover-bg: var(--primary-soft);
@@ -558,16 +638,18 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-active-bg: var(--primary-soft);
   --bs-btn-active-border-color: var(--primary);
   --bs-btn-disabled-color: var(--text-muted);
-  --bs-btn-disabled-bg: var(--white);
+  --bs-btn-disabled-bg: var(--surface);
   --bs-btn-disabled-border-color: var(--border);
-  width: 34px;
-  height: 34px;
+  --btn-h: 32px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   font-size: 15px;
 
   &.btn-sm,
   &.btn-icon-sm {
-    --bs-btn-border-radius: 8px;
+    --btn-h: 28px;
+    --bs-btn-border-radius: var(--radius-sm);
     width: 30px;
     height: 30px;
     font-size: 13.5px;
@@ -616,7 +698,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 :root :is(#{$btn-secondary}) {
   --bs-btn-color: var(--text);
-  --bs-btn-bg: var(--white);
+  --bs-btn-bg: var(--surface);
   --bs-btn-border-color: var(--border-strong);
   --bs-btn-hover-color: var(--gh-heading);
   --bs-btn-hover-bg: var(--bg-muted);
@@ -625,7 +707,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-active-bg: var(--border);
   --bs-btn-active-border-color: var(--border-strong);
   --bs-btn-disabled-color: var(--text-muted);
-  --bs-btn-disabled-bg: var(--white);
+  --bs-btn-disabled-bg: var(--surface);
   --bs-btn-disabled-border-color: var(--border);
 }
 
@@ -703,6 +785,85 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   box-shadow: none;
 }
 
+/* ---------- table toolbar buttons (Columns / Export) ----------
+   The tinted buttons above every list table. Same height as a field
+   (40px) so they line up with the search box beside them.
+     <button class="btn-tool btn-columns">  <button class="btn-tool btn-export"> */
+.btn-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--field-h, var(--control-h, 38px));
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-base);
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  i { font-size: 16px; }
+  .caret-icon { font-size: 11px; }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: var(--focus-ring);
+  }
+
+  &.btn-columns {
+    background: var(--warning-soft);
+    color: var(--orange-400);
+
+    &:hover { background: var(--orange-50-6); }
+  }
+
+  &.btn-export {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+
+    &:hover { background: var(--green-100-2); }
+  }
+}
+
+/* ---------- "Filters ▾" toggle on collapsible filter cards ----------
+     <button class="filters-toggle-btn" [class.open]="open">Filters <i class="bi bi-chevron-down chevron"></i></button> */
+.filters-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--control-h-sm, 32px);
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-family: var(--font-family-base);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover { background: var(--green-100-2); }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: var(--focus-ring);
+  }
+
+  .chevron {
+    font-size: 12px;
+    transition: transform 0.3s var(--ease, ease);
+  }
+
+  &.open .chevron,
+  .chevron.rotated {
+    transform: rotate(180deg);
+  }
+}
+
 /* ---------- close (x) buttons in modals / panels ---------- */
 :root :is(#{$btn-close}) {
   display: inline-flex;
@@ -713,7 +874,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   height: 32px;
   padding: 0;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-muted);
   color: var(--text-light);
   font-size: 13px;
@@ -746,7 +907,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   height: 32px;
   padding: 0;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background-size: 11px;
   background-color: var(--bg-muted);
   opacity: 0.75;
@@ -763,7 +924,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
     width: 26px;
     height: 26px;
     background-size: 9px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
   &.btn-close-white {
     background-color: rgba(var(--white-rgb), 0.12);
@@ -778,10 +939,10 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 ============================================================= */
 .p-select {
   width: 100%;
-  min-height: var(--field-h, 40px) !important;
-  border-radius: var(--field-radius, 10px) !important;
+  min-height: var(--field-h, var(--control-h, 38px)) !important;
+  border-radius: var(--field-radius, var(--control-radius, var(--radius-sm))) !important;
   border: 1px solid var(--border-strong) !important;
-  background-color: var(--white) !important;
+  background-color: var(--surface) !important;
   display: flex;
   align-items: center;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -802,7 +963,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   }
 
   .p-select-label {
-    font-size: var(--field-font, 13.5px) !important;
+    font-size: var(--field-font, var(--control-font, 14px)) !important;
     font-weight: 500;
     color: var(--gh-heading) !important;
     padding: 0 var(--field-px, 12px) !important;
@@ -839,9 +1000,9 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 .p-select-overlay-panel,
 .p-overlay,
 .p-popover {
-  background: var(--white) !important;
+  background: var(--surface) !important;
   border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
+  border-radius: var(--radius-sm) !important;
   box-shadow: 0 12px 32px rgba(var(--neutral-900-rgb), 0.18) !important;
   z-index: 99999 !important;
 
@@ -849,8 +1010,8 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
     padding: 8px 10px !important;
     background: var(--bg-soft) !important;
     border-bottom: 1px solid var(--bg-muted) !important;
-    border-top-left-radius: 10px !important;
-    border-top-right-radius: 10px !important;
+    border-top-left-radius: var(--radius-sm) !important;
+    border-top-right-radius: var(--radius-sm) !important;
   }
 
   .p-select-filter-container {
@@ -863,8 +1024,8 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
       padding: 6px 12px 6px 32px !important;
       font-size: 13.5px !important;
       border: 1px solid var(--text-faint) !important;
-      border-radius: 6px !important;
-      background: var(--white) !important;
+      border-radius: var(--radius-xs) !important;
+      background: var(--surface) !important;
 
       &:focus {
         border-color: var(--primary) !important;
@@ -907,7 +1068,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
     font-size: 13.5px !important;
     font-weight: 500 !important;
     color: var(--neutral-850) !important;
-    border-radius: 6px !important;
+    border-radius: var(--radius-xs) !important;
     margin-bottom: 2px !important;
     cursor: pointer !important;
     transition: all 0.12s ease !important;
@@ -943,6 +1104,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
      Dropdown (native)                 <select class="form-select">
      Dropdown (PrimeNG)                <p-select> (styled below, no class needed)
      Multi-line                        <textarea class="form-control">
+     Checkbox / radio / switch         <input class="form-check-input"> (brand green)
      Label                             <label class="form-label">
      Error text                        <div class="field-error">Message</div>
      Invalid field                     add .is-invalid to the field
@@ -957,15 +1119,42 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
    so a page never needs to add its own field styling.
 ============================================================= */
 
+/* Checkbox / radio / switch (Bootstrap .form-check-input) — brand green
+   instead of Bootstrap blue. :root prefix outranks bootstrap.min.css. */
+:root .form-check-input {
+  border-color: var(--border-strong);
+  cursor: pointer;
+
+  &:checked,
+  &[type='checkbox']:indeterminate {
+    background-color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: var(--focus-ring);
+  }
+
+  /* switch knob turns green-tinted while focused but off */
+  &[role='switch']:focus:not(:checked) {
+    --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgb(26, 156, 83)'/%3e%3c/svg%3e");
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
 $field: '.form-control, .form-select, select:not([class]), .p-inputtext, .p-inputnumber-input, textarea[pTextarea], .p-datepicker-input';
 $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
 
 @mixin field-look {
-  --field-h: 40px;
+  --field-h: var(--control-h, 38px);
   --field-px: 12px;
-  --field-py: 8px;
-  --field-radius: 10px;
-  --field-font: 13.5px;
+  --field-py: 6px;
+  --field-radius: var(--control-radius, var(--radius-sm));
+  --field-font: var(--control-font, 14px);
 
   display: block;
   width: 100%;
@@ -976,7 +1165,7 @@ $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
   font-weight: 500;
   line-height: 1.4;
   color: var(--gh-heading);
-  background-color: var(--white);
+  background-color: var(--surface);
   background-clip: padding-box;
   border: 1px solid var(--border-strong);
   border-radius: var(--field-radius);
@@ -1024,9 +1213,11 @@ $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
 }
 
 /* Plain text inputs / textareas that carry no field class of their own (search boxes,
-   inline editors...) get the same look. :where() keeps this at zero specificity, so any
-   layout rule a component adds (icon padding, width, flex) still wins. */
-:where(
+   inline editors...) get the same look. `:root :where()` gives this rule the weight of one
+   class: enough to beat Bootstrap's reboot (`input { font-size: inherit }`, loaded after this
+   file), still below any component rule (element + scoping attribute), so layout a component
+   adds (icon padding, width, flex) still wins. */
+:root :where(
   :is(
     input:not([type]),
     input[type='text'],
@@ -1048,7 +1239,7 @@ $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
 /* textarea: same box, but it grows vertically instead of centering text */
 textarea.form-control,
 textarea[pTextarea] {
-  min-height: 90px;
+  min-height: 76px;
   height: auto;
   padding-top: var(--field-py);
   resize: vertical;
@@ -1057,7 +1248,7 @@ textarea[pTextarea] {
 /* native <select>: draw our own arrow since appearance is switched off */
 select.form-select,
 select:not([class]) {
-  padding-right: 34px;
+  padding-right: 32px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4 7h12l-6 7z' fill='%235c6f82'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
@@ -1070,19 +1261,46 @@ select:not([class]) {
   }
 }
 
-/* sizes */
-:is(.form-control-sm, .form-select-sm) {
-  --field-h: 34px;
+/* file input: brand "Choose" button fused to the left edge of the field */
+input[type='file']:is(.form-control, :not([class])) {
+  padding: 0;
+  overflow: hidden;
+  line-height: calc(var(--field-h) - 2px);
+  cursor: pointer;
+
+  &::file-selector-button {
+    height: calc(var(--field-h) - 2px);
+    margin: 0 12px 0 0;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 0;
+    background: var(--primary);
+    color: var(--white);
+    font-family: var(--font-family-base);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  &:hover:not(:disabled)::file-selector-button {
+    background: var(--primary-dark);
+  }
+}
+
+/* sizes (p-select: add .p-select-sm via styleClass; .ct-p-select-sm is a legacy alias) */
+:is(.form-control-sm, .form-select-sm, .p-select-sm, .ct-p-select-sm) {
+  --field-h: var(--control-h-sm, 32px);
   --field-px: 10px;
-  --field-py: 6px;
-  --field-radius: 8px;
-  --field-font: 12.5px;
+  --field-py: 4px;
+  --field-radius: var(--radius-sm);
+  --field-font: 13px;
 }
 :is(.form-control-lg, .form-select-lg) {
   --field-h: 46px;
   --field-px: 16px;
-  --field-py: 11px;
-  --field-radius: 12px;
+  --field-py: 10px;
+  --field-radius: var(--radius-md);
   --field-font: 15px;
 }
 
@@ -1100,9 +1318,9 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
    loaded after this file) can never change a label's size/weight/colour. */
 :root :is(#{$label}) {
   display: inline-block;
-  margin-bottom: 6px;
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
+  margin-bottom: 8px;
+  font-size: var(--label-font, 14px) !important;
+  font-weight: 500 !important;
   color: var(--gh-heading) !important;
 
   .text-danger,
@@ -1118,7 +1336,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
 :root .form-label-filter {
   display: inline-block;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   font-size: 11.5px !important;
   font-weight: 700 !important;
   color: var(--text-light) !important;
@@ -1175,11 +1393,11 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
     &:first-child {
       border-right: 0;
-      border-radius: var(--field-radius, 10px) 0 0 var(--field-radius, 10px);
+      border-radius: var(--field-radius, var(--radius-sm)) 0 0 var(--field-radius, var(--radius-sm));
     }
     &:last-child {
       border-left: 0;
-      border-radius: 0 var(--field-radius, 10px) var(--field-radius, 10px) 0;
+      border-radius: 0 var(--field-radius, var(--radius-sm)) var(--field-radius, var(--radius-sm)) 0;
     }
   }
 }
@@ -1203,8 +1421,8 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   transform: translate(-50%, -50%);
   width: 92%;
   max-width: 530px;
-  background: var(--white);
-  border-radius: 20px;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
   z-index: 10005;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
@@ -1222,7 +1440,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     justify-content: space-between;
     padding: 16px 24px;
     border-bottom: 1px solid var(--bg-muted);
-    background: var(--white);
+    background: var(--surface);
 
     .modal-title {
       font-size: 1.15rem;
@@ -1236,7 +1454,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     .change-icon-circle {
       width: 36px;
       height: 36px;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       background: var(--primary-soft);
       color: var(--green-350);
       display: inline-flex;
@@ -1250,7 +1468,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
   /* Body */
   .modal-body {
-    padding: 22px 24px;
+    padding: 20px 24px;
     max-height: calc(85vh - 130px);
     overflow-y: auto;
   }
@@ -1261,165 +1479,101 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     align-items: center;
     justify-content: flex-end;
     gap: 10px;
-    padding: 14px 24px;
+    padding: 12px 24px;
     border-top: 1px solid var(--bg-muted);
-    background: var(--white);
+    background: var(--surface);
 
   }
 }
 
-/* Modal Summary Banner (Employee Banner Card) */
-.emp-banner-card,
-.modal-summary-banner {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 16px;
+/* Bootstrap-structured modals (.modal-content > .modal-header/-body/-footer)
+   get the SAME look as .modal-custom above — whether they sit inside a
+   Bootstrap .modal or a page's own overlay wrapper. Pages set only the
+   dialog width (.modal-sm/-lg/-xl or max-width on their wrapper).
+   (.modal-content-custom / -header-custom / -body-custom / -footer-custom
+   are legacy aliases and render identically.) */
+:root .modal {
+  --bs-modal-border-width: 0;
+  --bs-modal-border-radius: var(--radius-lg);
+  --bs-modal-inner-border-radius: var(--radius-lg);
+  --bs-modal-box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
+}
+
+:root :is(.modal-content, .modal-content-custom) {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
+  overflow: hidden;
 
-  .emp-banner-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .day-badge-green {
-    font-size: 13.5px;
-    color: var(--primary-dark);
-    letter-spacing: 0.2px;
-  }
-}
-
-/* Side-by-Side Comparison Grid */
-.shift-comparison-grid,
-.modal-comparison-grid {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  .shift-box,
-  .comparison-box {
-    flex: 1;
-    border-radius: 12px;
-    padding: 12px 14px;
-
-    .box-caption {
-      font-size: 10px;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .box-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--neutral-900);
-      line-height: 1.3;
-      margin-bottom: 2px;
-    }
-
-    .box-time {
-      font-size: 12px;
-      color: var(--neutral-500);
-    }
-
-    &.current-box,
-    &.box-current {
-      background: var(--bg-soft);
-      border: 1px solid var(--border) !important;
-    }
-
-    &.requested-box,
-    &.box-requested {
-      background: var(--green-50);
-      border: 1.5px solid var(--green-150) !important;
-    }
-  }
-
-  .shift-arrow,
-  .comparison-arrow {
-    color: var(--primary);
-    flex-shrink: 0;
-    font-size: 20px;
-  }
-}
-
-/* Modal Form Textarea */
-.modal-textarea {
-  resize: none;
-  border-radius: 10px;
-  border: 1px solid var(--text-faint);
-  font-size: 13px;
-  color: var(--neutral-850);
-  padding: 10px 12px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-
-  &:focus {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12) !important;
-    outline: none;
-  }
-}
-
-/* Modal p-select Standard Styling */
-.modal-p-select.p-select {
-  width: 100%;
-  height: 42px;
-  border-radius: 10px;
-  border: 1px solid var(--text-faint);
-  background: var(--white);
-
-  .p-select-label {
-    padding: 9px 12px;
-    font-size: 13.5px;
-    color: var(--neutral-850);
-  }
-
-  &:focus-within {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12) !important;
-  }
-}
-
-/* Approver Card (Dashed Border Card) */
-.approver-card,
-.modal-dashed-card {
-  background: var(--green-50);
-  border: 1.5px dashed var(--green-150);
-  border-radius: 14px;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .approver-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid var(--green-150);
-    flex-shrink: 0;
-  }
-
-  .approver-pill-badge {
-    background: var(--white);
-    color: var(--primary);
-    border: 1px solid var(--green-150);
-    border-radius: 999px;
-    padding: 3px 12px;
-    font-size: 11.5px;
-    font-weight: 600;
-    box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.04);
-    display: inline-flex;
+  > :is(.modal-header, .modal-header-custom) {
+    display: flex;
     align-items: center;
-    gap: 4px;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+    padding: 16px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--bg-muted);
   }
+
+  .modal-title {
+    margin: 0;
+    color: var(--gh-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  /* a <form> may wrap body + footer; it passes the column layout through */
+  > form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  > :is(.modal-body, .modal-body-custom),
+  > form > :is(.modal-body, .modal-body-custom) {
+    padding: 20px 24px;
+  }
+
+  > :is(.modal-footer, .modal-footer-custom),
+  > form > :is(.modal-footer, .modal-footer-custom) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+    padding: 12px 24px;
+    background: var(--surface);
+    border-top: 1px solid var(--bg-muted);
+
+    > * { margin: 0; }
+  }
+}
+
+/* icon tile before a dialog title — same in .modal-custom and .modal-content dialogs */
+:root .modal-content :is(.modal-icon-circle, .change-icon-circle) {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 18px;
+}
+
+:root .modal-backdrop.show {
+  opacity: 0.48;
+  background-color: var(--surface-inverse);
+  backdrop-filter: blur(3px);
 }
 
 @keyframes modalFadeIn {
@@ -1448,283 +1602,362 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   }
 }
 
-@keyframes overlaySlideIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+/* =============================================================
+   TABLES — the one table design for the whole app.
+   Use these classes; components set layout only (column widths,
+   text-align, min-width), never a table's colours, padding, font
+   or borders.
+
+     Table          <table class="data-table">            (or Bootstrap .table)
+     Compact        add .data-table-sm                     (or .table-sm)
+     Cell borders   add .data-table-bordered               (or .table-bordered)
+     Zebra rows     add .data-table-striped                (or .table-striped)
+     Sticky header  add .data-table-sticky (inside a scrolling wrapper)
+     Scroll wrapper <div class="data-table-wrap"> … </div> (horizontal scroll
+                    on small screens, rounded border around the table)
+     Empty row      <td class="data-table-empty" colspan="…">No records</td>
+     Numbers        .text-end on th/td; .cell-strong / .cell-muted for text
+
+   PrimeNG <p-table> (and <app-primedatatable>) render with the same
+   look automatically — .p-datatable-table is part of the list below.
+   The other names in the list are legacy page-specific aliases; they
+   render identically so older templates stay consistent.
+
+   Bootstrap's CSS loads after this file, so these rules are prefixed
+   with :root to outrank it while still feeding Bootstrap's own
+   --bs-table-* variables.
+============================================================= */
+
+/* Specialised grids keep their own page styles and are NOT in this list:
+   .adj-table (attendance grid, sticky columns), .ne-kyc-table (form rows),
+   .ps-table (printable payslip), .lead-stats-table, .tr-mini-table. */
+$table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
+
+:root {
+  --table-head-bg: var(--bg-muted);
+  --table-head-text: var(--gh-heading);
+  --table-text: var(--text);
+  --table-border: var(--border);
+  --table-head-divider: var(--border-strong); /* vertical lines between header cells */
+  --table-row-border: var(--border);
+  --table-row-hover: rgba(var(--primary-rgb), 0.035);
+  --table-row-stripe: var(--bg-soft);
+  --table-row-selected: var(--primary-soft);
 }
 
-@keyframes containerSlideUp {
-  0% {
-    opacity: 0;
-    transform: translateY(26px) scale(0.988);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+:root :is(#{$table}) {
+  --table-cell-px: 16px;
+  --table-cell-py: 8px;
+  --table-font: 14px;
+  --table-align: center;
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--table-text);
+  --bs-table-border-color: var(--table-row-border);
+  --bs-table-striped-bg: var(--table-row-stripe);
+  --bs-table-striped-color: var(--table-text);
+  --bs-table-hover-bg: var(--table-row-hover);
+  --bs-table-hover-color: var(--table-text);
+  --bs-table-active-bg: var(--table-row-selected);
 
-@keyframes cardElevate {
-  0% {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--table-text);
+  font-family: var(--font-family-base);
+  font-size: var(--table-font);
 
-@keyframes emptyTrayBounce {
-  0% {
-    opacity: 0;
-    transform: scale(0.65) translateY(16px);
-  }
-  65% {
-    opacity: 1;
-    transform: scale(1.05) translateY(-2px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-@keyframes rowSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-
-/* =========================================================
-   SHIFT CHANGE REQUESTS - FULL-SCREEN WIDE VIEW / MODAL
-========================================================= */
-.shift-requests-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1055;
-  background: var(--bg-muted);
-  display: flex;
-  flex-direction: column;
-  animation: overlaySlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  overflow-y: auto;
-
-  .shift-requests-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
-    animation: containerSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  > thead > tr > :is(th, td) {
+    padding: calc(var(--table-cell-py) - 2px) var(--table-cell-px);
+    background: var(--table-head-bg);
+    color: var(--table-head-text);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: var(--table-align);
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 0;
+    border-bottom: 1px solid var(--table-border);
+    box-shadow: none;
   }
 
-  .shift-requests-header {
+  /* column dividers in the body rows (lighter than the header's) */
+  > tbody > tr > :is(td, th):not(:last-child) {
+    border-right: 1px solid var(--table-row-border);
+  }
+
+  /* column dividers in the header row (as in the design reference) */
+  > thead > tr > :is(th, td):not(:last-child) {
+    border-right: 1px solid var(--table-head-divider);
+  }
+
+  > tbody > tr > :is(td, th) {
+    padding: var(--table-cell-py) var(--table-cell-px);
+    text-align: var(--table-align);
     background: transparent;
-    padding: 18px 28px 14px 28px;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1.45;
+    vertical-align: middle;
+    border: 0;
+    border-bottom: 1px solid var(--table-row-border);
+    box-shadow: none;
+    transition: background-color var(--duration-fast, 0.18s) ease;
   }
 
-  .header-icon-box {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--primary-soft);
-    color: var(--green-350);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
+  > tbody > tr:last-child > :is(td, th) {
+    border-bottom: 0;
   }
 
-  .view-pill-switcher {
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 3px;
+  > tbody > tr:hover > :is(td, th) {
+    background: var(--table-row-hover);
+  }
+
+  > tbody > tr:is(.selected, .active, .p-datatable-row-selected) > :is(td, th) {
+    background: var(--table-row-selected);
+  }
+
+  > tfoot > tr > :is(td, th) {
+    padding: var(--table-cell-py) var(--table-cell-px);
+    background: var(--table-head-bg);
+    color: var(--gh-heading);
+    font-weight: 700;
+    vertical-align: middle;
+    border: 0;
+    border-top: 1px solid var(--table-border);
+  }
+
+  /* sortable header icon (PrimeNG) */
+  .p-sortable-column-icon,
+  .p-datatable-sort-icon {
+    color: var(--text-muted);
+    width: 11px;
+    height: 11px;
+  }
+  .p-datatable-sortable-column:hover .p-sortable-column-icon,
+  .p-datatable-column-sorted .p-datatable-sort-icon {
+    color: var(--primary);
+  }
+}
+
+/* PrimeNG sets cell padding through its own variables (and its size
+   classes carry high specificity), so feed those variables from the
+   table tokens instead of fighting its selectors. */
+:root .p-datatable {
+  --p-datatable-header-cell-padding: 10px 16px;
+  --p-datatable-header-cell-sm-padding: 10px 16px;
+  --p-datatable-header-cell-lg-padding: 12px 16px;
+  --p-datatable-body-cell-padding: 6px 16px;
+  --p-datatable-body-cell-sm-padding: 6px 16px;
+  --p-datatable-body-cell-lg-padding: 8px 16px;
+  --p-datatable-footer-cell-padding: 10px 16px;
+  --p-datatable-header-cell-background: var(--table-head-bg);
+  --p-datatable-header-cell-color: var(--table-head-text);
+  --p-datatable-header-cell-border-color: var(--table-border);
+  --p-datatable-body-cell-border-color: var(--table-row-border);
+  --p-datatable-row-background: transparent;
+  --p-datatable-row-hover-background: var(--table-row-hover);
+  --p-datatable-row-color: var(--table-text);
+  --p-datatable-row-hover-color: var(--table-text);
+}
+
+/* compact */
+:root :is(.data-table-sm, .table-sm) {
+  --table-cell-px: 12px;
+  --table-cell-py: 8px;
+  --table-font: 13px;
+}
+
+/* left-aligned text columns (the default is centred, as in the design) */
+:root :is(.data-table-left, .text-start-cells) {
+  --table-align: left;
+}
+
+/* cell borders */
+:root :is(.data-table-bordered, .table-bordered) {
+  border: 1px solid var(--table-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+
+  > :is(thead, tbody, tfoot) > tr > :is(th, td):not(:last-child) {
+    border-right: 1px solid var(--table-row-border);
+  }
+}
+
+/* zebra */
+:root :is(.data-table-striped, .table-striped) > tbody > tr:nth-child(even) > :is(td, th) {
+  background: var(--table-row-stripe);
+}
+
+/* sticky header inside a scrolling wrapper */
+:root .data-table-sticky > thead > tr > :is(th, td) {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* scroll wrapper — rounded frame, horizontal scroll on small screens */
+:is(.data-table-wrap, .table-modern-wrap) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  border: 1px solid var(--table-border);
+  border-radius: var(--radius-md, var(--radius-md));
+  background: var(--surface);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+
+  > :is(#{$table}) {
+    margin-bottom: 0;
+  }
+}
+
+/* sortable column header: <th><button class="ui-th-sort">Label <i class="bi bi-arrow-down-up"></i></button></th> */
+.ui-th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  > i { color: var(--text-muted); font-size: 11px; }
+  &.is-sorted > i { color: var(--primary); }
+}
+
+/* group heading row inside a table body (permission matrix, grouped lists) */
+:root :is(#{$table}) > tbody > tr.row-group > td {
+  padding-block: 8px;
+  background: var(--bg-soft);
+  color: var(--primary-dark);
+  font-size: 12.5px;
+  font-weight: 700;
+
+  i { margin-right: 6px; }
+}
+
+/* dense grid (month registers, 30+ narrow columns) */
+:root .data-table-dense {
+  --table-cell-px: 4px;
+  --table-cell-py: 6px;
+  --table-font: 12.5px;
+
+  > thead > tr > :is(th, td) { font-size: 11.5px; }
+}
+
+/* calendar-style columns: weekend shading, today marker */
+:root :is(#{$table}) > :is(thead, tbody) > tr > .is-weekend { background: color-mix(in srgb, var(--bg-muted) 55%, transparent); }
+:root :is(#{$table}) > thead > tr > .is-today { color: var(--primary-dark); box-shadow: inset 0 -2px 0 var(--primary); }
+
+/* frozen columns in a wide scrolling table: add .is-sticky to the th/td and set
+   `left` per column in the page (layout); the background keeps rows opaque */
+:root :is(#{$table}) > :is(thead, tbody) > tr > .is-sticky {
+  position: sticky;
+  z-index: 2;
+  background: var(--surface);
+}
+:root :is(#{$table}) > thead > tr > .is-sticky {
+  z-index: 3;
+  background: var(--table-head-bg);
+}
+
+/* Bootstrap pagination in brand colours */
+:root .pagination {
+  --bs-pagination-color: var(--text);
+  --bs-pagination-bg: var(--surface);
+  --bs-pagination-border-color: var(--border);
+  --bs-pagination-hover-color: var(--primary-dark);
+  --bs-pagination-hover-bg: var(--primary-soft);
+  --bs-pagination-hover-border-color: var(--border);
+  --bs-pagination-focus-color: var(--primary-dark);
+  --bs-pagination-focus-bg: var(--primary-soft);
+  --bs-pagination-focus-box-shadow: var(--focus-ring);
+  --bs-pagination-active-color: var(--white);
+  --bs-pagination-active-bg: var(--primary);
+  --bs-pagination-active-border-color: var(--primary);
+  --bs-pagination-disabled-color: var(--text-muted);
+  --bs-pagination-disabled-bg: var(--surface);
+  --bs-pagination-disabled-border-color: var(--border);
+  --bs-pagination-border-radius: var(--radius-sm);
+  --bs-pagination-font-size: 13px;
+}
+
+/* empty state row */
+.data-table-empty {
+  padding: 40px 16px !important;
+  text-align: center;
+  color: var(--text-muted) !important;
+  font-size: 13px;
+
+  i {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 28px;
+    opacity: 0.6;
+  }
+}
+
+/* cell text helpers */
+.cell-strong { color: var(--gh-heading); font-weight: 600; }
+.cell-muted  { color: var(--text-light); font-size: 0.92em; }
+
+/* PrimeNG paginator — same look everywhere */
+:root .p-paginator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 0 0;
+  background: transparent;
+  border: 0;
+
+  .p-paginator-content-start {
+    margin-right: auto;
+  }
+
+  :is(.p-paginator-page, .p-paginator-first, .p-paginator-prev, .p-paginator-next, .p-paginator-last) {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-
-    .pill-btn {
-      background: transparent;
-      border: none;
-      color: var(--neutral-500);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 16px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-
-      &:hover {
-        color: var(--neutral-850);
-      }
-
-      &.active {
-        background: var(--white);
-        color: var(--green-550-2);
-        font-weight: 600;
-        box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.08);
-      }
-    }
-  }
-
-  .shift-requests-card-wrap {
-    padding: 0 28px 28px 28px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .shift-requests-card {
-    background: var(--white);
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 20px rgba(var(--neutral-900-rgb), 0.05);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 480px;
-    animation: cardElevate 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .shift-requests-table-head {
-    background: var(--border);
-    border-bottom: 1px solid var(--border);
-    color: var(--neutral-650);
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-  }
-
-  .shift-requests-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 380px;
-    position: relative;
-  }
-
-  .col-head, .col-cell {
-    padding: 8px 12px;
-
-    &.col-req-id {
-      flex: 0 0 130px;
-    }
-    &.col-emp {
-      flex: 1 1 220px;
-    }
-    &.col-day {
-      flex: 0 0 160px;
-    }
-    &.col-shift {
-      flex: 1 1 200px;
-    }
-    &.col-reason {
-      flex: 1 1 180px;
-    }
-    &.col-approver {
-      flex: 1 1 180px;
-    }
-    &.col-status {
-      flex: 0 0 120px;
-    }
-    &.col-action {
-      flex: 0 0 120px;
-      text-align: right;
-    }
-  }
-
-  .req-id-badge {
-    display: inline-block;
-    font-family: var(--font-family-mono);
-    font-weight: 700;
-    font-size: 12.5px;
-    color: var(--blue-650-3);
-    background: var(--accent-blue-soft);
-    padding: 3px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--blue-100-3);
-  }
-
-  .emp-avatar-sm {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
-  .shift-chip {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 6px;
-
-    &.current {
-      background: var(--bg-muted);
-      color: var(--neutral-650);
-      border: 1px solid var(--border);
-    }
-    &.requested {
-      background: var(--green-50-2);
-      color: var(--primary-dark);
-      border: 1px solid var(--green-100);
-    }
-    &.unassigned {
-      background: var(--bg-muted);
-      color: var(--neutral-350);
-    }
-  }
-
-  .shift-req-row {
-    animation: rowSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    transition: background 0.15s ease;
-    &:hover {
-      background: var(--bg-soft);
-    }
-  }
-
-  .empty-state-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    flex: 1;
-    min-height: 360px;
-    padding: 40px 20px;
-  }
+    min-width: 30px;
+    height: 30px;
+    padding: 0 6px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-light);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
 
-  .empty-icon-tray {
-    color: var(--neutral-500);
-    margin-bottom: 14px;
-    opacity: 0.85;
-
-    svg {
-      animation: emptyTrayBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    &:not(:disabled):hover {
+      background: var(--bg-muted);
+      color: var(--gh-heading);
     }
-  }
 
-  .empty-state-text {
-    color: var(--neutral-500);
-    font-size: 14px;
-    font-weight: 400;
+    &:focus-visible {
+      outline: 0;
+      box-shadow: var(--focus-ring);
+    }
+
+    &.p-paginator-page-selected {
+      background: var(--primary);
+      color: var(--white);
+      font-weight: 600;
+    }
   }
 }
+
+@media (max-width: 575.98px) {
+  :root :is(#{$table}) {
+    --table-cell-px: 12px;
+  }
+}
+
 
 /* =============================================================
    GLOBAL PRIMETABLE & REUSABLE TABLE STYLES
@@ -1741,7 +1974,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
-  padding: 5px 12px;
+  padding: 4px 12px;
   line-height: 1.3;
 }
 
@@ -1782,7 +2015,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 .category-pill-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
+  padding: 2px 10px;
   border-radius: 999px;
   font-size: 11.5px;
   font-weight: 600;
@@ -1800,7 +2033,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 .status-pill {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
+  padding: 2px 10px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 600;
@@ -1836,6 +2069,15 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 }
 
 
+/* a status pill that toggles the status on click */
+button.status-pill {
+  cursor: pointer;
+  transition: box-shadow .15s ease;
+
+  &:hover,
+  &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+}
+
 /* Repayment Progress Wrap */
 .repayment-progress-wrap {
   min-width: 150px;
@@ -1864,7 +2106,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 .tenure-pill {
   font-size: 11.5px;
   font-weight: 600;
-  padding: 3px 10px;
+  padding: 2px 10px;
   border-radius: 999px;
   white-space: nowrap;
 
@@ -1919,7 +2161,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   display: inline-block;
   min-width: 22px;
   padding: 1px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--primary);
   color: var(--white);
   font-size: 11px;
@@ -1939,7 +2181,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   color: var(--white);
   font-size: 12px;
   font-weight: 700;
-  border: 2px solid var(--white);
+  border: 2px solid var(--surface);
   box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.45);
 }
 
@@ -1969,7 +2211,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 14px 18px;
+  padding: 12px 16px;
 }
 
 .topbar-heading {
@@ -1999,6 +2241,181 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   align-items: flex-end; // labelled fields and plain buttons share one baseline
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* Bootstrap badges use em padding (odd pixel values) — even spacing like everything else */
+:root .badge {
+  --bs-badge-padding-x: 8px;
+  --bs-badge-padding-y: 4px;
+}
+
+/* Leaflet maps bring their own font and spacing */
+:root .leaflet-container,
+:root .leaflet-bar a,
+:root .leaflet-popup-close-button {
+  font-family: var(--font-family-base);
+}
+:root .leaflet-popup-content {
+  margin: 12px 16px;
+}
+:root .leaflet-control-attribution {
+  padding: 0 4px;
+}
+
+/* muted text helper used across pages */
+.text-neutral { color: var(--text-light) !important; }
+
+/* =============================================================
+   STAT CARDS — the one KPI tile for the whole app.
+   Prefer the component:  <app-stat-card label="…" [value]="…" icon="bi bi-…" tone="blue" sub="…" />
+   Same look in plain markup:
+     <div class="stat-card stat-tone-blue"><div class="stat-card-body">
+       <span class="stat-card-icon"><i class="bi bi-…"></i></span>
+       <div class="stat-card-text"><div class="stat-card-label">…</div><div class="stat-card-sub">…</div></div>
+       <div class="stat-card-value">…</div>
+     </div></div>
+   The card switches itself to value-under-label when it is narrow.
+   Tones: primary · blue · violet · amber · red · teal · pink · neutral
+   Row of tiles: wrap them in .stat-grid (auto-fits 1–5 per row).
+============================================================= */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  --tone: var(--primary);
+  --tone-soft: var(--primary-soft);
+
+  container-type: inline-size;
+  display: block;
+  height: 100%;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &.is-clickable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--tone) 45%, var(--border));
+    }
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone) 25%, transparent);
+    }
+  }
+
+  &.active {
+    border-color: var(--tone);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone) 16%, transparent);
+  }
+}
+
+/* icon · label (+sub) · value on the right — as in the design */
+.stat-card-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'icon text value';
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 4px;
+  min-height: 44px;
+}
+
+.stat-card-icon {
+  grid-area: icon;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--tone);
+  border-radius: 50%;
+  background: var(--tone-soft);
+  color: var(--tone);
+  font-size: 17px;
+}
+
+.stat-card-text {
+  grid-area: text;
+  min-width: 0;
+}
+
+.stat-card-label {
+  color: var(--text-light);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stat-card-sub {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+
+  &.tone-primary, &.tone-success { color: var(--primary-dark); }
+  &.tone-red, &.tone-danger { color: var(--danger); }
+  &.tone-amber { color: var(--orange-400); }
+  &.tone-blue { color: var(--accent-blue); }
+}
+
+.stat-card-value {
+  grid-area: value;
+  color: var(--gh-heading);
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* narrow card (5–6 per row, phones) or [stacked]: label, value, sub stacked beside the icon */
+@mixin stat-card-stacked {
+  .stat-card-body {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'icon label' 'icon value' 'icon sub';
+    align-items: start;
+    row-gap: 2px;
+  }
+  .stat-card-icon { grid-row: 1 / span 3; }
+  .stat-card-text { display: contents; }
+  .stat-card-label { grid-area: label; }
+  .stat-card-sub { grid-area: sub; margin-top: 2px; }
+  .stat-card-value {
+    margin-top: 2px;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+@container (max-width: 250px) {
+  @include stat-card-stacked;
+}
+
+.stat-card-stacked {
+  @include stat-card-stacked;
+}
+
+.stat-tone-blue    { --tone: var(--accent-blue); --tone-soft: var(--accent-blue-soft); }
+.stat-tone-violet  { --tone: var(--purple-550);  --tone-soft: var(--purple-50); }
+.stat-tone-amber   { --tone: var(--orange-400);  --tone-soft: var(--warning-soft); }
+.stat-tone-red     { --tone: var(--danger);      --tone-soft: var(--danger-soft); }
+.stat-tone-teal    { --tone: var(--teal-450);    --tone-soft: var(--teal-50); }
+.stat-tone-pink    { --tone: var(--pink-500);    --tone-soft: var(--pink-50); }
+.stat-tone-neutral { --tone: var(--text-light);  --tone-soft: var(--bg-muted); }
+
+app-stat-card {
+  display: block;
 }
 
 /* =============================================================
@@ -2044,7 +2461,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   .p-select,
   .p-datepicker-input {
     min-height: 44px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
   }
 
   p-datepicker.is-invalid .p-datepicker-input {
@@ -2058,7 +2475,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
   .btn {
     min-height: 44px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     white-space: nowrap;
   }
 }
@@ -2118,34 +2535,8 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   }
 
   input {
-    padding-left: 34px;
+    padding-left: 32px;
   }
-}
-
-.stat-tile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  height: 100%;
-}
-
-.stat-tile-value {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--gh-heading);
-
-  small {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-}
-
-.stat-tile-label {
-  font-size: 12px;
-  color: var(--text-muted);
 }
 
 /* =============================================================
@@ -2193,11 +2584,11 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 8px;
+  padding: 4px 8px;
   list-style: none;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -2243,7 +2634,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   font-weight: 700;
   line-height: 1;
   color: var(--primary-dark);
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 50%;
   box-shadow: 0 0 0 8px rgba(var(--white-rgb), 0.92), 0 0 14px 8px rgba(var(--white-rgb), 0.92);
@@ -2277,26 +2668,26 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
     right: 0;
     flex: 0 0 36px;
     align-self: stretch;
-    margin-left: -36px;
-    background: linear-gradient(to right, rgba(var(--white-rgb), 0), var(--white));
+    margin-left: -32px;
+    background: linear-gradient(to right, transparent, var(--surface));
     pointer-events: none;
   }
 }
 
 /* ---------- tab: shared base (both families) ---------- */
 :is(#{$tab}) {
-  --tab-px: 16px;
-  --tab-py: 8px;
-  --tab-font: 13.5px;
-  --tab-radius: 10px;
-  --tab-height: 40px;
+  --tab-px: 12px;
+  --tab-py: 6px;
+  --tab-font: 14px;
+  --tab-radius: var(--radius-sm);
+  --tab-height: 38px;
 
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 8px;
   min-height: var(--tab-height);
   padding: var(--tab-py) var(--tab-px);
   font-family: var(--font-family-base);
@@ -2430,7 +2821,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   --tab-px: 12px;
   --tab-py: 6px;
   --tab-font: 12.5px;
-  --tab-radius: 8px;
+  --tab-radius: var(--radius-sm);
   --tab-height: 34px;
   --tab-icon: 22px;
 }
@@ -2438,11 +2829,11 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 /* ---------- responsive ---------- */
 @media (max-width: 991.98px) {
   :is(#{$tab-underline}) {
-    --tab-px: 13px;
+    --tab-px: 12px;
     --tab-font: 13px;
     --tab-icon: 26px;
     --tab-height: 42px;
-    gap: 7px;
+    gap: 6px;
   }
   :is(#{$tab-bar}) {
     gap: 4px;
@@ -2452,7 +2843,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 
 @media (max-width: 575.98px) {
   :is(#{$tab-underline}) {
-    --tab-px: 11px;
+    --tab-px: 10px;
     --tab-font: 12.5px;
     --tab-icon: 24px;
     --tab-height: 40px;
@@ -2475,14 +2866,14 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   margin: 0;
   border: 0;
   border-bottom: 1px solid var(--border);
-  border-radius: 16px 16px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   box-shadow: none;
 }
 
 /* a tab bar sitting right above a card joins it into one card */
 :root :is(#{$tab-bar}):has(> :is(#{$tab-underline})):has(+ :is(#{$card}, .card, app-primedatatable)) {
   margin-bottom: 0 !important;
-  border-radius: 16px 16px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   box-shadow: none;
 }
 
@@ -2511,7 +2902,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 
   :is(#{$tab-underline}).active & {
     color: var(--primary-dark);
-    background: var(--white);
+    background: var(--surface);
   }
 
   :is(#{$tab-pill}).active & {
@@ -2538,7 +2929,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 .weekday-chip {
   font-size: 11px;
   padding: 1px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-muted);
   color: var(--text-light);
 
@@ -2565,7 +2956,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .chat-title {
@@ -2614,48 +3005,272 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
     }
   }
 }
+/* =============================================================
+   COMMON CALENDAR — themed to the brand green / soft green / gray
+   palette. Uses the app's design tokens so it stays in sync with
+   buttons, tabs, and fields.
+============================================================= */
 .common-calendar {
+  --cal-green:       var(--primary);
+  --cal-green-dark:  var(--primary-dark);
+  --cal-green-soft:  var(--primary-soft);
+  --cal-green-tint:  rgba(var(--primary-rgb), 0.10);
+  --cal-green-hover: rgba(var(--primary-rgb), 0.16);
+  --cal-gray-bg:     var(--bg-soft);
+  --cal-gray-line:   var(--border);
+  --cal-gray-text:   var(--text-light);
+  --cal-radius:      var(--radius-md);
+
   position: absolute;
   z-index: 1000;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  padding: 16px;
-  font-family: inherit;
+  min-width: 300px;
+  padding: 14px 14px 10px;
+  background: var(--surface);
+  border: 1px solid var(--cal-gray-line);
+  border-radius: var(--cal-radius);
+  box-shadow:
+    0 1px 0 rgba(var(--primary-rgb), 0.10) inset,
+    0 10px 30px rgba(var(--neutral-900-rgb), 0.12),
+    0 2px 6px rgba(var(--neutral-900-rgb), 0.06);
+  font-family: var(--font-family-base);
   font-size: 14px;
+  color: var(--gh-heading);
+  animation: calPop 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---------- header ---------- */
+  .hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
+
+  .hdr button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: var(--cal-gray-bg);
+    color: var(--cal-green-dark);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease,
+                transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      background: var(--cal-green-soft);
+      color: var(--cal-green-dark);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.14);
+    }
+    &:active { transform: scale(0.94); }
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.30);
+    }
+  }
+
+  /* ---------- month / year custom selects ---------- */
+  .calendar-custom-select {
+    position: relative;
+  }
+
+  .calendar-select-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,
+                var(--cal-green) 0%,
+                var(--cal-green-dark) 100%);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 3px 8px rgba(var(--primary-rgb), 0.30);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(var(--primary-rgb), 0.38);
+    }
+    &:active { transform: translateY(0); }
+
+    &::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid rgba(255, 255, 255, 0.9);
+      margin-left: 2px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  .calendar-custom-select.open .calendar-select-trigger::after {
+    transform: rotate(180deg);
+  }
+
+  .calendar-select-options {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 92px;
+    max-height: 220px;
+    padding: 6px;
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--cal-gray-line);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 12px 28px rgba(var(--neutral-900-rgb), 0.16);
+    z-index: 10;
+
+    &::-webkit-scrollbar { width: 5px; }
+    &::-webkit-scrollbar-thumb {
+      background: var(--cal-green-soft);
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track { background: transparent; }
+  }
+
+  .calendar-custom-select.open .calendar-select-options {
+    display: block;
+    animation: calPop 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .calendar-select-option {
+    padding: 7px 12px;
+    border-radius: var(--radius-xs);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.12s ease, color 0.12s ease;
+
+    &:hover {
+      background: var(--cal-green-soft);
+      color: var(--cal-green-dark);
+    }
+
+    &.selected {
+      background: var(--cal-green);
+      color: var(--white);
+      font-weight: 700;
+    }
+  }
+
+  /* ---------- day grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+  }
+
+  .dow {
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--cal-gray-text);
+  }
+
+  .day {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    margin: 1px;
+    border-radius: 50%;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--gh-heading);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease,
+                transform 0.12s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      background: var(--cal-green-hover);
+      color: var(--cal-green-dark);
+      transform: scale(1.06);
+    }
+    &:active { transform: scale(0.96); }
+  }
+
+  .day.muted {
+    color: var(--text-faint);
+    font-weight: 400;
+
+    &:hover {
+      background: var(--cal-gray-bg);
+      color: var(--text-muted);
+      transform: none;
+    }
+  }
+
+  .day.today {
+    border: 1.5px solid var(--cal-green);
+    background: var(--cal-green-tint);
+    color: var(--cal-green-dark);
+    font-weight: 700;
+  }
+
+  .day.sel {
+    background: linear-gradient(135deg,
+                var(--cal-green) 0%,
+                var(--cal-green-dark) 100%);
+    color: var(--white);
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.35);
+    transform: scale(1.02);
+
+    &:hover {
+      color: var(--white);
+      transform: scale(1.06);
+    }
+  }
+
+  /* disabled (out of min/max) — the template sets these inline; override here */
+  .day[data-disabled='true'] {
+    background: transparent !important;
+    color: var(--text-faint) !important;
+    opacity: 0.55 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      background: transparent !important;
+      color: var(--text-faint) !important;
+    }
+  }
 }
 
-.common-calendar .hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 8px;
-}
-
-.common-calendar .hdr button {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 50%;
-  background: #f3f4f6;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-}
-.common-calendar .hdr button:hover {
-  background: #e5e7eb;
-}
-
-.calendar-custom-select {
-  position: relative;
+/* ---------- pop animation ---------- */
+@keyframes calPop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 .calendar-select-trigger {
   display: flex;
   align-items: center;
   gap: 4px;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #72da88;
   cursor: pointer;
   font-weight: 500;
@@ -2671,7 +3286,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   max-height: 200px;
   overflow-y: auto;
   background: #fff;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   z-index: 10;
   min-width: 80px;
@@ -2707,7 +3322,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 .common-calendar .day {
   text-align: center;
   padding: 8px 0;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 .common-calendar .day:hover {
@@ -2738,4 +3353,296 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 
 .date-error {
   border-color: #dc3545 !important;
+}
+
+
+/* =============================================================
+   SIDEBAR RAIL TOOLTIP — PrimeNG appends it to <body>, so it is
+   styled globally here (tooltipStyleClass="sidebar-tooltip").
+============================================================= */
+
+.sidebar-tooltip.p-tooltip {
+  --sidebar-tooltip-bg: var(--secondary);
+  z-index: 3000 !important;
+
+  .p-tooltip-text {
+    padding: 6px 10px !important;
+    border-radius: var(--radius-xs) !important;
+    background: var(--sidebar-tooltip-bg) !important;
+    color: var(--white) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    box-shadow: var(--chrome-popover-shadow) !important;
+  }
+
+  .p-tooltip-arrow {
+    border-right-color: var(--sidebar-tooltip-bg) !important;
+    border-left-color: var(--sidebar-tooltip-bg) !important;
+  }
+}
+
+
+/* =============================================================
+   ROLE PERMISSIONS MODAL (GLOBAL)
+   Ported 1:1 from the PHP role page (.role-perm-modal block),
+   with the design tokens replacing the hard-coded colours.
+   Markup: <app-role-permission-modal> (role-permission-modal.html)
+   Paste at the end of classes.scss (replace any earlier
+   "ROLE PERMISSIONS MODAL (GLOBAL)" block).
+============================================================= */
+
+.role-perm-modal {
+
+  .modal-content {
+    border: 0;
+    border-radius: var(--radius-lg);
+    max-height: calc(100vh - 60px);
+  }
+
+  /* ---------- head ---------- */
+  .rp-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rp-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: var(--gh-heading);
+    font-size: 16px;
+    font-weight: 800;
+
+    .icon-chip {
+      width: 38px;
+      height: 38px;
+    }
+  }
+
+  .rp-role-name {
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .rp-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .rp-search-wrap {
+    position: relative;
+
+    > i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    input {
+      width: 210px;
+      padding: 8px 14px 8px 34px;
+      font-size: 12.5px;
+    }
+  }
+
+  .rp-count-chip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .rp-links {
+    font-size: 12px;
+    white-space: nowrap;
+
+    a {
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .rp-link-primary { color: var(--primary); }
+    .rp-link-muted { color: var(--text-light); }
+    .rp-links-sep { margin: 0 4px; color: var(--border-strong); }
+  }
+
+  /* ---------- body ---------- */
+  .rp-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0;
+    overflow-y: auto;
+  }
+
+  .rp-perm-wrapper {
+    border-top: 1px solid var(--border);
+  }
+
+  .rp-perm-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 110px;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 22px;
+    background: var(--bg-muted);
+    color: var(--text-light);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .rp-group-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px 8px;
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    i {
+      font-size: 14px;
+    }
+  }
+
+  .rp-perm-row {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 110px;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 22px;
+    border-top: 1px solid var(--border);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: var(--bg-soft);
+    }
+  }
+
+  .rp-feature {
+    color: var(--gh-heading);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .rp-caps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .rp-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-muted);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+
+    input {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    &:has(input:checked) {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+  }
+
+  .rp-check-all {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+
+    &:hover {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  /* ---------- foot ---------- */
+  .rp-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-soft);
+  }
+
+  /* ---------- tablet / phone ---------- */
+  @media (max-width: 767.98px) {
+    .rp-perm-header {
+      display: none;
+    }
+
+    .rp-perm-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .rp-perm-row > div:last-child {
+      text-align: left;
+    }
+
+    .rp-search-wrap input {
+      width: 100%;
+    }
+  }
 }

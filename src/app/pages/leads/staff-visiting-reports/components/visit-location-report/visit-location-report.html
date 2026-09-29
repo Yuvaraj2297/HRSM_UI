@@ -5,16 +5,12 @@
 
   <div class="report-filter-field">
     <label for="loc_staff">Staff</label>
-    <p-select inputId="loc_staff" [options]="staffOptions()" [ngModel]="staffId()"
-      (ngModelChange)="staffId.set($event)" name="staff" optionLabel="label" optionValue="value" [filter]="true"
-      filterBy="label" appendTo="body" styleClass="w-100" />
+    <app-select inputId="loc_staff" [ngModel]="staffId()" (ngModelChange)="staffId.set($event)" name="staff" [options]="staffOptions()" optionLabel="label" optionValue="value" />
   </div>
 
   <div class="report-filter-field">
     <label for="loc_branch">Branch</label>
-    <p-select inputId="loc_branch" [options]="branchOptions()" [ngModel]="branch()"
-      (ngModelChange)="onBranchChange($event)" name="branch" optionLabel="label" optionValue="value"
-      appendTo="body" styleClass="w-100" />
+    <app-select inputId="loc_branch" [ngModel]="branch()" (ngModelChange)="onBranchChange($event)" name="branch" [options]="branchOptions()" optionLabel="label" optionValue="value" />
   </div>
 
   <div class="report-filter-field">

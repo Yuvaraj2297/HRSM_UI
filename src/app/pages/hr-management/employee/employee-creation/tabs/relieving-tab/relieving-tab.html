@@ -4,9 +4,7 @@
        TITLE
   ====================================================== -->
 
-  <div class="ne-section-title relieving-title">
-    Resignation / Relieving Request :-
-  </div>
+  <div class="form-section-title relieving-title"><span class="form-section-icon"><i class="bi bi-box-arrow-right"></i></span>Resignation / Relieving Request</div>
 
 
   <!-- =====================================================
@@ -54,9 +52,7 @@
           Relieving Type
         </label>
 
-        <p-select formControlName="type" [options]="fs.relievingTypes" optionLabel="label" optionValue="value"
-          placeholder="Select Relieving Type" [showClear]="true" [filter]="true" filterBy="label" styleClass="w-100"
-          appendTo="body" />
+        <app-select formControlName="type" [options]="fs.relievingTypes" optionLabel="label" optionValue="value" placeholder="Select Relieving Type" />
 
         <div class="validation-message" *ngIf="isInvalid('type')">
           Please select relieving type.
@@ -122,8 +118,7 @@
           Notice Period
         </label>
 
-        <p-select formControlName="noticePeriod" [options]="fs.noticePeriods" optionLabel="label" optionValue="value"
-          placeholder="Select notice period" [showClear]="true" styleClass="w-100" appendTo="body" />
+        <app-select formControlName="noticePeriod" [options]="fs.noticePeriods" optionLabel="label" optionValue="value" placeholder="Select notice period" />
 
       </div>
 
@@ -202,7 +197,7 @@
 
     <div class="submit-container text-end mt-3">
 
-      <button type="submit" class="submit-button">
+      <button type="submit" class="btn btn-primary">
 
         <i class="bi bi-send"></i>
 

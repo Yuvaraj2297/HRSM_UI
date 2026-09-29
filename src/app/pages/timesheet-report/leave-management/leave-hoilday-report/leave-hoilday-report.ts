@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface LeaveBalance {
   type: string;
   available: number;
@@ -52,7 +52,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-leave-hoilday-report',
   standalone: true,
-  imports: [CommonModule, FormsModule,  SelectModule],
+  imports: [AppSelect, CommonModule, FormsModule],
   templateUrl: './leave-hoilday-report.html',
   styleUrl: './leave-hoilday-report.scss',
 })
@@ -99,12 +99,12 @@ export class LeaveHoildayReport implements OnInit {
 
   // Leave Balances Cards
   leaveBalances: LeaveBalance[] = [
-    { type: 'Annual leave', available: 10, booked: 0, icon: 'bi bi-calendar3', iconClass: 'icon-blue' },
-    { type: 'Bereavement leave', available: 1, booked: 0, icon: 'bi bi-bag-plus', iconClass: 'icon-blue' },
-    { type: 'Casual Leave', available: 12, booked: 2, icon: 'bi bi-calendar-x-fill', iconClass: 'icon-amber' },
-    { type: 'Compensatory off', available: 0, booked: 0, icon: 'bi bi-calendar2-check', iconClass: 'icon-green' },
-    { type: 'PTO', available: 2, booked: 0, icon: 'bi bi-briefcase-fill', iconClass: 'icon-blue' },
-    { type: 'Sick Leave', available: 12, booked: 0, icon: 'bi bi-calendar-heart-fill', iconClass: 'icon-violet' },
+    { type: 'Annual leave', available: 10, booked: 0, icon: 'bi bi-calendar3', iconClass: 'stat-tone-blue' },
+    { type: 'Bereavement leave', available: 1, booked: 0, icon: 'bi bi-bag-plus', iconClass: 'stat-tone-blue' },
+    { type: 'Casual Leave', available: 12, booked: 2, icon: 'bi bi-calendar-x-fill', iconClass: 'stat-tone-amber' },
+    { type: 'Compensatory off', available: 0, booked: 0, icon: 'bi bi-calendar2-check', iconClass: 'stat-tone-primary' },
+    { type: 'PTO', available: 2, booked: 0, icon: 'bi bi-briefcase-fill', iconClass: 'stat-tone-blue' },
+    { type: 'Sick Leave', available: 12, booked: 0, icon: 'bi bi-calendar-heart-fill', iconClass: 'stat-tone-violet' },
   ];
 
   // Leave Types options for p-select
@@ -156,7 +156,7 @@ export class LeaveHoildayReport implements OnInit {
       from: '01 Feb, Mon',
       to: '02 Feb, Tue',
       type: 'Casual Leave',
-      typeClass: 'type-casual',
+      typeClass: 'bar-green',
       days: 2,
       status: 'Pending',
       statusClass: 'status-pending',
@@ -167,7 +167,7 @@ export class LeaveHoildayReport implements OnInit {
       from: '10 Aug, Wed',
       to: '12 Aug, Fri',
       type: 'Annual Leave',
-      typeClass: 'type-annual',
+      typeClass: 'bar-blue',
       days: 3,
       status: 'Partial',
       statusClass: 'status-approved',
@@ -180,7 +180,7 @@ export class LeaveHoildayReport implements OnInit {
       from: '05 Sep, Mon',
       to: '06 Sep, Tue',
       type: 'Sick Leave',
-      typeClass: 'type-sick',
+      typeClass: 'bar-amber',
       days: 2,
       status: 'Rejected',
       statusClass: 'status-rejected',
@@ -197,7 +197,7 @@ export class LeaveHoildayReport implements OnInit {
       from: '15 Dec, Tue',
       to: '17 Dec, Thu',
       type: 'Annual Leave',
-      typeClass: 'type-annual',
+      typeClass: 'bar-blue',
       days: 3,
       status: 'Approved',
       statusClass: 'status-approved',
@@ -208,7 +208,7 @@ export class LeaveHoildayReport implements OnInit {
       from: '10 Nov, Wed',
       to: '11 Nov, Thu',
       type: 'Sick Leave',
-      typeClass: 'type-sick',
+      typeClass: 'bar-amber',
       days: 2,
       status: 'Approved',
       statusClass: 'status-approved',
@@ -319,10 +319,10 @@ export class LeaveHoildayReport implements OnInit {
   // Type color helper
   typeClassFor(t: string): string {
     const s = (t || '').toLowerCase();
-    if (s.includes('sick')) return 'type-sick';
-    if (s.includes('annual')) return 'type-annual';
-    if (s === 'pto') return 'type-pto';
-    return 'type-casual';
+    if (s.includes('sick')) return 'bar-amber';
+    if (s.includes('annual')) return 'bar-blue';
+    if (s === 'pto') return 'bar-violet';
+    return 'bar-green';
   }
 
   // Filtering visible lists

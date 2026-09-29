@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CalendarDatepickerDirective } from '../../../../../common/directives/datepicker';
 
+import { AppSelect } from '../../../../../shared/app-select/app-select';
 declare var bootstrap: any;
 
 export interface OfferCandidateOption {
@@ -31,7 +33,7 @@ export interface GenerateOfferEvent {
 @Component({
   selector: 'app-generate-offer-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [AppSelect, CommonModule, ReactiveFormsModule,CalendarDatepickerDirective],
   templateUrl: './generate-offer-modal.html',
   styleUrl: './generate-offer-modal.scss',
 })

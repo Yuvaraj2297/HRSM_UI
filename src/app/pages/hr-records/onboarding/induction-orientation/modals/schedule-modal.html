@@ -1,0 +1,97 @@
+<div class="modal-backdrop-custom" (click)="close()"></div>
+<div class="modal-custom modal-lg" role="dialog" aria-modal="true" aria-label="Schedule induction session">
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div class="modal-header">
+      <div class="d-flex align-items-center gap-2">
+        <span class="modal-icon-circle"><i class="bi bi-calendar-plus"></i></span>
+        <div>
+          <h5 class="modal-title">Schedule Induction Session</h5>
+          <small class="text-muted">Steps 1–4 · Joiner → Module → Schedule → Notify</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close-custom" aria-label="Close" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- steps 1 & 2 -->
+      <fieldset class="modal-step">
+        <legend><span class="modal-step-no">1–2</span> Joiner & Module</legend>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label"><span class="text-danger">*</span> Joiner</label>
+            <app-select formControlName="empId" [options]="employeeOptions" optionLabel="label" optionValue="value" optionSub="sub" placeholder="Select joiner" />
+            @if (error('empId')) { <div class="field-error">Select a joiner.</div> }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><span class="text-danger">*</span> Module</label>
+            <app-select formControlName="module" [options]="moduleOptions" optionLabel="label" optionValue="value" optionSub="sub" />
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- step 3 -->
+      <fieldset class="modal-step">
+        <legend><span class="modal-step-no">3</span> Session</legend>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="ses-title"><span class="text-danger">*</span> Topic / Title</label>
+            <input id="ses-title" type="text" class="form-control" formControlName="title"
+              placeholder="e.g. Vision, Culture & Org Chart" [class.is-invalid]="error('title')" />
+            @if (error('title')) { <div class="field-error">Title is required.</div> }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="ses-trainer"><span class="text-danger">*</span> Trainer</label>
+            <input id="ses-trainer" type="text" class="form-control" formControlName="trainer"
+              placeholder="e.g. Priya Sharma (HR Manager)" [class.is-invalid]="error('trainer')" />
+            @if (error('trainer')) { <div class="field-error">Trainer is required.</div> }
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="ses-date"><span class="text-danger">*</span> Date</label>
+            <input id="ses-date" type="text" class="form-control" formControlName="date" placeholder="DD/MM/YYYY"
+              appCalendarDatepicker />
+            @if (error('date')) { <div class="field-error">Date is required.</div> }
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="ses-time"><span class="text-danger">*</span> Time Slot</label>
+            <input id="ses-time" type="text" class="form-control" formControlName="time"
+              placeholder="11:00 AM - 12:00 PM" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Mode</label>
+            <app-select formControlName="mode" [options]="modeOptions" optionLabel="label" optionValue="value" />
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="ses-venue">Venue / Meeting Link</label>
+            <input id="ses-venue" type="text" class="form-control" formControlName="venue"
+              placeholder="Conference Room A, or meet.google.com/..." />
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- step 4 -->
+      <fieldset class="modal-step mb-0">
+        <legend><span class="modal-step-no">4</span> Notify Joiner</legend>
+        <div class="d-flex flex-wrap gap-4">
+          <label class="form-check mb-0">
+            <input type="checkbox" class="form-check-input" formControlName="notifyEmail" />
+            <span class="form-check-label"><i class="bi bi-envelope"></i> Email calendar invite</span>
+          </label>
+          <label class="form-check mb-0">
+            <input type="checkbox" class="form-check-input" formControlName="notifyWhatsApp" />
+            <span class="form-check-label"><i class="bi bi-whatsapp"></i> WhatsApp message</span>
+          </label>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-calendar-check"></i>
+        <span>Schedule Session</span>
+      </button>
+    </div>
+  </form>
+</div>

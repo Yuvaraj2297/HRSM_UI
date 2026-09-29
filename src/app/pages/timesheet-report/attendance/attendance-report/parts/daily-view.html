@@ -1,0 +1,56 @@
+@let f = store.statusFilter();
+
+@if (store.isWeekoff()) {
+<div class="card-custom empty-state">
+  <div class="e-ico"><i class="bi bi-moon-stars"></i></div>
+  <div class="e-title">Week off</div>
+  <div class="e-sub">No attendance is recorded on weekends. Use the arrows to pick a working day.</div>
+</div>
+} @else {
+<!-- summary — click a status to filter the log -->
+<app-att-summary-strip class="mb-3" label="Daily summary" [items]="strip()" [clickable]="true"
+  [active]="f ?? 'all'" (pick)="pick($event)" />
+
+<app-primedatatable [modalHeader]="header" [columns]="columns" [data]="store.dailyRows()"
+  searchPlaceholder="Search employee or ID..." [showColumnsButton]="false"
+  [exportFileName]="'attendance-' + store.date()" (actionClick)="onAction($event)">
+  <ng-template #cellTemplate let-row let-col="col">
+    @switch (col.field) {
+      @case ('name') {
+        <div class="d-flex align-items-center gap-2">
+          @if (row.avatar) {
+            <img [src]="row.avatar" [alt]="row.name" class="ui-avatar" />
+          } @else {
+            <span class="ui-avatar">{{ initials(row.name) }}</span>
+          }
+          <div>
+            <div class="emp-name-line">{{ row.name }}</div>
+            <div class="emp-code-line">{{ row.empId }} • {{ row.dept }}</div>
+          </div>
+        </div>
+      }
+      @case ('checkIn') {
+        <span [class.text-danger]="row.status === 'late'">{{ fmtTime(row.checkIn) }}</span>
+      }
+      @case ('checkOut') { {{ fmtTime(row.checkOut) }} }
+      @case ('hours') {
+        @if (row.checkIn !== null) {
+        <div class="hours-cell">
+          <span class="cell-strong">{{ row.hours }}h</span> <span class="ui-cell-sub">/ {{ shiftHours }}h</span>
+          <div class="ui-meter"><span [style.width.%]="pct(row.hours)" [class.is-warn]="row.hours < shiftHours - 1"></span></div>
+        </div>
+        } @else { <span class="text-muted">—</span> }
+      }
+      @case ('overtime') {
+        @if (row.overtime) { <span class="ui-status-pill" data-status="overtime">+{{ row.overtime }}h</span> } @else { <span class="text-muted">—</span> }
+      }
+      @case ('status') {
+        @let m = statusMeta(row.status);
+        <span class="ui-status-pill" [attr.data-status]="row.status">
+          <i [class]="m.icon"></i> {{ m.label }}
+        </span>
+      }
+    }
+  </ng-template>
+</app-primedatatable>
+}

@@ -2,26 +2,26 @@
   <!-- =========================================================
        BREADCRUMB & HEADER
   ========================================================== -->
-  <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-1">
+  <!-- <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-1">
     <div>
       <app-breadcrumb title="Leave Reports" parent="Leave Management" icon="bi bi-calendar-heart">
       </app-breadcrumb>
     </div>
-  </div>
+  </div> -->
 
   <!-- =========================================================
        REPORT TABS
   ========================================================== -->
-  <div class="d-flex gap-2 mb-3 flex-wrap text-nowrap" role="group" aria-label="Leave report tabs">
-    <button role="tab" type="button" class="btn-leave-tab" [class.active]="activeTab === 'requests'"
+  <nav class="page-tabs mb-3" role="tablist" aria-label="Leave report tabs">
+    <button role="tab" type="button" class="page-tab" [class.active]="activeTab === 'requests'"
       (click)="activeTab = 'requests'" [attr.aria-selected]="activeTab === 'requests'">
       <i class="bi bi-file-earmark-text"></i> Leave Requests
     </button>
-    <button role="tab" type="button" class="btn-leave-tab" [class.active]="activeTab === 'team-calendar'"
+    <button role="tab" type="button" class="page-tab" [class.active]="activeTab === 'team-calendar'"
       (click)="activeTab = 'team-calendar'" [attr.aria-selected]="activeTab === 'team-calendar'">
       <i class="bi bi-calendar3"></i> Team Calendar
     </button>
-  </div>
+  </nav>
 
   <!-- =========================================================
        LEAVE REQUESTS SECTION (PRIMARY)
@@ -29,94 +29,32 @@
   @if (activeTab === 'requests') {
   <div id="leaveSectionRequests">
     <!-- ================= KPI STATS ROW ================= -->
-    <div class="row g-3 mb-3">
-      <!-- Total Requests -->
-      <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-        <div class="stat-card stat-theme-violet leave-summary-card d-flex align-items-center gap-3 cursor-pointer"
-          [class.active]="activeKpiFilter === 'all'" (click)="setKpiFilter('all')" title="Click to view all requests">
-          <div class="stat-icon stat-icon-lg"><i class="bi bi-file-earmark-text"></i></div>
-          <div>
-            <div class="label">Total Requests</div>
-            <div class="value">{{ totalRequestsCount }}</div>
-            <div class="delta text-neutral">This month</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Approved -->
-      <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-        <div class="stat-card stat-theme-primary d-flex align-items-center gap-3 leave-summary-card cursor-pointer"
-          [class.active]="activeKpiFilter === 'Approved'" (click)="setKpiFilter('Approved')"
-          title="Click to filter approved requests">
-          <div class="stat-icon stat-icon-lg"><i class="bi bi-check2-circle"></i></div>
-          <div>
-            <div class="label">Approved</div>
-            <div class="value">{{ approvedCount }}</div>
-            <div class="delta text-up">
-              {{ totalRequestsCount ? ((approvedCount / totalRequestsCount) * 100 | number : '1.0-1') : 0 }}% approved
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pending Review -->
-      <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-        <div class="stat-card stat-theme-amber d-flex align-items-center gap-3 leave-summary-card cursor-pointer"
-          [class.active]="activeKpiFilter === 'Pending'" (click)="setKpiFilter('Pending')"
-          title="Click to filter pending requests">
-          <div class="stat-icon stat-icon-lg"><i class="bi bi-hourglass-split"></i></div>
-          <div>
-            <div class="label">Pending Review</div>
-            <div class="value">{{ pendingCount }}</div>
-            <div class="delta text-neutral">Needs attention</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Days On Leave -->
-      <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-        <div class="stat-card stat-theme-blue d-flex align-items-center gap-3 leave-summary-card cursor-pointer"
-          [class.active]="activeKpiFilter === 'days'" (click)="setKpiFilter('days')" title="Days on leave across teams">
-          <div class="stat-icon stat-icon-lg"><i class="bi bi-calendar2-minus"></i></div>
-          <div>
-            <div class="label">Days On Leave</div>
-            <div class="value">{{ daysOnLeaveCount }}</div>
-            <div class="delta text-neutral">Across all teams</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rejected -->
-      <div class="col-sm-6 col-md-4 col-xl text-nowrap">
-        <div class="stat-card stat-theme-red d-flex align-items-center gap-3 leave-summary-card cursor-pointer"
-          [class.active]="activeKpiFilter === 'Rejected'" (click)="setKpiFilter('Rejected')"
-          title="Click to filter rejected requests">
-          <div class="d-flex align-items-center gap-3">
-            <div class="stat-icon stat-icon-lg"><i class="bi bi-person-x"></i></div>
-            <div>
-              <div class="label">Rejected</div>
-              <div class="value">{{ rejectedCount }}</div>
-              <div class="delta text-neutral">This month</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="stat-grid">
+      <app-stat-card label="Total Requests" [value]="totalRequestsCount" icon="bi bi-file-earmark-text" tone="violet" sub="This month"
+        [clickable]="true" [active]="activeKpiFilter === 'all'" (click)="setKpiFilter('all')" />
+      <app-stat-card label="Approved" [value]="approvedCount" icon="bi bi-check2-circle" tone="primary" subTone="success"
+        [sub]="(totalRequestsCount ? ((approvedCount / totalRequestsCount) * 100 | number : '1.0-1') : 0) + '% approved'"
+        [clickable]="true" [active]="activeKpiFilter === 'Approved'" (click)="setKpiFilter('Approved')" />
+      <app-stat-card label="Pending Review" [value]="pendingCount" icon="bi bi-hourglass-split" tone="amber" sub="Needs attention"
+        [clickable]="true" [active]="activeKpiFilter === 'Pending'" (click)="setKpiFilter('Pending')" />
+      <app-stat-card label="Days On Leave" [value]="daysOnLeaveCount" icon="bi bi-calendar2-minus" tone="blue" sub="Across all teams"
+        [clickable]="true" [active]="activeKpiFilter === 'days'" (click)="setKpiFilter('days')" />
+      <app-stat-card label="Rejected" [value]="rejectedCount" icon="bi bi-person-x" tone="red" sub="This month"
+        [clickable]="true" [active]="activeKpiFilter === 'Rejected'" (click)="setKpiFilter('Rejected')" />
     </div>
 
     <!-- ================= FILTER COLLAPSE CARD ================= -->
-    <div class="card-custom mb-3 filters-card">
-      <div class="filters-toggle-row d-flex align-items-center justify-content-between p-3" (click)="toggleFilters()">
-        <span class="fw-semibold" style="font-size: 14.5px; color: var(--ink-900);">
-          <i class="bi bi-funnel me-1 text-primary"></i> Filter Leave Requests
-        </span>
-        <button type="button" class="filters-toggle-btn" (click)="$event.stopPropagation(); toggleFilters()">
+    <div class="card-custom mb-3">
+      <div class="card-custom-header" [class.border-0]="filtersCollapsed">
+        <h3 class="card-custom-title"><i class="bi bi-funnel"></i> Filter Leave Requests</h3>
+        <button type="button" class="filters-toggle-btn" (click)="toggleFilters()" [attr.aria-expanded]="!filtersCollapsed">
           <span>Filters</span>
           <i class="bi bi-chevron-down chevron" [class.rotated]="!filtersCollapsed"></i>
         </button>
       </div>
 
       @if (!filtersCollapsed) {
-      <div class="filters-collapse p-3 pt-0">
+      <div class="card-custom-body">
         <div class="row g-3">
           <!-- Search Employee -->
           <div class="col-lg-3 col-md-4 col-sm-6">
@@ -128,17 +66,13 @@
           <!-- Leave Type (PrimeNG p-select) -->
           <div class="col-lg-3 col-md-4 col-sm-6">
             <label class="form-label">Leave Type</label>
-            <p-select [options]="leaveTypeFilterOptions" [(ngModel)]="selectedLeaveType" optionLabel="label"
-              optionValue="value" styleClass="leave-filter-pselect w-100" placeholder="Select Type">
-            </p-select>
+            <app-select [(ngModel)]="selectedLeaveType" [options]="leaveTypeFilterOptions" optionLabel="label" optionValue="value" placeholder="Select Type" />
           </div>
 
           <!-- Status (PrimeNG p-select) -->
           <div class="col-lg-3 col-md-4 col-sm-6">
             <label class="form-label">Status</label>
-            <p-select [options]="statusFilterOptions" [(ngModel)]="selectedStatus" optionLabel="label"
-              optionValue="value" styleClass="leave-filter-pselect w-100" placeholder="Select Status">
-            </p-select>
+            <app-select [(ngModel)]="selectedStatus" [options]="statusFilterOptions" optionLabel="label" optionValue="value" placeholder="Select Status" />
           </div>
 
           <!-- Applied Date Range -->
@@ -150,7 +84,7 @@
 
           <!-- Actions -->
           <div class="col-lg-4 col-md-6 ms-auto d-flex align-items-end gap-2">
-            <button type="button" class="btn btn-reject flex-fill" (click)="clearFilters()">
+            <button type="button" class="btn btn-secondary flex-fill" (click)="clearFilters()">
               Clear Filters
             </button>
             <button type="button" class="btn btn-primary flex-fill" (click)="applyFilters()">
@@ -164,46 +98,34 @@
 
     <!-- ================= ACTIVE FILTERS BAR ================= -->
     @if (hasActiveFilters) {
-    <div class="leave-active-bar mb-3">
-      <span class="leave-active-label"><i class="bi bi-funnel-fill me-1"></i>Active Filters:</span>
-      <div class="d-flex flex-wrap gap-2">
-        @if (filterSearch) {
-        <span class="leave-active-chip">
-          Search: <strong>{{ filterSearch }}</strong>
-          <button type="button" class="btn-chip-remove" (click)="removeSearchFilter()">&times;</button>
-        </span>
-        }
-        @if (selectedLeaveType !== 'All Types') {
-        <span class="leave-active-chip">
-          Type: <strong>{{ selectedLeaveType }}</strong>
-          <button type="button" class="btn-chip-remove" (click)="removeTypeFilter()">&times;</button>
-        </span>
-        }
-        @if (selectedStatus !== 'All Status') {
-        <span class="leave-active-chip">
-          Status: <strong>{{ selectedStatus }}</strong>
-          <button type="button" class="btn-chip-remove" (click)="removeStatusFilter()">&times;</button>
-        </span>
-        }
-        @if (selectedDateRange) {
-        <span class="leave-active-chip">
-          Date: <strong>{{ selectedDateRange }}</strong>
-          <button type="button" class="btn-chip-remove" (click)="removeDateFilter()">&times;</button>
-        </span>
-        }
-        @if (activeKpiFilter !== 'all') {
-        <span class="leave-active-chip kpi-chip">
-          Filter: <strong>{{ activeKpiFilter }}</strong>
-          <button type="button" class="btn-chip-remove" (click)="removeKpiFilter()">&times;</button>
-        </span>
-        }
-      </div>
-      <button type="button" class="leave-active-clear ms-auto" (click)="clearFilters()">Clear All</button>
+    <div class="ui-filter-bar mb-3">
+      <span class="ui-filter-label"><i class="bi bi-funnel-fill"></i> Active Filters:</span>
+      @if (filterSearch) {
+      <span class="ui-filter-chip"><span class="chip-key">Search:</span> {{ filterSearch }}
+        <button type="button" (click)="removeSearchFilter()" aria-label="Remove search filter">&times;</button></span>
+      }
+      @if (selectedLeaveType !== 'All Types') {
+      <span class="ui-filter-chip"><span class="chip-key">Type:</span> {{ selectedLeaveType }}
+        <button type="button" (click)="removeTypeFilter()" aria-label="Remove type filter">&times;</button></span>
+      }
+      @if (selectedStatus !== 'All Status') {
+      <span class="ui-filter-chip"><span class="chip-key">Status:</span> {{ selectedStatus }}
+        <button type="button" (click)="removeStatusFilter()" aria-label="Remove status filter">&times;</button></span>
+      }
+      @if (selectedDateRange) {
+      <span class="ui-filter-chip"><span class="chip-key">Date:</span> {{ selectedDateRange }}
+        <button type="button" (click)="removeDateFilter()" aria-label="Remove date filter">&times;</button></span>
+      }
+      @if (activeKpiFilter !== 'all') {
+      <span class="ui-filter-chip"><span class="chip-key">Filter:</span> {{ activeKpiFilter }}
+        <button type="button" (click)="removeKpiFilter()" aria-label="Remove KPI filter">&times;</button></span>
+      }
+      <button type="button" class="ui-filter-clear" (click)="clearFilters()">Clear All</button>
     </div>
     }
 
     <!-- ================= PRIMEDATATABLE ================= -->
-    <div class="card-custom p-0 leave-table-card">
+    <div class="card-custom p-0">
       <app-primedatatable [modalHeader]="modalHeader" [columns]="columns" [data]="filteredLeaveRows"
         [Accessactions]="tableActions" [rowActions]="rowActions" [searchPlaceholder]="'Search leave requests...'"
         exportFileName="leave-report" (actionClick)="handleActionClick($event)" (addClicked)="openApplyLeaveModal()">
@@ -212,28 +134,22 @@
         <ng-template #cellTemplate let-row let-col="col">
           <!-- Leave Type Column -->
           @if (col.field === 'leaveType') {
-          <span class="leave-type {{ row.typeKey }}">
-            {{ row.leaveType }}
+          <span class="d-inline-flex align-items-center gap-2 cell-strong text-nowrap">
+            <span class="ui-legend-dot" [ngClass]="typeTone[row.typeKey] || 'stat-tone-blue'"></span>{{ row.leaveType }}
           </span>
           }
 
           <!-- Balance Column -->
           @else if (col.field === 'balance') {
-          <div class="leave-balance">
-            <strong>{{ row.balance }}</strong> / {{ row.quota }} days
-            <div class="balance-track">
-              <div class="balance-fill" [style.width.%]="row.quota ? ((row.balance / row.quota) * 100) : 0">
-              </div>
-            </div>
+          <div class="balance-cell">
+            <span class="cell-strong">{{ row.balance }}</span> / {{ row.quota }} days
+            <div class="ui-meter"><span [style.width.%]="row.quota ? ((row.balance / row.quota) * 100) : 0"></span></div>
           </div>
           }
 
           <!-- Status Column -->
           @else if (col.field === 'status') {
-          <span class="leave-status {{ row.status | lowercase }}">
-            <i class="bi bi-circle-fill"></i>
-            {{ row.partialText || row.status }}
-          </span>
+          <span class="status-pill status-{{ row.status | lowercase }}">{{ row.partialText || row.status }}</span>
           }
 
           <!-- Default fallback for any other custom column -->
@@ -262,11 +178,10 @@
 ========================================================== -->
 @if (rejectModalOpen) {
 <div class="modal-backdrop-custom" (click)="closeRejectModal()"></div>
-<div class="modal-custom-dialog-wrap">
-  <div class="modal-dialog modal-dialog-centered modal-custom-content">
+<div class="ui-dialog ui-dialog--sm" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title  fs-5">
+        <h5 class="modal-title">
           <i class="bi bi-x-circle text-danger me-2"></i>Reject Leave Request
         </h5>
         <button type="button" class="btn-close-custom" (click)="closeRejectModal()" aria-label="Close">
@@ -275,25 +190,24 @@
       </div>
 
       <div class="modal-body">
-        <p class="small text-muted mb-2">
-          Reason for rejecting <strong class="text-dark">{{ rejectRow?.name }}</strong>
+        <p class="field-hint mt-0 mb-2">
+          Reason for rejecting <strong>{{ rejectRow?.name }}</strong>
         </p>
         <textarea class="form-control" [(ngModel)]="rejectReason" rows="3" placeholder="Enter rejection reason"
           required>
         </textarea>
         @if (rejectError) {
-        <div class="text-danger small mt-1">Please enter a reason for rejection.</div>
+        <div class="field-error">Please enter a reason for rejection.</div>
         }
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeRejectModal()">Cancel</button>
-        <button type="button" class="btn btn-reject-submit" (click)="submitRejection()">
+        <button type="button" class="btn btn-danger" (click)="submitRejection()">
           Submit Rejection
         </button>
       </div>
     </div>
-  </div>
 </div>
 }
 
@@ -302,11 +216,10 @@
 ========================================================== -->
 @if (partialModalOpen) {
 <div class="modal-backdrop-custom" (click)="closePartialApproveModal()"></div>
-<div class="modal-custom-dialog-wrap">
-  <div class="modal-dialog modal-dialog-centered modal-custom-content partial-modal-width">
+<div class="ui-dialog" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title  fs-5">
+        <h5 class="modal-title">
           <i class="bi bi-check2-circle text-primary me-2"></i>Review Leave Days
         </h5>
         <button type="button" class="btn-close-custom" (click)="closePartialApproveModal()" aria-label="Close">
@@ -315,74 +228,47 @@
       </div>
 
       <div class="modal-body">
-        <!-- Employee Header Summary -->
-        <div class="partial-emp-info mb-3">
-          <img [src]="partialRow?.avatar" class="avatar-sm rounded-circle" style="width:40px;height:40px;"
-            alt="avatar" />
+        <div class="ui-media px-0 mb-3">
+          <img [src]="partialRow?.avatar" class="ui-avatar" alt="" />
           <div>
-            <div class=" text-dark">{{ partialRow?.name }}</div>
-            <div class="small text-muted">{{ partialRow?.leaveType }} ({{ partialRow?.rawFrom }} to {{ partialRow?.rawTo
-              }})</div>
+            <div class="ui-media-title">{{ partialRow?.name }}</div>
+            <div class="ui-media-sub">{{ partialRow?.leaveType }} ({{ partialRow?.rawFrom }} to {{ partialRow?.rawTo }})</div>
           </div>
         </div>
 
-        <!-- Summary Chip Counters -->
-        <div class="partial-days-summary-bar mb-3">
-          <span class="partial-summary-chip approved-chip">
-            <i class="bi bi-check-circle-fill"></i>
-            <span>{{ partialApprovedCount }}</span> Approved
-          </span>
-          <span class="partial-summary-chip rejected-chip">
-            <i class="bi bi-x-circle-fill"></i>
-            <span>{{ partialRejectedCount }}</span> Rejected
-          </span>
-          <span class="partial-summary-chip pending-chip">
-            <i class="bi bi-hourglass-split"></i>
-            <span>{{ partialPendingCount }}</span> Pending
-          </span>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <span class="ui-tag tone-success"><i class="bi bi-check-circle-fill"></i> {{ partialApprovedCount }} Approved</span>
+          <span class="ui-tag tone-danger"><i class="bi bi-x-circle-fill"></i> {{ partialRejectedCount }} Rejected</span>
+          <span class="ui-tag tone-warning"><i class="bi bi-hourglass-split"></i> {{ partialPendingCount }} Pending</span>
         </div>
 
-        <!-- Day Cards Breakdown -->
-        <div class="partial-days-list">
+        <div class="ui-list">
           @for (day of partialDaysList; track day.index) {
-          <div class="partial-day-card status-{{ day.status }}">
-            <div class="partial-day-num">{{ day.dayNum }}</div>
-            <div class="partial-day-info">
-              <div class="partial-day-date">{{ day.dow }}, {{ day.dateStr }}</div>
-              <div class="partial-day-dow">Day {{ day.dayNum }} of {{ partialDaysList.length }}</div>
-              @if (day.status === 'rejected' && day.reason) {
-              <button type="button" class="partial-day-view-reason" (click)="viewDayReason(day)"
-                title="View rejection reason">
-                <i class="bi bi-eye"></i> Reason
-              </button>
-              }
+          <div class="ui-row-card is-static" [ngClass]="day.status === 'approved' ? 'bar-green' : day.status === 'rejected' ? 'bar-red' : 'bar-amber'">
+            <span class="ui-step-num">{{ day.dayNum }}</span>
+            <div class="ui-row-body">
+              <div class="ui-row-title">{{ day.dow }}, {{ day.dateStr }}</div>
+              <div class="ui-row-sub">
+                Day {{ day.dayNum }} of {{ partialDaysList.length }}
+                @if (day.status === 'rejected' && day.reason) {
+                &middot; <button type="button" class="ui-link-btn" (click)="viewDayReason(day)"><i class="bi bi-eye"></i> Reason</button>
+                }
+              </div>
             </div>
-            <div class="partial-day-actions">
-              <button type="button" class="partial-day-approve-btn" [class.active]="day.status === 'approved'"
-                (click)="toggleDayApproval(day)" title="Toggle approve this day">
-                <i class="bi bi-check-lg"></i>
-              </button>
-              <button type="button" class="partial-day-reject-btn" [class.active]="day.status === 'rejected'"
-                (click)="openDayRejectModal(day)" title="Reject this day">
-                <i class="bi bi-x-lg"></i>
-              </button>
-            </div>
-            <div class="partial-day-status-badge badge-{{ day.status }}">
-              @if (day.status === 'approved') {
-              <i class="bi bi-check-circle-fill"></i> Approved
-              } @else if (day.status === 'rejected') {
-              <i class="bi bi-x-circle-fill"></i> Rejected
-              } @else {
-              <i class="bi bi-hourglass-split"></i> Pending
-              }
-            </div>
+            <button type="button" class="btn-icon btn-sm btn-icon-primary" [class.btn-primary]="day.status === 'approved'" (click)="toggleDayApproval(day)" aria-label="Approve this day">
+              <i class="bi bi-check-lg"></i>
+            </button>
+            <button type="button" class="btn-icon btn-sm btn-icon-danger" [class.btn-danger]="day.status === 'rejected'" (click)="openDayRejectModal(day)" aria-label="Reject this day">
+              <i class="bi bi-x-lg"></i>
+            </button>
+            <span class="status-pill status-{{ day.status }}">{{ day.status | titlecase }}</span>
           </div>
           }
         </div>
 
         <!-- Review Note -->
-        <div class="partial-note-row mt-3">
-          <label class="form-label fw-semibold mb-1">Note (Optional)</label>
+        <div class="mt-3">
+          <label class="form-label">Note (Optional)</label>
           <textarea class="form-control" [(ngModel)]="partialNote" rows="2" placeholder="Add an optional review note">
           </textarea>
         </div>
@@ -390,12 +276,11 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closePartialApproveModal()">Cancel</button>
-        <button type="button" class="btn btn-save" (click)="confirmPartialReview()">
+        <button type="button" class="btn btn-primary" (click)="confirmPartialReview()">
           <i class="bi bi-check2"></i>Confirm Review
         </button>
       </div>
     </div>
-  </div>
 </div>
 }
 
@@ -403,12 +288,11 @@
      MODAL 3: DAY REJECT SUB-MODAL
 ========================================================== -->
 @if (dayRejectModalOpen) {
-<div class="modal-backdrop-custom submodal-backdrop" (click)="closeDayRejectModal()"></div>
-<div class="modal-custom-dialog-wrap submodal-wrap">
-  <div class="modal-dialog modal-dialog-centered modal-custom-content" style="max-width: 480px;">
+<div class="modal-backdrop-custom" (click)="closeDayRejectModal()"></div>
+<div class="ui-dialog ui-dialog--sm" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title  fs-5">
+        <h5 class="modal-title">
           <i class="bi bi-x-circle text-danger me-2"></i>Reject Day
         </h5>
         <button type="button" class="btn-close-custom" (click)="closeDayRejectModal()" aria-label="Close">
@@ -417,25 +301,24 @@
       </div>
 
       <div class="modal-body">
-        <p class="small text-muted mb-2">
+        <p class="field-hint mt-0 mb-2">
           Reason for rejecting Day {{ dayRejectIdx + 1 }}
         </p>
         <textarea class="form-control" [(ngModel)]="dayRejectReason" rows="3"
           placeholder="Enter reason for rejecting this day" required>
         </textarea>
         @if (dayRejectError) {
-        <div class="text-danger small mt-1">Please enter a reason.</div>
+        <div class="field-error">Please enter a reason.</div>
         }
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeDayRejectModal()">Cancel</button>
-        <button type="button" class="btn btn-reject-submit" (click)="submitDayRejection()">
+        <button type="button" class="btn btn-danger" (click)="submitDayRejection()">
           Submit Rejection
         </button>
       </div>
     </div>
-  </div>
 </div>
 }
 
@@ -444,11 +327,10 @@
 ========================================================== -->
 @if (viewReasonModalOpen) {
 <div class="modal-backdrop-custom" (click)="closeViewReasonModal()"></div>
-<div class="modal-custom-dialog-wrap">
-  <div class="modal-dialog modal-dialog-centered modal-custom-content">
+<div class="ui-dialog ui-dialog--sm" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title  fs-5">
+        <h5 class="modal-title">
           <i class="bi bi-info-circle text-info me-2"></i>Rejection Reason
         </h5>
         <button type="button" class="btn-close-custom" (click)="closeViewReasonModal()" aria-label="Close">
@@ -457,10 +339,10 @@
       </div>
 
       <div class="modal-body">
-        <p class="small text-muted mb-2">
-          Rejection reason for <strong class="text-dark">{{ viewReasonEmployee }}</strong>
+        <p class="field-hint mt-0 mb-2">
+          Rejection reason for <strong>{{ viewReasonEmployee }}</strong>
         </p>
-        <div class="rejection-reason-box">
+        <div class="ui-desc">
           {{ viewReasonText }}
         </div>
       </div>
@@ -469,7 +351,6 @@
         <button type="button" class="btn btn-primary" (click)="closeViewReasonModal()">OK</button>
       </div>
     </div>
-  </div>
 </div>
 }
 
@@ -478,11 +359,10 @@
 ========================================================== -->
 @if (applyModalOpen) {
 <div class="modal-backdrop-custom" (click)="closeApplyLeaveModal()"></div>
-<div class="modal-custom-dialog-wrap">
-  <div class="modal-dialog modal-dialog-centered modal-custom-content apply-modal-width">
+<div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title  fs-5">
+        <h5 class="modal-title">
           <i class="bi bi-calendar-plus text-primary me-2"></i>Apply Leave
         </h5>
         <button type="button" class="btn-close-custom" (click)="closeApplyLeaveModal()" aria-label="Close">
@@ -491,84 +371,48 @@
       </div>
 
       <div class="modal-body">
-        <div class="leave-apply-grid">
-          <!-- LEFT: Form -->
-          <div class="leave-apply-form">
-            <!-- Leave Type (PrimeNG p-select) -->
-            <div class="leave-apply-row">
+        <div class="ui-form-aside">
+          <div>
+            <div class="mb-3">
               <label class="form-label required-label">Leave Type</label>
-              <p-select [options]="applyLeaveTypeOptions" [(ngModel)]="applyLeaveType" optionLabel="label"
-                optionValue="value" styleClass="w-100" placeholder="Select Leave Type">
-              </p-select>
+              <app-select [(ngModel)]="applyLeaveType" [options]="applyLeaveTypeOptions" optionLabel="label" optionValue="value" placeholder="Select Leave Type" />
             </div>
 
-            <!-- Date Range -->
-            <div class="leave-apply-row">
+            <div class="mb-3">
               <label class="form-label required-label">Date Range</label>
-              <div class="leave-apply-date-row">
-                <input type="date" class="form-control" [(ngModel)]="applyFromDate" (change)="onApplyDateChange()"
-                  placeholder="From date" />
-                <input type="date" class="form-control" [(ngModel)]="applyToDate" (change)="onApplyDateChange()"
-                  placeholder="To date" />
+              <div class="ui-field-pair">
+                <input type="date" class="form-control" [(ngModel)]="applyFromDate" (change)="onApplyDateChange()" aria-label="From date" />
+                <input type="date" class="form-control" [(ngModel)]="applyToDate" (change)="onApplyDateChange()" aria-label="To date" />
               </div>
             </div>
 
-            <!-- Day Type (PrimeNG p-select) -->
-            <div class="leave-apply-summary-row">
-              <span class="summary-date">
-                {{ applyFromDate || 'Select start date' }}
-                @if (applyToDate && applyToDate !== applyFromDate) {
-                &mdash; {{ applyToDate }}
-                }
-              </span>
-              <p-select [options]="applyDayTypeOptions" [(ngModel)]="applyDayType" (ngModelChange)="onApplyDateChange()"
-                optionLabel="label" optionValue="value" styleClass="daytype-select">
-              </p-select>
+            <div class="ui-kv mb-3">
+              <div class="ui-kv-row">
+                <span class="cell-strong">
+                  {{ applyFromDate || 'Select start date' }}
+                  @if (applyToDate && applyToDate !== applyFromDate) {
+                  &mdash; {{ applyToDate }}
+                  }
+                </span>
+                <div class="day-type"><app-select [(ngModel)]="applyDayType" (ngModelChange)="onApplyDateChange()" [options]="applyDayTypeOptions" optionLabel="label" optionValue="value" /></div>
+              </div>
+              <div class="ui-info-row"><span>Total</span><span class="ui-info-val">{{ applyTotalDays }}</span></div>
             </div>
 
-            <!-- Total -->
-            <div class="leave-apply-summary-row total-row">
-              <span>Total</span>
-              <strong class="text-primary">{{ applyTotalDays }}</strong>
-            </div>
-
-            <!-- Reason -->
-            <div class="leave-apply-row mb-0">
-              <label class="form-label">Reason for leave</label>
-              <textarea class="form-control" [(ngModel)]="applyReason" rows="3" placeholder="Enter reason for leave">
-              </textarea>
-            </div>
+            <label class="form-label">Reason for leave</label>
+            <textarea class="form-control" [(ngModel)]="applyReason" rows="3" placeholder="Enter reason for leave"></textarea>
           </div>
 
-          <!-- RIGHT: Balance Summary -->
-          <div class="leave-apply-side">
-            <div class="leave-balance-box">
-              <div class="leave-balance-box-head">
-                <span>As of today</span>
-                <span>Day(s)</span>
-              </div>
-              <div class="leave-balance-line">
-                <span>Available balance</span>
-                <strong>{{ availableBalance }}</strong>
-              </div>
-              <div class="leave-balance-line">
-                <span>Currently booked</span>
-                <strong>{{ currentlyBooked }}</strong>
-              </div>
-              <div class="leave-balance-line total">
-                <span>Balance after booked</span>
-                <strong>{{ balanceAfterBooking }}</strong>
-              </div>
+          <div class="ui-side">
+            <div class="ui-sec">
+              <div class="ui-sec-title">As of today</div>
+              <div class="ui-info-row"><span>Available balance</span><span class="ui-info-val">{{ availableBalance }}</span></div>
+              <div class="ui-info-row"><span>Currently booked</span><span class="ui-info-val">{{ currentlyBooked }}</span></div>
+              <div class="ui-info-row"><span>Balance after booking</span><span class="ui-info-val">{{ balanceAfterBooking }}</span></div>
             </div>
-
-            <div class="leave-balance-box">
-              <div class="leave-balance-box-head">
-                <span>End of Year Projection</span>
-              </div>
-              <div class="leave-balance-line total">
-                <span>Estimated balance</span>
-                <strong>{{ estimatedBalance }}</strong>
-              </div>
+            <div class="ui-sec">
+              <div class="ui-sec-title">End of Year Projection</div>
+              <div class="ui-info-row"><span>Estimated balance</span><span class="ui-info-val">{{ estimatedBalance }}</span></div>
             </div>
           </div>
         </div>
@@ -576,19 +420,16 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeApplyLeaveModal()">Cancel</button>
-        <button type="button" class="btn btn-save" (click)="submitApplyLeave()">Submit Application</button>
+        <button type="button" class="btn btn-primary" (click)="submitApplyLeave()">Submit Application</button>
       </div>
     </div>
-  </div>
 </div>
 }
 
 <!-- =========================================================
      TOAST NOTIFICATION
 ========================================================== -->
-@if (showToast) {
-<div class="leave-report-toast">
-  <i class="bi bi-check-circle-fill me-2"></i>
+<div class="ui-toast" [class.show]="showToast" role="status">
+  <i class="bi bi-check-circle-fill"></i>
   <span>{{ toastMessage }}</span>
 </div>
-}

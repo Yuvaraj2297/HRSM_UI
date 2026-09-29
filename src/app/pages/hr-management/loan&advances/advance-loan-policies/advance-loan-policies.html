@@ -26,9 +26,9 @@
         <!-- Category Badge -->
         @else if (col.field === 'category') {
           @if (row.category === 'Loan') {
-            <span class="cat-pill cat-loan">Loan</span>
+            <span class="ui-tag tone-info">Loan</span>
           } @else {
-            <span class="cat-pill cat-advance">Advance</span>
+            <span class="ui-tag tone-warning">Advance</span>
           }
         }
 
@@ -39,7 +39,7 @@
 
         <!-- Max Limit -->
         @else if (col.field === 'maxLimit') {
-          <span class=" text-success">{{ row.maxLimit }}</span>
+          <span class="text-success">{{ row.maxLimit }}</span>
         }
 
         <!-- Max Tenure -->
@@ -55,23 +55,13 @@
         <!-- Status -->
         @else if (col.field === 'status') {
           @if (row.status === 'Enable') {
-            <span
-              class="status-pill status-approved"
-              (click)="toggleStatus(row)"
-              title="Click to Toggle Status"
-              style="cursor: pointer;"
-            >
+            <button type="button" class="status-pill status-approved" (click)="toggleStatus(row)" title="Click to toggle status">
               Enable
-            </span>
+            </button>
           } @else {
-            <span
-              class="status-pill status-rejected"
-              (click)="toggleStatus(row)"
-              title="Click to Toggle Status"
-              style="cursor: pointer;"
-            >
+            <button type="button" class="status-pill status-rejected" (click)="toggleStatus(row)" title="Click to toggle status">
               Disable
-            </span>
+            </button>
           }
         }
       </ng-template>
@@ -84,24 +74,24 @@
 ========================================================== -->
 @if (modalOpen) {
   <div class="modal-backdrop-custom" (click)="closeModal()"></div>
-  <div class="modal-custom modal-lg shadow-lg" (click)="$event.stopPropagation()">
+  <div class="modal-custom modal-lg" (click)="$event.stopPropagation()">
     <!-- Modal Header -->
-    <div class="modal-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom">
+    <div class="modal-header">
       <div class="d-flex align-items-center gap-2">
         <span class="modal-icon-circle">
-          <i class="bi bi-sliders text-success "></i>
+          <i class="bi bi-sliders text-success"></i>
         </span>
-        <h5 class="modal-title fs-5  text-dark mb-0">
+        <h5 class="modal-title">
           {{ isEditMode ? 'Edit Loan Policy Scheme' : 'Create New Loan Policy Scheme' }}
         </h5>
       </div>
-      <button type="button" class="btn-modal-close-pink" (click)="closeModal()" title="Close">
+      <button type="button" class="btn-close-custom" (click)="closeModal()" title="Close">
         <i class="bi bi-x-lg"></i>
       </button>
     </div>
 
     <!-- Modal Body -->
-    <div class="modal-body p-4 pt-3" [formGroup]="policyForm">
+    <div class="modal-body" [formGroup]="policyForm">
       <div class="row g-3">
         <!-- Scheme Name -->
         <div class="col-md-6">
@@ -125,15 +115,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Classification <span class="text-danger">*</span>
           </label>
-          <p-select
-            [options]="categoryOptions"
-            formControlName="category"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select classification"
-            appendTo="body"
-            styleClass="w-100 modal-p-select"
-          />
+          <app-select formControlName="category" [options]="categoryOptions" optionLabel="label" optionValue="value" placeholder="Select classification" />
         </div>
 
         <!-- Annual Interest Rate -->
@@ -188,15 +170,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Min Service Required
           </label>
-          <p-select
-            [options]="eligibilityOptions"
-            formControlName="eligibility"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select eligibility criteria"
-            appendTo="body"
-            styleClass="w-100 modal-p-select"
-          />
+          <app-select formControlName="eligibility" [options]="eligibilityOptions" optionLabel="label" optionValue="value" placeholder="Select eligibility criteria" />
         </div>
 
         <!-- Status -->
@@ -204,20 +178,13 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Status
           </label>
-          <p-select
-            [options]="statusOptions"
-            formControlName="status"
-            optionLabel="label"
-            optionValue="value"
-            appendTo="body"
-            styleClass="w-100 modal-p-select"
-          />
+          <app-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" />
         </div>
       </div>
     </div>
 
     <!-- Modal Footer -->
-    <div class="modal-footer p-3 px-4 border-top d-flex justify-content-end gap-2 bg-white">
+    <div class="modal-footer">
       <button type="button" class="btn btn-secondary btn-sm px-3" (click)="closeModal()">
         Cancel
       </button>
@@ -233,23 +200,23 @@
 ========================================================== -->
 @if (deleteModalOpen) {
   <div class="modal-backdrop-custom" (click)="closeDeleteModal()"></div>
-  <div class="modal-custom modal-sm shadow-lg" (click)="$event.stopPropagation()">
-    <div class="modal-header d-flex align-items-center justify-content-between p-3 px-4 border-bottom">
-      <h6 class="modal-title  text-danger mb-0">
+  <div class="modal-custom modal-sm" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h6 class="modal-title text-danger">
         <i class="bi bi-exclamation-triangle-fill me-1"></i> Confirm Delete
       </h6>
-      <button type="button" class="btn-modal-close-pink" (click)="closeDeleteModal()" title="Close">
+      <button type="button" class="btn-close-custom" (click)="closeDeleteModal()" title="Close">
         <i class="bi bi-x-lg"></i>
       </button>
     </div>
-    <div class="modal-body p-4">
+    <div class="modal-body">
       <p class="text-dark mb-1">
         Are you sure you want to delete policy scheme:
       </p>
-      <p class=" text-danger mb-0 fs-6">"{{ deletingPolicy?.name }}"?</p>
+      <p class="text-danger mb-0 fs-6">"{{ deletingPolicy?.name }}"?</p>
       <small class="text-muted">This action cannot be undone.</small>
     </div>
-    <div class="modal-footer p-3 px-4 border-top d-flex justify-content-end gap-2 bg-white">
+    <div class="modal-footer">
       <button type="button" class="btn btn-secondary btn-sm px-3" (click)="closeDeleteModal()">
         Cancel
       </button>

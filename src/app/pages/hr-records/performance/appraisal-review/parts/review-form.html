@@ -1,0 +1,61 @@
+@let m = meta();
+
+<form [formGroup]="form" (ngSubmit)="approve()" novalidate class="review-form">
+  <div class="pane-head">
+    <div>
+      <h3 class="pane-title">{{ m.title }}</h3>
+      <p class="pane-sub">Signing as <strong>{{ reviewer() }}</strong></p>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label"><span class="text-danger">*</span> Rating</label>
+      <app-select formControlName="rating" [options]="ratingOptions" optionLabel="label" optionValue="value" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="rv-hike"><span class="text-danger">*</span> Hike %</label>
+      <input id="rv-hike" type="number" class="form-control" formControlName="hike" min="0" max="50" step="0.5"
+        [class.is-invalid]="invalid('hike')" />
+      @if (invalid('hike')) { <div class="field-error">0 – 50%.</div> }
+    </div>
+    <div class="col-md-5">
+      <label class="form-label" for="rv-promo">Promotion</label>
+      <input id="rv-promo" type="text" class="form-control" formControlName="promotion"
+        placeholder="Leave blank for none" />
+    </div>
+    <div class="col-12">
+      <label class="form-label" for="rv-remarks">
+        <span class="text-danger">*</span>
+        {{ tier() === 'mgr' ? 'Note to the employee' : 'Remarks' }}
+        @if (tier() === 'mgr') { <small class="text-muted">· shown on their scorecard</small> }
+      </label>
+      @if (tier() === 'mgr') {
+      <div class="d-flex flex-wrap gap-2 mb-2">
+        @for (p of replyPresets; track p.label) {
+        <button type="button" class="btn btn-outline-primary btn-xs" [title]="p.text"
+          (click)="form.controls.remarks.setValue(p.text)">
+          {{ p.label }}
+        </button>
+        }
+      </div>
+      }
+      <textarea id="rv-remarks" class="form-control" rows="3" formControlName="remarks"
+        [class.is-invalid]="invalid('remarks')"></textarea>
+      @if (invalid('remarks')) { <div class="field-error">Add a short remark (10+ characters).</div> }
+    </div>
+  </div>
+
+  <div class="pane-actions">
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-check2-circle"></i>
+      <span>
+        @switch (tier()) {
+          @case ('tl') { Approve & Forward to HR }
+          @case ('hr') { Approve & Send to Manager }
+          @default { Sign Off & Release Scorecard }
+        }
+      </span>
+    </button>
+  </div>
+</form>

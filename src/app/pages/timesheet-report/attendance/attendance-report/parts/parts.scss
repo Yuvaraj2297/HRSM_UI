@@ -1,0 +1,24 @@
+/* Layout only — colours, pills, strips, timelines and tables come from the
+   global UI library (ui-kit.scss: status & summaries). */
+:host { display: block; }
+
+.hours-cell .ui-meter { width: 110px; }
+
+.rate-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .ui-meter { width: 64px; margin: 0; }
+}
+
+.col-rate  { min-width: 130px; }
+.col-stack { min-width: 160px; }
+
+.row-link { cursor: pointer; }
+
+.month-grid {
+  .col-emp   { left: 0; min-width: 200px; }
+  .col-day   { min-width: 30px; }
+  .col-total { min-width: 38px; }
+}

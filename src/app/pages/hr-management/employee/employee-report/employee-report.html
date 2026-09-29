@@ -1,699 +1,446 @@
 <!-- =========================================================
-     PAGE HEADER
+     PAGE HEADER — title + view tabs on one row
 ========================================================= -->
-<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
-
-  <div class="overflow-auto">
-
-    <h1 class="font-display  mb-1 page-title">
-      Employees
-    </h1>
-
-    <nav class="d-flex align-items-center gap-2 text-neutral text-nowrap breadcrumb-text" aria-label="Breadcrumb">
-
-      <i class="bi bi-people-fill fs-6"></i>
-
-      <span>Employee Management</span>
-
-      <i class="bi bi-chevron-right"></i>
-
-      <span class=" text-dark">
-        Employees Reports
-      </span>
-
-    </nav>
-
-  </div>
-
-
-  <!-- New Employee -->
-  <button type="button" class="btn btn-primary px-3" (click)="openCreateModal()">
-
-    <i class="bi bi-plus-lg"></i>
-
-    New Employee
-
-  </button>
-
-</div>
-
-
-<!-- =========================================================
-     VIEW TABS
-========================================================= -->
-<div class="d-flex gap-2 mb-3 flex-wrap text-nowrap">
-
-  <button *ngFor="let view of views" type="button" class="btn" [ngClass]="
-      activeView === view.key
-        ? 'btn-primary'
-        : 'btn-outline-primary'
-    " (click)="setView(view.key)">
-
-    <i class="" [ngClass]="
-        view.key === 'all'
-          ? 'bi bi-people'
-          : 'bi bi-diagram-3'
-      ">
-    </i>
-
-    {{ view.label }}
-
-  </button>
-
-</div>
-
-
-<!-- =========================================================
-     ALL EMPLOYEES - STAT CARDS
-========================================================= -->
-<div *ngIf="activeView === 'all'" class="row g-3 mb-3">
-
-  <div class="col-sm-6 col-md-4 col-xl text-nowrap" *ngFor="let card of statCards">
-
-    <div class="stat-card d-flex align-items-center gap-3" [ngClass]="'stat-theme-' + card.theme">
-
-      <!-- Icon -->
-      <div class="stat-icon stat-icon-lg">
-        <i [class]="card.icon"></i>
-      </div>
-
-
-      <!-- Content -->
-      <div>
-
-        <div class="label stat-label">
-          {{ card.label }}
-        </div>
-
-        <div class="value">
-          {{ card.value }}
-        </div>
-
-        <div class="delta" [ngClass]="card.deltaClass">
-
-          {{ card.delta }}
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
+<div class="card-custom">
+  <nav class="page-tabs page-tabs-sm" role="tablist" aria-label="Employee views">
+    @for (view of views; track view.key) {
+    <button type="button" role="tab" class="page-tab" [class.active]="activeView === view.key"
+      [attr.aria-selected]="activeView === view.key" (click)="setView(view.key)">
+      <i [class]="view.key === 'all' ? 'bi bi-people' : 'bi bi-diagram-3'"></i>
+      {{ view.label }}
+      <span class="page-tab-count">{{ view.key === 'all' ? tableData.length : teamGroups.length }}</span>
+    </button>
+    }
+  </nav>
+<div class="p-3">
+<!-- 
+<div *ngIf="activeView === 'all'" class="stat-grid">
+  <app-stat-card *ngFor="let card of statCards"
+    [label]="card.label" [value]="card.value" [icon]="card.icon"
+    [tone]="card.theme" [sub]="card.delta" [subTone]="card.deltaClass" />
+</div> -->
 <!-- =========================================================
      ALL EMPLOYEES TABLE
 ========================================================= -->
 <div *ngIf="activeView === 'all'">
-
   <app-primedatatable [modalHeader]="header" [columns]="columns" [data]="tableData"
     [searchPlaceholder]="searchPlaceholder" [rowActions]="rowActions"
-    (addClicked)="openCreateModal()" (actionClick)="onTableAction($event)">
-
+    [Accessactions]="employeeActions" (addClicked)="openCreateModal()" (actionClick)="onTableAction($event)">
   </app-primedatatable>
-
 </div>
-
-
 <!-- =========================================================
      TEAM VIEW
 ========================================================= -->
 <div *ngIf="activeView === 'team'">
-
   <!-- =======================================================
        TEAM CARDS
   ======================================================== -->
   <div class="row g-3 mb-3">
-
     <div class="col-xl col-lg-4 col-sm-6" *ngFor="let group of teamGroups; trackBy: trackByTeam">
-
-      <div class="team-card" [class.team-card-active]="selectedTeam === group.name" (click)="selectTeam(group.name)"
+      <div class="card-custom card-custom-hover p-3 h-100 team-card" [class.is-selected]="selectedTeam === group.name" (click)="selectTeam(group.name)"
         role="button" tabindex="0" (keydown.enter)="selectTeam(group.name)" (keydown.space)="selectTeam(group.name)">
-
         <!-- Team Icon -->
-        <div class="team-card-icon" [ngStyle]="teamIconStyle(group.color)">
-
+        <div class="ui-ico ui-ico--lg mb-3" [ngStyle]="teamIconStyle(group.color)">
           <i class="bi bi-people-fill"></i>
-
         </div>
-
-
         <!-- Team Name -->
-        <div class="team-card-name">
-          {{ group.name }}
-        </div>
-
-
+        <div class="ui-row-title">{{ group.name }}</div>
         <!-- Members + Avatars -->
         <div class="d-flex align-items-center justify-content-between mt-2">
-
           <!-- Member Count -->
-          <div class="team-card-count">
-
-            <strong>
-              {{ group.members.length }}
-            </strong>
-
+          <div class="ui-cell-sub">
+            <span class="stat-card-value">{{ group.members.length }}</span>
             {{ group.members.length === 1 ? 'Member' : 'Members' }}
-
           </div>
-
-
           <!-- Avatars -->
-          <div class="team-card-avatars">
-
+          <div class="ui-avatar-stack">
             <img *ngFor="let member of visibleAvatars(group)" [src]="member.avatar" [alt]="member.name"
               [title]="member.name" (error)="onAvatarError($event, member.name)" />
-
-            <span class="avatar-more" *ngIf="avatarOverflow(group) > 0">
-
+            <span class="ui-avatar" *ngIf="avatarOverflow(group) > 0">
               +{{ avatarOverflow(group) }}
-
             </span>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
-
   <!-- =======================================================
        SELECTED TEAM TABLE
   ======================================================== -->
   <ng-container *ngIf="selectedTeam; else pickTeam">
-
     <app-primedatatable [modalHeader]="teamHeader" [columns]="teamColumns" [data]="teamMembers"
       [searchPlaceholder]="teamSearchPlaceholder" [Accessactions]="teamActions" [rowActions]="rowActions"
       (actionClick)="onTableAction($event)">
-
     </app-primedatatable>
-
   </ng-container>
-
-
   <!-- =======================================================
        NO TEAM SELECTED
   ======================================================== -->
   <ng-template #pickTeam>
-
-    <div class="text-center text-neutral py-5">
-
-      <i class="bi bi-people fs-1 d-block mb-2"></i>
-
-      <div class="fw-semibold">
-        Select a team
-      </div>
-
-      <div class="small">
-        Select a team card to view its members
-      </div>
-
+    <div class="card-custom empty-state">
+      <div class="e-ico"><i class="bi bi-people"></i></div>
+      <div class="e-title">Select a team</div>
+      <div class="e-sub">Select a team card to view its members</div>
     </div>
-
   </ng-template>
-
 </div>
-
-
+</div>
+</div>
 <!-- =========================================================
      EMPLOYEE VIEW MODAL
 ========================================================= -->
-<div class="employee-modal-overlay" *ngIf="isViewModalOpen && selectedEmployee">
-
-  <div class="employee-modal">
-
+<ng-container *ngIf="isViewModalOpen && selectedEmployee">
+<div class="modal-backdrop-custom"></div>
+<div class="ui-fs" role="dialog" aria-modal="true" aria-labelledby="empViewName">
+  <div class="ui-fs-head">
+    <div>
+      <h4 class="ui-fs-title" id="empViewName">{{ selectedEmployee.name }}</h4>
+      <div class="ui-fs-sub">{{ selectedEmployee.empId }} · {{ selectedEmployee.position }}</div>
+    </div>
     <!-- Close (top-left) -->
-    <button aria-label="Close" type="button" class="modal-close-x" (click)="closeViewModal()">
-      <i class="bi bi-x"></i>
-    </button>
-
-    <div class="employee-modal-body">
-
+    <button type="button" class="btn-close-custom" (click)="closeViewModal()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+  </div>
+    <div class="ui-fs-body">
       <!-- ===================================================
            LEFT PROFILE PANEL
       ==================================================== -->
-      <div class="employee-modal-sidebar">
-
-        <img class="employee-modal-avatar" [src]="selectedEmployee.avatar" [alt]="selectedEmployee.name"
+      <aside class="ui-fs-aside">
+        <img class="ui-avatar profile-photo mx-auto" [src]="selectedEmployee.avatar" [alt]="selectedEmployee.name"
           (error)="onAvatarError($event, selectedEmployee.name)" />
-
-        <div class="employee-modal-name">
-          {{ selectedEmployee.name }}
-        </div>
-
-        <div class="employee-modal-sub">
-          {{ selectedEmployee.empId }} · {{ selectedEmployee.position }}
-        </div>
-
+        <div class="ui-person-name text-center">{{ selectedEmployee.name }}</div>
+        <div class="ui-person-role text-center">{{ selectedEmployee.empId }} · {{ selectedEmployee.position }}</div>
         <div class="d-flex justify-content-center gap-2 mt-2 mb-3">
-          <span class="badge-pill">{{ selectedEmployee.dept }}</span>
-          <span class="badge-pill" [class.badge-active]="selectedEmployee.status === 'Active'"
-            [class.badge-inactive]="selectedEmployee.status === 'Inactive'"
-            [class.badge-invited]="selectedEmployee.status === 'Invited'">
+          <span class="ui-tag">{{ selectedEmployee.dept }}</span>
+          <span class="ui-tag" [class.tone-success]="selectedEmployee.status === 'Active'" [class.tone-danger]="selectedEmployee.status === 'Inactive'" [class.tone-info]="selectedEmployee.status === 'Invited'">
             {{ selectedEmployee.status }}
           </span>
         </div>
-
         <hr />
-
-        <div class="sidebar-item">
-          <i class="bi bi-envelope"></i>
-          <div>
-            <div class="sidebar-label">EMAIL</div>
-            <div class="sidebar-value">{{ selectedEmployee.email }}</div>
-          </div>
+        <div class="ui-media">
+          <span class="ui-ico ui-ico--sm"><i class="bi bi-envelope"></i></span>
+          <div class="min-w-0"><div class="ui-meta-label">Email</div><div class="ui-media-title text-break">{{ selectedEmployee.email }}</div></div>
         </div>
-
-        <div class="sidebar-item">
-          <i class="bi bi-telephone"></i>
-          <div>
-            <div class="sidebar-label">PHONE</div>
-            <div class="sidebar-value">{{ selectedEmployee.phone }}</div>
-          </div>
+        <div class="ui-media">
+          <span class="ui-ico ui-ico--sm"><i class="bi bi-telephone"></i></span>
+          <div class="min-w-0"><div class="ui-meta-label">Phone</div><div class="ui-media-title text-break">{{ selectedEmployee.phone }}</div></div>
         </div>
-
-        <div class="sidebar-item">
-          <i class="bi bi-geo-alt"></i>
-          <div>
-            <div class="sidebar-label">OFFICE</div>
-            <div class="sidebar-value">{{ selectedEmployee.office }}</div>
-          </div>
+        <div class="ui-media">
+          <span class="ui-ico ui-ico--sm"><i class="bi bi-geo-alt"></i></span>
+          <div class="min-w-0"><div class="ui-meta-label">Office</div><div class="ui-media-title text-break">{{ selectedEmployee.office }}</div></div>
         </div>
-
-        <div class="sidebar-item">
-          <i class="bi bi-calendar-check"></i>
-          <div>
-            <div class="sidebar-label">DATE OF JOINING</div>
-            <div class="sidebar-value">{{ selectedEmployee.joined }}</div>
-          </div>
+        <div class="ui-media">
+          <span class="ui-ico ui-ico--sm"><i class="bi bi-calendar-check"></i></span>
+          <div class="min-w-0"><div class="ui-meta-label">Date Of Joining</div><div class="ui-media-title text-break">{{ selectedEmployee.joined }}</div></div>
         </div>
-
-        <div class="sidebar-item">
-          <i class="bi bi-person-badge"></i>
-          <div>
-            <div class="sidebar-label">REPORTING MANAGER</div>
-            <div class="sidebar-value">{{ selectedEmployee.manager }}</div>
-          </div>
+        <div class="ui-media">
+          <span class="ui-ico ui-ico--sm"><i class="bi bi-person-badge"></i></span>
+          <div class="min-w-0"><div class="ui-meta-label">Reporting Manager</div><div class="ui-media-title text-break">{{ selectedEmployee.manager }}</div></div>
         </div>
-
-      </div>
-
+      </aside>
       <!-- ===================================================
            RIGHT CONTENT PANEL
       ==================================================== -->
-      <div class="employee-modal-content">
-
+      <div class="ui-fs-main side-scroll p-3">
         <!-- Tabs -->
-        <div role="tablist" class="employee-modal-tabs">
-          <button role="tab" type="button" *ngFor="let tab of modalTabs" class="modal-tab-btn"
+        <nav role="tablist" class="page-tabs page-tabs-sm mb-3">
+          <button role="tab" type="button" *ngFor="let tab of modalTabs" class="page-tab"
             [class.active]="activeModalTab === tab.key" (click)="setModalTab(tab.key)" [attr.aria-selected]="activeModalTab === tab.key">
             <i [class]="tab.icon"></i>
             <span>{{ tab.label }}</span>
           </button>
-        </div>
-
+        </nav>
         <!-- =============================================
              OVERVIEW TAB
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'overview'">
-
+        <div *ngIf="activeModalTab === 'overview'">
           <div class="row g-3">
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Employment Information</div>
-
-                <div class="info-row">
-                  <span class="info-label">Employee ID</span>
-                  <span class="info-value">{{ selectedEmployee.empId }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Employment Information</div>
+                <div class="ui-info-row">
+                  <span>Employee ID</span>
+                  <span class="ui-info-val">{{ selectedEmployee.empId }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Employment Type</span>
-                  <span class="info-value">{{ selectedEmployee.empType || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Employment Type</span>
+                  <span class="ui-info-val">{{ selectedEmployee.empType || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Date of Joining</span>
-                  <span class="info-value">{{ selectedEmployee.joined }}</span>
+                <div class="ui-info-row">
+                  <span>Date of Joining</span>
+                  <span class="ui-info-val">{{ selectedEmployee.joined }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Confirmation Date</span>
-                  <span class="info-value">{{ selectedEmployee.confirmDate || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Confirmation Date</span>
+                  <span class="ui-info-val">{{ selectedEmployee.confirmDate || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Probation Period</span>
-                  <span class="info-value">{{ selectedEmployee.probation || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Probation Period</span>
+                  <span class="ui-info-val">{{ selectedEmployee.probation || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Status</span>
-                  <span class="info-value">{{ selectedEmployee.status }}</span>
+                <div class="ui-info-row">
+                  <span>Status</span>
+                  <span class="ui-info-val">{{ selectedEmployee.status }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Organization Information</div>
-
-                <div class="info-row">
-                  <span class="info-label">Department</span>
-                  <span class="info-value">{{ selectedEmployee.dept }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Organization Information</div>
+                <div class="ui-info-row">
+                  <span>Department</span>
+                  <span class="ui-info-val">{{ selectedEmployee.dept }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Designation</span>
-                  <span class="info-value">{{ selectedEmployee.position }}</span>
+                <div class="ui-info-row">
+                  <span>Designation</span>
+                  <span class="ui-info-val">{{ selectedEmployee.position }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Grade</span>
-                  <span class="info-value">{{ selectedEmployee.grade || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Grade</span>
+                  <span class="ui-info-val">{{ selectedEmployee.grade || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Branch</span>
-                  <span class="info-value">{{ selectedEmployee.branch || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Branch</span>
+                  <span class="ui-info-val">{{ selectedEmployee.branch || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Location</span>
-                  <span class="info-value">{{ selectedEmployee.location || selectedEmployee.office }}</span>
+                <div class="ui-info-row">
+                  <span>Location</span>
+                  <span class="ui-info-val">{{ selectedEmployee.location || selectedEmployee.office }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Cost Center</span>
-                  <span class="info-value">{{ selectedEmployee.costCenter || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Cost Center</span>
+                  <span class="ui-info-val">{{ selectedEmployee.costCenter || '—' }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Contact Information</div>
-
-                <div class="info-row">
-                  <span class="info-label">Mobile</span>
-                  <span class="info-value">{{ selectedEmployee.phone }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Contact Information</div>
+                <div class="ui-info-row">
+                  <span>Mobile</span>
+                  <span class="ui-info-val">{{ selectedEmployee.phone }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Official Email</span>
-                  <span class="info-value">{{ selectedEmployee.email }}</span>
+                <div class="ui-info-row">
+                  <span>Official Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.email }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Personal Email</span>
-                  <span class="info-value">{{ selectedEmployee.personalEmail || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Personal Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.personalEmail || '—' }}</span>
                 </div>
-
-                <div class="info-row" style="align-items:flex-start;">
-                  <span class="info-label">Current Address</span>
-                  <span class="info-value" style="max-width:60%;">{{ selectedEmployee.address || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Current Address</span>
+                  <span class="ui-info-val">{{ selectedEmployee.address || '—' }}</span>
                 </div>
-
-                <a class="info-viewmore" href (click)="setModalTab('personal'); $event.preventDefault()">
-                  View More <i class="bi bi-arrow-right"></i>
-                </a>
+                <button type="button" class="ui-link-btn mt-2" (click)="setModalTab('personal')">View More <i class="bi bi-arrow-right"></i></button>
               </div>
             </div>
-
           </div>
-
         </div>
-
         <!-- =============================================
              PERSONAL TAB
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'personal'">
-
+        <div *ngIf="activeModalTab === 'personal'">
           <div class="row g-3">
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Personal Details</div>
-
-                <div class="info-row">
-                  <span class="info-label">Full Name</span>
-                  <span class="info-value">{{ selectedEmployee.name }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Personal Details</div>
+                <div class="ui-info-row">
+                  <span>Full Name</span>
+                  <span class="ui-info-val">{{ selectedEmployee.name }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Date of Birth</span>
-                  <span class="info-value">{{ selectedEmployee.dob || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Date of Birth</span>
+                  <span class="ui-info-val">{{ selectedEmployee.dob || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Blood Group</span>
-                  <span class="info-value">{{ selectedEmployee.bloodGroup || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Blood Group</span>
+                  <span class="ui-info-val">{{ selectedEmployee.bloodGroup || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Marital Status</span>
-                  <span class="info-value">{{ selectedEmployee.maritalStatus || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Marital Status</span>
+                  <span class="ui-info-val">{{ selectedEmployee.maritalStatus || '—' }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Contact Details</div>
-
-                <div class="info-row">
-                  <span class="info-label">Mobile</span>
-                  <span class="info-value">{{ selectedEmployee.phone }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Contact Details</div>
+                <div class="ui-info-row">
+                  <span>Mobile</span>
+                  <span class="ui-info-val">{{ selectedEmployee.phone }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Official Email</span>
-                  <span class="info-value">{{ selectedEmployee.email }}</span>
+                <div class="ui-info-row">
+                  <span>Official Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.email }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Personal Email</span>
-                  <span class="info-value">{{ selectedEmployee.personalEmail || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Personal Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.personalEmail || '—' }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Address</div>
-
-                <div class="info-row" style="align-items:flex-start;">
-                  <span class="info-label">Current Address</span>
-                  <span class="info-value" style="max-width:65%;">{{ selectedEmployee.address || '—' }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Address</div>
+                <div class="ui-info-row">
+                  <span>Current Address</span>
+                  <span class="ui-info-val" style="max-width:65%;">{{ selectedEmployee.address || '—' }}</span>
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
-
         <!-- =============================================
              EMPLOYMENT TAB
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'employment'">
-
+        <div *ngIf="activeModalTab === 'employment'">
           <div class="row g-3">
-
             <div class="col-lg-6">
-              <div class="info-card">
-                <div class="info-card-title">Employment Details</div>
-
-                <div class="info-row">
-                  <span class="info-label">Employment Type</span>
-                  <span class="info-value">{{ selectedEmployee.empType || '—' }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Employment Details</div>
+                <div class="ui-info-row">
+                  <span>Employment Type</span>
+                  <span class="ui-info-val">{{ selectedEmployee.empType || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Date of Joining</span>
-                  <span class="info-value">{{ selectedEmployee.joined }}</span>
+                <div class="ui-info-row">
+                  <span>Date of Joining</span>
+                  <span class="ui-info-val">{{ selectedEmployee.joined }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Confirmation Date</span>
-                  <span class="info-value">{{ selectedEmployee.confirmDate || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Confirmation Date</span>
+                  <span class="ui-info-val">{{ selectedEmployee.confirmDate || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Probation Period</span>
-                  <span class="info-value">{{ selectedEmployee.probation || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Probation Period</span>
+                  <span class="ui-info-val">{{ selectedEmployee.probation || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Status</span>
-                  <span class="info-value">{{ selectedEmployee.status }}</span>
+                <div class="ui-info-row">
+                  <span>Status</span>
+                  <span class="ui-info-val">{{ selectedEmployee.status }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Notice Period</span>
-                  <span class="info-value">{{ selectedEmployee.noticePeriod || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Notice Period</span>
+                  <span class="ui-info-val">{{ selectedEmployee.noticePeriod || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Work Location</span>
-                  <span class="info-value">{{ selectedEmployee.workLocation || selectedEmployee.office }}</span>
+                <div class="ui-info-row">
+                  <span>Work Location</span>
+                  <span class="ui-info-val">{{ selectedEmployee.workLocation || selectedEmployee.office }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-lg-6">
-              <div class="info-card">
-                <div class="info-card-title">Experience Details</div>
-
-                <div class="info-row">
-                  <span class="info-label">Previous Company</span>
-                  <span class="info-value">{{ selectedEmployee.prevCompany || '—' }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Experience Details</div>
+                <div class="ui-info-row">
+                  <span>Previous Company</span>
+                  <span class="ui-info-val">{{ selectedEmployee.prevCompany || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Previous Designation</span>
-                  <span class="info-value">{{ selectedEmployee.prevDesignation || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Previous Designation</span>
+                  <span class="ui-info-val">{{ selectedEmployee.prevDesignation || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Industry</span>
-                  <span class="info-value">{{ selectedEmployee.industry || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Industry</span>
+                  <span class="ui-info-val">{{ selectedEmployee.industry || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Total Experience (Years)</span>
-                  <span class="info-value">{{ selectedEmployee.totalExp || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Total Experience (Years)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.totalExp || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Relevant Experience (Years)</span>
-                  <span class="info-value">{{ selectedEmployee.relevantExp || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Relevant Experience (Years)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.relevantExp || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Previous CTC (Annual)</span>
-                  <span class="info-value">{{ selectedEmployee.prevCtc || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Previous CTC (Annual)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.prevCtc || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Expected CTC (Annual)</span>
-                  <span class="info-value">{{ selectedEmployee.expectedCtc || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Expected CTC (Annual)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.expectedCtc || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Reason for Leaving</span>
-                  <span class="info-value">{{ selectedEmployee.reasonLeaving || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Reason for Leaving</span>
+                  <span class="ui-info-val">{{ selectedEmployee.reasonLeaving || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Skills</span>
-                  <span class="info-value">{{ selectedEmployee.skills || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Skills</span>
+                  <span class="ui-info-val">{{ selectedEmployee.skills || '—' }}</span>
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
-
         <!-- =============================================
              ORGANIZATION TAB
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'organization'">
-
+        <div *ngIf="activeModalTab === 'organization'">
           <div class="row g-3">
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Organization Structure</div>
-
-                <div class="info-row">
-                  <span class="info-label">Department</span>
-                  <span class="info-value">{{ selectedEmployee.dept }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Organization Structure</div>
+                <div class="ui-info-row">
+                  <span>Department</span>
+                  <span class="ui-info-val">{{ selectedEmployee.dept }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Team</span>
-                  <span class="info-value">{{ selectedEmployee.team }}</span>
+                <div class="ui-info-row">
+                  <span>Team</span>
+                  <span class="ui-info-val">{{ selectedEmployee.team }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Designation</span>
-                  <span class="info-value">{{ selectedEmployee.position }}</span>
+                <div class="ui-info-row">
+                  <span>Designation</span>
+                  <span class="ui-info-val">{{ selectedEmployee.position }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Grade</span>
-                  <span class="info-value">{{ selectedEmployee.grade || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Grade</span>
+                  <span class="ui-info-val">{{ selectedEmployee.grade || '—' }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Location</div>
-
-                <div class="info-row">
-                  <span class="info-label">Office</span>
-                  <span class="info-value">{{ selectedEmployee.office }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Location</div>
+                <div class="ui-info-row">
+                  <span>Office</span>
+                  <span class="ui-info-val">{{ selectedEmployee.office }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Branch</span>
-                  <span class="info-value">{{ selectedEmployee.branch || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Branch</span>
+                  <span class="ui-info-val">{{ selectedEmployee.branch || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Cost Center</span>
-                  <span class="info-value">{{ selectedEmployee.costCenter || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Cost Center</span>
+                  <span class="ui-info-val">{{ selectedEmployee.costCenter || '—' }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Reporting Line</div>
-
-                <div class="info-row">
-                  <span class="info-label">Reporting Manager</span>
-                  <span class="info-value">{{ selectedEmployee.manager }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Reporting Line</div>
+                <div class="ui-info-row">
+                  <span>Reporting Manager</span>
+                  <span class="ui-info-val">{{ selectedEmployee.manager }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Manager Email</span>
-                  <span class="info-value">{{ selectedEmployee.managerEmail }}</span>
+                <div class="ui-info-row">
+                  <span>Manager Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.managerEmail }}</span>
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
-
         <!-- =============================================
              DOCUMENTS TAB
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'documents'">
-
-          <div class="info-card p-0">
-
+        <div *ngIf="activeModalTab === 'documents'">
+          <div class="card-custom p-0 h-100">
             <div class="d-flex align-items-center justify-content-between p-3">
-              <div class="info-card-title mb-0">Documents</div>
+              <div class="ui-sec-title mb-0">Documents</div>
               <button type="button" class="btn btn-primary btn-sm">
                 <i class="bi bi-upload"></i>Upload Document
               </button>
             </div>
-
-            <div class="table-responsive">
+            <div class="data-table-wrap">
               <table class="table mb-0 modal-doc-table">
                 <thead>
                   <tr>
@@ -718,218 +465,174 @@
                       </button>
                     </td>
                   </tr>
-
                   <tr *ngIf="!selectedEmployee.documents?.length">
                     <td colspan="6" class="text-center text-neutral py-3">No documents uploaded</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
           </div>
-
         </div>
-
         <!-- =============================================
              ATTENDANCE TAB (placeholder)
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'attendance'">
-          <div class="info-card">
-            <div class="modal-empty-state">
-              <i class="bi bi-clock-history"></i>
-              <strong>Attendance records coming soon</strong>
-              <span>Daily check-in/out and monthly attendance summary will appear here.</span>
+        <div *ngIf="activeModalTab === 'attendance'">
+          <div class="card-custom p-3 h-100">
+            <div class="empty-state">
+              <div class="e-ico"><i class="bi bi-clock-history"></i></div>
+              <div class="e-title">Attendance records coming soon</div>
+              <div class="e-sub">Daily check-in/out and monthly attendance summary will appear here.</div>
             </div>
           </div>
         </div>
-
         <!-- =============================================
              LEAVE TAB (placeholder)
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'leave'">
-          <div class="info-card">
-            <div class="modal-empty-state">
-              <i class="bi bi-calendar-x"></i>
-              <strong>No leave records yet</strong>
-              <span>Leave balance, applied leaves and approvals will be listed here.</span>
+        <div *ngIf="activeModalTab === 'leave'">
+          <div class="card-custom p-3 h-100">
+            <div class="empty-state">
+              <div class="e-ico"><i class="bi bi-calendar-x"></i></div>
+              <div class="e-title">No leave records yet</div>
+              <div class="e-sub">Leave balance, applied leaves and approvals will be listed here.</div>
             </div>
           </div>
         </div>
-
         <!-- =============================================
              PAYROLL TAB
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'payroll'">
-
+        <div *ngIf="activeModalTab === 'payroll'">
           <div class="row g-3">
-
             <div class="col-lg-4">
-              <div class="info-card">
-                <div class="info-card-title">Salary Information</div>
-
-                <div class="info-row">
-                  <span class="info-label">Salary Structure</span>
-                  <span class="info-value">CTC Structure 2024</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Salary Information</div>
+                <div class="ui-info-row">
+                  <span>Salary Structure</span>
+                  <span class="ui-info-val">CTC Structure 2024</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">CTC</span>
-                  <span class="info-value">{{ selectedEmployee.ctc || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>CTC</span>
+                  <span class="ui-info-val">{{ selectedEmployee.ctc || '—' }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Effective From</span>
-                  <span class="info-value">{{ selectedEmployee.joined }}</span>
+                <div class="ui-info-row">
+                  <span>Effective From</span>
+                  <span class="ui-info-val">{{ selectedEmployee.joined }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-lg-4">
-              <div class="info-card">
-                <div class="info-card-title">Earnings</div>
-
-                <div class="info-row">
-                  <span class="info-label">Basic Salary</span>
-                  <span class="info-value">{{ money(selectedEmployee.basic) }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Earnings</div>
+                <div class="ui-info-row">
+                  <span>Basic Salary</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.basic) }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">HRA</span>
-                  <span class="info-value">{{ money(selectedEmployee.hra) }}</span>
+                <div class="ui-info-row">
+                  <span>HRA</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.hra) }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Special Allowance</span>
-                  <span class="info-value">{{ money(selectedEmployee.specialAllowance) }}</span>
+                <div class="ui-info-row">
+                  <span>Special Allowance</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.specialAllowance) }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Other Allowance</span>
-                  <span class="info-value">{{ money(selectedEmployee.otherAllowance) }}</span>
+                <div class="ui-info-row">
+                  <span>Other Allowance</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.otherAllowance) }}</span>
                 </div>
-
-                <div class="info-row ">
-                  <span class="info-label">Gross Salary</span>
-                  <span class="info-value">{{ money(grossSalary) }}</span>
+                <div class="ui-info-row ">
+                  <span>Gross Salary</span>
+                  <span class="ui-info-val">{{ money(grossSalary) }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-lg-4">
-              <div class="info-card">
-                <div class="info-card-title">Deductions</div>
-
-                <div class="info-row">
-                  <span class="info-label">PF</span>
-                  <span class="info-value">{{ money(selectedEmployee.pf) }}</span>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Deductions</div>
+                <div class="ui-info-row">
+                  <span>PF</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.pf) }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Professional Tax</span>
-                  <span class="info-value">{{ money(selectedEmployee.professionalTax) }}</span>
+                <div class="ui-info-row">
+                  <span>Professional Tax</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.professionalTax) }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">TDS</span>
-                  <span class="info-value">{{ money(selectedEmployee.tds) }}</span>
+                <div class="ui-info-row">
+                  <span>TDS</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.tds) }}</span>
                 </div>
-
-                <div class="info-row">
-                  <span class="info-label">Total Deductions</span>
-                  <span class="info-value">{{ money(totalDeductions) }}</span>
+                <div class="ui-info-row">
+                  <span>Total Deductions</span>
+                  <span class="ui-info-val">{{ money(totalDeductions) }}</span>
                 </div>
-
-                <div class="info-row ">
-                  <span class="info-label">Net Salary</span>
-                  <span class="info-value">{{ money(netSalary) }}</span>
+                <div class="ui-info-row ">
+                  <span>Net Salary</span>
+                  <span class="ui-info-val">{{ money(netSalary) }}</span>
                 </div>
               </div>
             </div>
-
             <div class="col-12 text-center">
               <button type="button" class="btn btn-outline-primary btn-sm mt-1">
                 <i class="bi bi-clock-history"></i>View Salary History
               </button>
             </div>
-
           </div>
-
         </div>
-
         <!-- =============================================
              ASSETS TAB (placeholder)
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'assets'">
-          <div class="info-card">
-            <div class="modal-empty-state">
-              <i class="bi bi-laptop"></i>
-              <strong>No assets assigned</strong>
-              <span>Laptops, ID cards and other issued assets will be tracked here.</span>
+        <div *ngIf="activeModalTab === 'assets'">
+          <div class="card-custom p-3 h-100">
+            <div class="empty-state">
+              <div class="e-ico"><i class="bi bi-laptop"></i></div>
+              <div class="e-title">No assets assigned</div>
+              <div class="e-sub">Laptops, ID cards and other issued assets will be tracked here.</div>
             </div>
           </div>
         </div>
-
         <!-- =============================================
              PERFORMANCE TAB (placeholder)
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'performance'">
-          <div class="info-card">
-            <div class="modal-empty-state">
-              <i class="bi bi-graph-up-arrow"></i>
-              <strong>No performance reviews yet</strong>
-              <span>Goals, ratings and review cycles will be shown here.</span>
+        <div *ngIf="activeModalTab === 'performance'">
+          <div class="card-custom p-3 h-100">
+            <div class="empty-state">
+              <div class="e-ico"><i class="bi bi-graph-up-arrow"></i></div>
+              <div class="e-title">No performance reviews yet</div>
+              <div class="e-sub">Goals, ratings and review cycles will be shown here.</div>
             </div>
           </div>
         </div>
-
         <!-- =============================================
              TRAINING TAB (placeholder)
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'training'">
-          <div class="info-card">
-            <div class="modal-empty-state">
-              <i class="bi bi-mortarboard"></i>
-              <strong>No training records yet</strong>
-              <span>Completed and enrolled courses will be listed here.</span>
+        <div *ngIf="activeModalTab === 'training'">
+          <div class="card-custom p-3 h-100">
+            <div class="empty-state">
+              <div class="e-ico"><i class="bi bi-mortarboard"></i></div>
+              <div class="e-title">No training records yet</div>
+              <div class="e-sub">Completed and enrolled courses will be listed here.</div>
             </div>
           </div>
         </div>
-
         <!-- =============================================
              HISTORY TAB
         ============================================== -->
-        <div class="modal-tab-panels" *ngIf="activeModalTab === 'history'">
-          <div class="info-card">
-            <div class="info-card-title">Employee History</div>
-
-            <div class="modal-timeline">
-              <div class="modal-timeline-item" *ngFor="let entry of selectedEmployee.history || []">
-                <div class="modal-timeline-dot"></div>
-                <div class="modal-timeline-content">
-                  <div class="modal-timeline-date">{{ entry.date }}</div>
-                  <div class="modal-timeline-title">{{ entry.title }}</div>
-                  <div class="modal-timeline-desc">{{ entry.description }}</div>
+        <div *ngIf="activeModalTab === 'history'">
+          <div class="card-custom p-3 h-100">
+            <div class="ui-sec-title">Employee History</div>
+            <ol class="ui-vsteps m-0 p-0">
+              <li class="ui-vstep done" *ngFor="let entry of selectedEmployee.history || []">
+                <span class="ui-vstep-dot"><i class="bi bi-check"></i></span>
+                <div>
+                  <span class="ui-vstep-caption">{{ entry.date }}</span>
+                  <span class="ui-vstep-label">{{ entry.title }}</span>
+                  <div class="field-hint m-0">{{ entry.description }}</div>
                 </div>
-              </div>
-
-              <div class="text-neutral text-center py-3" *ngIf="!selectedEmployee.history?.length">
-                No history recorded
-              </div>
-            </div>
+              </li>
+            </ol>
+            <div class="empty-state py-3" *ngIf="!selectedEmployee.history?.length"><div class="e-sub">No history recorded</div></div>
           </div>
         </div>
-
       </div>
-
     </div>
-
     <!-- Footer -->
-    <div class="employee-modal-footer">
-      <button type="button" class="btn btn-outline-danger px-4" (click)="closeViewModal()">
-        Close
-      </button>
     </div>
-
-  </div>
-
-</div>
+</ng-container>

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
 import {
   DEPT_COLORS,
@@ -36,7 +37,7 @@ interface TeamGroup {
 
   standalone: true,
 
-  imports: [CommonModule, PrimeDataTable],
+  imports: [CommonModule, PrimeDataTable, AppStatCard],
 
   templateUrl:'./employee-report.html',
 
@@ -54,7 +55,7 @@ export class EmployeeReport implements OnInit {
   ======================================================== */
 
   header = {
-    title: 'Employees',
+    title: 'Employee Reports',
     icon: 'ti ti-users',
   };
 
@@ -177,6 +178,15 @@ export class EmployeeReport implements OnInit {
   /* =======================================================
      TEAM TABLE ACTIONS
   ======================================================== */
+
+  /** "New Employee" lives in the table toolbar */
+  employeeActions = {
+    add: true,
+    addLabel: 'New Employee',
+    addIcon: 'bi bi-plus-lg',
+    edit: false,
+    delete: false,
+  };
 
   teamActions = {
     add: false,

@@ -1,0 +1,77 @@
+<app-att-summary-strip class="mb-3" label="Monthly summary" [items]="strip()" />
+
+<section class="card-custom overflow-hidden">
+  <header class="card-custom-header">
+    <ul class="ui-legend m-0 p-0 list-unstyled" aria-label="Legend">
+      @for (s of legend; track s) {
+      <li class="ui-legend-item"><span class="ui-status-code ui-status-code--sm" [attr.data-status]="s">{{ s === 'weekoff' ? '—' : meta[s].short }}</span> {{ meta[s].label }}</li>
+      }
+    </ul>
+    <button type="button" class="btn btn-outline-primary btn-sm" (click)="exportCsv()">
+      <i class="bi bi-download"></i>
+      <span>Export CSV</span>
+    </button>
+  </header>
+
+  <div class="data-table-wrap border-0 rounded-0">
+    <table class="data-table data-table-dense data-table-sticky month-grid">
+      <thead>
+        <tr>
+          <th class="is-sticky col-emp text-start" scope="col">Employee</th>
+          @for (d of days(); track d.iso) {
+          <th scope="col" class="col-day" [class.is-weekend]="d.weekend" [class.is-today]="d.today">
+            <div>{{ d.day }}</div>
+            <div class="ui-cell-sub">{{ d.dow }}</div>
+          </th>
+          }
+          <th scope="col" class="col-total">P</th>
+          <th scope="col" class="col-total">L</th>
+          <th scope="col" class="col-total">LV</th>
+          <th scope="col" class="col-total">A</th>
+          <th scope="col" class="col-total">Hrs</th>
+          <th scope="col">Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of store.monthlyRows(); track r.empId) {
+        <tr>
+          <th scope="row" class="is-sticky col-emp text-start">
+            <button type="button" class="ui-media p-0" (click)="store.calendarEmpId.set(r.empId)"
+              [title]="'Monthly calendar — ' + r.name">
+              @if (r.avatar) {
+                <img [src]="r.avatar" [alt]="r.name" class="ui-avatar ui-avatar--sm" />
+              } @else {
+                <span class="ui-avatar ui-avatar--sm">{{ initials(r.name) }}</span>
+              }
+              <span>
+                <span class="ui-media-title d-block">{{ r.name }}</span>
+                <span class="ui-media-sub">{{ r.dept }}</span>
+              </span>
+            </button>
+          </th>
+          @for (d of r.days; track $index) {
+            @let col = days()[$index];
+          <td class="col-day" [class.is-weekend]="col.weekend">
+            @if (d) {
+              <span class="ui-status-code ui-status-code--sm" [attr.data-status]="d.status" [title]="cellTitle(col.iso, d)">
+                {{ d.status === 'weekoff' ? '' : meta[d.status].short }}
+              </span>
+            }
+          </td>
+          }
+          <td class="col-total">{{ r.present }}</td>
+          <td class="col-total">{{ r.late || '' }}</td>
+          <td class="col-total">{{ r.leave || '' }}</td>
+          <td class="col-total" [class.text-danger]="r.absent > 0">{{ r.absent || '' }}</td>
+          <td class="col-total">{{ r.hours }}</td>
+          <td>
+            <span class="ui-tag" [ngClass]="r.rate < 80 ? 'tone-warning' : 'tone-success'">{{ r.rate }}%</span>
+          </td>
+        </tr>
+        } @empty {
+        <tr><td class="data-table-empty" [attr.colspan]="days().length + 7">No employees match these filters.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

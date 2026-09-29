@@ -1,54 +1,98 @@
-<div class="ne-section-title">Bank Account Details :-</div>
 
-<div [formGroup]="form">
-  <div formArrayName="bankAccounts">
-    <div class="ne-bank-account-item border rounded p-3 mb-3"
-         *ngFor="let row of accounts.controls; let i = index" [formGroupName]="i">
-      <div class="row g-3">
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label"><span class="text-danger">*</span> Account type</label>
-          <input pInputText class="form-control" formControlName="accountType" placeholder="Enter account type">
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label">Bank name</label>
-          <input pInputText class="form-control" formControlName="bankName" placeholder="Enter bank name">
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label"><span class="text-danger">*</span> Account number</label>
-          <input pInputText class="form-control" formControlName="accountNumber" placeholder="Enter account number">
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label">Ifsc code</label>
-          <input pInputText class="form-control" formControlName="ifscCode" placeholder="Enter IFSC code">
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label">Branch name</label>
-          <input pInputText class="form-control" formControlName="branchName" placeholder="Enter branch name">
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label">Beneficiary Name</label>
-          <input pInputText class="form-control" formControlName="beneficiaryName" placeholder="Enter beneficiary name">
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label">Attachment</label>
-          <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" (change)="onFile($event, i)">
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label">Account Status</label>
-          <p-select formControlName="accountStatus" [options]="fs.accountStatuses" optionLabel="label" optionValue="value"
-                    placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
-        </div>
-
-        <div class="col-lg-4 col-md-6 align-self-end mb-1">
-          <button *ngIf="i > 0" type="button" class="btn btn-danger" (click)="remove(i)">Remove</button>
-        </div>
-      </div>
+<div class="data-table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Account Type</th>
+        <th>Bank Name</th>
+        <th>Account Number</th>
+        <th>IFSC Code</th>
+        <th>Branch Name</th>
+        <th>Beneficiary Name</th>
+        <th>Attachment</th>
+        <th>Status</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of accounts.controls; let i = index" [class.table-active]="editIndex === i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ row.value.accountType || '-' }}</td>
+        <td>{{ row.value.bankName || '-' }}</td>
+        <td>{{ row.value.accountNumber || '-' }}</td>
+        <td>{{ row.value.ifscCode || '-' }}</td>
+        <td>{{ row.value.branchName || '-' }}</td>
+        <td>{{ row.value.beneficiaryName || '-' }}</td>
+        <td>{{ row.value.attachment?.name || '-' }}</td>
+        <td>{{ statusLabel(row.value.accountStatus) }}</td>
+        <td class="text-center text-nowrap">
+          <button type="button" class="btn-icon btn-icon-primary btn-sm" aria-label="Edit" title="Edit" (click)="edit(i)">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button type="button" class="btn-icon btn-icon-danger btn-sm ms-1" aria-label="Delete" title="Delete" (click)="remove(i)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="accounts.length === 0">
+        <td class="data-table-empty" colspan="10">No bank accounts added</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- entry form -->
+<div class="border rounded p-3 mb-3 mt-2" [formGroup]="draft">
+  <div class="row g-3">
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label"><span class="text-danger">*</span> Account type</label>
+      <input pInputText class="form-control" formControlName="accountType" placeholder="Enter account type"
+             [class.is-invalid]="invalid('accountType')">
+      <div class="invalid-feedback" *ngIf="invalid('accountType')">Account type is required</div>
     </div>
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label">Bank name</label>
+      <input pInputText class="form-control" formControlName="bankName" placeholder="Enter bank name">
+    </div>
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label"><span class="text-danger">*</span> Account number</label>
+      <input pInputText class="form-control" formControlName="accountNumber" placeholder="Enter account number"
+             [class.is-invalid]="invalid('accountNumber')">
+      <div class="invalid-feedback" *ngIf="invalid('accountNumber')">Account number is required</div>
+    </div>
+
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label">Ifsc code</label>
+      <input pInputText class="form-control" formControlName="ifscCode" placeholder="Enter IFSC code">
+    </div>
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label">Branch name</label>
+      <input pInputText class="form-control" formControlName="branchName" placeholder="Enter branch name">
+    </div>
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label">Beneficiary Name</label>
+      <input pInputText class="form-control" formControlName="beneficiaryName" placeholder="Enter beneficiary name">
+    </div>
+
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label">Attachment</label>
+      <input #fileInput type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" (change)="onFile($event)">
+      <small class="text-muted" *ngIf="editIndex !== null && draft.value.attachment">
+        Current: {{ draft.value.attachment?.name }}
+      </small>
+    </div>
+    <div class="col-lg-3 col-md-4 col-12">
+      <label class="form-label">Account Status</label>
+      <app-select formControlName="accountStatus" [options]="fs.accountStatuses" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2 mt-3">
+    <button *ngIf="editIndex !== null" type="button" class="btn btn-secondary" (click)="reset()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()">
+      {{ editIndex === null ? '+ Add Bank Account' : 'Update Bank Account' }}
+    </button>
   </div>
 </div>
 
-<div class="d-flex justify-content-start">
-  <button type="button" class="btn btn-primary" (click)="add()">+ Add Bank Account</button>
-</div>
+

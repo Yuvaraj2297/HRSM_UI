@@ -1,41 +1,47 @@
 /* =============================================================
-   MAIN CONTENT — offset for fixed header + fixed sidebar
-   Sidebar: 290px expanded, 70px collapsed
-   Header:  64px
+   MAIN CONTENT — offset for the fixed header + fixed sidebar.
+   Every size comes from variable.scss (--header-height,
+   --sidebar-width, --sidebar-collapsed-width, --content-gutter),
+   so the gap between the chrome and the page is identical in
+   every sidebar state.
 ============================================================= */
 
 .main-content {
-  overflow: hidden;
-  min-height: 100vh;
-  transition: var(--transition);
-  padding-top: 88px;          /* 64px header + 24px breathing room */
-  /* Offset tracks the sidebar's actual rendered width (variable.scss)
-     at every breakpoint, so it can never drift out of sync with it. */
-  padding-left: calc(var(--sidebar-width) + 14px);
-  padding-right: 25px;
-  box-sizing: border-box;
-  background-color: var(--neutral-50-2);
+  --sidebar-offset: var(--sidebar-width);
+  --content-start: calc(var(--sidebar-offset) + var(--content-gutter));
+  --content-end: var(--content-gutter);
 
-  &.active {
-    padding-left: calc(var(--sidebar-collapsed-width) + 34px);
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-top: calc(var(--header-height) + var(--content-gutter));
+  padding-bottom: var(--content-gutter);
+  padding-left: var(--content-start);
+  padding-right: var(--content-end);
+  background-color: var(--page-bg);
+  /* clip (not hidden) so position: sticky keeps working inside pages */
+  overflow-x: clip;
+  transition: padding var(--duration) var(--ease);
+
+  &.active,
+  &.hide-sidebar {
+    --sidebar-offset: var(--sidebar-collapsed-width);
   }
+
+  /* sidebar on the right: swap the two sides */
+  &.right-sidebar {
+    padding-left: var(--content-end);
+    padding-right: var(--content-start);
+  }
+}
+
+/* RTL mirrors whichever side the sidebar is on */
+.rtl-enabled .main-content {
+  padding-left: var(--content-end);
+  padding-right: var(--content-start);
 
   &.right-sidebar {
-    padding-left: 25px;
-    padding-right: calc(var(--sidebar-width) + 14px);
-
-    &.active {
-      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
-    }
-  }
-
-  &.hide-sidebar {
-    padding-left: calc(var(--sidebar-collapsed-width) + 34px);
-
-    &.right-sidebar {
-      padding-left: 25px;
-      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
-    }
+    padding-left: var(--content-start);
+    padding-right: var(--content-end);
   }
 }
 
@@ -49,14 +55,8 @@
   .main-content,
   .rtl-enabled .main-content {
     &,
-    &.active,
-    &.right-sidebar,
-    &.right-sidebar.active,
-    &.hide-sidebar,
-    &.hide-sidebar.right-sidebar {
-      padding-left: 16px;
-      padding-right: 16px;
-      padding-top: 80px;
+    &.right-sidebar {
+      --content-start: var(--content-gutter);
     }
   }
 }
@@ -79,50 +79,8 @@
 }
 
 
-/* =============================================================
-   RTL
-============================================================= */
-
-.rtl-enabled {
+@media (prefers-reduced-motion: reduce) {
   .main-content {
-    padding-right: calc(var(--sidebar-width) + 14px);
-    padding-left: 25px;
-
-    &.active {
-      padding-left: 25px;
-      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
-    }
-
-    &.right-sidebar {
-      padding-right: 25px;
-      padding-left: calc(var(--sidebar-width) + 14px);
-
-      &.active {
-        padding-right: 25px;
-        padding-left: calc(var(--sidebar-collapsed-width) + 34px);
-      }
-    }
-
-    &.hide-sidebar {
-      padding-left: 25px;
-      padding-right: calc(var(--sidebar-collapsed-width) + 34px);
-
-      &.right-sidebar {
-        padding-right: 25px;
-        padding-left: calc(var(--sidebar-collapsed-width) + 34px);
-      }
-    }
+    transition: none;
   }
 }
-
-
-/* =============================================================
-   FIXED HEADER
-============================================================= */
-
-header {
-  position: fixed;
-  margin-top: 0;
-}
-
-

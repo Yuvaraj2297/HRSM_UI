@@ -21,7 +21,11 @@ export class CustomizerSettingsService {
     this.isBrowser = isPlatformBrowser(platformId);
 
     if (this.isBrowser) {
-      this.isDarkTheme = JSON.parse(localStorage.getItem('isDarkTheme') || 'false');
+      // first visit: follow the OS light/dark setting; after that, the user's own choice wins
+      const savedDark = localStorage.getItem('isDarkTheme');
+      this.isDarkTheme = savedDark !== null
+        ? JSON.parse(savedDark)
+        : window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
       this.isSidebarDarkTheme = JSON.parse(localStorage.getItem('isSidebarDarkTheme') || 'false');
       this.isRightSidebarTheme = JSON.parse(localStorage.getItem('isRightSidebarTheme') || 'false');
       this.isHideSidebarTheme = JSON.parse(localStorage.getItem('isHideSidebarTheme') || 'false');
@@ -81,10 +85,12 @@ export class CustomizerSettingsService {
 
   /* ------------------ BODY CLASSES ------------------ */
 
+  /** body.dark-theme drives the app's tokens + PrimeNG; data-bs-theme switches Bootstrap */
   private updateDarkBodyClass() {
     if (!this.isBrowser) return;
 
     document.body.classList.toggle('dark-theme', this.isDarkTheme);
+    document.documentElement.setAttribute('data-bs-theme', this.isDarkTheme ? 'dark' : 'light');
   }
 
   private updateRTLBodyClass() {

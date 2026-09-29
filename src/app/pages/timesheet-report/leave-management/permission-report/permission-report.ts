@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import {
   PrimeDataTable,
+  PrimeTableActions,
   PrimeTableColumn,
   PrimeTableHeader,
-  PrimeTableActions,
 } from '../../../../shared/primedatatable/primedatatable';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface PermissionRequest {
   id: number;
   sno?: number;
@@ -57,7 +58,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-permission-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable],
+  imports: [AppSelect, CommonModule, FormsModule, Breadcrumb, PrimeDataTable, AppStatCard],
   templateUrl: './permission-report.html',
   styleUrl: './permission-report.scss',
 })

@@ -19,49 +19,20 @@
 
   <!-- Summary cards -->
   <section class="stat-grid">
-    <div class="stat-card theme-violet">
-      <div class="stat-label">Employees</div>
-      <div class="stat-icon"><i class="bi bi-people"></i></div>
-      <div class="stat-value">{{ summary().employees }}</div>
-      <div class="stat-delta">In this report</div>
-    </div>
-
-    <div class="stat-card theme-green">
-      <div class="stat-label">Success Leads</div>
-      <div class="stat-icon"><i class="bi bi-person-check"></i></div>
-      <div class="stat-value">{{ summary().assign }}</div>
-      <div class="stat-delta">By assign</div>
-    </div>
-
-    <div class="stat-card theme-amber">
-      <div class="stat-label">Sourcer</div>
-      <div class="stat-icon"><i class="bi bi-search"></i></div>
-      <div class="stat-value">{{ summary().sourcer }}</div>
-      <div class="stat-delta">Overall</div>
-    </div>
-
-    <div class="stat-card theme-blue">
-      <div class="stat-label">Total Visits</div>
-      <div class="stat-icon"><i class="bi bi-geo-alt"></i></div>
-      <div class="stat-value">{{ summary().visits }}</div>
-      <div class="stat-delta">Overall</div>
-    </div>
-
-    <div class="stat-card theme-red">
-      <div class="stat-label">Total Kilometers</div>
-      <div class="stat-icon"><i class="bi bi-speedometer2"></i></div>
-      <div class="stat-value">{{ summary().km }}</div>
-      <div class="stat-delta">Travelled</div>
-    </div>
+    <app-stat-card label="Employees" [value]="summary().employees" icon="bi bi-people" tone="violet" sub="In this report" />
+    <app-stat-card label="Success Leads" [value]="summary().assign" icon="bi bi-person-check" tone="primary" sub="By assign" />
+    <app-stat-card label="Sourcer" [value]="summary().sourcer" icon="bi bi-search" tone="amber" sub="Overall" />
+    <app-stat-card label="Total Visits" [value]="summary().visits" icon="bi bi-geo-alt" tone="blue" sub="Overall" />
+    <app-stat-card label="Total Kilometers" [value]="summary().km" icon="bi bi-speedometer2" tone="red" sub="Travelled" />
   </section>
 
   <!-- Filters -->
-  <section class="filters-card">
-    <div class="filter-field filter-search">
+  <section class="card-custom report-filter-card is-compact mb-3">
+    <div class="report-filter-field">
       <label for="revSearch">Name / Mobile / Employee Id</label>
       <input
         id="revSearch"
-        class="rev-input"
+        class="form-control"
         type="text"
         autocomplete="off"
         placeholder="Enter Name / Mobile / Employee Id"
@@ -70,39 +41,40 @@
       />
     </div>
 
-    <div class="filter-field">
+    <div class="report-filter-field">
       <label for="revFrom">From Date</label>
-      <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+      <input id="revFrom" type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
     </div>
 
-    <div class="filter-field">
+    <div class="report-filter-field">
       <label for="revTo">To Date</label>
-     <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+      <input id="revTo" type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
     </div>
 
-    <div class="filter-actions">
-      <button type="button" class="btn-clear" (click)="onClear()">Clear</button>
-      <button type="button" class="btn-search" (click)="onSearch()">
-        <i class="bi bi-search"></i>Search
+    <div class="report-filter-actions">
+      <button type="button" class="btn btn-cancel px-4" (click)="onClear()">Clear</button>
+      <button type="button" class="btn btn-primary px-4" (click)="onSearch()">
+        <i class="bi bi-search"></i> Search
       </button>
     </div>
   </section>
 
   <!-- Employee cards -->
   @if (!cards().length) {
-    <div class="rev-empty">
-      <i class="bi bi-person-x"></i>
-      No employees match your search. Try a different name, mobile or employee ID.
+    <div class="card-custom empty-state">
+      <div class="e-ico"><i class="bi bi-person-x"></i></div>
+      <div class="e-title">No employees match your search</div>
+      <div class="e-sub">Try a different name, mobile or employee ID.</div>
     </div>
   } @else {
     <section class="rev-grid">
       @for (c of cards(); track c.id) {
-        <article class="rev-card">
+        <article class="card-custom card-custom-hover rev-card">
 
           <div class="rev-banner">
             <svg viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true">
               <path d="M0 44 L0 30 C60 6 120 8 190 24 C260 40 320 34 400 12 L400 44 Z" fill="rgba(var(--white-rgb), .28)" />
-              <path d="M0 44 L0 38 C70 20 140 26 210 34 C280 42 340 30 400 24 L400 44 Z" fill="var(--white)" />
+              <path d="M0 44 L0 38 C70 20 140 26 210 34 C280 42 340 30 400 24 L400 44 Z" fill="var(--surface)" />
             </svg>
             <div class="rev-avatar">
               @if (c.avatar) {

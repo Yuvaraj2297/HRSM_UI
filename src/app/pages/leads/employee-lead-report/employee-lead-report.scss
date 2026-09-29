@@ -23,14 +23,6 @@ $primary-dark: var(--green-600);
   gap: 12px;
 }
 
-.page-title {
-  margin: 0 0 4px;
-  font-size: 28px;
-  font-weight: 800;
-  color: $ink-900;
-  letter-spacing: -0.5px;
-}
-
 .breadcrumb-text {
   display: flex;
   align-items: center;
@@ -65,55 +57,7 @@ $primary-dark: var(--green-600);
   }
 }
 
-/* ---------- Filters ---------- */
-.filters-card {
-  display: grid;
-  grid-template-columns: minmax(240px, 1.35fr) minmax(160px, 1fr) minmax(160px, 1fr) auto;
-  gap: 24px;
-  align-items: end;
-  padding: 24px 30px;
-}
-
-.filter-field {
-  min-width: 0;
-
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: $ink-900;
-  }
-}
-
-.lead-input,
-.lead-datepicker ::ng-deep input {
-  width: 100%;
-
-}
-
-.lead-datepicker {
-  display: block;
-  width: 100%;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 12px;
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 38px;
-    white-space: nowrap;
-
-    &:active {
-      transform: translateY(1px);
-    }
-  }
-}
+/* ---------- Filters: global .report-filter-card ---------- */
 
 /* ---------- Table cells (rendered from this component's #cellTemplate) ---------- */
 .person-name {
@@ -128,28 +72,5 @@ $primary-dark: var(--green-600);
   &.zero {
     font-weight: 600;
     color: $ink-500;
-  }
-}
-
-/* ---------- Responsive ---------- */
-@media (max-width: 991px) {
-  .filters-card {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .filter-search {
-    grid-column: 1 / -1;
-  }
-
-  .filter-actions {
-    grid-column: 1 / -1;
-    justify-content: flex-end;
-  }
-}
-
-@media (max-width: 575px) {
-  .filters-card {
-    grid-template-columns: 1fr;
-    padding: 20px;
   }
 }

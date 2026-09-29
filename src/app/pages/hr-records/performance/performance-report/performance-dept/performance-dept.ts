@@ -1,9 +1,11 @@
+import { AppStatCard } from '../../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PrimeDataTable, PrimeTableColumn } from '../../../../../shared/primedatatable/primedatatable';
 
 
+import { AppSelect } from '../../../../../shared/app-select/app-select';
 type WorkflowStage = 'completed' | 'stage3' | 'stage2' | 'stage1';
 
 interface DeptEmployeeRow {
@@ -32,7 +34,7 @@ interface DeptStat {
 @Component({
   selector: 'app-performance-dept',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeDataTable],
+  imports: [AppSelect, CommonModule, FormsModule, PrimeDataTable, AppStatCard],
   templateUrl: './performance-dept.html',
   styleUrl: './performance-dept.scss',
 })

@@ -67,6 +67,17 @@ export class EmployeeFormFacade {
 
   form!: FormGroup;
 
+  /** set by validateAll(); makes every tab show its required / format errors, even on untouched fields */
+  submitted = false;
+
+  /** call from the Save / Next button: shows all errors and returns true only when the form is valid */
+  validateAll(): boolean {
+    this.submitted = true;
+    this.form.markAllAsTouched();
+    this.form.updateValueAndValidity();
+    return this.form.valid;
+  }
+
   constructor(private fb: FormBuilder) {
     this.build();
   }
@@ -175,7 +186,7 @@ export class EmployeeFormFacade {
 
       education: this.fb.array([this.educationRow()]),
       experience: this.fb.array([this.experienceRow()]),
-      bankAccounts: this.fb.array([this.bankRow()]),
+      bankAccounts: this.fb.array([] as FormGroup[]),
       kyc: this.fb.array([] as FormGroup[]),
 
       relieving: this.fb.group({

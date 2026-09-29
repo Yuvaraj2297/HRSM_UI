@@ -1,0 +1,121 @@
+@let r = row;
+
+<div class="modal-backdrop-custom" (click)="close()"></div>
+<div class="modal-custom modal-xl" role="dialog" aria-modal="true" [attr.aria-label]="'Invite ' + r.emp">
+  <form [formGroup]="form" (ngSubmit)="send()" novalidate>
+    <div class="modal-header">
+      <div class="d-flex align-items-center gap-2">
+        <span class="modal-icon-circle"><i class="bi bi-send-check"></i></span>
+        <div>
+          <h5 class="modal-title">Send Induction Invitation</h5>
+          <small class="text-muted">{{ r.emp }} • {{ r.empId }} • {{ r.role }} ({{ r.dept }})</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close-custom" aria-label="Close" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row g-4">
+        <!-- LEFT: channels -->
+        <div class="col-lg-7">
+          <label class="form-label" for="inv-link">Join Link <small class="text-muted">· valid 7 days</small></label>
+          <div class="invite-link mb-4">
+            <input id="inv-link" type="text" class="form-control" [value]="joinLink" readonly />
+            <button type="button" class="btn btn-outline-primary" (click)="copyLink()">
+              <i class="bi bi-clipboard"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+
+          <!-- email -->
+          <div class="invite-channel mb-3">
+            <label class="form-check form-switch invite-channel-head">
+              <input type="checkbox" role="switch" class="form-check-input" formControlName="sendEmail" />
+              <span class="form-check-label"><i class="bi bi-envelope"></i> Email with calendar invite</span>
+            </label>
+            @if (form.controls.sendEmail.value) {
+            <input type="email" class="form-control" formControlName="email" placeholder="Joiner email"
+              aria-label="Joiner email" [class.is-invalid]="form.controls.email.invalid" />
+            @if (form.controls.email.invalid) { <div class="field-error">Enter a valid email.</div> }
+            <div class="d-flex flex-wrap gap-4 mt-2">
+              <label class="form-check mb-0">
+                <input type="checkbox" class="form-check-input" formControlName="attachIcs" />
+                <span class="form-check-label">Attach calendar (.ics)</span>
+              </label>
+              <label class="form-check mb-0">
+                <input type="checkbox" class="form-check-input" formControlName="ccManager" />
+                <span class="form-check-label">CC manager & trainer</span>
+              </label>
+            </div>
+            }
+          </div>
+
+          <!-- whatsapp -->
+          <div class="invite-channel mb-3">
+            <label class="form-check form-switch invite-channel-head">
+              <input type="checkbox" role="switch" class="form-check-input" formControlName="sendWhatsApp" />
+              <span class="form-check-label"><i class="bi bi-whatsapp"></i> WhatsApp message</span>
+            </label>
+            @if (form.controls.sendWhatsApp.value) {
+            <div class="invite-link">
+              <input type="tel" class="form-control" formControlName="phone" placeholder="Joiner phone"
+                aria-label="Joiner phone" />
+              <button type="button" class="btn btn-outline-primary" (click)="openWhatsApp()">
+                <i class="bi bi-box-arrow-up-right"></i>
+                <span>Open WhatsApp</span>
+              </button>
+            </div>
+            }
+          </div>
+
+          <label class="form-label" for="inv-message">Welcome Note</label>
+          <textarea id="inv-message" class="form-control" rows="3" formControlName="message"></textarea>
+        </div>
+
+        <!-- RIGHT: preview -->
+        <div class="col-lg-5">
+          <div class="invite-preview">
+            <div class="invite-preview-label">Preview</div>
+            <h6 class="mb-1">{{ r.title }}</h6>
+            <span class="category-pill-badge mb-3">
+              <i [class]="moduleMeta(r.module).icon + ' me-1'"></i>{{ moduleMeta(r.module).short }}
+            </span>
+            <dl class="invite-preview-details">
+              <dt><i class="bi bi-calendar3"></i></dt><dd>{{ fmtDate(r.date) }}</dd>
+              <dt><i class="bi bi-clock"></i></dt><dd>{{ r.time }}</dd>
+              <dt><i class="bi bi-person-badge"></i></dt><dd>{{ r.trainer }}</dd>
+              <dt><i class="bi bi-geo-alt"></i></dt><dd>{{ r.venue || r.mode }}</dd>
+            </dl>
+            @if (r.materials) {
+            <div class="invite-preview-label mt-3">Materials</div>
+            <div class="d-flex flex-wrap gap-1">
+              @for (m of r.materials.split(','); track $index) {
+              <span class="category-pill-badge"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>{{ m.trim() }}</span>
+              }
+            </div>
+            }
+            @if (form.controls.message.value.trim()) {
+            <p class="invite-preview-note">{{ form.controls.message.value }}</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer justify-content-between">
+      <button type="button" class="btn btn-secondary" (click)="copyMessage()">
+        <i class="bi bi-chat-quote"></i>
+        <span>Copy Message</span>
+      </button>
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!canSend">
+          <i class="bi bi-send"></i>
+          <span>{{ r.notified ? 'Resend Invitation' : 'Send Invitation' }}</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

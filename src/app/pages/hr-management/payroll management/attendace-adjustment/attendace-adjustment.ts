@@ -1,4 +1,7 @@
+import { NgClass } from '@angular/common';
 import { Component, DestroyRef, HostListener, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AppSelect } from '../../../../shared/app-select/app-select';
 
 export type AttendanceStatus = 'FD' | 'HD' | 'A' | 'WO' | 'LWP';
 type SortKey = 'name' | 'role' | 'branch';
@@ -127,7 +130,7 @@ const escapeHtml = (v: string) =>
 
 @Component({
   selector: 'app-attendace-adjustment',
-  imports: [],
+  imports: [AppSelect, FormsModule, NgClass],
   templateUrl: './attendace-adjustment.html',
   styleUrl: './attendace-adjustment.scss',
 })
@@ -147,7 +150,6 @@ export class AttendaceAdjustment {
   readonly colVisibility = signal<Record<ColumnKey, boolean>>({ employee: true, role: true, branch: true });
   readonly openMenu = signal<MenuName | null>(null);
   readonly statusMenu = signal<StatusMenuState | null>(null);
-  readonly scrolled = signal(false);
   readonly toast = signal<string | null>(null);
   readonly brokenAvatars = signal<ReadonlySet<number>>(new Set());
 
@@ -242,8 +244,9 @@ export class AttendaceAdjustment {
     });
   }
 
-  statusClass(code: AttendanceStatus): string {
-    return 'st-' + code.toLowerCase();
+  /** attendance code -> the shared status colour key (data-status) */
+  statusKey(code: AttendanceStatus): string {
+    return ({ FD: 'present', HD: 'half', A: 'absent', WO: 'weekoff', LWP: 'leave' } as Record<string, string>)[code] ?? '';
   }
 
   statusLabel(code: AttendanceStatus): string {
@@ -394,16 +397,15 @@ export class AttendaceAdjustment {
   }
 
   // ---------------------------------------------------------------- global listeners
-  onTableScroll(e: Event): void {
-    this.scrolled.set((e.target as HTMLElement).scrollLeft > 0);
+  onTableScroll(): void {
     this.statusMenu.set(null);
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(e: MouseEvent): void {
     const t = e.target as HTMLElement | null;
-    if (!t?.closest('.tb-menu')) this.openMenu.set(null);
-    if (!t?.closest('.st-menu, .st-btn')) this.statusMenu.set(null);
+    if (!t?.closest('.ui-menu-wrap')) this.openMenu.set(null);
+    if (!t?.closest('.status-menu, .ui-status-code')) this.statusMenu.set(null);
   }
 
   @HostListener('document:keydown.escape')

@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 
 import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-ot-approval-tab',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SelectModule],
+  imports: [AppSelect, CommonModule, ReactiveFormsModule],
   templateUrl: './ot-approval-tab.html',
 })
 export class OtApprovalTab {

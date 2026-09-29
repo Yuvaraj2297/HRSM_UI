@@ -3,7 +3,7 @@
 ========================================================= */
 
 .ml-page {
-  padding: 18px 22px 28px;
+  padding: 16px 20px 28px;
   max-width: 1560px;
   margin: 0 auto;
 }
@@ -37,41 +37,10 @@
   z-index: 50;
 }
 
-.card-custom {
-  padding: 16px 18px;
-}
-
 .filters-toggle-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.filters-toggle-btn {
-  border: 1px solid var(--border);
-  background: var(--white);
-  border-radius: 10px;
-  padding: 7px 14px;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--neutral-750);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.15s;
-
-  .chevron {
-    transition: transform 0.2s;
-  }
-
-  &.open .chevron {
-    transform: rotate(180deg);
-  }
-
-  &:hover {
-    border-color: var(--primary, var(--green-400));
-    color: var(--primary, var(--green-400));
-  }
 }
 
 .filters-collapse {
@@ -85,7 +54,7 @@
   }
 
   .form-label {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 
 }
@@ -99,11 +68,11 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 10px 14px;
+  padding: 10px 12px;
   margin-bottom: 12px;
   border: 1px solid var(--bg-muted);
-  border-radius: 14px;
-  background: var(--white);
+  border-radius: var(--card-radius);
+  background: var(--surface);
 }
 
 .ml-active-label {
@@ -115,8 +84,8 @@
 .mlf-chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 8px 6px 11px;
+  gap: 6px;
+  padding: 6px 8px 6px 10px;
   border-radius: 999px;
   background: var(--primary-light, var(--green-50-2));
   color: var(--primary-dark, var(--primary-darker));
@@ -185,7 +154,7 @@
 .ml-lm-btn {
   width: 26px;
   height: 26px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: none;
   background: transparent;
   color: var(--primary, var(--green-400));
@@ -229,10 +198,10 @@
   color: var(--green-400);
   border: 1px solid var(--green-150);
   background: var(--green-50);
-  padding: 3px 12px;
+  padding: 2px 12px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   transition: 0.15s;
 
   &:hover,
@@ -270,7 +239,7 @@
 }
 
 .ml-status-menu {
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.13);
   padding: 6px;
@@ -315,7 +284,7 @@
   display: inline-block;
   font-size: 10.5px;
   font-weight: 800;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 4px 12px;
   background: var(--border);
   color: var(--neutral-600-2);
@@ -329,7 +298,7 @@
 .ml-act-btn {
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: 1px solid;
   font-size: 13px;
   display: inline-flex;
@@ -403,8 +372,8 @@
 }
 
 .ml-modal {
-  background: var(--white);
-  border-radius: 12px;
+  background: var(--surface);
+  border-radius: var(--card-radius);
   width: 100%;
   max-height: 90vh;
   display: flex;
@@ -430,7 +399,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--neutral-50-3);
-  padding: 14px 20px;
+  padding: 12px 20px;
 
   h5 {
     font-size: 14.5px;
@@ -441,7 +410,7 @@
 }
 
 .ml-modal-body {
-  padding: 18px 20px;
+  padding: 16px 20px;
   overflow-y: auto;
   flex: 1;
 
@@ -468,20 +437,20 @@
   justify-content: flex-end;
   gap: 10px;
   border-top: 1px solid var(--neutral-50-3);
-  padding: 14px 20px;
+  padding: 12px 20px;
 
 }
 
 /* Compose email fields */
 .mce-field {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 
   label {
     display: block;
     font-size: 12px;
     font-weight: 700;
     color: var(--neutral-750);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 }
 
@@ -498,7 +467,7 @@
   justify-content: center;
   flex: 0 0 auto;
   border: 1px solid var(--border-strong);
-  background: var(--white);
+  background: var(--surface);
   color: var(--neutral-750);
   border-radius: 7px;
   cursor: pointer;
@@ -524,7 +493,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 7px 9px;
+  padding: 6px 8px;
   border: 1px solid var(--border);
   border-radius: 7px;
   background: var(--bg-soft);
@@ -556,7 +525,7 @@
 
 .mrv-timeline {
   position: relative;
-  padding-left: 34px;
+  padding-left: 32px;
 
   &::before {
     content: '';
@@ -571,12 +540,12 @@
 }
 
 .mrv-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--neutral-50-3);
-  border-radius: 10px;
-  padding: 14px 18px 12px;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px 12px;
   position: relative;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   box-shadow: 0 1px 2px rgba(var(--neutral-900-rgb), 0.04);
   transition: box-shadow 0.15s, transform 0.15s;
 
@@ -605,7 +574,7 @@
 
 .mrv-row {
   display: flex;
-  gap: 26px;
+  gap: 24px;
   flex-wrap: wrap;
   align-items: baseline;
 }
@@ -650,7 +619,7 @@
 .mrv-by {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 
   .ml-avatar {
     width: 24px;
@@ -668,7 +637,7 @@
 
 .mrv-empty {
   text-align: center;
-  padding: 40px 14px;
+  padding: 40px 12px;
   color: var(--text-muted);
 
   i {
@@ -700,7 +669,7 @@
 
 .mlv-tab-count {
   display: inline-block;
-  margin-left: 5px;
+  margin-left: 4px;
 }
 
 /* =========================================================
@@ -709,7 +678,7 @@
 
 .mlv-timeline {
   position: relative;
-  padding-left: 34px;
+  padding-left: 32px;
 
   &::before {
     content: '';
@@ -724,11 +693,11 @@
 }
 
 .mlv-act-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--neutral-50-3);
-  border-radius: 12px;
-  padding: 14px 18px 13px;
-  margin-bottom: 14px;
+  border-radius: var(--card-radius);
+  padding: 12px 16px 12px;
+  margin-bottom: 12px;
   position: relative;
   box-shadow: 0 1px 2px rgba(var(--neutral-900-rgb), 0.04);
   transition: box-shadow 0.15s, transform 0.15s;
@@ -759,7 +728,7 @@
 .mlv-act-top {
   display: flex;
   align-items: baseline;
-  gap: 26px;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -793,17 +762,17 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 5px;
+  gap: 4px;
 }
 
 .mlv-chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-size: 11px;
   font-weight: 700;
   border-radius: 999px;
-  padding: 3px 11px;
+  padding: 2px 10px;
   white-space: nowrap;
 
   i {
@@ -861,7 +830,7 @@
 
 .mlv-empty {
   text-align: center;
-  padding: 46px 16px;
+  padding: 48px 16px;
   color: var(--text-muted);
 
   i {

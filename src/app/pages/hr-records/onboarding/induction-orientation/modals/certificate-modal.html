@@ -1,0 +1,48 @@
+@let c = cert;
+
+<div class="modal-backdrop-custom" (click)="close()"></div>
+<div class="modal-custom modal-lg" role="dialog" aria-modal="true" [attr.aria-label]="'Certificate — ' + c.emp">
+  <div class="modal-header">
+    <h5 class="modal-title">Induction Certificate</h5>
+    <button type="button" class="btn-close-custom" aria-label="Close" (click)="close()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="cert" #sheet>
+      <div class="cert-seal"><i class="bi bi-patch-check-fill"></i></div>
+      <div class="cert-kicker">HR INDUCTION CLEARANCE</div>
+      <h3 class="cert-title">Certificate of Induction Completion</h3>
+      <p class="cert-desc">This certifies that</p>
+      <div class="cert-name">{{ c.emp }}</div>
+      <p class="cert-desc">{{ c.role }} · {{ c.dept }} · {{ c.empId }}</p>
+      <p class="cert-desc">has successfully completed all mandatory induction modules:</p>
+      <ul class="cert-modules">
+        @for (m of modules; track m.value) {
+        <li><i class="bi bi-check-circle-fill"></i> {{ m.short }}</li>
+        }
+      </ul>
+      <div class="cert-foot">
+        <div>
+          <div>Issued: <strong>{{ fmtDate(c.certDate) }}</strong></div>
+          @if (c.score !== null) {
+          <div>Average assessment: <strong>{{ c.score }}%</strong></div>
+          }
+        </div>
+        <div>
+          <div><strong>Gharuda HR Operations</strong></div>
+          <div>Authorised sign-off</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="print()">
+      <i class="bi bi-printer"></i>
+      <span>Print Certificate</span>
+    </button>
+  </div>
+</div>

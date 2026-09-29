@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PrimeDataTable, PrimeTableColumn, PrimeTableRowAction } from '../../../../shared/primedatatable/primedatatable';
 
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 /* =========================================================
    MODELS
 ========================================================= */
@@ -63,7 +64,7 @@ const STATUS_OPTIONS = [
 @Component({
   selector: 'app-manage-lead',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeDataTable],
+  imports: [AppSelect, CommonModule, FormsModule, PrimeDataTable],
   templateUrl: './manage-lead.html',
   styleUrl: './manage-lead.scss',
 })

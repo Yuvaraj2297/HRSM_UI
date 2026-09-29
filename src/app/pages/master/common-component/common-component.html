@@ -18,3 +18,9 @@
 
 <app-master-modal #masterModal (saveClicked)="onModalSave($event)">
 </app-master-modal>
+
+
+<!-- ROLE PERMISSIONS MODAL (opened by the shield button) -->
+
+<app-role-permission-modal #rolePermissionModal (saved)="onPermissionSaved($event)">
+</app-role-permission-modal>

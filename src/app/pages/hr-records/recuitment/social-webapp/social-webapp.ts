@@ -1,10 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PrimeDataTable, PrimeTableColumn, PrimeTableHeader, PrimeTableHeaderButton, PrimeTableRowAction } from '../../../../shared/primedatatable/primedatatable';
 import { ModalField, ModalSaveEvent, ReuseModal } from '../../../../shared/reuse-model/reuse-model';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
+import { ValidationMethods } from '../../../../shared/validation/validation-methods';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 // NOTE: adjust these two import paths to wherever primedatatable.ts and
 // reuse-model.ts actually live in your project (e.g. a shared/ folder).
 
@@ -50,7 +53,7 @@ type SourceFilter = 'all' | 'easy_apply' | 'job_share' | 'portal';
 @Component({
   selector: 'app-social-webapp',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeDataTable, ReuseModal],
+  imports: [AppSelect, CommonModule, FormsModule, RouterLink, PrimeDataTable, ReuseModal, AppStatCard],
   templateUrl: './social-webapp.html',
   styleUrl: './social-webapp.scss',
 })
@@ -223,9 +226,9 @@ export class SocialWebapp implements OnInit {
   ];
 
   headerButtons: PrimeTableHeaderButton[] = [
-    { id: 'bulkZip', label: 'Bulk Download Resumes (.csv)', icon: 'ti ti-file-download', variant: 'outline' },
-    { id: 'tlEval', label: 'TL Evaluations', icon: 'ti ti-clipboard-check', variant: 'outline', routerLink: '/candidate-evaluations' },
-    { id: 'shareJob', label: 'Post Job Link', icon: 'ti ti-share', variant: 'outline' },
+    // { id: 'bulkZip', label: 'Bulk  Resumes', icon: 'ti ti-file-download', variant: 'outline' },
+    // { id: 'tlEval', label: 'TL Evaluations', icon: 'ti ti-clipboard-check', variant: 'outline', routerLink: '/candidate-evaluations' },
+    // { id: 'shareJob', label: 'Post Job', icon: 'ti ti-share', variant: 'outline' },
   ];
 
   selection: Applicant[] = [];
@@ -272,16 +275,20 @@ export class SocialWebapp implements OnInit {
     { label: 'HR Talent Acquisition Specialist', value: 'HR Talent Acquisition Specialist' },
   ];
 
-  addFields: ModalField[] = [
-    { key: 'fullName', label: 'Full Name', type: 'text', required: true, placeholder: 'e.g. Ramesh Kumar', col: 12 },
-    { key: 'email', label: 'Email Address', type: 'email', required: true, placeholder: 'ramesh@example.com' },
-    { key: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+91 98765 43210' },
-    { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'text', required: true, placeholder: 'https://www.linkedin.com/in/username', col: 12 },
-    { key: 'jobTitle', label: 'Applied Position', type: 'select', options: this.positionOptions, showClear: true },
-    { key: 'experience', label: 'Total Experience', type: 'text', placeholder: 'e.g. 4.5 Years' },
-    { key: 'expectedCtc', label: 'Expected CTC', type: 'text', placeholder: 'e.g. ₹16 LPA' },
-    { key: 'noticePeriod', label: 'Notice Period', type: 'text', placeholder: 'e.g. Immediate / 15 days' },
-  ];
+addFields: ModalField[] = [
+  { key: 'fullName', label: 'Full Name', type: 'text', required: true, placeholder: 'e.g. Ramesh Kumar', col: 12,
+    capitalizeFirst: true,
+    sanitizer: 'alphabets',
+    validators: [ValidationMethods.alphabetOnly()] },
+  { key: 'email', label: 'Email Address', type: 'email', required: true, placeholder: 'ramesh@example.com' },
+
+  { key: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+91 98765 43210', validators: [ValidationMethods.phoneNumber()] },
+  { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'text', required: true, placeholder: 'https://www.linkedin.com/in/username', col: 12 },
+  { key: 'jobTitle', label: 'Applied Position', type: 'select', options: this.positionOptions, showClear: true },
+  { key: 'experience', label: 'Total Experience', type: 'text', placeholder: 'e.g. 4.5 Years' },
+  { key: 'expectedCtc', label: 'Expected CTC', type: 'text', placeholder: 'e.g. ₹16 LPA' },
+  { key: 'noticePeriod', label: 'Notice Period', type: 'text', placeholder: 'e.g. Immediate / 15 days' },
+];
 
   openAddModal(): void {
     this.addModal.open('add');

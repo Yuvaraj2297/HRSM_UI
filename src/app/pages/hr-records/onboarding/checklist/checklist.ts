@@ -1,777 +1,278 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
-import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
-import { PrimeDataTable, PrimeTableColumn } from '../../../../shared/primedatatable/primedatatable';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CalendarDatepickerDirective } from '../../../../common/directives/datepicker';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
+import {
+  PrimeDataTable,
+  PrimeTableColumn,
+  PrimeTableHeader,
+} from '../../../../shared/primedatatable/primedatatable';
 
-interface ChecklistRow {
+import { AppSelect } from '../../../../shared/app-select/app-select';
+type Milestone = 'Pre-Boarding' | 'Day 1 Induction' | 'Week 1 Milestones' | '30-Day Review' | '60-90 Day Goal';
+type TaskStatus = 'Upcoming' | 'Pending' | 'In Progress' | 'Completed';
+type StatusFilter = TaskStatus | 'overdue' | null;
+
+interface ChecklistTask {
   id: number;
+  title: string;
+  milestone: Milestone;
+  joiner: string; // '' = template default for all joiners
+  owner: string;
+  dueDate: string; // yyyy-mm-dd, '' = no due date
+  status: TaskStatus;
+}
+
+/** a table row: the task plus display-only fields */
+interface ChecklistRow extends ChecklistTask {
   sno: number;
-  taskTitle: string;
-  completed: boolean;
-
-  milestonePhase:
-    | 'Pre-Boarding'
-    | 'Day 1 Induction'
-    | 'Week 1 Milestones'
-    | '30-Day Review'
-    | '60-90 Day Goal';
-
-  joiner: string;
   role: string;
   department: string;
-  owner: string;
-  dueDate: string;
-
-  status: 'Completed' | 'Pending' | 'In Progress' | 'Upcoming';
-
-  milestoneClass?: string;
-  statusClass?: string;
+  overdue: boolean;
 }
+
+const MILESTONES: { value: Milestone; icon: string; tone: string }[] = [
+  { value: 'Pre-Boarding',      icon: 'bi bi-envelope-paper', tone: 'var(--warning)' },
+  { value: 'Day 1 Induction',   icon: 'bi bi-door-open',      tone: 'var(--blue-450)' },
+  { value: 'Week 1 Milestones', icon: 'bi bi-calendar-week',  tone: 'var(--purple-500)' },
+  { value: '30-Day Review',     icon: 'bi bi-clipboard-check', tone: 'var(--teal-350)' },
+  { value: '60-90 Day Goal',    icon: 'bi bi-flag',           tone: 'var(--primary)' },
+];
+
+const STATUSES: TaskStatus[] = ['Upcoming', 'Pending', 'In Progress', 'Completed'];
+
+const JOINERS: { name: string; role: string; department: string }[] = [
+  { name: 'Kavitha Raman',  role: 'UI/UX Designer',    department: 'Design' },
+  { name: 'Rahul Verma',    role: 'Backend Engineer',  department: 'Engineering' },
+  { name: 'Siddharth Nair', role: 'iOS App Developer', department: 'Engineering' },
+  { name: 'Priya Sundaram', role: 'Financial Analyst', department: 'Finance' },
+];
+
+const TASKS: ChecklistTask[] = [
+  { id: 1, title: 'Complete Background Verification & Address Proof',      milestone: 'Pre-Boarding',      joiner: 'Kavitha Raman',  owner: 'HR Operations',         dueDate: '2026-09-10', status: 'Completed' },
+  { id: 2, title: 'Issue Hardware & Work Email ID (Laptop + Access Card)', milestone: 'Day 1 Induction',   joiner: 'Kavitha Raman',  owner: 'IT Admin',              dueDate: '2026-09-15', status: 'Completed' },
+  { id: 3, title: 'Conduct HR Policy Briefing & Code of Conduct Sign-off', milestone: 'Day 1 Induction',   joiner: 'Rahul Verma',    owner: 'Sarah Mitchell (HR)',   dueDate: '2026-09-22', status: 'Pending' },
+  { id: 4, title: 'Department Architecture Walkthrough & Buddy Pairing',   milestone: 'Week 1 Milestones', joiner: 'Siddharth Nair', owner: 'David Anderson (Lead)', dueDate: '2026-10-02', status: 'In Progress' },
+  { id: 5, title: '30-Day Performance Review & Probation Assessment',      milestone: '30-Day Review',     joiner: 'Priya Sundaram', owner: 'Emily Clark (Manager)', dueDate: '2026-10-20', status: 'Upcoming' },
+  { id: 6, title: 'Set 90-Day Goals with Reporting Manager',               milestone: '60-90 Day Goal',    joiner: '',               owner: 'Reporting Manager',     dueDate: '',           status: 'Upcoming' },
+];
 
 @Component({
   selector: 'app-checklist',
   standalone: true,
-
-  imports: [CommonModule, ReactiveFormsModule, SelectModule, PrimeDataTable, Breadcrumb],
-
+  imports: [AppSelect, CommonModule, ReactiveFormsModule, PrimeDataTable, AppStatCard, CalendarDatepickerDirective],
   templateUrl: './checklist.html',
   styleUrl: './checklist.scss',
 })
-export class Checklist implements OnInit {
-  // =========================================================
-  // FORM
-  // =========================================================
+export class Checklist {
+  private readonly fb = inject(FormBuilder);
 
-  private fb = inject(FormBuilder);
+  readonly milestones = MILESTONES;
 
-  taskForm!: FormGroup;
-
-  // =========================================================
-  // TABLE
-  // =========================================================
-
-  searchPlaceholder = 'Search employee...';
-
-  tableData: ChecklistRow[] = [];
-
-  private allData: ChecklistRow[] = [];
-
-  // =========================================================
-  // TABLE ACTIONS
-  // =========================================================
-
-  actions = {
-    add: false,
-    edit: true,
-    delete: false,
+  readonly tableHeader: PrimeTableHeader = {
+    title: 'Onboarding Checklist',
+    icon: 'bi bi-list-check',
   };
 
-  // =========================================================
-  // MODAL
-  // =========================================================
-
-  showTaskModal = false;
-
-  modalType: 'add' | 'edit' = 'add';
-
-  editingTaskId: number | null = null;
-
-  // =========================================================
-  // DROPDOWN OPTIONS
-  // =========================================================
-
-  milestoneOptions = [
-    {
-      label: 'Pre-Boarding',
-      value: 'Pre-Boarding',
-    },
-    {
-      label: 'Day 1 Induction',
-      value: 'Day 1 Induction',
-    },
-    {
-      label: 'Week 1 Milestones',
-      value: 'Week 1 Milestones',
-    },
-    {
-      label: '30-Day Review',
-      value: '30-Day Review',
-    },
-    {
-      label: '60-90 Day Goal',
-      value: '60-90 Day Goal',
-    },
+  readonly columns: PrimeTableColumn[] = [
+    { field: 'sno', header: 'S.NO', width: '65px', sortable: false },
+    { field: 'title', header: 'TASK', width: '340px', sortable: true, type: 'custom' },
+    { field: 'milestone', header: 'MILESTONE', width: '180px', sortable: true, type: 'custom' },
+    { field: 'joiner', header: 'JOINER', width: '200px', sortable: true, type: 'custom' },
+    { field: 'owner', header: 'TASK OWNER', width: '180px', sortable: true },
+    { field: 'dueDate', header: 'DUE DATE', width: '130px', sortable: true, type: 'custom' },
+    { field: 'status', header: 'STATUS', width: '140px', sortable: true, type: 'custom' },
+    { field: 'actions', header: 'ACTION', width: '100px', type: 'actions' },
   ];
 
-  joinerOptions = [
-    {
-      label: 'All Joiners (Template Default)',
-      value: 'All Joiners (Template Default)',
-    },
-    {
-      label: 'Kavitha Raman (UI/UX Designer)',
-      value: 'Kavitha Raman',
-    },
-    {
-      label: 'Rahul Verma (Backend Engineer)',
-      value: 'Rahul Verma',
-    },
-    {
-      label: 'Siddharth Nair (iOS App Developer)',
-      value: 'Siddharth Nair',
-    },
-    {
-      label: 'Priya Sundaram (Financial Analyst)',
-      value: 'Priya Sundaram',
-    },
+  readonly tableActions = { add: false, edit: true, delete: true };
+
+  readonly milestoneOptions = MILESTONES.map((m) => ({ label: m.value, value: m.value }));
+  readonly statusOptions = STATUSES.map((s) => ({ label: s, value: s }));
+  readonly joinerOptions = [
+    { label: 'All joiners (template default)', value: '' },
+    ...JOINERS.map((j) => ({ label: `${j.name} (${j.role})`, value: j.name })),
   ];
 
-  statusOptions = [
-    {
-      label: 'Completed',
-      value: 'Completed',
-    },
-    {
-      label: 'Pending',
-      value: 'Pending',
-    },
-    {
-      label: 'In Progress',
-      value: 'In Progress',
-    },
-    {
-      label: 'Upcoming',
-      value: 'Upcoming',
-    },
-  ];
+  readonly tasks = signal<ChecklistTask[]>(TASKS);
 
-  // =========================================================
-  // TABLE COLUMNS
-  // =========================================================
+  // ---------------------------------------------------------------- filters
+  readonly milestone = signal<Milestone | null>(null);
+  readonly statusFilter = signal<StatusFilter>(null);
 
-  columns: PrimeTableColumn[] = [
-    {
-      field: 'sno',
-      header: 'S.No',
-      type: 'text',
-      sortable: true,
-      width: '70px',
-    },
-
-    {
-      field: 'taskTitle',
-      header: 'Task Description',
-      type: 'checkboxText',
-      checkboxField: 'completed',
-      sortable: true,
-      width: '300px',
-    },
-
-    {
-      field: 'milestonePhase',
-      header: 'Milestone Phase',
-      type: 'badge',
-      sortable: true,
-      width: '160px',
-    },
-
-    {
-      field: 'joiner',
-      header: 'Assigned Joiner',
-      type: 'text',
-      sortable: true,
-      width: '200px',
-      subField: 'role',
-    },
-
-    {
-      field: 'department',
-      header: 'Department',
-      type: 'badge',
-      sortable: true,
-      width: '140px',
-    },
-
-    {
-      field: 'owner',
-      header: 'Assigned Joiner',
-      type: 'text',
-      sortable: true,
-      width: '180px',
-    },
-
-    {
-      field: 'dueDate',
-      header: 'Due Date',
-      type: 'text',
-      sortable: true,
-      width: '120px',
-    },
-
-    {
-      field: 'status',
-      header: 'Status',
-      type: 'status',
-      sortable: true,
-      width: '130px',
-    },
-
-    // =======================================================
-    // DYNAMIC EDIT ACTION
-    // =======================================================
-
-    {
-      field: 'actions',
-      header: 'Action',
-      type: 'actions',
-      width: '100px',
-    },
-  ];
-
-  // =========================================================
-  // INIT
-  // =========================================================
-
-  ngOnInit(): void {
-    this.initializeForm();
-
-    this.loadChecklistData();
-  }
-
-  // =========================================================
-  // FORM INITIALIZATION
-  // =========================================================
-
-  private initializeForm(): void {
-    this.taskForm = this.fb.group({
-      taskTitle: ['', Validators.required],
-
-      milestonePhase: ['Pre-Boarding', Validators.required],
-
-      taskJoiner: ['All Joiners (Template Default)'],
-
-      taskOwner: [''],
-
-      taskDueDate: [''],
-
-      taskStatus: ['Pending'],
+  private readonly allRows = computed<ChecklistRow[]>(() => {
+    const today = todayIso();
+    return this.tasks().map((t, i) => {
+      const j = JOINERS.find((x) => x.name === t.joiner);
+      return {
+        ...t,
+        sno: i + 1,
+        role: j?.role ?? '',
+        department: j?.department ?? '',
+        overdue: !!t.dueDate && t.status !== 'Completed' && t.dueDate < today,
+      };
     });
-  }  
+  });
 
-  private loadChecklistData(): void {
-    this.allData = [
-      {
-        id: 1,
-        sno: 1,
+  readonly rows = computed(() => {
+    const ms = this.milestone();
+    const st = this.statusFilter();
+    return this.allRows()
+      .filter((r) => (!ms || r.milestone === ms) && matchesStatus(r, st))
+      .map((r, i) => ({ ...r, sno: i + 1 }));
+  });
 
-        taskTitle: 'Complete Background Verification & Address Proof',
-
-        completed: true,
-
-        milestonePhase: 'Pre-Boarding',
-
-        joiner: 'Kavitha Raman',
-
-        role: 'UI/UX Designer',
-
-        department: 'Design',
-
-        owner: 'HR Operations',
-
-        dueDate: '10-Mar-2026',
-
-        status: 'Completed',
-      },
-
-      {
-        id: 2,
-        sno: 2,
-
-        taskTitle: 'Issue Hardware & Work Email ID (Laptop + Access Card)',
-
-        completed: true,
-
-        milestonePhase: 'Day 1 Induction',
-
-        joiner: 'Kavitha Raman',
-
-        role: 'UI/UX Designer',
-
-        department: 'Design',
-
-        owner: 'IT Admin',
-
-        dueDate: '15-Mar-2026',
-
-        status: 'Completed',
-      },
-
-      {
-        id: 3,
-        sno: 3,
-
-        taskTitle: 'Conduct HR Policy Briefing & Code of Conduct Sign-off',
-
-        completed: false,
-
-        milestonePhase: 'Day 1 Induction',
-
-        joiner: 'Rahul Verma',
-
-        role: 'Backend Engineer',
-
-        department: 'Engineering',
-
-        owner: 'Sarah Mitchell (HR)',
-
-        dueDate: '01-Apr-2026',
-
-        status: 'Pending',
-      },
-
-      {
-        id: 4,
-        sno: 4,
-
-        taskTitle: 'Department Architecture Walkthrough & Buddy Pairing',
-
-        completed: false,
-
-        milestonePhase: 'Week 1 Milestones',
-
-        joiner: 'Siddharth Nair',
-
-        role: 'iOS App Developer',
-
-        department: 'iOS Dev',
-
-        owner: 'David Anderson (Lead)',
-
-        dueDate: '25-Mar-2026',
-
-        status: 'In Progress',
-      },
-
-      {
-        id: 5,
-        sno: 5,
-
-        taskTitle: '30-Day Performance Review & Probation Assessment',
-
-        completed: false,
-
-        milestonePhase: '30-Day Review',
-
-        joiner: 'Priya Sundaram',
-
-        role: 'Financial Analyst',
-
-        department: 'Finance',
-
-        owner: 'Emily Clark (Manager)',
-
-        dueDate: '31-Mar-2026',
-
-        status: 'Upcoming',
-      },
-    ];
-
-    this.prepareTableData();
-  }  
-
-  private prepareTableData(): void {
-    this.tableData = this.allData.map((row, index) => ({
-      ...row,
-
-      sno: index + 1,
-
-      milestoneClass: this.getMilestoneClass(row.milestonePhase),
-
-      statusClass: this.getStatusClass(row.status),
-    }));
-  }
-
-  // =========================================================
-  // MILESTONE CLASS
-  // =========================================================
-
-  private getMilestoneClass(milestone: ChecklistRow['milestonePhase']): string {
-    switch (milestone) {
-      case 'Pre-Boarding':
-        return 'milestone-preboarding';
-
-      case 'Day 1 Induction':
-        return 'milestone-day1';
-
-      case 'Week 1 Milestones':
-        return 'milestone-week1';
-
-      case '30-Day Review':
-        return 'milestone-review';
-
-      case '60-90 Day Goal':
-        return 'milestone-goal';
-
-      default:
-        return '';
+  /** tab counts follow the status filter, so the numbers match what you'll see */
+  readonly milestoneCounts = computed(() => {
+    const st = this.statusFilter();
+    const counts: Record<string, number> = {};
+    for (const r of this.allRows()) {
+      if (matchesStatus(r, st)) counts[r.milestone] = (counts[r.milestone] ?? 0) + 1;
     }
+    return counts;
+  });
+
+  readonly stats = computed(() => {
+    const rows = this.allRows();
+    const completed = rows.filter((r) => r.status === 'Completed').length;
+    return {
+      total: rows.length,
+      completed,
+      completedPct: rows.length ? Math.round((completed / rows.length) * 100) : 0,
+      inProgress: rows.filter((r) => r.status === 'In Progress').length,
+      overdue: rows.filter((r) => r.overdue).length,
+    };
+  });
+
+  /** stat cards double as a status filter — click again to clear */
+  toggleStatus(s: StatusFilter): void {
+    this.statusFilter.set(this.statusFilter() === s ? null : s);
   }
 
-  // =========================================================
-  // STATUS CLASS
-  // =========================================================
-
-  private getStatusClass(status: ChecklistRow['status']): string {
-    switch (status) {
-      case 'Completed':
-        return 'status-completed';
-
-      case 'Pending':
-        return 'status-pending';
-
-      case 'In Progress':
-        return 'status-progress';
-
-      case 'Upcoming':
-        return 'status-upcoming';
-
-      default:
-        return '';
-    }
+  milestoneMeta(m: Milestone) {
+    return MILESTONES.find((x) => x.value === m)!;
   }
 
-  // =========================================================
-  // ADD MODAL
-  // =========================================================
+  /** the tick box in the Task cell: tick = Completed, untick = back to In Progress */
+  toggleComplete(row: ChecklistRow, checked: boolean): void {
+    this.patch(row.id, { status: checked ? 'Completed' : 'In Progress' });
+  }
 
-  openAddModal(): void {
-    this.modalType = 'add';
+  onAction(e: { action: string; row: ChecklistRow }): void {
+    if (e.action === 'edit') this.openEdit(e.row);
+    if (e.action === 'delete') this.deleting.set(e.row);
+  }
 
-    this.editingTaskId = null;
+  // ---------------------------------------------------------------- add / edit modal
+  readonly modalOpen = signal(false);
+  editingId: number | null = null;
 
-    this.taskForm.reset({
-      taskTitle: '',
+  readonly form = this.fb.nonNullable.group({
+    title: ['', [Validators.required, Validators.maxLength(150)]],
+    milestone: ['Pre-Boarding' as Milestone, Validators.required],
+    joiner: [''],
+    owner: [''],
+    dueDate: [''], // DD/MM/YYYY from the calendar picker
+    status: ['Pending' as TaskStatus, Validators.required],
+  });
 
-      milestonePhase: 'Pre-Boarding',
+  openAdd(): void {
+    this.editingId = null;
+    this.form.reset({ milestone: this.milestone() ?? 'Pre-Boarding', status: 'Pending' });
+    this.modalOpen.set(true);
+  }
 
-      taskJoiner: 'All Joiners (Template Default)',
-
-      taskOwner: '',
-
-      taskDueDate: '',
-
-      taskStatus: 'Pending',
+  openEdit(row: ChecklistRow): void {
+    this.editingId = row.id;
+    this.form.reset({
+      title: row.title,
+      milestone: row.milestone,
+      joiner: row.joiner,
+      owner: row.owner,
+      dueDate: isoToDmy(row.dueDate),
+      status: row.status,
     });
-
-    this.showTaskModal = true;
+    this.modalOpen.set(true);
   }
 
-  // =========================================================
-  // EDIT MODAL
-  // =========================================================
-
-  openEditModal(row: ChecklistRow): void {
-    this.modalType = 'edit';
-
-    this.editingTaskId = row.id;
-
-    this.taskForm.patchValue({
-      taskTitle: row.taskTitle,
-
-      milestonePhase: row.milestonePhase,
-
-      taskJoiner: row.joiner,
-
-      taskOwner: row.owner,
-
-      taskDueDate: this.toInputDate(row.dueDate),
-
-      taskStatus: row.status,
-    });
-
-    this.showTaskModal = true;
+  closeModal(): void {
+    this.modalOpen.set(false);
   }
 
-  // =========================================================
-  // TABLE ACTION
-  // =========================================================
-
-  onTableAction(event: { action: string; row: ChecklistRow }): void {
-    switch (event.action) {
-      case 'edit':
-        this.openEditModal(event.row);
-
-        break;
-
-      case 'delete':
-        this.deleteTask(event.row);
-
-        break;
-    }
-  }
-
-  // =========================================================
-  // SAVE TASK
-  // =========================================================
-
-  saveTask(): void {
-    if (this.taskForm.invalid) {
-      this.taskForm.markAllAsTouched();
-
+  save(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    const formValue = this.taskForm.getRawValue();
+    const v = this.form.getRawValue();
+    const task = {
+      title: v.title.trim(),
+      milestone: v.milestone,
+      joiner: v.joiner,
+      owner: v.owner.trim(),
+      dueDate: dmyToIso(v.dueDate),
+      status: v.status,
+    };
 
-    // =======================================================
-    // EDIT
-    // =======================================================
-
-    if (this.modalType === 'edit' && this.editingTaskId !== null) {
-      const index = this.allData.findIndex((task) => task.id === this.editingTaskId);
-
-      if (index !== -1) {
-        const existingTask = this.allData[index];
-
-        this.allData[index] = {
-          ...existingTask,
-
-          taskTitle: formValue.taskTitle,
-
-          milestonePhase: formValue.milestonePhase,
-
-          joiner: formValue.taskJoiner,
-
-          owner: formValue.taskOwner,
-
-          dueDate: this.formatDisplayDate(formValue.taskDueDate),
-
-          status: formValue.taskStatus,
-
-          completed: formValue.taskStatus === 'Completed',
-        };
-      }
+    if (this.editingId !== null) {
+      this.patch(this.editingId, task);
+    } else {
+      this.tasks.update((list) => [...list, { id: Math.max(0, ...list.map((t) => t.id)) + 1, ...task }]);
     }
-
-    // =======================================================
-    // ADD
-    // =======================================================
-    else {
-      const newId = this.allData.length ? Math.max(...this.allData.map((task) => task.id)) + 1 : 1;
-
-      const newTask: ChecklistRow = {
-        id: newId,
-
-        sno: this.allData.length + 1,
-
-        taskTitle: formValue.taskTitle,
-
-        completed: formValue.taskStatus === 'Completed',
-
-        milestonePhase: formValue.milestonePhase,
-
-        joiner: formValue.taskJoiner,
-
-        role: this.getJoinerRole(formValue.taskJoiner),
-
-        department: this.getJoinerDepartment(formValue.taskJoiner),
-
-        owner: formValue.taskOwner,
-
-        dueDate: this.formatDisplayDate(formValue.taskDueDate),
-
-        status: formValue.taskStatus,
-      };
-
-      this.allData.push(newTask);
-    }
-
-    this.prepareTableData();
-
     this.closeModal();
   }
 
-  // =========================================================
-  // DELETE TASK
-  // =========================================================
-
-  deleteTask(row: ChecklistRow): void {
-    const confirmed = window.confirm(`Are you sure you want to delete "${row.taskTitle}"?`);
-
-    if (!confirmed) {
-      return;
-    }
-
-    this.allData = this.allData.filter((task) => task.id !== row.id);
-
-    this.allData.forEach((task, index) => {
-      task.sno = index + 1;
-    });
-
-    this.prepareTableData();
+  invalid(name: 'title' | 'milestone'): boolean {
+    const c = this.form.controls[name];
+    return c.invalid && c.touched;
   }
 
-  // =========================================================
-  // GET JOINER ROLE
-  // =========================================================
+  // ---------------------------------------------------------------- delete confirm
+  readonly deleting = signal<ChecklistRow | null>(null);
 
-  private getJoinerRole(joiner: string): string {
-    switch (joiner) {
-      case 'Kavitha Raman':
-        return 'UI/UX Designer';
-
-      case 'Rahul Verma':
-        return 'Backend Engineer';
-
-      case 'Siddharth Nair':
-        return 'iOS App Developer';
-
-      case 'Priya Sundaram':
-        return 'Financial Analyst';
-
-      default:
-        return '';
-    }
+  confirmDelete(): void {
+    const row = this.deleting();
+    if (row) this.tasks.update((list) => list.filter((t) => t.id !== row.id));
+    this.deleting.set(null);
   }
 
-  // =========================================================
-  // GET JOINER DEPARTMENT
-  // =========================================================
-
-  private getJoinerDepartment(joiner: string): string {
-    switch (joiner) {
-      case 'Kavitha Raman':
-        return 'Design';
-
-      case 'Rahul Verma':
-        return 'Engineering';
-
-      case 'Siddharth Nair':
-        return 'iOS Dev';
-
-      case 'Priya Sundaram':
-        return 'Finance';
-
-      default:
-        return '';
-    }
+  // ---------------------------------------------------------------- helpers
+  private patch(id: number, changes: Partial<ChecklistTask>): void {
+    this.tasks.update((list) => list.map((t) => (t.id === id ? { ...t, ...changes } : t)));
   }
 
-  // =========================================================
-  // DATE FOR INPUT
-  // =========================================================
-
-  private toInputDate(date: string): string {
-    if (!date) {
-      return '';
-    }
-
-    const parts = date.split('-');
-
-    if (parts.length !== 3) {
-      return '';
-    }
-
-    const day = parts[0].padStart(2, '0');
-
-    const month = this.getMonthNumber(parts[1]);
-
-    const year = parts[2];
-
-    if (!month) {
-      return '';
-    }
-
-    return `${year}-${month}-${day}`;
+  statusClass(s: TaskStatus): string {
+    return { Completed: 'status-success', 'In Progress': 'status-warning', Pending: 'status-pending', Upcoming: 'status-muted' }[s];
   }
 
-  // =========================================================
-  // MONTH NUMBER
-  // =========================================================
-
-  private getMonthNumber(month: string): string {
-    const months: Record<string, string> = {
-      Jan: '01',
-      Feb: '02',
-      Mar: '03',
-      Apr: '04',
-      May: '05',
-      Jun: '06',
-      Jul: '07',
-      Aug: '08',
-      Sep: '09',
-      Oct: '10',
-      Nov: '11',
-      Dec: '12',
-    };
-
-    return months[month] || '';
+  fmtDate(iso: string): string {
+    return iso
+      ? new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+      : '—';
   }
+}
 
-  // =========================================================
-  // FORMAT DISPLAY DATE
-  // =========================================================
+// ------------------------------------------------------------------ pure helpers
 
-  private formatDisplayDate(date: string): string {
-    if (!date) {
-      return '';
-    }
+function matchesStatus(r: ChecklistRow, f: StatusFilter): boolean {
+  if (!f) return true;
+  return f === 'overdue' ? r.overdue : r.status === f;
+}
 
-    const parts = date.split('-');
+function todayIso(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 
-    if (parts.length !== 3) {
-      return date;
-    }
+function isoToDmy(iso: string): string {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
 
-    const year = parts[0];
-
-    const month = parts[1];
-
-    const day = parts[2];
-
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-
-    const monthName = months[Number(month) - 1];
-
-    return `${day}-${monthName}-${year}`;
-  }
-
-  // =========================================================
-  // CLOSE MODAL
-  // =========================================================
-
-  closeModal(): void {
-    this.showTaskModal = false;
-
-    this.editingTaskId = null;
-
-    this.taskForm.reset({
-      taskTitle: '',
-
-      milestonePhase: 'Pre-Boarding',
-
-      taskJoiner: 'All Joiners (Template Default)',
-
-      taskOwner: '',
-
-      taskDueDate: '',
-
-      taskStatus: 'Pending',
-    });
-  }
+function dmyToIso(dmy: string): string {
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(dmy.trim());
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : '';
 }

@@ -3,7 +3,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, finalize } from 'rxjs';
-import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 
 import {
@@ -24,6 +23,7 @@ import {
 import { dateToIso, isoToDate, toDisplayDate } from '../../staff-visiting-reports.utils';
 import { CalendarDatepickerDirective } from '../../../../../common/directives/datepicker';
 
+import { AppSelect } from '../../../../../shared/app-select/app-select';
 /**
  * Staff Visiting Location Report — every lead check-in in a date range,
  * comparing the lead's original location with where the staff checked in.
@@ -32,7 +32,7 @@ import { CalendarDatepickerDirective } from '../../../../../common/directives/da
 @Component({
   selector: 'app-visit-location-report',
   standalone: true,
-  imports: [FormsModule, SelectModule, DatePickerModule, PrimeDataTable,CalendarDatepickerDirective],
+  imports: [AppSelect, FormsModule, DatePickerModule, PrimeDataTable,CalendarDatepickerDirective],
   templateUrl: './visit-location-report.html',
   styleUrl: './visit-location-report.scss',
 })

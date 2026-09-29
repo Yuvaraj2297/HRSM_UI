@@ -1,0 +1,235 @@
+/* Shared layout for the performance report panels. Colours come from
+   tokens; cards, pills, tables and stat tiles come from classes.scss. */
+
+:host {
+  display: block;
+}
+
+/* ================================================================
+   Panels
+================================================================ */
+.perf-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 16px;
+
+  &.perf-grid-drill { grid-template-columns: minmax(260px, 4fr) minmax(0, 8fr); }
+
+  @media (max-width: 991.98px) {
+    &, &.perf-grid-drill { grid-template-columns: 1fr; }
+  }
+}
+
+.perf-panel {
+  padding: 20px;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gh-heading);
+
+  i { color: var(--primary); }
+}
+
+.panel-sub {
+  margin: 2px 0 16px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* rating number tinted by its band (--tone set inline) */
+.rating-chip {
+  --tone: var(--primary);
+
+  display: inline-block;
+  min-width: 40px;
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--tone) 35%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+  font-weight: 700;
+  text-align: center;
+  color: var(--gh-heading);
+}
+
+.perf-avatar {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.perf-initials {
+  background: var(--primary);
+}
+
+.perf-avatar-lg {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  flex-shrink: 0;
+  font-size: 18px;
+  background: var(--primary);
+}
+
+/* ================================================================
+   Rating distribution
+================================================================ */
+.dist-bar {
+  display: flex;
+  height: 22px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+  overflow: hidden;
+
+  > span {
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--white);
+  }
+}
+
+.dist-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr) 40px 44px;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+}
+
+.dist-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.dist-label strong { color: var(--gh-heading); }
+
+.dist-count {
+  font-weight: 700;
+  text-align: right;
+  color: var(--gh-heading);
+}
+
+.dist-pct {
+  text-align: right;
+  color: var(--text-muted);
+}
+
+.dist-note {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ================================================================
+   Department table
+================================================================ */
+.perf-row-link {
+  cursor: pointer;
+}
+
+.completion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.completion-bar {
+  width: 70px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    background: var(--primary);
+  }
+}
+
+/* ================================================================
+   Employee history
+================================================================ */
+.history-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.history-picker {
+  width: 280px;
+  max-width: 100%;
+}
+
+.history-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 4fr) minmax(0, 8fr);
+  gap: 16px;
+
+  @media (max-width: 991.98px) { grid-template-columns: 1fr; }
+}
+
+.history-summary {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-soft);
+}
+
+.history-trend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 12px;
+
+  > div {
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+  }
+
+  dt { font-size: 11.5px; font-weight: 500; color: var(--text-muted); }
+  dd { margin: 2px 0 0; font-size: 15px; }
+  i { font-size: 11px; color: var(--text-muted); }
+  strong { color: var(--primary-dark); }
+}
+
+.history-verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--primary-soft);
+  font-size: 13px;
+
+  i { color: var(--primary); }
+
+  &.is-down {
+    border-left-color: var(--warning);
+    background: var(--yellow-50-2);
+
+    i { color: var(--warning); }
+  }
+}

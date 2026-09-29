@@ -1,0 +1,158 @@
+/* =============================================================
+   SHARED UI PIECES — small building blocks that several pages used
+   to copy into their own component SCSS. Defined once here; pages
+   keep only layout tweaks (width, margin) in their own files.
+
+     Search box with icon   .mt-search-wrap > .mt-search-icon + .mt-search-input
+     Ticket badges          .tkt-status-badge / .tkt-priority-badge (colour classes
+                            come from the ticket service), .badge-sla-breached|risk|ok,
+                            .badge-unassigned, .sla-due
+     Side cards             .side-card-title (+ .sc-badge), .side-scroll
+     Table footer           .report-footer
+     Required-field star    .req
+     Centred small dialog   .modal-dialog-custom (+ .modal-sm-custom), pairs with
+                            the global .modal-backdrop-custom
+     Empty state            .empty-state (aliases: .tdash-empty, .ct-empty)
+============================================================= */
+
+/* ---------------- search box with a leading icon ---------------- */
+.mt-search-wrap {
+  position: relative;
+  min-width: 230px;
+
+  .mt-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .mt-search-input {
+    width: 100%;
+    padding-left: 32px;
+  }
+}
+
+/* ---------------- ticket badges ---------------- */
+.tkt-status-badge,
+.tkt-priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  i { font-size: 11px; }
+}
+
+.tkt-priority-badge { padding-inline: 10px; }
+
+.badge-sla-breached,
+.badge-sla-risk,
+.badge-sla-ok,
+.badge-unassigned {
+  font-size: 10.5px;
+}
+
+.badge-sla-breached { background: var(--danger-soft);  color: var(--red-550); }
+.badge-sla-risk     { background: var(--orange-50);    color: var(--orange-550); }
+.badge-sla-ok       { background: var(--primary-soft); color: var(--green-550); }
+.badge-unassigned   { background: var(--bg-muted);     color: var(--text-light); font-size: 10px; }
+
+.sla-due {
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--text-light);
+}
+
+/* ---------------- side cards ---------------- */
+.side-card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--gh-heading);
+
+  .sc-badge {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-muted);
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--neutral-650);
+  }
+}
+
+.side-scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar { width: 5px; }
+  &::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-pill); }
+}
+
+/* ---------------- table footer strip ---------------- */
+.report-footer {
+  border-top: 1px solid var(--bg-muted);
+  background: var(--bg-soft);
+}
+
+/* ---------------- required-field star ---------------- */
+.req {
+  color: var(--danger);
+}
+
+/* ---------------- centred small dialog ----------------
+   Same layer as .modal-custom so it always sits above the global
+   .modal-backdrop-custom (z-index 10000). */
+.modal-dialog-custom {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 10005;
+  width: 92%;
+  max-width: 520px;
+  transform: translate(-50%, -50%);
+
+  &.modal-sm-custom { max-width: 420px; }
+}
+
+/* ---------------- empty state ---------------- */
+.empty-state,
+.tdash-empty,
+.ct-empty {
+  padding: 40px 16px;
+  text-align: center;
+
+  .e-ico {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    font-size: 24px;
+    color: var(--primary);
+  }
+
+  .e-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--gh-heading);
+  }
+
+  .e-sub {
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+}

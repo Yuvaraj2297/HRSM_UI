@@ -1,0 +1,125 @@
+@let tab = store.deskTab();
+@let queues = store.queues();
+
+<nav class="page-tabs page-tabs-sm mb-3" role="tablist" aria-label="Reviewer desk">
+  @for (t of tierKeys; track t) {
+  <button type="button" role="tab" class="page-tab" [class.active]="tab === t" [attr.aria-selected]="tab === t"
+    (click)="store.deskTab.set(t)">
+    <i [class]="tiers[t].icon"></i> {{ tiers[t].title }}
+    <span class="page-tab-count" [class.has-unread]="queues[t].length">{{ queues[t].length }}</span>
+  </button>
+  }
+  <button type="button" role="tab" class="page-tab" [class.active]="tab === 'all'" [attr.aria-selected]="tab === 'all'"
+    (click)="store.deskTab.set('all')">
+    <i class="bi bi-journal-text"></i> All Appraisals
+    <span class="page-tab-count">{{ store.appraisals().length }}</span>
+  </button>
+</nav>
+
+@if (tab === 'all') {
+  <!-- =========================================================
+       LEDGER
+  ========================================================== -->
+  <app-primedatatable [modalHeader]="ledgerHeader" [columns]="ledgerColumns" [data]="ledgerRows()"
+    searchPlaceholder="Search employee, role, department..." [showColumnsButton]="false"
+    exportFileName="appraisal-ledger" (actionClick)="onLedgerAction($event)">
+    <ng-template #cellTemplate let-row let-col="col">
+      @switch (col.field) {
+        @case ('name') {
+          <div class="emp-name-line">{{ row.name }}</div>
+          <div class="emp-code-line">{{ row.id }} • {{ row.role }} ({{ row.dept }})</div>
+        }
+        @case ('stage') {
+          <span class="status-pill" [ngClass]="stageClass(row.stage)">
+            {{ row.stage === 5 ? 'Completed' : row.stage === 1 ? 'Self-review draft' : 'Awaiting ' + stageLabel(row.stage) }}
+          </span>
+          <div class="emp-code-line mt-1">Stage {{ row.stage }} of 5</div>
+        }
+        @case ('ratings') {
+          <span class="rating-trail">
+            <span>{{ row.self.rating.toFixed(1) }}</span>
+            <i class="bi bi-arrow-right"></i>
+            <span [class.is-empty]="!row.tl">{{ row.tl ? row.tl.rating.toFixed(1) : '—' }}</span>
+            <i class="bi bi-arrow-right"></i>
+            <span [class.is-empty]="!row.hr">{{ row.hr ? row.hr.rating.toFixed(1) : '—' }}</span>
+            <i class="bi bi-arrow-right"></i>
+            <strong [class.is-empty]="!row.mgr">{{ row.mgr ? row.mgr.rating.toFixed(1) : '—' }}</strong>
+          </span>
+        }
+        @case ('hike') {
+          {{ row.hike === null ? '—' : row.hike + '%' }}
+        }
+      }
+    </ng-template>
+  </app-primedatatable>
+} @else if (tier(); as t) {
+  <!-- =========================================================
+       QUEUE  |  REVIEW
+  ========================================================== -->
+  @let waiting = queue();
+  @let sel = selected();
+
+  @if (!waiting.length) {
+    <div class="card-custom desk-empty">
+      <i class="bi bi-inbox"></i>
+      <div class="fw-semibold">Nothing waiting for {{ tiers[t].title }}</div>
+      <small class="text-muted">New appraisals appear here when the previous stage approves them.</small>
+    </div>
+  } @else {
+    <div class="desk-split">
+      <!-- queue -->
+      <aside class="card-custom desk-queue" aria-label="Waiting for review">
+        <div class="desk-queue-head">Waiting <span class="page-tab-count">{{ waiting.length }}</span></div>
+        <ul>
+          @for (a of waiting; track a.key) {
+          <li>
+            <button type="button" class="desk-queue-item" [class.active]="sel?.key === a.key"
+              [attr.aria-current]="sel?.key === a.key" (click)="store.select(t, a.key)">
+              <span class="emp-initials-avatar">{{ a.name[0] }}</span>
+              <span class="desk-queue-text">
+                <span class="emp-name-line">{{ a.name }}</span>
+                <span class="emp-code-line">{{ a.role }}</span>
+              </span>
+              <span class="desk-queue-score" title="Self rating">{{ a.self.rating.toFixed(1) }}</span>
+            </button>
+          </li>
+          }
+        </ul>
+      </aside>
+
+      <!-- review -->
+      @if (sel) {
+      <section class="card-custom desk-review">
+        <header class="desk-review-head">
+          <div>
+            <div class="pane-title">{{ sel.name }}</div>
+            <div class="emp-code-line">{{ sel.id }} • {{ sel.role }} • {{ sel.dept }} • TL: {{ sel.teamLead }}</div>
+          </div>
+          <span class="status-pill status-pending">Stage {{ tiers[t].stage }} of 5</span>
+        </header>
+
+        <!-- what the employee wrote -->
+        <details class="desk-self" open>
+          <summary>Self-review <span class="text-muted">· rated {{ sel.self.rating.toFixed(1) }}</span></summary>
+          <dl class="desk-self-body">
+            <dt>Summary</dt><dd>{{ sel.self.summary }}</dd>
+            <dt>Achievements</dt><dd class="pre-line">{{ sel.self.achievements }}</dd>
+            <dt>Projects</dt><dd>{{ sel.self.projects }}</dd>
+            @if (sel.self.certs) { <dt>Certifications</dt><dd>{{ sel.self.certs }}</dd> }
+          </dl>
+        </details>
+
+        <!-- earlier reviewers -->
+        @if (sel.tl) {
+        <app-appraisal-review-card [review]="sel.tl" [title]="tiers.tl.title" [icon]="tiers.tl.icon" />
+        }
+        @if (sel.hr) {
+        <app-appraisal-review-card [review]="sel.hr" [title]="tiers.hr.title" [icon]="tiers.hr.icon" />
+        }
+
+        <app-appraisal-review-form [tier]="t" [appraisal]="sel" />
+      </section>
+      }
+    </div>
+  }
+}

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 // actually live in your project.
 import { ModalField, ModalSaveEvent, ReuseModal } from '../../../../shared/reuse-model/reuse-model';
 import { PrimeDataTable, PrimeTableColumn, PrimeTableRowAction } from '../../../../shared/primedatatable/primedatatable';
+import { ValidationMethods } from '../../../../shared/validation/validation-methods';
 
 type TabKey = 'all_application' | 'screening' | 'tech_interview' | 'hr_round' | 'offered' | 'hired' | 'archived';
 type CandidateStage = Exclude<TabKey, 'all_application'>;
@@ -259,9 +260,15 @@ export class CadidatePipeline {
 
   private buildCandidateFields(): ModalField[] {
     return [
-      { key: 'name', label: 'Full Name', type: 'text', required: true, placeholder: 'Candidate full name', col: 6 },
+      { key: 'name', label: 'Full Name', type: 'text', required: true, placeholder: 'Candidate full name', col: 6 , 
+          capitalizeFirst: true,
+          sanitizer: 'alphabets',
+          validators: [ValidationMethods.alphabetOnly()]},
       { key: 'email', label: 'Email Address', type: 'email', required: true, placeholder: 'email@example.com', col: 6 },
-      { key: 'phone', label: 'Phone Number', type: 'tel', required: true, placeholder: '+91 98765 43210', col: 6 },
+      { key: 'phone', label: 'Phone Number', type: 'tel', required: true, placeholder: '+91 98765 43210', col: 6,
+        sanitizer: 'numbers',
+        validators: [ValidationMethods.phoneNumber()]
+       },
       {
         key: 'jobCode',
         label: 'Applied Job Position',

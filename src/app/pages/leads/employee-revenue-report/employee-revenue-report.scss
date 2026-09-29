@@ -36,14 +36,6 @@ $themes: (
   gap: 12px;
 }
 
-.page-title {
-  margin: 0 0 4px;
-  font-size: 28px;
-  font-weight: 800;
-  color: $ink-900;
-  letter-spacing: -0.5px;
-}
-
 .breadcrumb-text {
   display: flex;
   align-items: center;
@@ -66,120 +58,11 @@ $themes: (
   i { color: $primary; margin-right: 6px; }
 }
 
-/* ---------- Summary cards ---------- */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
-  max-width: 1200px;   /* prevents stretching on ultrawide; remove if you want full width */
-}
+/* ---------- Summary cards: <app-stat-card> (global) ---------- */
 
-.stat-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    '.    label'
-    'icon value'
-    '.    delta';
-  column-gap: 14px;
-  row-gap: 2px;
-  align-items: center;
-  padding: 14px 18px;
-  background: var(--white);
-  border: 1px solid var(--bg-muted);
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.04);
-  white-space: nowrap;
-}
+/* ---------- Filters: global .report-filter-card ---------- */
 
-.stat-label {
-  grid-area: label;
-  font-size: 13px;
-  font-weight: 500;
-  color: $ink-400;
-}
-
-.stat-value {
-  grid-area: value;
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.1;
-  color: $ink-900;
-}
-
-.stat-delta {
-  grid-area: delta;
-  font-size: 12px;
-  color: $ink-400;
-}
-
-.stat-icon {
-  grid-area: icon;
-  width: 38px;
-  height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  font-size: 16px;
-}
-
-@each $name, $c in $themes {
-  .stat-card.theme-#{$name} .stat-icon {
-    background: list.nth($c, 1);
-    color: list.nth($c, 2);
-  }
-}
-
-/* ---------- Filters ---------- */
-.filters-card {
-  display: grid;
-  grid-template-columns: minmax(240px, 1.35fr) minmax(160px, 1fr) minmax(160px, 1fr) auto;
-  gap: 24px;
-  align-items: end;
-  padding: 24px 30px;
-}
-
-.filter-field {
-  min-width: 0;
-
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: $ink-900;
-  }
-}
-
-.rev-input,
-.rev-datepicker ::ng-deep input {
-  width: 100%;
-
-}
-
-.rev-datepicker {
-  display: block;
-  width: 100%;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 12px;
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 38px;
-    white-space: nowrap;
-
-    &:active { transform: translateY(1px); }
-  }
-}
-
-/* ---------- Employee cards ---------- */
+/* ---------- Employee cards (card shell: global .card-custom) ---------- */
 .rev-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -189,16 +72,6 @@ $themes: (
 .rev-card {
   height: 100%;
   overflow: hidden;
-  background: var(--white);
-  border: 1px solid var(--bg-muted);
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(var(--neutral-900-3-rgb), 0.1);
-  }
 }
 
 .rev-banner {
@@ -228,8 +101,8 @@ $themes: (
   justify-content: center;
   overflow: hidden;
   border-radius: 50%;
-  background: var(--white);
-  border: 2px solid var(--white);
+  background: var(--surface);
+  border: 2px solid var(--surface);
   color: $ink-900;
   font-size: 30px;
   box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.15);
@@ -270,7 +143,7 @@ $themes: (
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 9px 0;
+  padding: 8px 0;
 
   & + & { border-top: 1px dashed var(--border); }
 }
@@ -282,7 +155,7 @@ $themes: (
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 15px;
 }
 
@@ -338,48 +211,15 @@ $themes: (
   &.neg { background: linear-gradient(90deg, var(--red-500), var(--red-350)); }
 }
 
-.rev-empty {
-  padding: 48px 16px;
-  text-align: center;
-  color: $ink-500;
-  background: var(--white);
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(var(--neutral-900-rgb), 0.05);
-
-  i {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 34px;
-  }
-}
-
 /* ---------- Responsive ---------- */
-@media (max-width: 1399px) {
-  .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
 @media (max-width: 1199px) {
-  .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .rev-grid  { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rev-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 991px) {
-  .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .rev-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-  .filters-card { grid-template-columns: 1fr 1fr; }
-  .filter-search { grid-column: 1 / -1; }
-  .filter-actions { grid-column: 1 / -1; justify-content: flex-end; }
-}
-
-@media (max-width: 767px) {
-  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 575px) {
-  .stat-grid,
-  .rev-grid,
-  .filters-card { grid-template-columns: 1fr; }
-
-  .filters-card { padding: 20px; }
+  .rev-grid { grid-template-columns: 1fr; }
 }

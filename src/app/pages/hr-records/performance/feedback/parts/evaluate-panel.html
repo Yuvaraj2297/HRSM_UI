@@ -1,0 +1,144 @@
+@let queues = store.queues();
+@let acting = store.actingAs();
+
+<!-- who am I giving feedback as? -->
+<div class="card-custom acting-bar mb-3">
+  <span class="acting-label"><i class="bi bi-person-bounding-box"></i> Acting as</span>
+  <nav class="page-tabs page-tabs-sm" role="tablist" aria-label="Acting as">
+    @for (k of evaluatorKeys; track k) {
+    <button type="button" role="tab" class="page-tab" [class.active]="acting === k" [attr.aria-selected]="acting === k"
+      (click)="store.actingAs.set(k)">
+      <i [class]="evaluators[k].icon"></i> {{ evaluators[k].label }} · {{ evaluators[k].person }}
+      <span class="page-tab-count" [class.has-unread]="queues[k].length">{{ queues[k].length }}</span>
+    </button>
+    }
+    <button type="button" role="tab" class="page-tab" [class.active]="acting === 'employee'"
+      [attr.aria-selected]="acting === 'employee'" (click)="store.actingAs.set('employee')">
+      <i class="bi bi-person"></i> Employee
+    </button>
+  </nav>
+</div>
+
+@if (who(); as w) {
+  @let current = store.current();
+
+  @if (!queue().length) {
+    <div class="card-custom fb-empty">
+      <i class="bi bi-inbox"></i>
+      <div class="fw-semibold">Nothing waiting for {{ evaluators[w].label }} feedback</div>
+      <small class="text-muted">Reviews arrive here when the previous evaluator submits, or when a new cycle starts.</small>
+    </div>
+  } @else {
+    <div class="fb-split">
+      <!-- queue -->
+      <aside class="card-custom fb-queue" aria-label="Waiting for your feedback">
+        <div class="fb-queue-head">Waiting <span class="page-tab-count">{{ queue().length }}</span></div>
+        <ul>
+          @for (r of queue(); track r.id) {
+          <li>
+            <button type="button" class="fb-queue-item" [class.active]="current?.id === r.id"
+              [attr.aria-current]="current?.id === r.id" (click)="store.select(w, r.id)">
+              @if (r.avatar) {
+                <img [src]="r.avatar" [alt]="r.name" class="rounded-circle fb-avatar" />
+              } @else {
+                <span class="emp-initials-avatar fb-initials">{{ initials(r.name) }}</span>
+              }
+              <span class="fb-queue-text">
+                <span class="emp-name-line">{{ r.name }}</span>
+                <span class="emp-code-line">{{ r.cycle }}</span>
+              </span>
+              <span class="fb-due" [class.is-late]="r.daysLeft < 0" [class.is-soon]="r.daysLeft >= 0 && r.daysLeft <= 7">
+                {{ r.daysLeft < 0 ? (-r.daysLeft) + 'd late' : r.daysLeft + 'd' }}
+              </span>
+            </button>
+          </li>
+          }
+        </ul>
+      </aside>
+
+      <!-- review -->
+      @if (current) {
+      <section class="card-custom fb-review">
+        <header class="fb-review-head">
+          <div class="d-flex align-items-center gap-3">
+            @if (current.avatar) {
+              <img [src]="current.avatar" [alt]="current.name" class="rounded-circle fb-avatar-lg" />
+            } @else {
+              <span class="emp-initials-avatar fb-avatar-lg">{{ initials(current.name) }}</span>
+            }
+            <div>
+              <div class="pane-title">{{ current.name }}</div>
+              <div class="emp-code-line">{{ current.role }} • {{ current.dept }} · {{ current.team }}</div>
+              <div class="emp-code-line">{{ current.cycle }} · due {{ fmtDate(current.due) }}</div>
+            </div>
+          </div>
+          <ol class="fb-steps" aria-label="Pipeline">
+            @for (s of stages; track s.no) {
+            <li [class.done]="s.no < current.stage" [class.current]="s.no === current.stage">
+              <i [class]="s.no < current.stage ? 'bi bi-check-lg' : s.icon"></i> {{ s.label }}
+            </li>
+            }
+          </ol>
+        </header>
+
+        <!-- what earlier evaluators said -->
+        @for (k of evaluatorKeys; track k) {
+          @if (current[k]; as e) {
+          <div class="fb-prev">
+            <div class="fb-prev-head">
+              <span><i [class]="evaluators[k].icon"></i> {{ e.by }}</span>
+              <span class="fb-score">{{ e.rating.toFixed(1) }} <small>/ 5</small></span>
+            </div>
+            <div class="fb-prev-body">
+              <div><strong>Strengths:</strong> {{ e.strengths }}</div>
+              <div><strong>Growth:</strong> {{ e.growth }}</div>
+            </div>
+          </div>
+          }
+        }
+
+        <!-- my feedback -->
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="fb-form">
+          <h3 class="pane-title mb-3">Your feedback as {{ evaluators[w].label }}</h3>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label"><span class="text-danger">*</span> Overall rating</label>
+              <app-select formControlName="rating" [options]="ratingOptions" optionLabel="label" optionValue="value" />
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="fb-strengths"><span class="text-danger">*</span> What do they do exceptionally well?</label>
+              <textarea id="fb-strengths" class="form-control" rows="3" formControlName="strengths"
+                placeholder="Core strengths, contributions, collaboration..." [class.is-invalid]="invalid('strengths')"></textarea>
+              @if (invalid('strengths')) { <div class="field-error">Add at least a sentence (10+ characters).</div> }
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="fb-growth">Suggestions for growth</label>
+              <textarea id="fb-growth" class="form-control" rows="2" formControlName="growth"
+                placeholder="Where could they expand their impact?"></textarea>
+            </div>
+          </div>
+          <div class="pane-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-send"></i>
+              <span>{{ submitLabel(w) }}</span>
+            </button>
+          </div>
+        </form>
+      </section>
+      }
+    </div>
+  }
+} @else {
+  <div class="card-custom fb-empty fb-locked">
+    <i class="bi bi-lock"></i>
+    <div class="fw-semibold">View-only as an employee</div>
+    <small class="text-muted">
+      360° feedback is submitted by Managers, Team Leads and HR. Employees see their result in <strong>360° Reports</strong>
+      once HR signs off.
+    </small>
+    <button type="button" class="btn btn-outline-primary mt-2" (click)="store.tab.set('report')">
+      <i class="bi bi-file-earmark-bar-graph"></i>
+      <span>Open 360° Reports</span>
+    </button>
+  </div>
+}

@@ -1,23 +1,19 @@
-<div class="table-card-container">
-
-  <!-- header + toolbar: stacked (default) or one row when inlineToolbar = true -->
-  <div class="table-head-area" [class.is-inline]="inlineToolbar">
+<div class="card-custom table-card-container">
 
   <!-- =========================================================
-       CARD HEADER
+       HEAD ROW — one line: title on the left; Columns · Export ·
+       Search · page buttons · Add on the right. Wraps under the
+       title only when the card is too narrow.
   ========================================================== -->
+  @if (modalHeader.title || showColumnsButton || showExportButton || showGlobalFilter || Accessactions.add || headerButtons.length) {
+  <div class="table-head-area">
 
-  @if (modalHeader.title) {
-
-  <div class="table-top-header">
-
+    @if (modalHeader.title) {
     <div class="header-left">
-
       <div class="header-icon-box">
         <i [class]="modalHeader.icon"></i>
       </div>
-
-      <div>
+      <div class="header-text">
         <h2 class="header-title mb-0">
           {{ modalHeader.title }}
           @if (modalHeader.count !== undefined) {
@@ -25,14 +21,91 @@
           }
         </h2>
         @if (modalHeader.subtitle) {
-        <div class="header-subtitle text-muted" style="font-size: 12px; margin-top: 2px;">{{ modalHeader.subtitle }}
+        <div class="header-subtitle">{{ modalHeader.subtitle }}</div>
+        }
+      </div>
+    </div>
+    }
+
+    <div class="table-head-actions">
+
+      @if (showColumnsButton) {
+      <div class="columns-wrapper">
+        <button type="button" class="btn-tool btn-columns" (click)="onColumns()" title="Manage Columns"
+          aria-haspopup="true" [attr.aria-expanded]="columnsPanelOpen">
+          <i class="ti ti-eye"></i>
+          <span>Columns</span>
+          @if (hiddenCount) {
+          <span class="columns-hidden-count">{{ hiddenCount }} hidden</span>
+          }
+        </button>
+
+        @if (columnsPanelOpen) {
+        <div class="export-menu-backdrop" (click)="closeColumnsPanel()"></div>
+        <div class="columns-menu" role="menu">
+          <div class="columns-menu-head">
+            <span>Show columns</span>
+            <button type="button" class="columns-menu-reset" [disabled]="!hiddenCount" (click)="restoreAllColumns()">
+              Show all
+            </button>
+          </div>
+
+          <div class="columns-menu-list">
+            @for (col of columns; track col.field) {
+            @let on = isColumnVisible(col.field);
+            <label class="columns-menu-item" [class.is-locked]="on && visibleColumns.length === 1">
+              <input type="checkbox" class="form-check-input" [checked]="on"
+                [disabled]="on && visibleColumns.length === 1"
+                (change)="toggleColumnVisibility(col.field)" />
+              <span>{{ col.header || col.field }}</span>
+            </label>
+            }
+          </div>
         </div>
         }
       </div>
+      }
 
-    </div>
+      @if (showExportButton) {
+      <div class="export-wrapper">
+        <button type="button" class="btn-tool btn-export" (click)="onExport()" title="Export">
+          <i class="ti ti-download"></i>
+          <span>Export</span>
+          <i class="ti ti-chevron-down caret-icon" [class.rotated]="exportMenuOpen"></i>
+        </button>
 
-    <div class="header-right">
+        @if (exportMenuOpen) {
+        <div class="export-menu-backdrop" (click)="closeExportMenu()"></div>
+        <div class="export-menu">
+          <button type="button" class="export-menu-item" (click)="onExportCopy()">
+            <i class="ti ti-copy"></i><span>Copy</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportCSV()">
+            <i class="ti ti-file-type-csv"></i><span>CSV</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportExcel()">
+            <i class="ti ti-file-spreadsheet"></i><span>Excel</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportPDF()">
+            <i class="ti ti-file-type-pdf"></i><span>PDF</span>
+          </button>
+          <button type="button" class="export-menu-item" (click)="onExportPrint()">
+            <i class="ti ti-printer"></i><span>Print</span>
+          </button>
+        </div>
+        }
+      </div>
+      }
+
+      <ng-content select="[table-toolbar-left], [table-toolbar-actions]"></ng-content>
+
+      @if (showGlobalFilter) {
+      <div class="search-input-box">
+        <i class="ti ti-search search-icon"></i>
+        <input pInputText type="text" [placeholder]="searchPlaceholder"
+          (input)="onGlobalFilter($any($event.target).value)" />
+      </div>
+      }
 
       <ng-content select="[table-header-actions]"></ng-content>
 
@@ -79,94 +152,7 @@
     </div>
 
   </div>
-
   }
-
-
-
-  <!-- =========================================================
-       ACTION TOOLBAR
-  ========================================================== -->
-
-  @if (showColumnsButton || showExportButton || showGlobalFilter) {
-
-  <div class="table-toolbar-row">
-
-    <div class="toolbar-left">
-
-      @if (showColumnsButton) {
-      <button type="button" class="btn-tool btn-columns" (click)="onColumns()" title="Manage Columns">
-        <i class="ti ti-eye"></i>
-        <span>Columns</span>
-      </button>
-      }
-
-      @if (showExportButton) {
-      <div class="export-wrapper">
-
-        <button type="button" class="btn-tool btn-export" (click)="onExport()" title="Export">
-          <i class="ti ti-download"></i>
-          <span>Export</span>
-          <i class="ti ti-chevron-down caret-icon" [class.rotated]="exportMenuOpen"></i>
-        </button>
-
-        @if (exportMenuOpen) {
-
-        <div class="export-menu-backdrop" (click)="closeExportMenu()"></div>
-
-        <div class="export-menu">
-
-          <button type="button" class="export-menu-item" (click)="onExportCopy()">
-            <i class="ti ti-copy"></i>
-            <span>Copy</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportCSV()">
-            <i class="ti ti-file-type-csv"></i>
-            <span>CSV</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportExcel()">
-            <i class="ti ti-file-spreadsheet"></i>
-            <span>Excel</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportPDF()">
-            <i class="ti ti-file-type-pdf"></i>
-            <span>PDF</span>
-          </button>
-
-          <button type="button" class="export-menu-item" (click)="onExportPrint()">
-            <i class="ti ti-printer"></i>
-            <span>Print</span>
-          </button>
-
-        </div>
-
-        }
-
-      </div>
-      }
-
-      <ng-content select="[table-toolbar-left], [table-toolbar-actions]"></ng-content>
-
-    </div>
-
-    @if (showGlobalFilter) {
-    <div class="toolbar-right">
-      <div class="search-input-box">
-        <i class="ti ti-search search-icon"></i>
-        <input pInputText type="text" [placeholder]="searchPlaceholder"
-          (input)="onGlobalFilter($any($event.target).value)" />
-      </div>
-    </div>
-    }
-
-  </div>
-
-  }
-
-  </div>
 
   <!-- =========================================================
        PRIMENG TABLE
@@ -191,7 +177,8 @@
         @for (col of visibleColumns; track col.field) {
 
         <th [pSortableColumn]="col.sortable ? col.field : undefined" [pSortableColumnDisabled]="!col.sortable"
-          [style.width]="col.width" class="th-col" [ngClass]="[col.cellClass || '', col.headerClass || '']">
+          [style.width]="col.width" class="th-col" [class.col-frozen-right]="isFrozen(col)"
+          [ngClass]="[col.cellClass || '', col.headerClass || '']">
 
           <div class="th-content">
 
@@ -228,7 +215,7 @@
 
         @for (col of visibleColumns; track col.field) {
 
-        <td class="td-col" [ngClass]="col.cellClass || ''" [style.width]="col.width">
+        <td class="td-col" [class.col-frozen-right]="isFrozen(col)" [ngClass]="col.cellClass || ''" [style.width]="col.width">
 
           @switch (kind(col)) {
 
@@ -298,6 +285,16 @@
           }
           }
 
+          @case ('chips') {
+          <div class="chips-cell">
+            @for (chip of chipsFor(col, row); track chip) {
+            <span class="cell-chip">{{ chip }}</span>
+            } @empty {
+            <span class="cell-chip-empty">—</span>
+            }
+          </div>
+          }
+
           @case ('progress') {
           <div class="whrs-wrap">
             <div class="whrs-label">{{ row[col.field] }}h / {{ row.hoursExpected }}h</div>
@@ -327,6 +324,11 @@
             }
 
             } @else {
+            @if (Accessactions.permission) {
+            <button type="button" class="btn-action-icon btn-permission" title="Permissions" (click)="onAction('permission', row)">
+              <i class="ti ti-shield-lock"></i>
+            </button>
+            }
             @if (Accessactions.edit) {
             <button type="button" class="btn-action-icon btn-edit" title="Edit" (click)="onAction('edit', row)">
               <i class="ti ti-pencil"></i>
@@ -386,7 +388,15 @@
           }
 
           @default {
+          @if (isChipValue(row[col.field])) {
+          <div class="chips-cell">
+            @for (chip of chipsFor(col, row); track chip) {
+            <span class="cell-chip">{{ chip }}</span>
+            }
+          </div>
+          } @else {
           <span class="cell-text">{{ row[col.field] }}</span>
+          }
           }
           }
 
@@ -405,11 +415,7 @@
 
         <span class="show-label">Show:</span>
 
-        <select class="show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)">
-          @for (opt of rowsPerPageOptions; track opt) {
-          <option [value]="opt">{{ opt }}</option>
-          }
-        </select>
+        <app-select class="show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)" [filter]="false" [showClear]="false" [options]="rowsPerPageOptions" />
 
         <span class="showing-range">
           Showing {{ getTotal() ? ((dt.first || 0) + 1) : 0 }} - {{ getEndIndex() }} of {{ getTotal() }}
@@ -436,44 +442,6 @@
   </p-table>
 
 </div>
-
-
-<!-- =========================================================
-     COLUMNS VISIBILITY OFFCANVAS
-========================================================== -->
-
-@if (columnsPanelOpen) {
-
-<div class="columns-offcanvas-backdrop" (click)="closeColumnsPanel()"></div>
-
-<div class="columns-offcanvas-panel">
-
-  <div class="columns-offcanvas-header">
-    <h3 class="columns-offcanvas-title">Columns Visibility</h3>
-    <button type="button" class="columns-offcanvas-close" (click)="closeColumnsPanel()" aria-label="Close">
-      <i class="ti ti-x"></i>
-    </button>
-  </div>
-
-  <div class="columns-offcanvas-body">
-
-    @for (col of columns; track col.field) {
-    <div class="column-visibility-row">
-      <span class="column-visibility-label">{{ col.header }}</span>
-      <button [attr.aria-label]="'Show ' + col.header + ' column'" type="button" class="column-toggle-switch" [class.on]="isColumnVisible(col.field)"
-        (click)="toggleColumnVisibility(col.field)" [attr.aria-pressed]="isColumnVisible(col.field)">
-        <span class="column-toggle-knob"></span>
-      </button>
-    </div>
-    }
-
-    <button type="button" class="btn-restore-all" (click)="restoreAllColumns()">Restore All</button>
-
-  </div>
-
-</div>
-
-}
 
 
 <!-- =========================================================

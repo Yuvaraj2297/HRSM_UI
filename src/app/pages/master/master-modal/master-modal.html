@@ -92,12 +92,34 @@
 
             @case ('select') {
 
-            <p-select [formControlName]="field.name" [options]="field.options || []" optionLabel="label"
-              optionValue="value" [filter]="field.filter ?? false" filterBy="label" [showClear]="true"
-              [resetFilterOnHide]="true" appendTo="body" styleClass="master-select w-100"
-              [placeholder]="field.placeholder || 'Select'">
+            <app-select class="master-select" [formControlName]="field.name" [options]="field.options || []" optionLabel="label" optionValue="value" [placeholder]="field.placeholder || 'Select'" />
 
-            </p-select>
+            }
+
+
+            @case ('checkbox') {
+
+            <div class="capabilities-wrapper" [formGroupName]="field.name">
+
+              @for (opt of field.checkboxOptions; track opt.key) {
+
+              <label class="capability-item">
+
+                <input type="checkbox" [formControlName]="opt.key" />
+
+                <span class="checkmark"></span>
+
+                <span class="capability-label">{{ opt.label }}</span>
+
+              </label>
+
+              }
+
+            </div>
+
+            @if (hasError(field.name)) {
+            <small class="field-error">Select at least one option</small>
+            }
 
             }
 
@@ -114,18 +136,10 @@
 
           <div class="form-field status-field" [style.--field-index]="currentFields.length">
 
-            <label class="form-label" for="status">
-
-              Status
-
-            </label>
+            <label class="form-label" for="status"> Status </label>
 
 
-            <p-select inputId="status" formControlName="status" [options]="statusOptions" optionLabel="label"
-              optionValue="value" appendTo="body" styleClass="master-select w-100" placeholder="Select status"
-              [filter]="true" filterBy="label" [showClear]="true" [resetFilterOnHide]="true">
-
-            </p-select>
+            <app-select class="master-select" inputId="status" formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Select status" />
 
           </div>
 
@@ -146,11 +160,8 @@
 
         <button type="button" class="btn btn-cancel" (click)="close()">
 
-          <i class="ti ti-refresh"></i>
+          <i class="ti ti-refresh"></i> Cancel
 
-          <span>
-            Cancel
-          </span>
 
         </button>
 

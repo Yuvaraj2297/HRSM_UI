@@ -1,8 +1,10 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { PrimeDataTable, PrimeTableColumn, PrimeTableRowAction } from '../../../../shared/primedatatable/primedatatable';
 import { ReuseModal, ModalField, ModalSaveEvent } from '../../../../shared/reuse-model/reuse-model';
+import { ValidationMethods } from '../../../../shared/validation/validation-methods';
 
 // NOTE: adjust these relative paths to wherever PrimeDataTable / ReuseModal
 // actually live in your project.
@@ -32,7 +34,7 @@ export interface JobOpeningRow {
 @Component({
   selector: 'app-job-opening',
   standalone: true,
-  imports: [CommonModule, RouterLink, PrimeDataTable, ReuseModal],
+  imports: [CommonModule, RouterLink, PrimeDataTable, ReuseModal, AppStatCard],
   templateUrl: './job-opening.html',
   styleUrl: './job-opening.scss',
 })
@@ -48,7 +50,11 @@ export class JobOpening {
   // and edit (status defaults to 'Active' on create).
   // =========================================================
   jobFields: ModalField[] = [
-    { key: 'title', label: 'Job Title', type: 'text', required: true, placeholder: 'e.g. Senior Full Stack Engineer', col: 8 },
+    { key: 'title', label: 'Job Title', type: 'text', required: true, placeholder: 'e.g. Senior Full Stack Engineer', col: 8,
+      capitalizeFirst: true,
+      sanitizer: 'alphabets',
+      validators: [ValidationMethods.alphabetOnly()]
+     },
     { key: 'dept', label: 'Department', type: 'select', required: true, col: 4,
       options: this.departments.map((d) => ({ label: d, value: d })) },
     { key: 'location', label: 'Work Location', type: 'text', required: true, placeholder: 'e.g. Bangalore (Hybrid)', col: 4 },

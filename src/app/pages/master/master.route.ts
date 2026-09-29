@@ -1,5 +1,11 @@
 import { Routes } from '@angular/router';
 
+
+const commonMasterComponent = () =>
+  import('./common-component/common-component').then(
+    (m) => m.CommonComponent
+  );
+
 export const MASTER_ROUTES: Routes = [
 
   // =========================================================
@@ -12,56 +18,54 @@ export const MASTER_ROUTES: Routes = [
       parentTitle: 'Master',
       masterType: 'department'
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent:commonMasterComponent,
   },
 
-  // =========================================================
-  // TEAM
-  // =========================================================
-  {
-    path: 'teams',
+
+   {
+    path: 'job',
     data: {
-      title: 'Teams',
+      title: 'Job Type',
       parentTitle: 'Master',
-      masterType: 'team'
+      masterType: 'job_type',
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent: commonMasterComponent,
   },
 
-  // =========================================================
-  // POSITION
-  // =========================================================
   {
-    path: 'position',
+    path: 'designation',
     data: {
-      title: 'Position',
+      title: 'Designation',
       parentTitle: 'Master',
-      masterType: 'position'
+      masterType: 'designation',
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent: commonMasterComponent,
   },
 
-  // =========================================================
-  // DOCUMENT UPLOAD
-  // =========================================================
   {
-    path: 'document-upload',
+    path: 'branch',
     data: {
-      title: 'Document Upload',
+      title: 'Branch',
       parentTitle: 'Master',
-      masterType: 'document'
+      masterType: 'branch',
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent: commonMasterComponent,
   },
 
+
+   {
+    path: 'employee',
+    data: {
+      title: 'Employee Type',
+      parentTitle: 'Master',
+      masterType: 'employee',
+    },
+    loadComponent: commonMasterComponent,
+    },
+
+
+  
+  
   // =========================================================
   // WORK LOCATION
   // =========================================================
@@ -72,14 +76,22 @@ export const MASTER_ROUTES: Routes = [
       parentTitle: 'Master',
       masterType: 'work'
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent:commonMasterComponent
   },
 
-  // =========================================================
-  // STATE
-  // =========================================================
+
+
+  {
+    path: 'country',
+    data: {
+      title: 'Country',
+      parentTitle: 'Master',
+      masterType: 'country',
+    },
+    loadComponent: commonMasterComponent,
+  },
+
+
   {
     path: 'state',
     data: {
@@ -87,9 +99,7 @@ export const MASTER_ROUTES: Routes = [
       parentTitle: 'Master',
       masterType: 'state'
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent: commonMasterComponent,
   },
 
   // =========================================================
@@ -102,9 +112,7 @@ export const MASTER_ROUTES: Routes = [
       parentTitle: 'Master',
       masterType: 'district'
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent: commonMasterComponent,
   },
 
   // =========================================================
@@ -117,10 +125,13 @@ export const MASTER_ROUTES: Routes = [
       parentTitle: 'Master',
       masterType: 'leave'
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
+    loadComponent: commonMasterComponent,
   },
+
+
+
+
+
 
   // =========================================================
   // SHIFT
@@ -132,9 +143,65 @@ export const MASTER_ROUTES: Routes = [
       parentTitle: 'Master',
       masterType: 'shift'
     },
-    loadComponent: () =>
-      import('./common-component/common-component')
-        .then(m => m.CommonComponent)
-  }
+    loadComponent: commonMasterComponent,
+  },
+
+   {
+    path: 'relieving-type',
+    data: {
+      title: 'Relieving Type',
+      parentTitle: 'Master',
+      masterType: 'relieving_type'
+    },
+    loadComponent: commonMasterComponent,
+  },
+
+   {
+    path: 'notice-period',
+    data: {
+      title: 'Notice Period',
+      parentTitle: 'Master',
+      masterType: 'notice_period'
+    },
+    loadComponent: commonMasterComponent,
+  },
+
+   {
+    path: 'holiday',
+    data: {
+      title: 'Holiday Type',
+      parentTitle: 'Master',
+      masterType: 'holiday'
+    },
+    loadComponent: commonMasterComponent,
+  },
+
+
+  {
+    path: 'permission',
+    data: {
+      title: 'Permission Modules',
+      parentTitle: 'Master',
+      masterType: 'permission'
+    },
+    loadComponent: commonMasterComponent,
+  },
+
+
+
+   {
+    path: 'role',
+    data: {
+      title: 'Role',
+      parentTitle: 'Master',
+      masterType: 'role'
+    },
+    loadComponent: commonMasterComponent,
+  },
+
+
+
+
+
 
 ];

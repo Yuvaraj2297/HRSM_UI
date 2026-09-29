@@ -1,3 +1,4 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,7 +18,7 @@ import { PrimeDataTable, PrimeTableColumn } from '../../../../shared/primedatata
 @Component({
   selector: 'app-onboarding-pipeline',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PrimeDataTable],
+  imports: [CommonModule, ReactiveFormsModule, PrimeDataTable, AppStatCard],
   templateUrl: './joining-pipeline.html',
   styleUrl: './joining-pipeline.scss',
 })

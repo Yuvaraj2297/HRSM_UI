@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import {
-    PrimeDataTable,
-    PrimeTableActions,
-    PrimeTableColumn,
-    PrimeTableHeader,
-    PrimeTableRowAction,
+  PrimeDataTable,
+  PrimeTableActions,
+  PrimeTableColumn,
+  PrimeTableHeader,
+  PrimeTableRowAction,
 } from '../../../../shared/primedatatable/primedatatable';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
 export interface LeaveRequestRow {
   id: string;
@@ -50,14 +50,18 @@ export interface SelectOption {
 
 import { Calendar } from '../../../../shared/calendar/calendar';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-leave-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable, Calendar],
+  imports: [AppSelect, CommonModule, FormsModule, Breadcrumb, PrimeDataTable, Calendar, AppStatCard],
   templateUrl: './leave-report.html',
   styleUrl: './leave-report.scss',
 })
 export class LeaveReport implements OnInit {
+  /** leave type -> tone class for the dot in the Leave Type column */
+  readonly typeTone: Record<string, string> = { casual: 'stat-tone-blue', sick: 'stat-tone-amber', earned: 'stat-tone-primary', wfh: 'stat-tone-violet' };
+
   // Navigation Tabs
   activeTab: 'requests' | 'team-calendar' = 'requests';
 

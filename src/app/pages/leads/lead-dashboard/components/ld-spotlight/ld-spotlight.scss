@@ -9,9 +9,9 @@
   flex-direction: column;
   height: 100%;
   min-height: 300px;
-  padding: 22px;
+  padding: 20px;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: var(--card-radius);
   color: var(--white);
   background: linear-gradient(150deg, var(--secondary) 0%, var(--primary-dark) 55%, var(--primary) 100%);
   box-shadow: 0 14px 30px rgba(var(--green-600-2-rgb), 0.25);
@@ -51,7 +51,7 @@
 .spot-trophy {
   width: 26px;
   height: 26px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,8 +62,8 @@
 .spot-top {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin: 18px 0 14px;
+  gap: 12px;
+  margin: 16px 0 12px;
 }
 
 .spot-avatar {
@@ -104,7 +104,7 @@
   align-items: center;
   gap: 4px;
   margin-top: 4px;
-  padding: 2px 9px;
+  padding: 2px 8px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
@@ -121,7 +121,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 7px 0;
+    padding: 6px 0;
 
     & + li { border-top: 1px solid rgba(var(--white-rgb), 0.12); }
   }

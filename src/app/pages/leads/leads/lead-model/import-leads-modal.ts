@@ -2,12 +2,13 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-import-leads-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [AppSelect, CommonModule, FormsModule],
   templateUrl: './import-leads-modal.html',
   styleUrl: './import-leads-modal.scss',
 })

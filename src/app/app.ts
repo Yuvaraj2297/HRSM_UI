@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
+import { ImageFallbackService } from './common/image-fallback.service';
 import { TabScrollService } from './common/tab-scroll.service';
 
 @Component({
@@ -14,5 +15,6 @@ export class App {
 
   constructor() {
     inject(TabScrollService).init();
+    inject(ImageFallbackService).init();
   }
 }

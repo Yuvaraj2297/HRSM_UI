@@ -14,8 +14,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 16px;
-  background: var(--white);
+  padding: 8px 16px;
+  background: var(--surface);
   border-left: 4px solid var(--gh-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-card);
@@ -28,7 +28,7 @@
   position: relative;
   list-style: none;
   margin: 16px 0 0;
-  padding: 0 0 0 22px;
+  padding: 0 0 0 20px;
 
   &::before {
     content: '';
@@ -43,8 +43,8 @@
 
 .tl-item {
   position: relative;
-  margin-bottom: 14px;
-  padding-left: 26px;
+  margin-bottom: 12px;
+  padding-left: 24px;
   cursor: pointer;
   outline: none;
 
@@ -73,15 +73,15 @@
   justify-content: center;
   color: var(--white);
   font-size: 12px;
-  border: 3px solid var(--white);
+  border: 3px solid var(--surface);
   background: var(--activity-color);
   box-shadow: 0 0 0 2px var(--activity-color);
 }
 
 .tl-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: 6px;
-  padding: 9px 12px;
+  padding: 8px 12px;
   border-left: 3px solid var(--activity-color);
   box-shadow: 0 1px 5px rgba(var(--neutral-900-rgb), 0.1);
   transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
@@ -104,7 +104,7 @@
   font-size: 11px;
   white-space: nowrap;
   padding: 2px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--accent-blue-soft);
   color: var(--accent-blue);
 }
@@ -112,13 +112,13 @@
 .tl-area {
   font-size: 12px;
   color: var(--text-light);
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .tl-meta {
   font-size: 11px;
   color: var(--text-muted);
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .tl-empty {
@@ -127,5 +127,5 @@
   gap: 8px;
   font-size: 12px;
   color: var(--text-muted);
-  padding: 14px 0 0 4px;
+  padding: 12px 0 0 4px;
 }

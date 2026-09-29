@@ -20,10 +20,11 @@ import {
 } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
-import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CalendarDatepickerDirective } from '../../common/directives/datepicker';
+import { ValidationMethods } from '../validation/validation-methods';
 
+import { AppSelect } from '../app-select/app-select';
 declare var bootstrap: any;
 
 // =============================================================
@@ -41,6 +42,9 @@ export type ModalFieldType =
   | 'date'
   | 'file'
   | 'info'; // static note box — no form control, `label` is the note text
+
+/** Which ValidationMethods live-sanitizer to run on keystroke */
+export type ModalFieldSanitizer = 'alphabets' | 'numbers' | 'email';
 
 export interface ModalSelectOption {
   label: string;
@@ -77,6 +81,38 @@ export interface ModalField {
   accept?: string; // e.g. '.pdf,.docx'
   maxSizeMB?: number; // default 10
   hint?: string; // small grey text inside the dropzone
+
+  // -----------------------------------------------------------
+  // VALIDATION
+  // -----------------------------------------------------------
+
+  /**
+   * Extra validators layered on top of the built-in ones (required/email/min/max).
+   * e.g. validators: [ValidationMethods.phoneNumber()]
+   */
+  validators?: ValidatorFn[];
+
+  /**
+   * Custom error message per validator error-key, shown instead of the
+   * generic fallback. e.g. { phoneNumber: 'Enter a valid 10-digit number' }
+   */
+  errorMessages?: Record<string, string>;
+
+  /**
+   * Live keystroke sanitizer backed by ValidationMethods' instance methods
+   * (preventNumbers / preventAlphabets / preventEmail). Strips disallowed
+   * characters as the user types, separately from `validators` which just
+   * validate the value.
+   */
+  sanitizer?: ModalFieldSanitizer;
+
+  /**
+   * Opt-in: capitalize just the first letter of the value on blur.
+   * Only applies when true — leave unset/false for URLs, codes, etc.
+   * that must not be reformatted. Only takes effect on type: 'text'.
+   */
+  capitalizeFirst?: boolean;
+  maxLength?: number;
 }
 
 export interface ModalSaveEvent {
@@ -90,12 +126,13 @@ export interface ModalSaveEvent {
 @Component({
   selector: 'app-reuse-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SelectModule, DatePickerModule, CalendarDatepickerDirective],
+  imports: [AppSelect, CommonModule, ReactiveFormsModule, DatePickerModule, CalendarDatepickerDirective],
   templateUrl: './reuse-model.html',
   styleUrl: './reuse-model.scss',
 })
 export class ReuseModal implements OnChanges, AfterViewInit {
   private fb = inject(FormBuilder);
+  private vm = new ValidationMethods();
 
   // =========================================================
   // INPUTS  (label, type, placeholder, buttons — all from parent)
@@ -212,12 +249,65 @@ export class ReuseModal implements OnChanges, AfterViewInit {
       if (f.type === 'email') validators.push(Validators.email);
       if (f.type === 'number' && f.min !== undefined) validators.push(Validators.min(f.min));
       if (f.type === 'number' && f.max !== undefined) validators.push(Validators.max(f.max));
+      if (f.maxLength !== undefined && f.type !== 'number') {
+        validators.push(Validators.maxLength(f.maxLength));
+      }
+
+      // Extra validators the page passes in, e.g. ValidationMethods.phoneNumber()
+      if (f.validators?.length) validators.push(...f.validators);
 
       controls[f.key] = [this.emptyValue(f), validators];
     }
 
     this.form = this.fb.group(controls);
     this.selectedFiles = {};
+  }
+
+  /**
+   * Bound to (input) on text-like fields that declare `f.sanitizer`.
+   * Strips disallowed characters as the user types, using the matching
+   * ValidationMethods instance method. No-op when the field doesn't
+   * opt in, so existing fields are unaffected.
+   */
+  onFieldInput(event: Event, f: ModalField): void {
+    if (!f.sanitizer) return;
+
+    const control = this.form.get(f.key);
+
+    switch (f.sanitizer) {
+      case 'alphabets':
+        this.vm.preventNumbers(event, control);
+        break;
+      case 'numbers':
+        this.vm.preventAlphabets(event, control);
+        break;
+      case 'email':
+        this.vm.preventEmail(event, control);
+        break;
+    }
+  }
+
+  /**
+   * Bound to (blur) on text-like fields. Capitalizes just the first
+   * letter of the value — only when the field opts in via
+   * `capitalizeFirst: true`. Never runs on URLs, codes, dates, email,
+   * tel, number, etc. Kept inline (no external directive) so there's
+   * no separate import path to get wrong.
+   */
+  onFieldBlur(event: Event, f: ModalField): void {
+    if (!f.capitalizeFirst || f.type !== 'text') return;
+
+    const target = event.target as HTMLInputElement;
+    const isDateField = target.hasAttribute('appCalendarDatepicker');
+    if (isDateField) return;
+
+    const raw = (target.value || '').trim().replace(/\s+/g, ' ');
+    if (!raw) return;
+
+    const value = raw.charAt(0).toUpperCase() + raw.slice(1);
+
+    target.value = value;
+    this.form.get(f.key)?.setValue(value);
   }
 
   private resetForm(): void {
@@ -251,10 +341,25 @@ export class ReuseModal implements OnChanges, AfterViewInit {
     const errors = this.form.get(f.key)?.errors;
 
     if (!errors) return '';
+
+    // Field-level custom message wins, whatever the error key is
+    const firstKey = Object.keys(errors)[0];
+    if (firstKey && f.errorMessages?.[firstKey]) return f.errorMessages[firstKey];
+
     if (errors['required']) return f.type === 'file' ? 'Please upload a file' : `${f.label} is required`;
     if (errors['email']) return 'Enter a valid email address';
     if (errors['min']) return `Minimum value is ${errors['min'].min}`;
     if (errors['max']) return `Maximum value is ${errors['max'].max}`;
+    if (errors['maxlength']) {
+      return `${f.label} must be at most ${errors['maxlength'].requiredLength} characters`;
+    }
+
+    // ValidationMethods static validators
+    if (errors['phoneNumber']) return 'Enter a valid 10-digit phone number';
+    if (errors['panNumber']) return 'Enter a valid PAN (e.g. ABCDE1234F)';
+    if (errors['postalNumber']) return 'Enter a valid postal / PIN code';
+    if (errors['alphabetOnly']) return `${f.label} must not contain numbers`;
+    if (errors['invalidFormat']) return `${f.label} has an invalid format`;
 
     return 'Invalid value';
   }

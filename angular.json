@@ -33,8 +33,6 @@
               "node_modules/@fontsource/inter/700.css",
               "node_modules/@fontsource/inter/800.css",
               "node_modules/@fontsource/inter/900.css",
-              "node_modules/@fontsource/sora/700.css",
-              "node_modules/@fontsource/sora/800.css",
               "src/styles.scss",
               "node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

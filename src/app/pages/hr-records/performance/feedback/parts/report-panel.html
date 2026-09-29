@@ -1,0 +1,124 @@
+@if (report(); as r) {
+<!-- =========================================================
+     PICKER + HERO
+========================================================== -->
+<section class="card-custom report-hero mb-3">
+  <div class="d-flex align-items-center gap-3">
+    @if (r.avatar) {
+      <img [src]="r.avatar" [alt]="r.name" class="rounded-circle report-avatar" />
+    } @else {
+      <span class="emp-initials-avatar report-avatar">{{ initials(r.name) }}</span>
+    }
+    <div>
+      <h2 class="report-name">{{ r.name }}</h2>
+      <div class="text-muted">{{ r.role }} • {{ r.dept }}</div>
+      <div class="emp-code-line mt-1">
+        <i class="bi bi-calendar-check"></i> {{ r.cycle }} · signed off {{ fmtDate(r.hr!.date) }} by {{ r.hr!.by }}
+      </div>
+    </div>
+  </div>
+
+  <div class="report-score">
+    <div class="score-ring" [style.--pct]="pct(r.overall ?? 0) + '%'" role="img"
+      [attr.aria-label]="'Overall ' + r.overall + ' out of 5'">
+      <span>{{ r.overall?.toFixed(1) }}<small>/ 5</small></span>
+    </div>
+    <div>
+      <div class="report-score-label">Overall 360°</div>
+      <span class="status-pill status-success gap-1"><i class="bi bi-trophy"></i> {{ band(r.overall ?? 0) }}</span>
+      <div class="report-stars" aria-hidden="true">{{ stars(r.overall ?? 0) }}</div>
+    </div>
+  </div>
+
+  <div class="report-picker">
+    <label class="form-label mb-1" for="report-for">Report for</label>
+    <app-select inputId="report-for" [ngModel]="r.id" (ngModelChange)="store.reportId.set($event)" [options]="options()" optionLabel="label" optionValue="value" optionSub="sub" />
+  </div>
+</section>
+
+<div class="report-grid">
+  <!-- =========================================================
+       SOURCES
+  ========================================================== -->
+  <section class="card-custom report-panel">
+    <h3 class="pane-title mb-3"><i class="bi bi-bar-chart"></i> Scores by Source</h3>
+    <ul class="source-list">
+      @for (s of sources(); track s.label) {
+      <li [class.is-self]="s.self">
+        <span class="source-label"><i [class]="s.icon"></i> {{ s.label }}</span>
+        <span class="source-bar" role="img" [attr.aria-label]="s.label + ' ' + s.score + ' of 5'">
+          <span [style.width.%]="pct(s.score)"></span>
+        </span>
+        <span class="source-score">{{ s.score.toFixed(1) }}</span>
+        <small class="source-who">{{ s.who }}</small>
+      </li>
+      }
+    </ul>
+    <p class="report-note">Overall excludes the self-assessment — it's shown for comparison.</p>
+  </section>
+
+  <!-- =========================================================
+       SELF vs OTHERS
+  ========================================================== -->
+  <section class="card-custom report-panel">
+    <h3 class="pane-title mb-3"><i class="bi bi-sliders"></i> Self vs. Others</h3>
+    @if (matrix().length) {
+    <div class="data-table-wrap">
+      <table class="data-table data-table-sm">
+        <thead>
+          <tr>
+            <th>Competency</th>
+            <th class="text-end">Self</th>
+            <th class="text-end">Others</th>
+            <th>Perception</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of matrix(); track m.comp) {
+          <tr>
+            <td class="cell-strong">{{ m.comp }}</td>
+            <td class="text-end">{{ m.self.toFixed(1) }}</td>
+            <td class="text-end cell-strong">{{ m.others.toFixed(1) }}</td>
+            <td>
+              <span class="status-pill gap-1" [ngClass]="m.gap.cls">
+                <i [class]="m.gap.icon"></i>
+                {{ m.gap.value > 0 ? '+' : '' }}{{ m.gap.value.toFixed(1) }} · {{ m.gap.label }}
+              </span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    } @else {
+    <p class="text-muted mb-0">No competency survey was collected for this cycle.</p>
+    }
+  </section>
+</div>
+
+<!-- =========================================================
+     WRITTEN FEEDBACK
+========================================================== -->
+<section class="card-custom report-panel mt-3">
+  <h3 class="pane-title mb-3"><i class="bi bi-chat-quote"></i> Written Feedback</h3>
+  <div class="report-quotes">
+    @for (e of [r.mgr, r.tl, r.hr]; track $index) {
+      @if (e) {
+      <figure class="report-quote">
+        <blockquote>
+          <p><strong>Strengths:</strong> {{ e.strengths }}</p>
+          <p><strong>Growth:</strong> {{ e.growth }}</p>
+        </blockquote>
+        <figcaption>{{ e.by }} · {{ e.rating.toFixed(1) }} / 5</figcaption>
+      </figure>
+      }
+    }
+  </div>
+</section>
+} @else {
+<div class="card-custom fb-empty">
+  <i class="bi bi-file-earmark-lock"></i>
+  <div class="fw-semibold">No published reports yet</div>
+  <small class="text-muted">A report is published once HR signs off the last evaluation.</small>
+</div>
+}

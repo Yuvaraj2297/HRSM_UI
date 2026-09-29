@@ -1,12 +1,12 @@
-<div class="ne-section-title">Documents :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-folder2-open"></i></span>Documents</div>
 
 <div class="row g-4">
   <div class="col-lg-3 col-md-6" *ngFor="let d of fixedDocs">
     <label class="form-label">{{ d.label }}</label>
-    <label class="aw-upload-box" style="min-height:100px;">
+    <label class="ui-file-drop d-block">
       <i class="bi bi-file-earmark-arrow-up"></i>
-      <div class="aw-upload-title">Upload File</div>
-      <div class="aw-upload-hint">{{ d.hint }}</div>
+      <div class="ui-file-drop-text">Upload File</div>
+      <div class="ui-file-drop-hint">{{ d.hint }}</div>
       <input type="file" [accept]="d.accept" hidden (change)="onFixedFile($event, d.key)">
     </label>
   </div>
@@ -18,10 +18,10 @@
       <label class="form-label">Document Name</label>
       <input pInputText class="form-control mb-2" formControlName="name" placeholder="Enter document name">
 
-      <label class="aw-upload-box" style="min-height:100px;">
+      <label class="ui-file-drop d-block">
         <i class="bi bi-file-earmark-arrow-up"></i>
-        <div class="aw-upload-title">Upload File</div>
-        <div class="aw-upload-hint">PDF, JPG, PNG (Max 5MB)</div>
+        <div class="ui-file-drop-text">Upload File</div>
+        <div class="ui-file-drop-hint">PDF, JPG, PNG (Max 5MB)</div>
         <input type="file" accept=".pdf,.jpg,.jpeg,.png" hidden (change)="onCustomFile($event, i)">
       </label>
 

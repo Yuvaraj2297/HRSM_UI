@@ -1,0 +1,68 @@
+<nav class="page-tabs page-tabs-sm mb-3" role="tablist" aria-label="Clearance filter">
+  <button type="button" role="tab" class="page-tab" [class.active]="store.clearanceFilter() === null"
+    [attr.aria-selected]="store.clearanceFilter() === null" (click)="store.clearanceFilter.set(null)">
+    All Joiners <span class="page-tab-count">{{ store.clearance().length }}</span>
+  </button>
+  <button type="button" role="tab" class="page-tab" [class.active]="store.clearanceFilter() === 'pending'"
+    [attr.aria-selected]="store.clearanceFilter() === 'pending'" (click)="store.clearanceFilter.set('pending')">
+    <i class="bi bi-hourglass-split"></i> Pending <span class="page-tab-count">{{ store.stats().pending }}</span>
+  </button>
+  <button type="button" role="tab" class="page-tab" [class.active]="store.clearanceFilter() === 'certified'"
+    [attr.aria-selected]="store.clearanceFilter() === 'certified'" (click)="store.clearanceFilter.set('certified')">
+    <i class="bi bi-patch-check"></i> Certified <span class="page-tab-count">{{ store.stats().certified }}</span>
+  </button>
+</nav>
+
+<app-primedatatable
+  [modalHeader]="tableHeader"
+  [columns]="columns"
+  [data]="store.filteredClearance()"
+  searchPlaceholder="Search joiner..."
+  [showColumnsButton]="false"
+  exportFileName="induction-clearance"
+  (actionClick)="onAction($event)"
+>
+  <ng-template #cellTemplate let-row let-col="col">
+    @switch (col.field) {
+      @case ('emp') {
+        <div class="emp-name-line">{{ row.emp }}</div>
+        <div class="emp-code-line">{{ row.empId }} • {{ row.role }} ({{ row.dept }})</div>
+      }
+
+      @case ('done') {
+        <div class="repayment-progress-wrap">
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="fw-semibold">{{ row.done.length }} of {{ totalModules }} done</span>
+            <span class="text-muted">{{ (row.done.length / totalModules) * 100 }}%</span>
+          </div>
+          <div class="progress" role="progressbar" [attr.aria-valuenow]="row.done.length" aria-valuemin="0"
+            [attr.aria-valuemax]="totalModules">
+            <div class="progress-bar" [class.bg-success]="row.certified" [class.bg-warning]="!row.certified"
+              [style.width.%]="(row.done.length / totalModules) * 100"></div>
+          </div>
+        </div>
+      }
+
+      @case ('missing') {
+        <div class="module-chips">
+          @for (m of row.missing; track m) {
+            @let meta = moduleMeta(m);
+            <span class="category-pill-badge"><i [class]="meta.icon + ' me-1'"></i>{{ meta.short }}</span>
+          } @empty {
+            <span class="text-muted">None</span>
+          }
+        </div>
+      }
+
+      @case ('certified') {
+        @if (row.certified) {
+          <span class="status-pill status-success gap-1"><i class="bi bi-patch-check-fill"></i> Certified</span>
+          <div class="emp-code-line mt-1">{{ fmtDate(row.certDate) }}@if (row.score !== null) { • {{ row.score }}% }</div>
+        } @else {
+          <span class="status-pill status-pending gap-1"><i class="bi bi-hourglass-split"></i> Pending</span>
+          <div class="emp-code-line mt-1">{{ row.missing.length }} module{{ row.missing.length > 1 ? 's' : '' }} left</div>
+        }
+      }
+    }
+  </ng-template>
+</app-primedatatable>

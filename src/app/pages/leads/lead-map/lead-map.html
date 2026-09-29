@@ -43,43 +43,11 @@
   <!-- =========================================================
        SUMMARY
   ========================================================== -->
-  <div class="row g-3 mb-3">
-    <div class="col-6 col-lg-3">
-      <div class="stat-tile card-custom">
-        <div class="icon-chip"><i class="bi bi-people-fill"></i></div>
-        <div>
-          <div class="stat-tile-value">{{ summary().total }}</div>
-          <div class="stat-tile-label">Field Users</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="stat-tile card-custom">
-        <div class="icon-chip"><i class="bi bi-broadcast"></i></div>
-        <div>
-          <div class="stat-tile-value">{{ summary().online }}</div>
-          <div class="stat-tile-label">Online Now</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="stat-tile card-custom">
-        <div class="icon-chip"><i class="bi bi-geo-alt-fill"></i></div>
-        <div>
-          <div class="stat-tile-value">{{ summary().visits }}</div>
-          <div class="stat-tile-label">Total Visits</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="stat-tile card-custom">
-        <div class="icon-chip"><i class="bi bi-signpost-2-fill"></i></div>
-        <div>
-          <div class="stat-tile-value">{{ summary().kms }} <small>km</small></div>
-          <div class="stat-tile-label">Distance Travelled</div>
-        </div>
-      </div>
-    </div>
+  <div class="stat-grid">
+    <app-stat-card label="Field Users" [value]="summary().total" icon="bi bi-people-fill" tone="blue" />
+    <app-stat-card label="Online Now" [value]="summary().online" icon="bi bi-broadcast" tone="primary" />
+    <app-stat-card label="Total Visits" [value]="summary().visits" icon="bi bi-geo-alt-fill" tone="amber" />
+    <app-stat-card label="Distance Travelled" [value]="summary().kms + ' km'" icon="bi bi-signpost-2-fill" tone="violet" />
   </div>
 
   <!-- =========================================================

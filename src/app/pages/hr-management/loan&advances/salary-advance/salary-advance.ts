@@ -1,8 +1,8 @@
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
 import {
   PrimeDataTable,
   PrimeTableColumn,
@@ -11,6 +11,7 @@ import {
 } from '../../../../shared/primedatatable/primedatatable';
 import { CalendarDatepickerDirective } from '../../../../common/directives/datepicker';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface LoanTransaction {
   date: string;
   ref: string;
@@ -76,15 +77,15 @@ export interface ActiveFilterChip {
 @Component({
   selector: 'app-salary-advance',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,  SelectModule, PrimeDataTable, CalendarDatepickerDirective],
+  imports: [AppSelect, CommonModule, FormsModule, ReactiveFormsModule,  PrimeDataTable, CalendarDatepickerDirective, AppStatCard],
   templateUrl: './salary-advance.html',
   styleUrl: './salary-advance.scss'
 })
 export class SalaryAdvance implements OnInit {
   // Table Configuration
   tableHeader: PrimeTableHeader = {
-    title: '',
-    icon: ''
+    title: 'Salary Advance & Company Loans',
+    icon: 'bi bi-cash-coin'
   };
 
   searchPlaceholder = 'Search employee name, ID, loan ref...';

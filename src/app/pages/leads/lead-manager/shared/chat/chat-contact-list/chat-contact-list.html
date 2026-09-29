@@ -16,8 +16,7 @@
       <input type="text" placeholder="Search contacts..." aria-label="Search contacts" [value]="search()"
         (input)="onSearch($event)">
     </div>
-    <p-select [options]="replyFilters" [ngModel]="replyFilter()" (ngModelChange)="replyFilter.set($event)"
-      optionLabel="label" optionValue="value" ariaLabel="Reply status" appendTo="body" styleClass="reply-select" />
+    <app-select class="reply-select" [ngModel]="replyFilter()" (ngModelChange)="replyFilter.set($event)" ariaLabel="Reply status" [options]="replyFilters" optionLabel="label" optionValue="value" />
   </div>
 
   <div class="page-tabs page-tabs-sm" role="tablist" aria-label="Contact type">

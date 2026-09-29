@@ -34,23 +34,17 @@
 
       <div class="bwr-field">
         <label for="bwr_brand">Brand</label>
-        <p-select inputId="bwr_brand" [options]="brandOptions()" [ngModel]="brand()" (ngModelChange)="brand.set($event)"
-          name="brand" optionLabel="label" optionValue="value" placeholder="All brands" [showClear]="true"
-          appendTo="body" styleClass="w-100" />
+        <app-select inputId="bwr_brand" [ngModel]="brand()" (ngModelChange)="brand.set($event)" name="brand" [options]="brandOptions()" optionLabel="label" optionValue="value" placeholder="All brands" />
       </div>
 
       <div class="bwr-field">
         <label for="bwr_product">Product</label>
-        <p-select inputId="bwr_product" [options]="productOptions()" [ngModel]="product()"
-          (ngModelChange)="product.set($event)" name="product" optionLabel="label" optionValue="value"
-          placeholder="All products" [showClear]="true" appendTo="body" styleClass="w-100" />
+        <app-select inputId="bwr_product" [ngModel]="product()" (ngModelChange)="product.set($event)" name="product" [options]="productOptions()" optionLabel="label" optionValue="value" placeholder="All products" />
       </div>
 
       <div class="bwr-field">
         <label for="bwr_source">Lead Source</label>
-        <p-select inputId="bwr_source" [options]="sourceOptions()" [ngModel]="source()"
-          (ngModelChange)="source.set($event)" name="source" optionLabel="label" optionValue="value"
-          placeholder="All sources" [showClear]="true" appendTo="body" styleClass="w-100" />
+        <app-select inputId="bwr_source" [ngModel]="source()" (ngModelChange)="source.set($event)" name="source" [options]="sourceOptions()" optionLabel="label" optionValue="value" placeholder="All sources" />
       </div>
 
       <div class="bwr-filter-actions">

@@ -9,9 +9,9 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
 }
 
@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   color: var(--white);
   background: var(--chat-head-bg);
 
@@ -42,7 +42,7 @@
     justify-content: center;
     font-size: 19px;
     color: var(--primary-dark);
-    background: var(--white);
+    background: var(--surface);
 
     &.is-text { font-size: 10px; font-weight: 800; letter-spacing: 0.3px; }
   }
@@ -56,7 +56,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 14px 8px;
+  padding: 12px 12px 8px;
 }
 
 .search-wrap {
@@ -73,7 +73,7 @@
   }
 
   input {
-    padding-left: 34px;
+    padding-left: 32px;
     width: 100%;
 
   }
@@ -93,7 +93,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
 
 }
 
@@ -112,7 +112,7 @@
     height: 7px;
     border-radius: 50%;
     background: var(--green-300);
-    border: 1.5px solid var(--white);
+    border: 1.5px solid var(--surface);
   }
 }
 
@@ -131,7 +131,7 @@
   width: 100%;
   padding: 10px;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--card-radius);
   text-align: left;
   background: transparent;
   transition: background 0.12s ease;
@@ -163,7 +163,7 @@
     height: 10px;
     border-radius: 50%;
     background: var(--green-300);
-    border: 2px solid var(--white);
+    border: 2px solid var(--surface);
   }
 
   &.off::after { background: var(--text-faint); }
@@ -214,7 +214,7 @@
 .badge {
   min-width: 18px;
   height: 18px;
-  padding: 0 5px;
+  padding: 0 4px;
   border-radius: 999px;
   font-size: 10.5px;
   font-weight: 800;
@@ -225,7 +225,7 @@
 }
 
 .empty {
-  padding: 40px 14px;
+  padding: 40px 12px;
   text-align: center;
   font-size: 12.5px;
   font-weight: 600;

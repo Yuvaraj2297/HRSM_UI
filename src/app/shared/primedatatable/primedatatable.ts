@@ -17,6 +17,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 
+import { AppSelect } from '../app-select/app-select';
 export interface PrimeTableColumn {
   field: string;
   header: string;
@@ -31,6 +32,7 @@ export interface PrimeTableColumn {
     | 'actions'
     | 'pill-actions'
     | 'checkboxText'
+    | 'chips'
     | 'checkbox'
     | 'shift-name'
     | 'day-timing'
@@ -48,6 +50,9 @@ export interface PrimeTableColumn {
   width?: string;
   cellClass?: string;
   headerClass?: string;
+  /** pin the column to the right edge while the table scrolls sideways.
+      Action columns are pinned automatically; set false to opt out. */
+  frozen?: boolean;
   imageField?: any;
   colorMap?: any;
   subField?: any;
@@ -113,6 +118,8 @@ export interface PrimeTableActions {
   add?: boolean;
   edit?: boolean;
   delete?: boolean;
+  /** shows a shield button that emits actionClick { action: 'permission' } */
+  permission?: boolean;
   addLabel?: string;
   addIcon?: string;
 }
@@ -120,7 +127,7 @@ export interface PrimeTableActions {
 @Component({
   selector: 'app-primedatatable',
   standalone: true,
-  imports: [
+  imports: [AppSelect, 
     CommonModule,
     TableModule,
     ButtonModule,
@@ -189,8 +196,9 @@ export class PrimeDataTable {
   @Input() searchPlaceholder = 'Search...';
   @Input() exportFileName = 'export';
 
-  /** true = title, Columns/Export and Search share one row (wraps on small screens) */
-  @Input() inlineToolbar = false;
+  /** @deprecated the head is always one row now (title | Columns · Export · Search · buttons);
+      kept so existing [inlineToolbar] bindings still compile */
+  @Input() inlineToolbar = true;
 
   /** 'menu' = kebab dropdown, 'inline' = icon buttons in the cell (only affects type:'actions' columns) */
   @Input() actionsMode: 'inline' | 'menu' = 'menu';
@@ -235,7 +243,7 @@ export class PrimeDataTable {
   @ViewChild('dt') table!: Table;
 
   // =========================================================
-  // COLUMN VISIBILITY OFFCANVAS
+  // COLUMN VISIBILITY DROPDOWN (under the Columns button)
   // =========================================================
 
   columnsPanelOpen = false;
@@ -246,6 +254,10 @@ export class PrimeDataTable {
     return this.columns.filter((col) => !this.hiddenFields.has(col.field));
   }
 
+  get hiddenCount(): number {
+    return this.columns.length - this.visibleColumns.length;
+  }
+
   isColumnVisible(field: string): boolean {
     return !this.hiddenFields.has(field);
   }
@@ -254,7 +266,8 @@ export class PrimeDataTable {
     const next = new Set(this.hiddenFields);
     if (next.has(field)) {
       next.delete(field);
-    } else {
+    } else if (this.visibleColumns.length > 1) {
+      // never hide the last visible column
       next.add(field);
     }
     this.hiddenFields = next;
@@ -264,12 +277,19 @@ export class PrimeDataTable {
     this.hiddenFields = new Set<string>();
   }
 
-  openColumnsPanel(): void {
-    this.columnsPanelOpen = true;
+  toggleColumnsPanel(): void {
+    this.columnsPanelOpen = !this.columnsPanelOpen;
+    if (this.columnsPanelOpen) this.closeExportMenu();
   }
 
   closeColumnsPanel(): void {
     this.columnsPanelOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  closeMenusOnEscape(): void {
+    this.closeColumnsPanel();
+    this.closeExportMenu();
   }
 
   // =========================================================
@@ -286,8 +306,39 @@ export class PrimeDataTable {
     return col.type || 'text';
   }
 
+  /** action columns (by type, or a custom column named action/actions) stay pinned right */
+  isFrozen(col: PrimeTableColumn): boolean {
+    if (col.frozen !== undefined) return col.frozen;
+    return col.type === 'actions' || col.type === 'pill-actions' || /^actions?$/i.test(col.field);
+  }
+
   colorFor(col: PrimeTableColumn, row: any): string | null {
     return col.colorMap?.[row[col.field]] ?? null;
+  }
+
+  // =========================================================
+  // CHIPS CELL — accepts { key: boolean }, string[] or "a b c"
+  // Labels for object keys come from col.meta.labels
+  // =========================================================
+
+  isChipValue(value: any): boolean {
+    return Array.isArray(value) || (value !== null && typeof value === 'object');
+  }
+
+  chipsFor(col: PrimeTableColumn, row: any): string[] {
+    const value = row[col.field];
+    if (!value) return [];
+
+    if (Array.isArray(value)) return value;
+
+    if (typeof value === 'object') {
+      const labels: Record<string, string> = col.meta?.labels ?? {};
+      return Object.keys(value)
+        .filter((key) => value[key])
+        .map((key) => labels[key] ?? key);
+    }
+
+    return String(value).split(/\s+(?=[A-Z])/); // "View(Own) Create" -> chips
   }
 
   avatarSrc(col: PrimeTableColumn, row: any): string {
@@ -310,7 +361,7 @@ export class PrimeDataTable {
   pillButtonStyle(btn: PrimeTablePillButton): { [k: string]: string } {
     const color = btn.color || this.primaryColor;
     if (btn.variant === 'outline') {
-      return { background: 'var(--white)', color };
+      return { background: 'var(--surface)', color };
     }
     return { background: color, color: 'var(--white)' };
   }
@@ -370,6 +421,7 @@ export class PrimeDataTable {
 
   toggleExportMenu(): void {
     this.exportMenuOpen = !this.exportMenuOpen;
+    if (this.exportMenuOpen) this.closeColumnsPanel();
   }
 
   closeExportMenu(): void {
@@ -391,6 +443,8 @@ export class PrimeDataTable {
       cols.forEach((col) => {
         if (col.field === 'sno') {
           record[col.header] = index + 1;
+        } else if (col.type === 'chips') {
+          record[col.header] = this.chipsFor(col, row).join(', ');
         } else {
           record[col.header] = row[col.field] ?? '';
         }
@@ -503,7 +557,7 @@ export class PrimeDataTable {
         <head>
           <title>${this.exportFileName}</title>
           <style>
-            table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }
+            table { border-collapse: collapse; width: 100%; font-family: 'Inter', Arial, sans-serif; }
             th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; font-size: 13px; }
             th { background: #f4f7f7; }
           </style>
@@ -604,7 +658,7 @@ export class PrimeDataTable {
   }
 
   onColumns(): void {
-    this.openColumnsPanel();
+    this.toggleColumnsPanel();
     this.columnsClicked.emit();
   }
 

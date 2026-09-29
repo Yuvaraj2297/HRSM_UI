@@ -1,7 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
 import {
   PrimeDataTable,
@@ -10,11 +11,12 @@ import {
 } from '../../../../shared/primedatatable/primedatatable';
 
 import {
-  ReuseModal,
   ModalField,
   ModalSaveEvent,
+  ReuseModal,
 } from '../../../../shared/reuse-model/reuse-model';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 // =============================================================
 // TYPES
 // =============================================================
@@ -54,13 +56,18 @@ const STORAGE_KEY = 'candidate_evaluations_v1';
 @Component({
   selector: 'app-tl-evaluation-scores',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeDataTable, ReuseModal],
+  imports: [AppSelect, CommonModule, FormsModule, PrimeDataTable, ReuseModal, AppStatCard],
   templateUrl: './tl-evaluation-scores.html',
   styleUrl: './tl-evaluation-scores.scss',
 })
 export class TlEvaluationScores {
   @ViewChild('assignModal') assignModal!: ReuseModal;
   @ViewChild('scoreModal') scoreModal!: ReuseModal;
+
+  modalHeader = {
+    title: 'Team Lead Candidate Evaluations & Scorecards',
+    icon: 'ti ti-file-check',
+  };
 
   // =========================================================
   // DATA

@@ -1,37 +1,33 @@
 <!-- ===== Personal Details ===== -->
-<div class="ne-section-title">Personal Details :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-person"></i></span>Personal Details</div>
 
 <div class="row g-3" [formGroup]="profile">
   <div class="col-lg-2 col-md-3">
     <label class="form-label">Profile Image</label>
-    <label class="ne-upload-box" [class.ne-has-image]="photoPreview()">
-      <img *ngIf="photoPreview() as src" [src]="src" class="ne-preview" alt="Profile preview">
+    <label class="ui-image-drop" [class.has-image]="photoPreview()">
+      <img *ngIf="photoPreview() as src" [src]="src" alt="Profile preview">
       <i class="bi bi-camera"></i>
-      <div class="ne-upload-title">Choose File</div>
-      <div class="ne-upload-hint">JPG, PNG (Max 2MB)</div>
+      <div class="ui-file-drop-text">Choose File</div>
+      <div class="ui-file-drop-hint">JPG, PNG (Max 2MB)</div>
       <input type="file" accept="image/png, image/jpeg" hidden (change)="onPhoto($event)">
     </label>
   </div>
 
   <div class="col-lg-10">
     <div class="row g-3">
-      <div class="col-lg-4 col-md-6">
-        <label class="form-label"><span class="ne-req">*</span> Employee Code</label>
-        <input pInputText class="form-control" formControlName="employeeCode" placeholder="Enter employee code">
-      </div>
+      
       <div class="col-lg-4 col-md-6">
         <label class="form-label">First Name</label>
         <input (input)="preventNumbers($event)" pInputText class="form-control" formControlName="firstName" placeholder="Enter first name">
       </div>
       <div class="col-lg-4 col-md-6">
-        <label class="form-label"><span class="ne-req">*</span> Last Name</label>
+        <label class="form-label required-label"> Last Name</label>
         <input (input)="preventNumbers($event)" pInputText class="form-control" formControlName="lastName" placeholder="Enter last name">
       </div>
 
       <div class="col-lg-4 col-md-6">
         <label class="form-label">Gender</label>
-        <p-select formControlName="gender" [options]="fs.genders" optionLabel="label" optionValue="value"
-                  placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+        <app-select formControlName="gender" [options]="fs.genders" optionLabel="label" optionValue="value" placeholder="Non selected" />
       </div>
       <div class="col-lg-4 col-md-6">
         <label class="form-label">Birthday</label>
@@ -75,8 +71,7 @@
       </div>
       <div class="col-lg-4 col-md-6">
         <label class="form-label">Blood Group</label>
-        <p-select formControlName="bloodGroup" [options]="fs.bloodGroups" optionLabel="label" optionValue="value"
-                  placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+        <app-select formControlName="bloodGroup" [options]="fs.bloodGroups" optionLabel="label" optionValue="value" placeholder="Non selected" />
       </div>
       <div class="col-lg-4 col-md-6">
         <label class="form-label">Latitude</label>
@@ -96,101 +91,93 @@
 </div>
 
 <!-- ===== Emergency Contact ===== -->
-<div class="ne-section-title">Emergency Contact Details :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-telephone"></i></span>Emergency Contact Details</div>
 <div class="row g-3" [formGroup]="emergency">
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Emergency Contact Name</label>
     <input (input)="preventNumbers($event)" pInputText class="form-control" formControlName="name" placeholder="Enter name">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Emergency Contact Number</label>
     <input (input)="preventAlphabets($event)" pInputText class="form-control" formControlName="phone" placeholder="98765 43210">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Emergency Contact Blood Group</label>
-    <p-select formControlName="bloodGroup" [options]="fs.bloodGroups" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="bloodGroup" [options]="fs.bloodGroups" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Type of Relationship</label>
     <input pInputText class="form-control" formControlName="relation" placeholder="e.g. Father, Spouse, Friend">
   </div>
 </div>
 
 <!-- ===== Job Details ===== -->
-<div class="ne-section-title">Job Details :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-briefcase"></i></span>Job Details</div>
 <div class="row g-3" [formGroup]="job">
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Date of Joining</label>
     <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Experience</label>
     <input pInputText class="form-control" formControlName="experience" placeholder="e.g. 3 Years 2 Months">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Job Type</label>
-    <p-select formControlName="jobType" [options]="fs.jobTypes" optionLabel="label" optionValue="value"
-              placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="jobType" [options]="fs.jobTypes" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
   </div>
 
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Designation</label>
-    <p-select formControlName="designation" [options]="fs.designations" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [filter]="true" [showClear]="true" appendTo="body" />
+    <app-select formControlName="designation" [options]="fs.designations" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
-    <label class="form-label"><span class="ne-req">*</span> Phone</label>
+  <div class="col-lg-3 col-md-4 col-12">
+    <label class="form-label required-label"> Phone</label>
     <input pInputText class="form-control" formControlName="phone" placeholder="98765 43210">
   </div>
-  <div class="col-lg-4 col-md-6">
-    <label class="form-label"><span class="ne-req">*</span> Official Email</label>
+  <div class="col-lg-3 col-md-4 col-12">
+    <label class="form-label required-label"> Official Email</label>
     <input pInputText class="form-control" formControlName="officialEmail" placeholder="name@company.com">
   </div>
 
-  <div class="col-lg-4 col-md-6">
-    <label class="form-label"><span class="ne-req">*</span> Personal Email</label>
+  <div class="col-lg-3 col-md-4 col-12">
+    <label class="form-label required-label"> Personal Email</label>
     <input pInputText class="form-control" formControlName="personalEmail" placeholder="name@gmail.com">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Branch</label>
-    <p-select formControlName="branch" [options]="fs.branches" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="branch" [options]="fs.branches" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Reporting To</label>
-    <p-select formControlName="reportingTo" [options]="fs.managers" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [filter]="true" [showClear]="true" appendTo="body" />
+    <app-select formControlName="reportingTo" [options]="fs.managers" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
 
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Status</label>
-    <p-select formControlName="status" [options]="fs.statuses" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="status" [options]="fs.statuses" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Employee Type</label>
-    <p-select formControlName="employeeType" [options]="fs.employeeTypes" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="employeeType" [options]="fs.employeeTypes" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Worklocation</label>
-    <p-select formControlName="workLocation" [options]="fs.workLocations" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="workLocation" [options]="fs.workLocations" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
 
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Offer Letter Date</label>
     <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Notice Period (In Days)</label>
     <input pInputText type="number" class="form-control" formControlName="noticePeriodDays" placeholder="e.g. 30">
   </div>
-  <div class="col-lg-4 col-md-6 d-flex align-items-end pb-2">
-    <label class="ne-check">
+  <div class="col-lg-3 col-md-4 col-12 d-flex align-items-end pb-2">
+    <label class="ui-check">
       <p-checkbox formControlName="mobileAppIssues" [binary]="true" inputId="mobileAppIssues" />
-      <span class="ms-2">Mobile App Issues</span>
+      <span>Mobile App Issues</span>
     </label>
   </div>
 
@@ -201,14 +188,13 @@
 </div>
 
 <!-- ===== Salary Details ===== -->
-<div class="ne-section-title">Salary Details :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-cash-stack"></i></span>Salary Details</div>
 <div class="row g-3" [formGroup]="salary">
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Salary Type</label>
-    <p-select formControlName="salaryType" [options]="fs.salaryTypes" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="salaryType" [options]="fs.salaryTypes" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">CTC (Annual)</label>
     <div class="input-group">
       <span class="input-group-text">₹</span>
@@ -216,62 +202,57 @@
     </div>
     <small class="text-muted">Cost To Company per annum</small>
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Personal tax code</label>
     <input pInputText class="form-control" formControlName="taxCode" placeholder="e.g. TX001">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Hourly Rate</label>
     <input pInputText type="number" class="form-control" formControlName="hourlyRate" placeholder="0">
   </div>
 
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">PF Eligible</label>
-    <p-select formControlName="pfEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value"
-              placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="pfEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">ESI Eligible</label>
-    <p-select formControlName="esiEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value"
-              placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="esiEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">OT Eligible</label>
-    <p-select formControlName="otEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value"
-              placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="otEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
   </div>
 
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">UAN No</label>
     <input pInputText class="form-control" formControlName="uan" placeholder="Enter UAN number">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">ESI No</label>
     <input pInputText class="form-control" formControlName="esiNo" placeholder="Enter ESI number">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Aadhaar No</label>
     <input pInputText class="form-control" formControlName="aadhaarNo" placeholder="Enter Aadhaar number">
   </div>
 
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">PAN No</label>
     <input pInputText class="form-control" formControlName="panNo" placeholder="Enter PAN number">
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">PENSION Eligible</label>
-    <p-select formControlName="pensionEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value"
-              placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="pensionEligible" [options]="fs.yesNo" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
   </div>
-  <div class="col-lg-4 col-md-6">
+  <div class="col-lg-3 col-md-4 col-12">
     <label class="form-label">Salary Calendar</label>
-    <p-select formControlName="salaryCalendar" [options]="fs.salaryCalendars" optionLabel="label" optionValue="value"
-              placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="salaryCalendar" [options]="fs.salaryCalendars" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
   </div>
 </div>
 
 <!-- ===== Interview Feedback ===== -->
-<div class="ne-section-title">Interview Feedback Consolidated :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-chat-square-text"></i></span>Interview Feedback Consolidated</div>
 <div class="row g-3" [formGroup]="interview">
   <div class="col-lg-3 col-md-6">
     <label class="form-label">Round 1 - CV Screening</label>
@@ -292,17 +273,16 @@
 </div>
 
 <!-- ===== Welcome Kit ===== -->
-<div class="ne-section-title">Welcome Kit :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-gift"></i></span>Welcome Kit</div>
 
 <div [formGroup]="form">
   <div formArrayName="welcomeKit">
-    <div class="ne-wk-row" *ngFor="let row of welcomeKit.controls; let i = index" [formGroupName]="i">
-      <div>
+    <div class="row g-3 align-items-end mb-3" *ngFor="let row of welcomeKit.controls; let i = index" [formGroupName]="i">
+      <div class="col-md-6">
         <label class="form-label">ID Card</label>
-        <p-select formControlName="idCard" [options]="fs.idCardStatuses" optionLabel="label" optionValue="value"
-                  placeholder="Nothing selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+        <app-select formControlName="idCard" [options]="fs.idCardStatuses" optionLabel="label" optionValue="value" placeholder="Nothing selected" />
       </div>
-      <div>
+      <div class="col-md-6">
         <label class="form-label">ID Card Issued Date</label>
        <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
       </div>
@@ -317,7 +297,7 @@
 </div>
 
 <!-- ===== Social Media ===== -->
-<div class="ne-section-title">Social Media :-</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-share"></i></span>Social Media</div>
 <div class="row g-3" [formGroup]="social">
   <div class="col-lg-4 col-md-6">
     <label class="form-label"><i class="bi bi-facebook me-1"></i> Facebook</label>
@@ -335,53 +315,23 @@
 
 <!-- ===== Member departments ===== -->
 <div [formGroup]="form">
-  <div class="mt-3 mb-2 fw-semibold" style="font-size:12.5px;">Member departments</div>
-  <div class="ne-dept-list">
-    <label class="ne-check" *ngFor="let d of fs.departmentList">
+  <label class="form-label mt-3">Member departments</label>
+  <div class="ui-check-grid">
+    <label class="ui-check" *ngFor="let d of fs.departmentList">
       <p-checkbox [value]="d" formControlName="departments" [inputId]="'dept-' + d" />
-      <span class="ms-2">{{ d }}</span>
+      <span>{{ d }}</span>
     </label>
   </div>
 
   <div class="d-flex flex-column gap-2 mt-3">
-    <label class="ne-check">
+    <label class="ui-check">
       <p-checkbox formControlName="administrator" [binary]="true" inputId="administrator" />
-      <span class="ms-2">Administrator</span>
+      <span>Administrator</span>
     </label>
-    <label class="ne-check">
+    <label class="ui-check">
       <p-checkbox formControlName="sendWelcomeEmail" [binary]="true" inputId="sendWelcomeEmail" />
-      <span class="ms-2">Send welcome email</span>
+      <span>Send welcome email</span>
     </label>
   </div>
 </div>
 
-<!-- ===== Account Password ===== -->
-<div class="ne-section-title">Account Password :-</div>
-<div class="row g-3" [formGroup]="account">
-  <div class="col-lg-4 col-md-6">
-    <label class="form-label"><span class="ne-req">*</span> Password</label>
-    <div class="input-group">
-      <input pInputText [type]="showPw ? 'text' : 'password'" class="form-control" formControlName="password" placeholder="Enter password">
-      <button [attr.aria-label]="showPw ? 'Hide password' : 'Show password'" class="btn btn-outline-secondary" type="button" (click)="showPw = !showPw">
-        <i class="bi" [ngClass]="showPw ? 'bi-eye-slash' : 'bi-eye'"></i>
-      </button>
-    </div>
-    <div class="pw-meter">
-      <div class="pw-meter-fill" [style.width.%]="strength * 20" [style.background]="strengthColor"></div>
-    </div>
-    <div class="pw-hint">Min 8 chars, use uppercase, numbers &amp; symbols for strong password</div>
-  </div>
-
-  <div class="col-lg-4 col-md-6">
-    <label class="form-label"><span class="ne-req">*</span> Confirm Password</label>
-    <div class="input-group">
-      <input pInputText [type]="showCpw ? 'text' : 'password'" class="form-control" formControlName="confirmPassword" placeholder="Re-enter password">
-      <button [attr.aria-label]="showCpw ? 'Hide confirm password' : 'Show confirm password'" class="btn btn-outline-secondary" type="button" (click)="showCpw = !showCpw">
-        <i class="bi" [ngClass]="showCpw ? 'bi-eye-slash' : 'bi-eye'"></i>
-      </button>
-    </div>
-    <div class="pw-match" *ngIf="account.value.confirmPassword" [style.color]="passwordsMatch ? 'var(--green-400-2)' : 'var(--danger)'">
-      {{ passwordsMatch ? 'Passwords match' : 'Passwords do not match' }}
-    </div>
-  </div>
-</div>

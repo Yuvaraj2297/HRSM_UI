@@ -15,9 +15,7 @@
         <div class="im-field">
           <label><span class="req">*</span>Status (fallback)</label>
           <div class="d-flex gap-2">
-            <select class="form-select" [(ngModel)]="status">
-              <option *ngFor="let o of statusOptions" [value]="o">{{ o }}</option>
-            </select>
+            <app-select [(ngModel)]="status" [options]="statusOptions" />
             <button type="button" class="im-inline-add" (click)="showAddStatus = !showAddStatus" title="Add new status"><i class="bi bi-plus-lg"></i></button>
           </div>
           <div class="im-inline-wrap" [class.show]="showAddStatus">
@@ -29,9 +27,7 @@
         <div class="im-field">
           <label><span class="req">*</span>Source (fallback)</label>
           <div class="d-flex gap-2">
-            <select class="form-select" [(ngModel)]="source">
-              <option *ngFor="let o of sourceOptions" [value]="o">{{ o }}</option>
-            </select>
+            <app-select [(ngModel)]="source" [options]="sourceOptions" />
             <button type="button" class="im-inline-add" (click)="showAddSource = !showAddSource" title="Add new source"><i class="bi bi-plus-lg"></i></button>
           </div>
           <div class="im-inline-wrap" [class.show]="showAddSource">
@@ -42,10 +38,7 @@
 
         <div class="im-field">
           <label>Responsible (Assignee)</label>
-          <select class="form-select" [(ngModel)]="assignee">
-            <option value="">Non selected</option>
-            <option *ngFor="let o of assigneeOptions" [value]="o">{{ o }}</option>
-          </select>
+          <app-select [(ngModel)]="assignee" [options]="assigneeOptions" placeholder="Non selected" />
         </div>
 
         <a href="javascript:void(0)" class="im-sample-link" (click)="downloadSample()"><i class="bi bi-download"></i>Download sample</a>

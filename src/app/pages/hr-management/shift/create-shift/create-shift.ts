@@ -2,10 +2,10 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import { TimePicker } from '../../../../shared/time-picker/time-picker';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface ShiftColor {
   id: string;
   name: string;
@@ -25,7 +25,7 @@ export interface DayShiftTiming {
 @Component({
   selector: 'app-create-shift',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SelectModule, Breadcrumb, TimePicker],
+  imports: [AppSelect, CommonModule, FormsModule, ReactiveFormsModule, RouterLink, Breadcrumb, TimePicker],
   templateUrl: './create-shift.html',
   styleUrl: './create-shift.scss',
 })

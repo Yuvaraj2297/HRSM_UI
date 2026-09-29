@@ -25,7 +25,7 @@
   <div class="mbx-shell">
 
     <!-- ===== Sidebar ===== -->
-    <aside class="mbx-side">
+    <aside class="card-custom mbx-side">
       <button type="button" class="mbx-compose-btn" (click)="compose()">
         <i class="bi bi-pencil-square"></i>Compose Email
       </button>
@@ -47,14 +47,14 @@
     </aside>
 
     <!-- ===== Main panel ===== -->
-    <section class="mbx-main">
-      <div class="mbx-main-head">
+    <section class="card-custom mbx-main">
+      <div class="card-custom-header justify-content-start">
         @if (reading()) {
         <button type="button" class="mbx-back" title="Back" aria-label="Back to list" (click)="back()">
           <i class="bi bi-arrow-left"></i>
         </button>
         }
-        <h2 class="mbx-head-title">{{ title() }}</h2>
+        <h2 class="card-custom-title text-truncate">{{ title() }}</h2>
       </div>
 
       <div class="mbx-main-body">

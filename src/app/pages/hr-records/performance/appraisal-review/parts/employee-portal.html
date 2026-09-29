@@ -1,0 +1,139 @@
+@let emp = a();
+@let open = store.employeeStage();
+
+<section class="card-custom p-0 overflow-hidden">
+  <!-- who + where they are -->
+  <header class="card-custom-header">
+    <div class="d-flex align-items-center gap-3">
+      <div class="emp-initials-avatar portal-avatar">{{ emp.name[0] }}</div>
+      <div>
+        <div class="emp-name-line">{{ emp.name }}</div>
+        <div class="emp-code-line">{{ emp.id }} • {{ emp.role }} • {{ emp.dept }}</div>
+      </div>
+    </div>
+    <div class="portal-viewas">
+      <label class="form-label mb-0" for="view-as">Viewing as</label>
+      <app-select inputId="view-as" [ngModel]="store.employeeKey()" (ngModelChange)="store.viewAsEmployee($event)" [options]="employeeOptions()" optionLabel="label" optionValue="value" optionSub="sub" />
+    </div>
+  </header>
+
+  <!-- stage tracker (click a stage to open its pane) -->
+  <ol class="stage-track" aria-label="Appraisal stages">
+    @for (s of stages; track s.no) {
+    <li>
+      <button type="button" class="stage-step" [class.done]="stepState(s.no) === 'done'"
+        [class.current]="stepState(s.no) === 'current'" [class.open]="open === s.no"
+        [attr.aria-current]="open === s.no ? 'step' : null" (click)="store.employeeStage.set(s.no)">
+        <span class="stage-dot">
+          @if (stepState(s.no) === 'done') { <i class="bi bi-check-lg"></i> } @else { <i [class]="s.icon"></i> }
+        </span>
+        <span class="stage-label">{{ s.label }}</span>
+        <span class="stage-note">{{ stepNote(s.no) }}</span>
+      </button>
+    </li>
+    }
+  </ol>
+
+  <!-- stage pane -->
+  <div class="portal-pane">
+    @switch (open) {
+      @case (1) {
+        <form [formGroup]="form" (ngSubmit)="save(true)" novalidate>
+          <div class="pane-head">
+            <div>
+              <h2 class="pane-title">Self-Review</h2>
+              <p class="pane-sub">
+                @if (editable()) { Fill in your review and submit it to {{ emp.teamLead }}. }
+                @else { Locked — your Team Lead has already reviewed it. }
+              </p>
+            </div>
+            @if (emp.submitted) {
+            <span class="status-pill status-success gap-1"><i class="bi bi-send-check"></i> Submitted</span>
+            } @else {
+            <span class="status-pill status-muted gap-1"><i class="bi bi-pencil"></i> Draft</span>
+            }
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="self-projects"><span class="text-danger">*</span> Projects Handled</label>
+              <input id="self-projects" type="text" class="form-control" formControlName="projects"
+                [class.is-invalid]="invalid('projects')" />
+              @if (invalid('projects')) { <div class="field-error">List at least one project.</div> }
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="self-tools">Tools / Tech Stack</label>
+              <input id="self-tools" type="text" class="form-control" formControlName="tools" />
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="self-summary"><span class="text-danger">*</span> Performance Summary</label>
+              <textarea id="self-summary" class="form-control" rows="3" formControlName="summary"
+                [class.is-invalid]="invalid('summary')"></textarea>
+              @if (invalid('summary')) { <div class="field-error">Write at least a couple of sentences.</div> }
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="self-achievements"><span class="text-danger">*</span> Key Achievements</label>
+              <textarea id="self-achievements" class="form-control" rows="3" formControlName="achievements"
+                [class.is-invalid]="invalid('achievements')"></textarea>
+              @if (invalid('achievements')) { <div class="field-error">Add your key achievements.</div> }
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Self Rating</label>
+              <app-select formControlName="rating" [options]="ratingOptions" optionLabel="label" optionValue="value" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="self-certs">Certifications / Upskilling</label>
+              <input id="self-certs" type="text" class="form-control" formControlName="certs" />
+            </div>
+          </div>
+
+          @if (editable()) {
+          <div class="pane-actions">
+            <button type="button" class="btn btn-secondary" (click)="save(false)">Save Draft</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-send"></i>
+              <span>{{ emp.submitted ? 'Update & Resubmit' : 'Submit to Team Lead' }}</span>
+            </button>
+          </div>
+          }
+        </form>
+      }
+
+      @case (2) {
+        <app-appraisal-review-card [review]="emp.tl" [title]="tiers.tl.title" [icon]="tiers.tl.icon"
+          [active]="stage() === 2"
+          [pendingText]="emp.submitted ? emp.teamLead + ' is reviewing your self-appraisal.' : 'Submit your self-review first.'" />
+      }
+
+      @case (3) {
+        <app-appraisal-review-card [review]="emp.hr" [title]="tiers.hr.title" [icon]="tiers.hr.icon"
+          [active]="stage() === 3" pendingText="HR checks policy, attendance and the increment budget after the Team Lead approves." />
+      }
+
+      @case (4) {
+        <app-appraisal-review-card [review]="emp.mgr" [title]="tiers.mgr.title" [icon]="tiers.mgr.icon"
+          [active]="stage() === 4" pendingText="The Manager gives the final rating and a note once HR approves." />
+      }
+
+      @case (5) {
+        @if (emp.mgr) {
+          <app-appraisal-scorecard [appraisal]="emp" />
+          <div class="pane-actions">
+            <button type="button" class="btn btn-primary" (click)="store.scorecardKey.set(emp.key)">
+              <i class="bi bi-printer"></i>
+              <span>Open & Print</span>
+            </button>
+          </div>
+        } @else {
+          <div class="review-pending">
+            <i class="bi bi-lock"></i>
+            <div>
+              <div class="fw-bold">Scorecard locked</div>
+              <small class="text-muted">It is released automatically when the Manager signs off.</small>
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+</section>

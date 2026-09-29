@@ -5,28 +5,26 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
-import { SelectModule } from 'primeng/select';
 
 import {
   ALL_PERMISSIONS,
   PERMISSION_GROUPS,
   PermGroup,
   PermModule,
-  ROLE_BADGE_CLASS,
   ROLE_DESCRIPTIONS
 } from './permissions.data';
 
 import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-permission-tab',
 
   standalone: true,
 
-  imports: [
+  imports: [AppSelect, 
     CommonModule,
-    ReactiveFormsModule,
-    SelectModule
+    ReactiveFormsModule
   ],
 
   templateUrl: './permission-tab.html',
@@ -96,22 +94,6 @@ export class PermissionsTab {
         ?.value;
 
     return ROLE_DESCRIPTIONS[role] || '';
-
-  }
-
-
-  /* =========================================================
-     ROLE BADGE
-  ========================================================= */
-
-  get badgeClass(): string {
-
-    const role =
-      this.permissions
-        .get('role')
-        ?.value;
-
-    return ROLE_BADGE_CLASS[role] || '';
 
   }
 

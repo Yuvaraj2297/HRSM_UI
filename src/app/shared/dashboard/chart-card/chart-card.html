@@ -1,19 +1,19 @@
-<div class="chart-card">
-  <div class="chart-card-head">
-    <span class="chart-card-title">{{ title() }}</span>
+<section class="card-custom card-custom-hover chart-card">
+  <header class="card-custom-header">
+    <h3 class="card-custom-title">{{ title() }}</h3>
 
-    <div class="chart-card-actions">
+    <div class="card-header-actions">
       <ng-content select="[card-actions]" />
       @if (badge()) {
-      <span class="chart-card-badge">{{ badge() }}</span>
+      <span class="ui-count-chip">{{ badge() }}</span>
       }
     </div>
-  </div>
+  </header>
 
-  <div class="chart-card-body" [style.height]="height()">
+  <div class="card-custom-body chart-card-body" [style.height]="height()">
     @if (config(); as cfg) {
     <p-chart [type]="type()" [data]="cfg.data" [options]="cfg.options" width="100%" [height]="height()" />
     }
     <ng-content />
   </div>
-</div>
+</section>

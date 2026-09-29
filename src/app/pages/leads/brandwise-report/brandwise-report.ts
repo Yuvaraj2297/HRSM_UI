@@ -3,7 +3,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, finalize } from 'rxjs';
-import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 
 import { ChartCard } from '../../../shared/dashboard/chart-card/chart-card';
@@ -26,10 +25,11 @@ import {
 } from './brandwise-report.model';
 import { CalendarDatepickerDirective } from '../../../common/directives/datepicker';
 
+import { AppSelect } from '../../../shared/app-select/app-select';
 @Component({
   selector: 'app-brandwise-report',
   standalone: true,
-  imports: [FormsModule, SelectModule, DatePickerModule, ChartCard, DashSection, CalendarDatepickerDirective],
+  imports: [AppSelect, FormsModule, DatePickerModule, ChartCard, DashSection, CalendarDatepickerDirective],
   templateUrl: './brandwise-report.html',
   styleUrl: './brandwise-report.scss',
 })

@@ -18,12 +18,12 @@
   </header>
 
   <!-- Filters -->
-  <section class="filters-card">
-    <div class="filter-field filter-search">
+  <section class="card-custom report-filter-card is-compact">
+    <div class="report-filter-field">
       <label for="leadSearch">Name / Mobile / Employee Id</label>
       <input
         id="leadSearch"
-        class="lead-input"
+        class="form-control"
         type="text"
         autocomplete="off"
         placeholder="Enter Name / Mobile / Employee Id"
@@ -32,20 +32,20 @@
       />
     </div>
 
-    <div class="filter-field">
+    <div class="report-filter-field">
       <label for="leadFrom">From Date</label>
-<input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+      <input id="leadFrom" type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
     </div>
 
-    <div class="filter-field">
+    <div class="report-filter-field">
       <label for="leadTo">To Date</label>
-<input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
+      <input id="leadTo" type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
     </div>
 
-    <div class="filter-actions">
-      <button type="button" class="btn-clear" (click)="onClear()">Clear</button>
-      <button type="button" class="btn-search" (click)="onSearch()">
-        <i class="bi bi-search"></i>Search
+    <div class="report-filter-actions">
+      <button type="button" class="btn btn-cancel px-4" (click)="onClear()">Clear</button>
+      <button type="button" class="btn btn-primary px-4" (click)="onSearch()">
+        <i class="bi bi-search"></i> Search
       </button>
     </div>
   </section>

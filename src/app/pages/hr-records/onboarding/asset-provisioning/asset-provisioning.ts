@@ -1,1166 +1,373 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { PrimeDataTable } from '../../../../shared/primedatatable/primedatatable';
-import { SelectModule } from 'primeng/select';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CalendarDatepickerDirective } from '../../../../common/directives/datepicker';
+import {
+  PrimeDataTable,
+  PrimeTableColumn,
+  PrimeTableHeader,
+} from '../../../../shared/primedatatable/primedatatable';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
-declare var bootstrap: any;
-
+import { AppSelect } from '../../../../shared/app-select/app-select';
+type AssetType = 'Laptop' | 'Desktop' | 'Monitor' | 'Mobile' | 'Headset' | 'ID Card' | 'Access Card';
 type AssetStatus = 'Requested' | 'Approved' | 'Assigned' | 'Returned' | 'Damaged';
+type Condition = 'New' | 'Good' | 'Used' | 'Damaged';
+/** stat-card filter: one status, or a group of statuses */
+type StatusFilter = 'pending' | 'Assigned' | 'closed' | null;
 
-type AssetType =
-  | 'Laptop'
-  | 'Desktop'
-  | 'Monitor'
-  | 'Mobile'
-  | 'Headset'
-  | 'ID Card'
-  | 'Access Card';
-
-interface AssetRow {
-  sno: number;
-  empName: string;
-  empId: string;
-  dept: string;
-  role: string;
-  avatar?: string;
-
-  type: AssetType;
-  model: string;
-  assetId: string;
-  serial: string;
-
-  assignedDate: string;
-  assignedBy: string;
-
-  condition: 'New' | 'Good' | 'Used' | 'Damaged';
-
-  accessories: string;
-  location: string;
-  returnDate: string;
-
-  status: AssetStatus;
-  remarks: string;
-}
-
-interface EmployeeOption {
+interface Employee {
   name: string;
   empId: string;
   dept: string;
   role: string;
+  avatar: string;
 }
 
-interface SelectOption {
-  label: string;
-  value: string;
+interface Asset {
+  id: number;
+  empId: string;
+  type: AssetType;
+  model: string;
+  assetTag: string;
+  serial: string;
+  assignedDate: string; // yyyy-mm-dd
+  assignedBy: string;
+  condition: Condition;
+  accessories: string;
+  location: string;
+  returnDate: string; // yyyy-mm-dd, '' = permanent
+  status: AssetStatus;
+  remarks: string;
 }
+
+/** a table row: the asset plus the employee it belongs to */
+interface AssetRow extends Asset {
+  sno: number;
+  empName: string;
+  role: string;
+  dept: string;
+  avatar: string;
+}
+
+const ASSET_TYPES: { value: AssetType; label: string; icon: string }[] = [
+  { value: 'Laptop',      label: 'Laptop',               icon: 'bi bi-laptop' },
+  { value: 'Desktop',     label: 'Desktop PC',           icon: 'bi bi-pc-display' },
+  { value: 'Monitor',     label: 'Monitor',              icon: 'bi bi-display' },
+  { value: 'Mobile',      label: 'Mobile / Test Device', icon: 'bi bi-phone' },
+  { value: 'Headset',     label: 'Headset',              icon: 'bi bi-headphones' },
+  { value: 'ID Card',     label: 'ID Card',              icon: 'bi bi-person-badge' },
+  { value: 'Access Card', label: 'Access Card / Key',    icon: 'bi bi-key' },
+];
+
+/** lifecycle order; Damaged is an exit state after Assigned */
+const LIFECYCLE: AssetStatus[] = ['Requested', 'Approved', 'Assigned', 'Returned'];
+
+const STATUS_META: Record<AssetStatus, { cls: string; icon: string }> = {
+  Requested: { cls: 'status-pending',  icon: 'bi bi-hourglass-split' },
+  Approved:  { cls: 'status-warning',  icon: 'bi bi-hand-thumbs-up' },
+  Assigned:  { cls: 'status-success',  icon: 'bi bi-check-circle-fill' },
+  Returned:  { cls: 'status-muted',    icon: 'bi bi-box-arrow-in-left' },
+  Damaged:   { cls: 'status-rejected', icon: 'bi bi-exclamation-triangle-fill' },
+};
+
+/** the one-click "next step" offered in the view modal */
+const NEXT_STEP: Partial<Record<AssetStatus, { to: AssetStatus; label: string; icon: string }>> = {
+  Requested: { to: 'Approved', label: 'Approve Request',  icon: 'bi bi-hand-thumbs-up' },
+  Approved:  { to: 'Assigned', label: 'Mark Handed Over', icon: 'bi bi-box-arrow-right' },
+  Assigned:  { to: 'Returned', label: 'Mark Returned',    icon: 'bi bi-box-arrow-in-left' },
+};
+
+const EMPLOYEES: Employee[] = [
+  { name: 'Kavitha Raman',   empId: 'EMP-2026-041', dept: 'Design',      role: 'UI/UX Designer',    avatar: 'assets/profile-1.jpg' },
+  { name: 'Rahul Verma',     empId: 'EMP-2026-042', dept: 'Engineering', role: 'Backend Engineer',  avatar: 'assets/profile-2.jpg' },
+  { name: 'Siddharth Nair',  empId: 'EMP-2026-043', dept: 'Engineering', role: 'iOS App Developer', avatar: 'assets/profile-3.jpg' },
+  { name: 'Priya Sundaram',  empId: 'EMP-2026-044', dept: 'Finance',     role: 'Financial Analyst', avatar: 'assets/profile-4.jpg' },
+  { name: 'Ananya Sundaram', empId: 'EMP-2026-045', dept: 'Design',      role: 'UI/UX Designer',    avatar: '' },
+];
+
+const ASSETS: Asset[] = [
+  { id: 1, empId: 'EMP-2026-041', type: 'Laptop',      model: 'MacBook Pro 16" (M3 Max, 36GB, 1TB)', assetTag: 'AST-MAC-2026-081', serial: 'C02G4109Q05P',    assignedDate: '2026-09-01', assignedBy: 'IT Admin (Sarah Mitchell)', condition: 'New',     accessories: 'Magic Mouse, 140W USB-C Charger, Laptop Bag', location: 'Office (HQ - Chennai)', returnDate: '',           status: 'Assigned',  remarks: 'Workstation for the design team.' },
+  { id: 2, empId: 'EMP-2026-042', type: 'Monitor',     model: 'Dell UltraSharp 27" 4K USB-C',        assetTag: 'AST-MON-2026-014', serial: 'CN-0V283H-74261', assignedDate: '2026-09-20', assignedBy: 'IT Admin (Sarah Mitchell)', condition: 'Good',    accessories: 'HDMI Cable, DisplayPort Cable, Power Cable',  location: 'Office (HQ - Chennai)', returnDate: '',           status: 'Approved',  remarks: 'Approved by Tech Lead, awaiting pickup.' },
+  { id: 3, empId: 'EMP-2026-043', type: 'Mobile',      model: 'iPhone 15 Pro 256GB (Test Device)',   assetTag: 'AST-MOB-2026-009', serial: 'F2LXW099PN23',    assignedDate: '2026-09-25', assignedBy: 'Admin Support',             condition: 'Used',    accessories: 'USB-C Cable, Protective Case',                location: 'Remote (WFH)',          returnDate: '2027-03-31', status: 'Requested', remarks: 'For iOS build & testing.' },
+  { id: 4, empId: 'EMP-2026-044', type: 'Access Card', model: 'Biometric RFID Access Card',          assetTag: 'ACC-BLR-8819',     serial: 'RFID-994821',     assignedDate: '2026-01-10', assignedBy: 'HR Operations',             condition: 'Good',    accessories: 'Company Lanyard, Card Holder',                location: 'Branch Office',         returnDate: '2026-08-31', status: 'Returned',  remarks: 'Returned at exit clearance.' },
+  { id: 5, empId: 'EMP-2026-045', type: 'Headset',     model: 'Jabra Evolve2 65 Wireless',           assetTag: 'AST-HDS-2026-033', serial: 'JAB-772910',      assignedDate: '2026-02-05', assignedBy: 'Admin Support',             condition: 'Damaged', accessories: 'Charging Stand, USB Dongle',                  location: 'Office (HQ - Chennai)', returnDate: '',           status: 'Damaged',   remarks: 'Mic boom arm faulty; sent for vendor repair.' },
+  { id: 6, empId: 'EMP-2026-041', type: 'ID Card',     model: 'Employee Photo ID Card',              assetTag: 'IDC-2026-0412',    serial: 'IDC-0412',        assignedDate: '2026-09-01', assignedBy: 'HR Operations',             condition: 'New',     accessories: 'Lanyard',                                     location: 'Office (HQ - Chennai)', returnDate: '',           status: 'Assigned',  remarks: '' },
+];
+
+const opts = (...v: string[]) => v.map((x) => ({ label: x, value: x }));
 
 @Component({
   selector: 'app-asset-provisioning',
   standalone: true,
-
-  imports: [CommonModule, ReactiveFormsModule, SelectModule, PrimeDataTable, CalendarDatepickerDirective],
-
+  imports: [AppSelect, CommonModule, ReactiveFormsModule, PrimeDataTable, AppStatCard, CalendarDatepickerDirective],
   templateUrl: './asset-provisioning.html',
   styleUrl: './asset-provisioning.scss',
 })
-export class AssetProvisioning implements OnInit, AfterViewInit {
-  // =========================================================
-  // FORM BUILDER
-  // =========================================================
+export class AssetProvisioning {
+  private readonly fb = inject(FormBuilder);
 
-  private fb = new FormBuilder();
+  readonly assetTypes = ASSET_TYPES;
+  readonly lifecycle = LIFECYCLE;
 
-  // =========================================================
-  // MODAL REFERENCES
-  // =========================================================
+  readonly tableHeader: PrimeTableHeader = {
+    title: 'Asset Provisioning',
+    icon: 'bi bi-laptop',
+  };
 
-  @ViewChild('provisionAssetModal')
-  provisionAssetModalRef!: ElementRef;
-
-  @ViewChild('viewAssetModal')
-  viewAssetModalRef!: ElementRef;
-
-  @ViewChild('editAssetModal')
-  editAssetModalRef!: ElementRef;
-
-  private provisionModal: any;
-  private viewModal: any;
-  private editModal: any;
-
-  // =========================================================
-  // PAGE CONFIG
-  // =========================================================
-
-  header = 'Asset Provisioning & Lifecycle Management';
-
-  searchPlaceholder = 'Search employee, asset ID, serial #...';
-
-  // =========================================================
-  // EMPLOYEES
-  // =========================================================
-
-  employees: EmployeeOption[] = [
+  readonly columns: PrimeTableColumn[] = [
+    { field: 'sno', header: 'S.NO', width: '65px', sortable: false },
+    { field: 'empName', header: 'EMPLOYEE', width: '220px', sortable: true, type: 'custom' },
+    { field: 'model', header: 'ASSET', width: '260px', sortable: true, type: 'custom' },
+    { field: 'assetTag', header: 'TAG / SERIAL', width: '180px', sortable: true, type: 'custom' },
+    { field: 'assignedDate', header: 'ASSIGNED', width: '190px', sortable: true, type: 'custom' },
+    { field: 'condition', header: 'CONDITION', width: '190px', sortable: true, type: 'custom' },
+    { field: 'returnDate', header: 'RETURN BY', width: '130px', sortable: true, type: 'custom' },
+    { field: 'status', header: 'STATUS', width: '140px', sortable: true, type: 'custom' },
     {
-      name: 'Kavitha Raman',
-      empId: 'EMP-2026-041',
-      dept: 'Design',
-      role: 'UI/UX Designer',
-    },
-
-    {
-      name: 'Rahul Verma',
-      empId: 'EMP-2026-042',
-      dept: 'Engineering',
-      role: 'Backend Engineer',
-    },
-
-    {
-      name: 'Siddharth Nair',
-      empId: 'EMP-2026-043',
-      dept: 'iOS Dev',
-      role: 'iOS App Developer',
-    },
-
-    {
-      name: 'Priya Sundaram',
-      empId: 'EMP-2026-044',
-      dept: 'Finance',
-      role: 'Financial Analyst',
-    },
-
-    {
-      name: 'Ananya Sundaram',
-      empId: 'EMP-2026-045',
-      dept: 'Design',
-      role: 'UI/UX Designer',
-    },
-  ];
-
-  // =========================================================
-  // ASSET TYPES
-  // =========================================================
-
-  assetTypes: SelectOption[] = [
-    {
-      value: 'Laptop',
-      label: 'Laptop Workstation',
-    },
-
-    {
-      value: 'Desktop',
-      label: 'Desktop PC',
-    },
-
-    {
-      value: 'Monitor',
-      label: 'Monitor & Display',
-    },
-
-    {
-      value: 'Mobile',
-      label: 'Mobile / Test Device',
-    },
-
-    {
-      value: 'Headset',
-      label: 'Headset & Audio',
-    },
-
-    {
-      value: 'ID Card',
-      label: 'Employee ID Card',
-    },
-
-    {
-      value: 'Access Card',
-      label: 'Access Card / Key',
-    },
-  ];
-
-  // =========================================================
-  // DROPDOWN OPTIONS
-  // =========================================================
-
-  conditionOptions: SelectOption[] = [
-    {
-      label: 'New',
-      value: 'New',
-    },
-
-    {
-      label: 'Good',
-      value: 'Good',
-    },
-
-    {
-      label: 'Used',
-      value: 'Used',
-    },
-
-    {
-      label: 'Damaged',
-      value: 'Damaged',
-    },
-  ];
-
-  locationOptions: SelectOption[] = [
-    {
-      label: 'Office (HQ - Chennai)',
-      value: 'Office (HQ - Chennai)',
-    },
-
-    {
-      label: 'Branch Office',
-      value: 'Branch Office',
-    },
-
-    {
-      label: 'Remote (WFH)',
-      value: 'Remote (WFH)',
-    },
-  ];
-
-  assignedByOptions: SelectOption[] = [
-    {
-      label: 'IT Admin (Sarah Mitchell)',
-      value: 'IT Admin (Sarah Mitchell)',
-    },
-
-    {
-      label: 'HR Operations',
-      value: 'HR Operations',
-    },
-
-    {
-      label: 'Admin Support',
-      value: 'Admin Support',
-    },
-  ];
-
-  statusOptions: SelectOption[] = [
-    {
-      label: 'Requested',
-      value: 'Requested',
-    },
-
-    {
-      label: 'Approved',
-      value: 'Approved',
-    },
-
-    {
-      label: 'Assigned',
-      value: 'Assigned',
-    },
-
-    {
-      label: 'Returned',
-      value: 'Returned',
-    },
-
-    {
-      label: 'Damaged',
-      value: 'Damaged',
-    },
-  ];
-
-  // =========================================================
-  // TABLE CONFIGURATION
-  // =========================================================
-
-  columns = [
-    {
-      field: 'sno',
-      header: 'S.No',
-      sortable: false,
-      width: '60px',
-    },
-
-    {
-      field: 'empName',
-      header: 'Employee',
-      sortable: true,
-      type: 'avatarText',
-      avatarField: 'avatar',
-      subField: 'empSub',
-    },
-
-    {
-      field: 'type',
-      header: 'Asset Type & Model',
-      sortable: true,
-      type: 'iconTitleSub',
-      iconField: 'typeIcon',
-      subField: 'model',
-    },
-
-    {
-      field: 'assetId',
-      header: 'Asset Tag & Serial #',
-      sortable: false,
-      type: 'tagSerial',
-      tagField: 'assetId',
-      serialField: 'serial',
-    },
-
-    {
-      field: 'assignedDate',
-      header: 'Assigned Date & By',
-      sortable: true,
-      type: 'dateBy',
-      dateField: 'assignedDateDisplay',
-      byField: 'assignedBy',
-    },
-
-    {
-      field: 'condition',
-      header: 'Condition & Location',
-      sortable: false,
-      type: 'twoBadges',
-      firstField: 'condition',
-      secondField: 'location',
-    },
-
-    {
-      field: 'accessories',
-      header: 'Accessories',
-      sortable: false,
-      type: 'pillText',
-    },
-
-    {
-      field: 'returnDate',
-      header: 'Expected Return',
-      sortable: false,
-      type: 'text',
-      displayField: 'returnDateDisplay',
-    },
-
-    {
-      field: 'status',
-      header: 'Status',
-      sortable: true,
-      type: 'statusBadge',
-      statusClassField: 'statusClass',
-      statusIconField: 'statusIcon',
-    },
-
-    // ---------------------------------------------------------
-    // ACTION COLUMN — pill-actions style.
-    // Buttons live on the column itself (col.buttons), and the
-    // table renders them as segmented "pill-action-seg" buttons
-    // via visibleButtons()/onPillButton(). This fires
-    // (actionClick) the same way the icon-button 'actions' type
-    // did, so onTableAction()/onAction() below needs no changes.
-    // ---------------------------------------------------------
-    {
-      field: 'actions',
-      header: 'Action',
-      type: 'pill-actions',
-      width: '120px',
+      field: 'actions', header: 'ACTION', width: '150px', type: 'pill-actions',
       buttons: [
-        {
-          key: 'view',
-          label: 'View',
-          icon: 'ti ti-eye',
-          variant: 'outline' as const,
-          tooltip: 'View asset details',
-        },
-        {
-          key: 'edit',
-          label: 'Edit',
-          icon: 'ti ti-pencil',
-          tooltip: 'Edit asset',
-        },
+        { key: 'view', label: '', icon: 'bi bi-eye', variant: 'outline', tooltip: 'View asset' },
+        { key: 'edit', icon: 'bi bi-pencil', tooltip: 'Edit asset' },
       ],
     },
   ];
 
-  // =========================================================
-  // DATA
-  // =========================================================
-
-  assets: AssetRow[] = [];
-
-  tableData: any[] = [];
-
-  // =========================================================
-  // FILTER
-  // =========================================================
-
-  activeFilter: 'all' | 'requested' | 'approved' | 'assigned' | 'returned' = 'all';
-
-  stageTabs: {
-    key: 'all' | 'requested' | 'approved' | 'assigned' | 'returned';
-
-    label: string;
-  }[] = [
-    {
-      key: 'all',
-      label: 'All Assets',
-    },
-
-    {
-      key: 'requested',
-      label: 'Requested',
-    },
-
-    {
-      key: 'approved',
-      label: 'Approved',
-    },
-
-    {
-      key: 'assigned',
-      label: 'Assigned (In Use)',
-    },
-
-    {
-      key: 'returned',
-      label: 'Returned',
-    },
-  ];
-
-  // =========================================================
-  // KPI
-  // =========================================================
-
-  kpis = {
-    totalProvisioned: 0,
-
-    pendingApproval: 0,
-
-    activeInUse: 0,
-
-    returnedOrDamaged: 0,
-  };
-
-  // =========================================================
-  // REACTIVE FORMS
-  // =========================================================
-
-  addForm!: FormGroup;
-
-  editForm!: FormGroup;
-
-  // =========================================================
-  // VIEW MODAL
-  // =========================================================
-
-  viewData: any = null;
-
-  viewWorkflowSteps: {
-    key: string;
-    icon: string;
-    label: string;
-    state: '' | 'completed' | 'active';
-  }[] = [];
-
-  // =========================================================
-  // EDITING ROW
-  // =========================================================
-
-  editingRow: AssetRow | null = null;
-
-  // =========================================================
-  // INIT
-  // =========================================================
-
-  ngOnInit(): void {
-    this.createForms();
-
-    this.assets = [
-      {
-        sno: 1,
-        empName: 'Kavitha Raman',
-        empId: 'EMP-2026-041',
-        dept: 'Design',
-        role: 'UI/UX Designer',
-        avatar: './assets/img/profile-1.jpg',
-        type: 'Laptop',
-        model: 'MacBook Pro 16" (M3 Max, 36GB RAM, 1TB SSD)',
-        assetId: 'AST-MAC-2026-081',
-        serial: 'C02G4109Q05P',
-        assignedDate: '2026-03-15',
-        assignedBy: 'IT Admin (Sarah Mitchell)',
-        condition: 'New',
-        accessories: 'Magic Mouse, 140W USB-C Charger, Laptop Bag',
-        location: 'Office (HQ - Chennai)',
-        returnDate: '',
-        status: 'Assigned',
-        remarks: 'High-performance workstation for design team.',
-      },
-
-      {
-        sno: 2,
-        empName: 'Rahul Verma',
-        empId: 'EMP-2026-042',
-        dept: 'Engineering',
-        role: 'Backend Engineer',
-        avatar: './assets/img/profile-2.jpg',
-        type: 'Monitor',
-        model: 'Dell UltraSharp 27" 4K USB-C Monitor',
-        assetId: 'AST-MON-2026-014',
-        serial: 'CN-0V283H-74261',
-        assignedDate: '2026-04-01',
-        assignedBy: 'IT Hardware Lead',
-        condition: 'Good',
-        accessories: 'HDMI Cable, DisplayPort, Power Cable',
-        location: 'Office (HQ - Chennai)',
-        returnDate: '',
-        status: 'Approved',
-        remarks: 'Allocation approved by Tech Lead, awaiting employee pickup.',
-      },
-
-      {
-        sno: 3,
-        empName: 'Siddharth Nair',
-        empId: 'EMP-2026-043',
-        dept: 'iOS Dev',
-        role: 'iOS App Developer',
-        avatar: './assets/img/profile-3.jpg',
-        type: 'Mobile',
-        model: 'iPhone 15 Pro 256GB (Test Device)',
-        assetId: 'AST-MOB-2026-009',
-        serial: 'F2LXW099PN23',
-        assignedDate: '2026-03-20',
-        assignedBy: 'IT Support',
-        condition: 'Used',
-        accessories: 'USB-C Cable, Protective Case',
-        location: 'Remote (WFH)',
-        returnDate: '2026-09-20',
-        status: 'Requested',
-        remarks: 'Requested for iOS build & testing.',
-      },
-
-      {
-        sno: 4,
-        empName: 'Priya Sundaram',
-        empId: 'EMP-2026-044',
-        dept: 'Finance',
-        role: 'Financial Analyst',
-        type: 'Access Card',
-        model: 'Biometric Smart RFID Access Card',
-        assetId: 'ACC-BLR-8819',
-        serial: 'RFID-994821',
-        assignedDate: '2026-01-10',
-        assignedBy: 'HR Operations',
-        condition: 'Good',
-        accessories: 'Company Lanyard, Card Holder',
-        location: 'Branch Office',
-        returnDate: '2026-03-31',
-        status: 'Returned',
-        remarks: 'Returned upon employee exit clearance.',
-      },
-
-      {
-        sno: 5,
-        empName: 'Ananya Sundaram',
-        empId: 'EMP-2026-045',
-        dept: 'Design',
-        role: 'UI/UX Designer',
-        type: 'Headset',
-        model: 'Jabra Evolve2 65 Wireless Headset',
-        assetId: 'AST-HDS-2026-033',
-        serial: 'JAB-772910',
-        assignedDate: '2026-02-05',
-        assignedBy: 'IT Support',
-        condition: 'Damaged',
-        accessories: 'Charging Stand, USB Dongle',
-        location: 'Office (HQ - Chennai)',
-        returnDate: '',
-        status: 'Damaged',
-        remarks: 'Mic boom arm faulty; sent to vendor repair.',
-      },
-    ];
-
-    this.recalcKpis();
-
-    this.applyFilter();
-  }
-
-  // =========================================================
-  // CREATE FORMS
-  // =========================================================
-
-  private createForms(): void {
-    // -------------------------------------------------------
-    // ADD / REQUEST FORM
-    // -------------------------------------------------------
-
-    this.addForm = this.fb.group({
-      empKey: ['', Validators.required],
-
-      type: ['Laptop', Validators.required],
-
-      model: ['', [Validators.required, Validators.minLength(2)]],
-
-      assetId: ['', Validators.required],
-
-      serial: ['', Validators.required],
-
-      assignedDate: [this.todayIso(), Validators.required],
-
-      assignedBy: ['IT Admin (Sarah Mitchell)', Validators.required],
-
-      condition: ['New', Validators.required],
-
-      accessories: [''],
-
-      location: ['Office (HQ - Chennai)', Validators.required],
-
-      returnDate: [''],
-
-      status: ['Assigned', Validators.required],
-
-      remarks: [''],
-    });
-
-    // -------------------------------------------------------
-    // EDIT FORM
-    // -------------------------------------------------------
-
-    this.editForm = this.fb.group({
-      empName: ['', Validators.required],
-
-      empInfo: [''],
-
-      type: ['Laptop', Validators.required],
-
-      model: ['', Validators.required],
-
-      assetId: ['', Validators.required],
-
-      serial: ['', Validators.required],
-
-      assignedDate: ['', Validators.required],
-
-      assignedBy: ['', Validators.required],
-
-      condition: ['New', Validators.required],
-
-      accessories: [''],
-
-      location: ['Office (HQ - Chennai)', Validators.required],
-
-      returnDate: [''],
-
-      status: ['Assigned', Validators.required],
-
-      remarks: [''],
-    });
-  }
-
-  // =========================================================
-  // AFTER VIEW INIT
-  // =========================================================
-
-  ngAfterViewInit(): void {
-    if (typeof bootstrap !== 'undefined') {
-      this.provisionModal = bootstrap.Modal.getOrCreateInstance(
-        this.provisionAssetModalRef.nativeElement,
-        { backdrop: true, keyboard: true },
-      );
-
-      this.viewModal = bootstrap.Modal.getOrCreateInstance(
-        this.viewAssetModalRef.nativeElement,
-        { backdrop: true, keyboard: true },
-      );
-
-      this.editModal = bootstrap.Modal.getOrCreateInstance(
-        this.editAssetModalRef.nativeElement,
-        { backdrop: true, keyboard: true },
-      );
+  readonly employeeOptions = EMPLOYEES.map((e) => ({ label: e.name, value: e.empId, sub: `${e.empId} • ${e.role}` }));
+  readonly typeOptions = ASSET_TYPES.map((t) => ({ label: t.label, value: t.value, icon: t.icon }));
+  readonly statusOptions = opts('Requested', 'Approved', 'Assigned', 'Returned', 'Damaged');
+  readonly conditionOptions = opts('New', 'Good', 'Used', 'Damaged');
+  readonly locationOptions = opts('Office (HQ - Chennai)', 'Branch Office', 'Remote (WFH)');
+  readonly assignedByOptions = opts('IT Admin (Sarah Mitchell)', 'HR Operations', 'Admin Support');
+
+  readonly assets = signal<Asset[]>(ASSETS);
+
+  // ---------------------------------------------------------------- filters
+  readonly type = signal<AssetType | null>(null);
+  readonly statusFilter = signal<StatusFilter>(null);
+
+  private readonly allRows = computed<AssetRow[]>(() =>
+    this.assets().map((a, i) => {
+      const e = employee(a.empId);
+      return { ...a, sno: i + 1, empName: e?.name ?? a.empId, role: e?.role ?? '', dept: e?.dept ?? '', avatar: e?.avatar ?? '' };
+    }),
+  );
+
+  readonly rows = computed(() => {
+    const t = this.type();
+    const st = this.statusFilter();
+    return this.allRows()
+      .filter((r) => (!t || r.type === t) && matchesStatus(r.status, st))
+      .map((r, i) => ({ ...r, sno: i + 1 }));
+  });
+
+  /** tab counts follow the status filter, so the numbers match what you'll see */
+  readonly typeCounts = computed(() => {
+    const st = this.statusFilter();
+    const counts: Record<string, number> = {};
+    for (const a of this.assets()) {
+      if (matchesStatus(a.status, st)) counts[a.type] = (counts[a.type] ?? 0) + 1;
     }
-  }
+    return counts;
+  });
 
-  // =========================================================
-  // HELPERS
-  // =========================================================
-
-  private todayIso(): string {
-    return new Date().toISOString().slice(0, 10);
-  }
-
-  private formatDateForDisplay(str: string): string {
-    if (!str) {
-      return 'N/A';
-    }
-
-    const d = new Date(str);
-
-    if (isNaN(d.getTime())) {
-      return str;
-    }
-
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-
-    const day = String(d.getDate()).padStart(2, '0');
-
-    return `${day}-${months[d.getMonth()]}-${d.getFullYear()}`;
-  }
-
-  private assetIcon(type: AssetType): string {
-    switch (type) {
-      case 'Laptop':
-        return 'bi-laptop text-white';
-
-      case 'Desktop':
-        return 'bi-pc-display text-white';
-
-      case 'Monitor':
-        return 'bi-display text-white';
-
-      case 'Mobile':
-        return 'bi-phone text-white';
-
-      case 'Headset':
-        return 'bi-headphones text-white';
-
-      case 'ID Card':
-        return 'bi-person-badge text-white';
-
-      case 'Access Card':
-        return 'bi-key-fill text-white';
-
-      default:
-        return 'bi-box-seam text-white';
-    }
-  }
-
-  private statusMeta(status: AssetStatus): {
-    cls: string;
-    icon: string;
-  } {
-    switch (status) {
-      case 'Requested':
-        return {
-          cls: 'asset-status-requested',
-          icon: 'bi-hourglass-split',
-        };
-
-      case 'Approved':
-        return {
-          cls: 'asset-status-approved',
-          icon: 'bi-hand-thumbs-up-fill',
-        };
-
-      case 'Assigned':
-        return {
-          cls: 'asset-status-assigned',
-          icon: 'bi-check-circle-fill',
-        };
-
-      case 'Returned':
-        return {
-          cls: 'asset-status-returned',
-          icon: 'bi-box-arrow-in-left',
-        };
-
-      case 'Damaged':
-        return {
-          cls: 'asset-status-damaged',
-          icon: 'bi-exclamation-triangle-fill',
-        };
-
-      default:
-        return {
-          cls: '',
-          icon: '',
-        };
-    }
-  }
-
-  // =========================================================
-  // FORM VALIDATION HELPER
-  // =========================================================
-
-  private markFormTouched(form: FormGroup): void {
-    Object.keys(form.controls).forEach((controlName) => {
-      form.controls[controlName].markAsTouched();
-    });
-  }
-
-  // =========================================================
-  // KPI
-  // =========================================================
-
-  private recalcKpis(): void {
-    this.kpis.totalProvisioned = this.assets.length;
-
-    this.kpis.pendingApproval = this.assets.filter((a) => a.status === 'Requested').length;
-
-    this.kpis.activeInUse = this.assets.filter((a) => a.status === 'Assigned').length;
-
-    this.kpis.returnedOrDamaged = this.assets.filter(
-      (a) => a.status === 'Returned' || a.status === 'Damaged',
-    ).length;
-  }
-
-  // =========================================================
-  // TAB COUNTS
-  // =========================================================
-
-  get tabCounts(): Record<string, number> {
+  readonly stats = computed(() => {
+    const list = this.assets();
     return {
-      all: this.assets.length,
-
-      requested: this.assets.filter((a) => a.status === 'Requested').length,
-
-      approved: this.assets.filter((a) => a.status === 'Approved').length,
-
-      assigned: this.assets.filter((a) => a.status === 'Assigned').length,
-
-      returned: this.assets.filter((a) => a.status === 'Returned' || a.status === 'Damaged').length,
+      total: list.length,
+      pending: list.filter((a) => matchesStatus(a.status, 'pending')).length,
+      inUse: list.filter((a) => a.status === 'Assigned').length,
+      closed: list.filter((a) => matchesStatus(a.status, 'closed')).length,
     };
+  });
+
+  toggleStatus(s: StatusFilter): void {
+    this.statusFilter.set(this.statusFilter() === s ? null : s);
   }
 
-  // =========================================================
-  // FILTER
-  // =========================================================
-
-  selectFilter(key: 'all' | 'requested' | 'approved' | 'assigned' | 'returned'): void {
-    this.activeFilter = key;
-
-    this.applyFilter();
+  onAction(e: { action: string; row: AssetRow }): void {
+    if (e.action === 'view') this.viewing.set(e.row.id);
+    if (e.action === 'edit') this.openEdit(e.row);
   }
 
-  private applyFilter(): void {
-    let filtered = this.assets;
+  // ---------------------------------------------------------------- view modal
+  private readonly viewing = signal<number | null>(null);
 
-    if (this.activeFilter === 'requested') {
-      filtered = this.assets.filter((a) => a.status === 'Requested');
-    } else if (this.activeFilter === 'approved') {
-      filtered = this.assets.filter((a) => a.status === 'Approved');
-    } else if (this.activeFilter === 'assigned') {
-      filtered = this.assets.filter((a) => a.status === 'Assigned');
-    } else if (this.activeFilter === 'returned') {
-      filtered = this.assets.filter((a) => a.status === 'Returned' || a.status === 'Damaged');
-    }
+  /** looked up live, so the modal reflects a lifecycle change made from inside it */
+  readonly viewRow = computed(() => this.allRows().find((r) => r.id === this.viewing()) ?? null);
 
-    this.tableData = filtered.map((a, idx) => {
-      const meta = this.statusMeta(a.status);
+  closeView(): void {
+    this.viewing.set(null);
+  }
 
-      return {
-        ...a,
+  nextStep(status: AssetStatus) {
+    return NEXT_STEP[status] ?? null;
+  }
 
-        sno: idx + 1,
-
-        empSub: `${a.empId} • ${a.role}`,
-
-        typeIcon: this.assetIcon(a.type),
-
-        assignedDateDisplay: this.formatDateForDisplay(a.assignedDate),
-
-        returnDateDisplay: a.returnDate
-          ? this.formatDateForDisplay(a.returnDate)
-          : 'N/A (Permanent)',
-
-        statusClass: meta.cls,
-
-        statusIcon: meta.icon,
-      };
+  advance(row: AssetRow): void {
+    const step = NEXT_STEP[row.status];
+    if (!step) return;
+    this.patch(row.id, {
+      status: step.to,
+      ...(step.to === 'Returned' && !row.returnDate ? { returnDate: todayIso() } : {}),
     });
   }
 
-  // =========================================================
-  // ADD / REQUEST ASSET
-  // =========================================================
-
-  openProvisionModal(): void {
-    this.addForm.reset({
-      empKey: '',
-
-      type: 'Laptop',
-
-      model: '',
-
-      assetId: '',
-
-      serial: '',
-
-      assignedDate: this.todayIso(),
-
-      assignedBy: 'IT Admin (Sarah Mitchell)',
-
-      condition: 'New',
-
-      accessories: '',
-
-      location: 'Office (HQ - Chennai)',
-
-      returnDate: '',
-
-      status: 'Assigned',
-
-      remarks: '',
-    });
-
-    this.addForm.markAsPristine();
-
-    this.addForm.markAsUntouched();
-
-    this.provisionModal?.show();
+  markDamaged(row: AssetRow): void {
+    this.patch(row.id, { status: 'Damaged', condition: 'Damaged' });
   }
 
-  // =========================================================
-  // SAVE NEW ASSET
-  // =========================================================
-
-  saveNewAsset(): void {
-    if (this.addForm.invalid) {
-      this.markFormTouched(this.addForm);
-
-      return;
-    }
-
-    const formValue = this.addForm.getRawValue();
-
-    const emp = this.employees.find((e) => e.name === formValue.empKey);
-
-    if (!emp) {
-      this.addForm.get('empKey')?.setErrors({
-        invalidEmployee: true,
-      });
-
-      return;
-    }
-
-    const newRow: AssetRow = {
-      sno: this.assets.length + 1,
-
-      empName: emp.name,
-
-      empId: emp.empId,
-
-      dept: emp.dept,
-
-      role: emp.role,
-
-      type: formValue.type as AssetType,
-
-      model: formValue.model.trim(),
-
-      assetId: formValue.assetId.trim(),
-
-      serial: formValue.serial.trim(),
-
-      assignedDate: formValue.assignedDate,
-
-      assignedBy: formValue.assignedBy,
-
-      condition: formValue.condition,
-
-      accessories: formValue.accessories?.trim() || '',
-
-      location: formValue.location,
-
-      returnDate: formValue.returnDate || '',
-
-      status: formValue.status,
-
-      remarks: formValue.remarks?.trim() || '',
-    };
-
-    this.assets.push(newRow);
-
-    this.recalcKpis();
-
-    this.applyFilter();
-
-    this.provisionModal?.hide();
+  /** stepper state for each lifecycle stage */
+  stepState(status: AssetStatus, stage: AssetStatus): 'completed' | 'active' | '' {
+    // a damaged asset got as far as Assigned, then left the normal flow
+    const at = status === 'Damaged' ? LIFECYCLE.indexOf('Assigned') : LIFECYCLE.indexOf(status);
+    const i = LIFECYCLE.indexOf(stage);
+    if (i < at || (status === 'Returned' && i === at)) return 'completed';
+    return i === at ? 'active' : '';
   }
 
-  // =========================================================
-  // VIEW ASSET
-  // =========================================================
-
-  openViewAsset(row: AssetRow): void {
-    const meta = this.statusMeta(row.status);
-
-    this.viewData = {
-      ...row,
-
-      typeIcon: this.assetIcon(row.type),
-
-      assignedDateDisplay: this.formatDateForDisplay(row.assignedDate),
-
-      returnDateDisplay: row.returnDate ? this.formatDateForDisplay(row.returnDate) : 'N/A',
-
-      statusClass: meta.cls,
-
-      accessoriesList: (row.accessories || 'Standard accessories')
-        .split(',')
-        .map((a) => a.trim())
-        .filter(Boolean),
-    };
-
-    const stageOrder = ['Requested', 'Approved', 'Assigned', 'Returned', 'Inspected'];
-
-    const icons = ['bi-check', 'bi-check', 'bi-laptop', 'bi-box-arrow-in-left', 'bi-search'];
-
-    let activeIndex = 0;
-
-    if (row.status === 'Requested') {
-      activeIndex = 0;
-    } else if (row.status === 'Approved') {
-      activeIndex = 1;
-    } else if (row.status === 'Assigned') {
-      activeIndex = 2;
-    } else if (row.status === 'Returned') {
-      activeIndex = 3;
-    } else {
-      activeIndex = 4;
-    }
-
-    this.viewWorkflowSteps = stageOrder.map((label, i) => ({
-      key: label.toLowerCase(),
-
-      icon: icons[i],
-
-      label,
-
-      state: i < activeIndex ? 'completed' : i === activeIndex ? 'active' : '',
-    }));
-
-    requestAnimationFrame(() => {
-      this.viewModal?.show();
-    });
+  accessoriesList(s: string): string[] {
+    return s.split(',').map((x) => x.trim()).filter(Boolean);
   }
 
-  // =========================================================
-  // EDIT ASSET
-  // =========================================================
+  // ---------------------------------------------------------------- add / edit modal
+  readonly formOpen = signal(false);
+  editingId: number | null = null;
 
-  openEditAsset(row: AssetRow): void {
-    this.editingRow = row;
+  readonly form = this.fb.nonNullable.group({
+    empId: ['', Validators.required],
+    type: ['Laptop' as AssetType, Validators.required],
+    model: ['', [Validators.required, Validators.maxLength(120)]],
+    assetTag: ['', Validators.required],
+    serial: ['', Validators.required],
+    assignedDate: ['', Validators.required], // DD/MM/YYYY from the calendar picker
+    assignedBy: ['IT Admin (Sarah Mitchell)', Validators.required],
+    condition: ['New' as Condition, Validators.required],
+    accessories: [''],
+    location: ['Office (HQ - Chennai)', Validators.required],
+    returnDate: [''],
+    status: ['Requested' as AssetStatus, Validators.required],
+    remarks: [''],
+  });
 
-    this.editForm.reset({
-      empName: row.empName,
+  openAdd(): void {
+    this.editingId = null;
+    this.form.reset({ type: this.type() ?? 'Laptop', assignedDate: isoToDmy(todayIso()) });
+    this.formOpen.set(true);
+  }
 
-      empInfo: `${row.empId} • ${row.dept}`,
-
+  openEdit(row: AssetRow): void {
+    this.editingId = row.id;
+    this.form.reset({
+      empId: row.empId,
       type: row.type,
-
       model: row.model,
-
-      assetId: row.assetId,
-
+      assetTag: row.assetTag,
       serial: row.serial,
-
-      assignedDate: row.assignedDate,
-
+      assignedDate: isoToDmy(row.assignedDate),
       assignedBy: row.assignedBy,
-
       condition: row.condition,
-
       accessories: row.accessories,
-
       location: row.location,
-
-      returnDate: row.returnDate,
-
+      returnDate: isoToDmy(row.returnDate),
       status: row.status,
-
       remarks: row.remarks,
     });
-
-    this.editForm.markAsPristine();
-
-    this.editForm.markAsUntouched();
-
-    this.editModal?.show();
+    this.formOpen.set(true);
   }
 
-  // =========================================================
-  // UPDATE ASSET
-  // =========================================================
+  closeForm(): void {
+    this.formOpen.set(false);
+  }
 
-  updateAsset(): void {
-    if (!this.editingRow) {
+  save(): void {
+    const tag = this.form.controls.assetTag;
+    const clash = this.assets().some(
+      (a) => a.id !== this.editingId && a.assetTag.toLowerCase() === tag.value.trim().toLowerCase(),
+    );
+    if (clash) tag.setErrors({ duplicate: true });
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    if (this.editForm.invalid) {
-      this.markFormTouched(this.editForm);
+    const v = this.form.getRawValue();
+    const asset = {
+      ...v,
+      model: v.model.trim(),
+      assetTag: v.assetTag.trim(),
+      serial: v.serial.trim(),
+      accessories: v.accessories.trim(),
+      remarks: v.remarks.trim(),
+      assignedDate: dmyToIso(v.assignedDate),
+      returnDate: dmyToIso(v.returnDate),
+    };
 
-      return;
+    if (this.editingId !== null) {
+      this.patch(this.editingId, asset);
+    } else {
+      this.assets.update((list) => [...list, { id: Math.max(0, ...list.map((a) => a.id)) + 1, ...asset }]);
     }
-
-    const formValue = this.editForm.getRawValue();
-
-    Object.assign(this.editingRow, {
-      empName: formValue.empName.trim(),
-
-      type: formValue.type,
-
-      model: formValue.model.trim(),
-
-      assetId: formValue.assetId.trim(),
-
-      serial: formValue.serial.trim(),
-
-      assignedDate: formValue.assignedDate,
-
-      assignedBy: formValue.assignedBy.trim(),
-
-      condition: formValue.condition,
-
-      accessories: formValue.accessories?.trim() || '',
-
-      location: formValue.location,
-
-      returnDate: formValue.returnDate || '',
-
-      status: formValue.status,
-
-      remarks: formValue.remarks?.trim() || '',
-    });
-
-    this.recalcKpis();
-
-    this.applyFilter();
-
-    this.editModal?.hide();
-
-    this.editingRow = null;
+    this.closeForm();
   }
 
-  // =========================================================
-  // TABLE ACTION
-  // (fired by pill-actions' onPillButton -> (actionClick), same
-  //  payload shape as the old icon-button 'actions' type)
-  // =========================================================
-
-  onTableAction(event: { action: string; row: AssetRow }): void {
-    const original = this.assets.find((a) => a.assetId === event.row.assetId) || event.row;
-
-    switch (event.action) {
-      case 'view':
-        this.openViewAsset(original);
-
-        break;
-
-      case 'edit':
-        this.openEditAsset(original);
-
-        break;
-    }
+  error(name: string): string | null {
+    const c = this.form.get(name);
+    if (!c || !c.touched || c.valid) return null;
+    if (c.hasError('duplicate')) return 'This asset tag is already in use.';
+    return 'This field is required.';
   }
+
+  // ---------------------------------------------------------------- helpers
+  private patch(id: number, changes: Partial<Asset>): void {
+    this.assets.update((list) => list.map((a) => (a.id === id ? { ...a, ...changes } : a)));
+  }
+
+  typeIcon(t: AssetType): string {
+    return ASSET_TYPES.find((x) => x.value === t)?.icon ?? 'bi bi-box-seam';
+  }
+
+  statusMeta(s: AssetStatus) {
+    return STATUS_META[s];
+  }
+
+  initials(name: string): string {
+    return name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase();
+  }
+
+  fmtDate(iso: string): string {
+    return iso ? new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+  }
+}
+
+// ------------------------------------------------------------------ pure helpers
+
+function employee(empId: string): Employee | undefined {
+  return EMPLOYEES.find((e) => e.empId === empId);
+}
+
+function matchesStatus(s: AssetStatus, f: StatusFilter): boolean {
+  switch (f) {
+    case null: return true;
+    case 'pending': return s === 'Requested' || s === 'Approved';
+    case 'closed': return s === 'Returned' || s === 'Damaged';
+    default: return s === f;
+  }
+}
+
+function todayIso(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function isoToDmy(iso: string): string {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function dmyToIso(dmy: string): string {
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(dmy.trim());
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : '';
 }

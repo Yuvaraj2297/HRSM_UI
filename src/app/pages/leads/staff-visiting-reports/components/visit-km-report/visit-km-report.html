@@ -5,9 +5,7 @@
 
   <div class="report-filter-field">
     <label for="km_staff">Staff</label>
-    <p-select inputId="km_staff" [options]="staffOptions()" [ngModel]="staffId()"
-      (ngModelChange)="staffId.set($event)" name="staff" optionLabel="label" optionValue="value" [filter]="true"
-      filterBy="label" placeholder="Select staff" appendTo="body" styleClass="w-100" />
+    <app-select inputId="km_staff" [ngModel]="staffId()" (ngModelChange)="staffId.set($event)" name="staff" [options]="staffOptions()" optionLabel="label" optionValue="value" placeholder="Select staff" />
   </div>
 
   <div class="report-filter-field">

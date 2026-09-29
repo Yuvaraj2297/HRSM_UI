@@ -1,0 +1,164 @@
+/* <app-select> — global (ViewEncapsulation.None) because the panel lives
+   in <body>. Every rule is namespaced under .app-select*. The closed field
+   is a real .form-select, so it inherits the app's field look from classes.scss. */
+
+.app-select {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.app-select-trigger {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+
+  /* room for the ✕ next to the chevron */
+  &.has-clear { padding-right: 3.75rem; }
+
+  &:disabled { cursor: not-allowed; }
+}
+
+.app-select.is-open .app-select-trigger {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+.app-select-value {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &.is-placeholder { color: var(--text-muted); font-weight: 400; }
+}
+
+.app-select-clear {
+  position: absolute;
+  top: 50%;
+  right: 2.1rem;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 11px;
+  color: var(--text-muted);
+  transform: translateY(-50%);
+  cursor: pointer;
+
+  &:hover { background: var(--bg-muted); color: var(--danger); }
+}
+
+.app-select.is-sm .app-select-clear { right: 1.9rem; width: 18px; height: 18px; font-size: 10px; }
+
+/* ---------------------------------------------------------------- panel (in <body>) */
+.app-select-panel {
+  position: fixed;
+  z-index: 11000; /* above .modal-custom (10005) */
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(var(--black-rgb), 0.14);
+  overflow: hidden;
+  animation: app-select-in 0.12s ease;
+  font-size: 14px;
+
+  &.is-sm { font-size: 13px; }
+}
+
+@keyframes app-select-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.app-select-search {
+  position: relative;
+  flex-shrink: 0;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+
+  > i {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    font-size: 13px;
+    color: var(--text-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  > input {
+    width: 100%;
+    height: 34px;
+    padding: 4px 10px 4px 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: 13px;
+    color: var(--gh-heading);
+    outline: none;
+
+    &:focus { border-color: var(--primary); box-shadow: var(--focus-ring); }
+  }
+}
+
+.app-select-list {
+  flex: 1;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  outline: none;
+}
+
+.app-select-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--gh-heading);
+  cursor: pointer;
+
+  > i { flex-shrink: 0; font-size: 15px; color: var(--primary); }
+
+  &.is-active { background: var(--bg-soft); }
+
+  &.is-selected {
+    background: var(--primary-soft);
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+}
+
+.app-select-option-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  > span,
+  > small {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  > small { font-size: 11.5px; font-weight: 400; color: var(--text-muted); }
+}
+
+.app-select-empty {
+  padding: 14px 10px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--text-muted);
+}

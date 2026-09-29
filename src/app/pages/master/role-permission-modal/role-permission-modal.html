@@ -1,0 +1,123 @@
+<div class="modal fade role-perm-modal" tabindex="-1" #permModal aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+
+        <div class="modal-content d-flex flex-column">
+
+            <!-- =====================================================
+           HEAD
+      ====================================================== -->
+
+            <div class="rp-head">
+
+                <h5 class="rp-title">
+                    <span class="icon-chip"><i class="bi bi-shield-lock"></i></span>
+                    Role Permissions
+                    <span class="rp-role-name">{{ roleName() || '—' }}</span>
+                </h5>
+
+                <div class="rp-tools">
+
+                    <div class="rp-search-wrap">
+                        <i class="bi bi-search"></i>
+                        <input type="text" placeholder="Search module…" autocomplete="off" [value]="search()"
+                            (input)="search.set($any($event.target).value)" />
+                    </div>
+
+                    <span class="rp-count-chip">
+                        <i class="bi bi-shield-check"></i>
+                        Selected: <strong>{{ selectedCount() }}</strong>
+                    </span>
+
+                    <div class="rp-links">
+                        <a role="button" tabindex="0" class="rp-link-primary" (click)="selectAll()"
+                            (keydown.enter)="selectAll()">Select All</a>
+                        <span class="rp-links-sep">|</span>
+                        <a role="button" tabindex="0" class="rp-link-muted" (click)="deselectAll()"
+                            (keydown.enter)="deselectAll()">Deselect All</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+           BODY
+      ====================================================== -->
+
+            <div class="rp-body">
+
+                <div class="rp-perm-wrapper">
+
+                    <div class="rp-perm-header">
+                        <div>Module</div>
+                        <div>Capabilities</div>
+                        <div class="text-center">All</div>
+                    </div>
+
+                    <div>
+
+                        @for (g of groups(); track g.name) {
+
+                        <div class="rp-group-label">
+                            <i class="bi" [class]="'bi ' + g.icon"></i>
+                            {{ g.name }}
+                        </div>
+
+                        @for (m of g.modules; track m.id) {
+
+                        <div class="rp-perm-row">
+
+                            <div class="rp-feature">{{ m.name }}</div>
+
+                            <div class="rp-caps">
+                                @for (c of m.caps; track c) {
+                                <label class="rp-check">
+                                    <input type="checkbox" [value]="value(m, c)" [checked]="isChecked(m, c)"
+                                        (change)="toggle(m, c)" />
+                                    {{ capLabels[c] }}
+                                </label>
+                                }
+                            </div>
+
+                            <div class="text-center">
+                                <span class="rp-check-all" role="button" tabindex="0" (click)="toggleRow(m)"
+                                    (keydown.enter)="toggleRow(m)">
+                                    {{ isRowAll(m) ? 'Deselect All' : 'Select All' }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        }
+
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+           FOOT
+      ====================================================== -->
+
+            <div class="rp-foot">
+
+                <button type="button" class="btn btn-secondary btn-sm" (click)="close()">Cancel</button>
+
+                <button type="button" class="btn btn-primary btn-sm" (click)="save()">
+                    <i class="ti ti-device-floppy"></i>
+                    Save Permissions
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

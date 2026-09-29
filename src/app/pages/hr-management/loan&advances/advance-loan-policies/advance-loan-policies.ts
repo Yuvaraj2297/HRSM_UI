@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import {
   PrimeDataTable,
   PrimeTableColumn,
@@ -9,6 +8,7 @@ import {
   PrimeTableActions
 } from '../../../../shared/primedatatable/primedatatable';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface LoanPolicyScheme {
   id: number;
   sno?: number;
@@ -26,7 +26,7 @@ export interface LoanPolicyScheme {
 @Component({
   selector: 'app-advance-loan-policies',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SelectModule, PrimeDataTable],
+  imports: [AppSelect, CommonModule, FormsModule, ReactiveFormsModule, PrimeDataTable],
   templateUrl: './advance-loan-policies.html',
   styleUrl: './advance-loan-policies.scss',
 })
