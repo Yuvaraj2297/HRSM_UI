@@ -27,7 +27,7 @@ export interface DateHeader {
 }
 
 export interface StatusBadge {
-  cls: 'full-day' | 'half-day' | 'absent' | 'weekoff';
+  cls: 'status-approved' | 'status-pending' | 'status-rejected' | 'status-muted';
   text: string;
   icon: string;
 }
@@ -147,7 +147,7 @@ export class PunchinReport implements OnInit {
   selectedEmp: EmployeePunchRow | null = null;
   selectedDateStr: string = '';
   selectedDateHeader: DateHeader | null = null;
-  selectedStatusBadge: StatusBadge = { cls: 'full-day', text: 'Full Day', icon: 'bi-check-circle-fill' };
+  selectedStatusBadge: StatusBadge = { cls: 'status-approved', text: 'Full Day', icon: 'bi-check-circle-fill' };
   selectedDayHoursLogged: string = '';
   timelinePunches: TimelinePunchDisplay[] = [];
   activeActionDropdownIndex: number | null = null;
@@ -503,19 +503,19 @@ export class PunchinReport implements OnInit {
     const dt = new Date(`${dateStr}T00:00:00`);
     const dow = dt.getDay();
     if (dow === 0 || (dow === 6 && empId % 3 === 0)) {
-      return { cls: 'weekoff', text: 'Week Off', icon: 'bi-moon-stars-fill' };
+      return { cls: 'status-muted', text: 'Week Off', icon: 'bi-moon-stars-fill' };
     }
     if (ps.length === 0) {
-      return { cls: 'absent', text: 'Absent', icon: 'bi-x-circle-fill' };
+      return { cls: 'status-rejected', text: 'Absent', icon: 'bi-x-circle-fill' };
     }
     if (ps.length === 2) {
       let diff = this.parseMinutes(ps[1].time) - this.parseMinutes(ps[0].time);
       if (diff < 0) diff += 1440;
       if (diff < 360) {
-        return { cls: 'half-day', text: 'Half Day', icon: 'bi-hourglass-split' };
+        return { cls: 'status-pending', text: 'Half Day', icon: 'bi-hourglass-split' };
       }
     }
-    return { cls: 'full-day', text: 'Full Day', icon: 'bi-check-circle-fill' };
+    return { cls: 'status-approved', text: 'Full Day', icon: 'bi-check-circle-fill' };
   }
 
   private parseMinutes(t: string): number {

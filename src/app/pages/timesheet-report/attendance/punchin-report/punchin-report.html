@@ -1,193 +1,129 @@
 <main class="punchin-report-page">
-  <!-- =========================================================
-       PAGE TITLE & BREADCRUMB
-  ========================================================== -->
-  <!-- <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
-    <div>
-      <h1 class="page-title mb-1">Punch In Reports</h1>
-      <nav class="d-flex align-items-center gap-2 text-neutral text-nowrap breadcrumb-text">
-        <i class="bi bi-clock-history"></i>
-        <span>Attendance Management</span>
-        <i class="bi bi-chevron-right"></i>
-        <span class=" text-dark">Punch In Reports</span>
-      </nav>
-    </div>
-  </div> -->
-
-  <!-- =========================================================
-       FILTER CONTROLS ROW
-  ========================================================== -->
+  <!-- Filters -->
   <div class="card-custom mb-3 p-3">
     <div class="row g-3 align-items-end">
-      <!-- Date Range -->
       <div class="col-md-4">
-        <label class="form-label text-muted small fw-semibold mb-1">Date Range</label>
-        <div class="date-picker date-range-picker position-relative">
-          <input type="text" class="date-input form-control" [value]="dateRangeDisplay" readonly
-            placeholder="From date — To date" />
-          <i class="bi bi-calendar3 position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
+        <label class="form-label">Date Range</label>
+        <div class="mt-search-wrap">
+          <i class="bi bi-calendar3 mt-search-icon"></i>
+          <input type="text" class="form-control mt-search-input" [value]="dateRangeDisplay" readonly placeholder="From date — To date" />
         </div>
       </div>
 
-      <!-- Branch (PrimeNG p-select) -->
       <div class="col-md-4">
-        <label class="form-label text-muted small fw-semibold mb-1">Branch</label>
-        <app-select class="punch-branch-pselect" [(ngModel)]="selectedBranch" [options]="branchOptions" optionLabel="label" optionValue="value" placeholder="Choose Branch" />
+        <label class="form-label">Branch</label>
+        <app-select [(ngModel)]="selectedBranch" [options]="branchOptions" optionLabel="label" optionValue="value" placeholder="Choose Branch" />
       </div>
 
-      <!-- Search Button -->
       <div class="col-md-4">
-        <button type="button" class="btn btn-primary punch-search-btn" (click)="onSearchBtnClick()">
+        <button type="button" class="btn btn-primary" (click)="onSearchBtnClick()">
           <i class="bi bi-search"></i> Search
         </button>
       </div>
     </div>
   </div>
 
-  <!-- =========================================================
-       ACTIVE FILTERS BAR
-  ========================================================== -->
+  <!-- Active filters -->
   @if (activeBranchFilter) {
-  <div class="active-filters-bar mb-3 show">
-    <span class="active-filters-label">
-      <i class="bi bi-funnel-fill me-1"></i>Active Filters:
+  <div class="ui-filter-bar mb-3">
+    <span class="ui-filter-label"><i class="bi bi-funnel-fill"></i> Active Filters:</span>
+    <span class="ui-filter-chip">
+      <span class="chip-key">Branch:</span> {{ activeBranchFilter }}
+      <button type="button" (click)="clearBranchFilter()" aria-label="Remove branch filter">&times;</button>
     </span>
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-      <span class="filter-chip">
-        <span class="chip-key">Branch:</span> {{ activeBranchFilter }}
-        <button type="button" class="chip-close" (click)="clearBranchFilter()" aria-label="Remove branch filter">
-          &times;
-        </button>
-      </span>
-      <button type="button" class="active-filters-clear" (click)="clearAllFilters()">
-        Clear All
-      </button>
-    </div>
+    <button type="button" class="ui-filter-clear" (click)="clearAllFilters()">Clear All</button>
   </div>
   }
 
-  <!-- =========================================================
-       REPORT TABLE CARD
-  ========================================================== -->
-  <div class="card-custom p-0" id="punchReportTableWrap">
-    <!-- Card Head & Toolbar -->
-    <div class="card-head d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="icon-chip">
-          <i class="bi bi-clipboard2-pulse"></i>
-        </div>
-        <div>
-          <h3 class="card-title mb-0 fs-6  text-dark">Daily Punch Report</h3>
-        </div>
-      </div>
+  <!-- Report table -->
+  <section class="card-custom overflow-hidden">
+    <header class="card-custom-header">
+      <span class="card-header-icon"><i class="bi bi-clipboard2-pulse"></i></span>
+      <h3 class="card-custom-title">Daily Punch Report</h3>
 
-      <!-- Toolbar Right Controls -->
-      <div class="d-flex align-items-center gap-2 flex-wrap">
-        <!-- Search in table -->
-        <div class="search-input-wrap position-relative">
-          <input type="text" class="form-control form-control-sm table-search-input ps-4"
-            placeholder="Search records..." [(ngModel)]="searchQuery" (input)="applyFilters()" />
-          <i class="bi bi-search position-absolute start-0 top-50 translate-middle-y ms-2 text-muted small"></i>
+      <div class="card-header-actions">
+        <div class="mt-search-wrap">
+          <i class="bi bi-search mt-search-icon"></i>
+          <input type="text" class="form-control form-control-sm mt-search-input" placeholder="Search records..." [(ngModel)]="searchQuery" (input)="applyFilters()" />
         </div>
 
-        <!-- Columns Button -->
         <button type="button" class="btn-tool btn-columns" (click)="triggerToast('Column settings panel')">
           <i class="bi bi-eye"></i>Columns
         </button>
 
-        <!-- Export Dropdown -->
-        <div class="position-relative">
-          <button type="button" class="btn-tool btn-export"
-            (click)="$event.stopPropagation(); exportDropdownOpen = !exportDropdownOpen">
-            <i class="bi bi-download"></i>Export
-            <i class="bi bi-chevron-down" style="font-size: 10px;"></i>
+        <div class="ui-menu-wrap">
+          <button type="button" class="btn-tool btn-export" (click)="$event.stopPropagation(); exportDropdownOpen = !exportDropdownOpen">
+            <i class="bi bi-download"></i>Export <i class="bi bi-chevron-down"></i>
           </button>
           @if (exportDropdownOpen) {
-          <div class="mt-export-dropdown shadow show" role="menu">
-            <button type="button" class="mt-export-item" (click)="exportCSV()"><i
-                class="bi bi-filetype-csv me-2"></i>CSV</button>
-            <button type="button" class="mt-export-item" (click)="exportExcel()"><i
-                class="bi bi-filetype-xlsx me-2"></i>Excel</button>
-            <button type="button" class="mt-export-item" (click)="exportPDF()"><i
-                class="bi bi-filetype-pdf me-2"></i>PDF</button>
-            <button type="button" class="mt-export-item" (click)="printTable()"><i
-                class="bi bi-printer me-2"></i>Print</button>
+          <div class="ui-menu" role="menu">
+            <button type="button" class="ui-menu-item" (click)="exportCSV()"><i class="bi bi-filetype-csv"></i>CSV</button>
+            <button type="button" class="ui-menu-item" (click)="exportExcel()"><i class="bi bi-filetype-xlsx"></i>Excel</button>
+            <button type="button" class="ui-menu-item" (click)="exportPDF()"><i class="bi bi-filetype-pdf"></i>PDF</button>
+            <button type="button" class="ui-menu-item" (click)="printTable()"><i class="bi bi-printer"></i>Print</button>
           </div>
           }
         </div>
       </div>
-    </div>
+    </header>
 
-    <!-- Wide Matrix Table Responsive Wrap -->
-    <div class="table-responsive table-modern-wrap overflow-auto column-border">
-      <table class="punch-table w-100 mb-0">
+    <div class="data-table-wrap rounded-0 border-0">
+      <table class="data-table data-table-sm data-table-bordered punch-table">
         <thead>
           <tr>
-            <th class="text-nowrap sticky-col col-sno" style="width: 50px;">S.No</th>
-            <th class="text-nowrap sticky-col col-emp" style="min-width: 190px;">Employee</th>
-            <th class="text-nowrap sticky-col col-role" style="min-width: 150px;">Roles</th>
+            <th class="is-sticky col-sno">S.No</th>
+            <th class="is-sticky col-emp">Employee</th>
+            <th class="is-sticky col-role">Roles</th>
             @for (hdr of dateHeaders; track hdr.key) {
-            <th class="date-col-header">
-              <div class="date-label">{{ hdr.full }}</div>
-              <div class="day-label">{{ hdr.day }}</div>
+            <th class="col-date">
+              <div>{{ hdr.full }}</div>
+              <div class="ui-cell-sub">{{ hdr.day }}</div>
             </th>
             }
           </tr>
         </thead>
-        <tbody id="pgBody">
+        <tbody>
           @for (row of paginatedEmployees; track row.id; let idx = $index) {
-          <tr class="punch-table-row">
-            <!-- S.No -->
-            <td class="sticky-col col-sno text-center">
-              <span class="sno-value">{{ (currentPage - 1) * pageSize + idx + 1 }}</span>
-            </td>
+          <tr>
+            <td class="is-sticky col-sno">{{ (currentPage - 1) * pageSize + idx + 1 }}</td>
 
-            <!-- Employee -->
-            <td class="sticky-col col-emp">
+            <td class="is-sticky col-emp text-start">
               <div class="d-flex align-items-center gap-2">
-                <img [src]="'./assets/img/' + row.avatar" class="avatar-sm rounded-circle"
-                  style="width: 34px; height: 34px; object-fit: cover;" alt="Avatar" />
+                <img [src]="'./assets/img/' + row.avatar" class="ui-avatar" alt="" />
                 <div>
-                  <div class="person-name">{{ row.name }}</div>
-                  <div class="emp-id">{{ row.emp_id }}</div>
+                  <div class="cell-strong">{{ row.name }}</div>
+                  <div class="ui-cell-sub">{{ row.emp_id }}</div>
                 </div>
               </div>
             </td>
 
-            <!-- Roles -->
-            <td class="sticky-col col-role">
-              <div>
-                <div class="fw-semibold text-dark" style="font-size: 13px;">{{ row.role }}</div>
-                <div style="font-size: 11.5px; color: var(--ink-500, var(--neutral-500));">{{ row.sub_role }}</div>
-              </div>
+            <td class="is-sticky col-role text-start">
+              <div class="cell-strong">{{ row.role }}</div>
+              <div class="ui-cell-sub">{{ row.sub_role }}</div>
             </td>
 
-            <!-- Dynamic Punch Date Cells -->
             @for (hdr of dateHeaders; track hdr.key) {
             @let punches = getPunchesFor(row.id, hdr.key);
-            <td class="punch-cell" (click)="openAttendanceLog(row, hdr.key)"
-              [title]="'Click to view timeline for ' + row.name + ' on ' + hdr.date">
+            <td class="punch-cell" role="button" (click)="openAttendanceLog(row, hdr.key)" [title]="'Click to view timeline for ' + row.name + ' on ' + hdr.date">
               @if (punches.length === 0) {
-              <span class="no-punch">&mdash;</span>
+              <span class="ui-cell-sub">&mdash;</span>
               } @else {
-              <div class="punch-times-wrap">
-                @for (p of punches; track $index) {
-                <span class="punch-time">
-                  {{ p.time }}
-                  @if (p.warn) {
-                  <span class="punch-warn" title="Irregular punch">&#9888;</span>
-                  }
-                </span>
+              @for (p of punches; track $index) {
+              <div class="cell-strong">
+                {{ p.time }}
+                @if (p.warn) {
+                <span class="ui-tag tone-warning" title="Irregular punch"><i class="bi bi-exclamation-triangle"></i></span>
                 }
               </div>
+              }
               }
             </td>
             }
           </tr>
           } @empty {
           <tr>
-            <td [attr.colspan]="3 + dateHeaders.length" class="text-center py-5 text-muted">
-              <i class="bi bi-inbox fs-2 opacity-50 d-block mb-2"></i>
+            <td [attr.colspan]="3 + dateHeaders.length" class="data-table-empty">
+              <i class="bi bi-inbox"></i>
               No employee records found matching your filters.
             </td>
           </tr>
@@ -196,24 +132,19 @@
       </table>
     </div>
 
-    <!-- Table Footer with Show Entries & Pagination -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 report-footer p-3 border-top">
+    <footer class="card-custom-footer justify-content-between">
       <div class="d-flex gap-2 align-items-center">
-        <span class="small text-muted text-nowrap">Show:</span>
+        <span class="field-hint m-0">Show:</span>
         <app-select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" [filter]="false" [showClear]="false" [options]="pageSizeOptions" size="sm" />
-        <span class="small text-muted text-nowrap">
-          Showing <strong>{{ startIndex }}</strong>&ndash;<strong>{{ endIndex }}</strong> of <strong>{{
-            filteredEmployees.length }}</strong>
+        <span class="field-hint m-0 text-nowrap">
+          Showing <strong>{{ startIndex }}</strong>&ndash;<strong>{{ endIndex }}</strong> of <strong>{{ filteredEmployees.length }}</strong>
         </span>
       </div>
 
-      <!-- Pagination Buttons -->
       <nav aria-label="Punch report pagination">
         <ul class="pagination pagination-sm mb-0">
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button type="button" class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
-              <i class="bi bi-chevron-left"></i>
-            </button>
+            <button type="button" class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
           </li>
           @for (page of [].constructor(totalPages); track $index) {
           <li class="page-item" [class.active]="currentPage === $index + 1">
@@ -221,300 +152,206 @@
           </li>
           }
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button type="button" class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
-              <i class="bi bi-chevron-right"></i>
-            </button>
+            <button type="button" class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
           </li>
         </ul>
       </nav>
-    </div>
-  </div>
+    </footer>
+  </section>
 </main>
 
-<!-- =========================================================
-     ATTENDANCE LOG OFFCANVAS (DRAWER FROM RIGHT)
-========================================================== -->
+<!-- Attendance log drawer -->
 @if (offcanvasOpen && selectedEmp) {
-<!-- Backdrop -->
-<div class="offcanvas-backdrop fade show" (click)="closeOffcanvas()"></div>
-
-<!-- Drawer -->
-<div class="offcanvas offcanvas-end show" tabindex="-1" id="attendanceLogOffcanvas" role="dialog" aria-modal="true">
-  <!-- Header -->
-  <div class="offcanvas-header d-flex align-items-center justify-content-between">
+<div class="ui-drawer-backdrop" (click)="closeOffcanvas()"></div>
+<aside class="ui-drawer ui-drawer--lg" role="dialog" aria-modal="true" aria-labelledby="alTitle">
+  <div class="ui-drawer-head">
     <div>
-      <div class="al-title text-muted">ATTENDANCE LOG</div>
-      <div class="al-sub text-dark ">{{ selectedEmp.name }} &middot; <span class="text-muted fw-normal"
-          style="font-size: 14px;">{{ selectedEmp.role }}</span></div>
+      <div class="ui-meta-label">Attendance Log</div>
+      <h5 class="ui-drawer-title" id="alTitle">{{ selectedEmp.name }} <span class="ui-page-sub m-0">&middot; {{ selectedEmp.role }}</span></h5>
     </div>
-    <button type="button" class="btn-close-custom" (click)="closeOffcanvas()" aria-label="Close offcanvas">
+    <button type="button" class="btn-close-custom" (click)="closeOffcanvas()" aria-label="Close">
       <i class="bi bi-x-lg"></i>
     </button>
   </div>
 
-  <!-- Body -->
-  <div class="offcanvas-body" id="alBody">
-    <!-- Day summary hero card -->
-    <div class="al-hero">
+  <div class="ui-drawer-body d-flex flex-column gap-3">
+    <!-- Day summary -->
+    <div class="ui-sec d-flex align-items-center justify-content-between gap-3">
       <div>
-        <div class="al-hero-date">{{ selectedDateHeader?.full }}</div>
-        <div class="al-hero-day text-muted">{{ selectedDateHeader?.day }}</div>
+        <div class="ui-row-title">{{ selectedDateHeader?.full }}</div>
+        <div class="ui-row-sub">{{ selectedDateHeader?.day }}</div>
+        <span class="status-pill mt-2" [ngClass]="selectedStatusBadge.cls">
+          <i class="bi" [ngClass]="selectedStatusBadge.icon"></i>&nbsp;{{ selectedStatusBadge.text }}
+        </span>
       </div>
       @if (selectedDayHoursLogged) {
-      <div class="al-hero-hours">
-        <div class="al-hero-hours-val">{{ selectedDayHoursLogged }}</div>
-        <div class="al-hero-hours-label">Hours Logged</div>
+      <div class="text-end">
+        <div class="stat-card-value">{{ selectedDayHoursLogged }}</div>
+        <div class="ui-meta-label">Hours Logged</div>
       </div>
       }
     </div>
 
-    <!-- Status Badge -->
-    <div style="margin: 10px 20px 0;">
-      <span class="al-status-badge" [ngClass]="selectedStatusBadge.cls">
-        <i class="bi" [ngClass]="selectedStatusBadge.icon"></i>
-        {{ selectedStatusBadge.text }}
-      </span>
-    </div>
-
-    <!-- Timeline Label -->
-    <div class="al-section-label">PUNCH TIMELINE</div>
-
-    <!-- Timeline Container -->
-    <div class="al-timeline">
-      <div class="al-date-group">
-        @if (timelinePunches.length === 0) {
-        <div class="al-empty">
-          <i class="bi bi-clock-history"></i>
-          <span>No punches recorded for this day</span>
-        </div>
-        } @else {
-        <!-- Paired Punches -->
+    <!-- Punch timeline -->
+    <div>
+      <div class="ui-meta-label mb-2">Punch Timeline</div>
+      @if (timelinePunches.length === 0) {
+      <div class="empty-state py-3">
+        <div class="e-ico"><i class="bi bi-clock-history"></i></div>
+        <div class="e-sub">No punches recorded for this day</div>
+      </div>
+      } @else {
+      <div class="ui-list">
         @for (item of timelinePunches; track item.index) {
-        <div style="position: relative;">
-          <!-- Dot on the vertical line -->
-          <div class="al-timeline-dot" [ngClass]="item.isIn ? 'in' : 'out'">
-            <i class="bi" [ngClass]="item.isIn ? 'bi-arrow-down' : 'bi-arrow-up'"></i>
-          </div>
-          <div class="al-timeline-connector"></div>
-
-          <!-- Card -->
-          <div class="al-punch-row" [ngClass]="item.isIn ? 'in' : 'out'">
-            <div class="al-punch-node" [ngClass]="item.isIn ? 'in' : 'out'">
-              <i class="bi" [ngClass]="item.isIn ? 'bi-box-arrow-in-right' : 'bi-box-arrow-right'"></i>
-            </div>
-            <div class="al-punch-text">
-              <span class="al-punch-label" [ngClass]="item.isIn ? 'in' : 'out'">
-                {{ item.isIn ? 'In' : 'Out' }}
-              </span>
-            </div>
-            <input type="text" class="al-punch-time-input" [value]="item.timeDisplay" readonly />
+        <div class="ui-row-card is-static" [ngClass]="item.isIn ? 'bar-green' : 'bar-red'">
+          <span class="ui-ico ui-ico--sm" [ngClass]="item.isIn ? 'stat-tone-primary' : 'stat-tone-red'">
+            <i class="bi" [ngClass]="item.isIn ? 'bi-box-arrow-in-right' : 'bi-box-arrow-right'"></i>
+          </span>
+          <div class="ui-row-body d-flex align-items-center gap-2">
+            <span class="ui-tag" [ngClass]="item.isIn ? 'tone-success' : 'tone-danger'">{{ item.isIn ? 'In' : 'Out' }}</span>
+            <input type="text" class="form-control form-control-sm punch-time" [value]="item.timeDisplay" readonly aria-label="Punch time" />
             @if (item.warn) {
-            <span class="punch-warn" title="Irregular punch">&#9888;</span>
+            <span class="ui-tag tone-warning" title="Irregular punch"><i class="bi bi-exclamation-triangle"></i> Irregular</span>
             }
-
-            <!-- 3-Dots Action Dropdown -->
-            <div class="al-punch-actions">
-              <button type="button" class="al-punch-more" (click)="toggleActionDropdown(item.index, $event)"
-                title="Punch Options">
-                <i class="bi bi-three-dots"></i>
-              </button>
-
-              @if (activeActionDropdownIndex === item.index) {
-              <div class="al-punch-dropdown show" (click)="$event.stopPropagation()">
-                <button type="button" class="al-punch-dropdown-item" (click)="openEditPunchModal(item.index)">
-                  <i class="bi bi-pencil-square me-2"></i>Edit
-                </button>
-                <button type="button" class="al-punch-dropdown-item al-punch-dropdown-danger"
-                  (click)="deletePunch(item.index)">
-                  <i class="bi bi-trash3 me-2"></i>Delete
-                </button>
-              </div>
-              }
+          </div>
+          <div class="ui-menu-wrap">
+            <button type="button" class="btn-icon btn-sm" (click)="toggleActionDropdown(item.index, $event)" aria-label="Punch options">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            @if (activeActionDropdownIndex === item.index) {
+            <div class="ui-menu" (click)="$event.stopPropagation()">
+              <button type="button" class="ui-menu-item" (click)="openEditPunchModal(item.index)"><i class="bi bi-pencil-square"></i>Edit</button>
+              <button type="button" class="ui-menu-item is-danger" (click)="deletePunch(item.index)"><i class="bi bi-trash3"></i>Delete</button>
             </div>
+            }
           </div>
         </div>
 
-        <!-- Break Time Badge -->
         @if (item.breakAfter) {
-        <div class="al-break-badge">
-          <i class="bi bi-cup-hot"></i> Break Time : {{ item.breakAfter }}
-        </div>
+        <span class="ui-tag tone-warning align-self-start"><i class="bi bi-cup-hot"></i> Break Time : {{ item.breakAfter }}</span>
         }
-        }
-
-        <!-- Add Punch Button -->
-        <button type="button" class="al-add-punch" (click)="openAddPunchModal()" title="Add new punch">
-          <i class="bi bi-plus-lg"></i> Add Punch
-        </button>
         }
       </div>
+
+      <button type="button" class="btn btn-outline-primary btn-sm mt-3" (click)="openAddPunchModal()">
+        <i class="bi bi-plus-lg"></i> Add Punch
+      </button>
+      }
     </div>
 
-    <!-- Quick Actions Accordion -->
-    <div class="al-section">
-      <button type="button" class="al-section-toggle" [class.open]="quickActionsOpen"
-        (click)="quickActionsOpen = !quickActionsOpen">
-        <span>
-          <i class="bi bi-lightning-charge-fill me-2" style="color: var(--primary, var(--green-400-2));"></i>Quick Actions
-        </span>
-        <i class="bi bi-chevron-up chevron" [class.rotated]="!quickActionsOpen"></i>
+    <!-- Quick actions -->
+    <div class="ui-collapse">
+      <button type="button" class="ui-collapse-head" [class.open]="quickActionsOpen" (click)="quickActionsOpen = !quickActionsOpen" [attr.aria-expanded]="quickActionsOpen">
+        <span><i class="bi bi-lightning-charge-fill"></i> Quick Actions</span>
+        <i class="bi bi-chevron-down ui-collapse-chevron"></i>
       </button>
-
-      <div class="al-section-body" [class.open]="quickActionsOpen">
-        <div class="al-section-body-inner">
-          <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="al-qa-btn" (click)="executeQuickAction('Full Day')">Mark Full Day</button>
-            <button type="button" class="al-qa-btn" (click)="executeQuickAction('Penalty')">Add Penalty</button>
-            <button type="button" class="al-qa-btn" (click)="executeQuickAction('Half Day')">Mark Half Day</button>
-            <button type="button" class="al-qa-btn" (click)="executeQuickAction('Absent')">Mark Absent</button>
-            <button type="button" class="al-qa-btn" (click)="executeQuickAction('Working Hours')">Add Working
-              Hours</button>
-            <button type="button" class="al-qa-btn" (click)="executeQuickAction('Paid Leave')">Convert To Paid
-              Leave</button>
-            <button type="button" class="al-qa-btn" (click)="executeQuickAction('Week Off')">Mark Week Off</button>
-          </div>
+      <div class="ui-collapse-body" [class.open]="quickActionsOpen">
+        <div class="ui-collapse-inner d-flex flex-wrap gap-2">
+          <button type="button" class="btn btn-secondary btn-sm" (click)="executeQuickAction('Full Day')">Mark Full Day</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="executeQuickAction('Penalty')">Add Penalty</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="executeQuickAction('Half Day')">Mark Half Day</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="executeQuickAction('Absent')">Mark Absent</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="executeQuickAction('Working Hours')">Add Working Hours</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="executeQuickAction('Paid Leave')">Convert To Paid Leave</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="executeQuickAction('Week Off')">Mark Week Off</button>
         </div>
       </div>
     </div>
 
-    <!-- Insight Accordion -->
-    <div class="al-section mb-4">
-      <button type="button" class="al-section-toggle" [class.open]="insightOpen" (click)="insightOpen = !insightOpen">
-        <span>
-          <i class="bi bi-bar-chart-fill me-2" style="color: var(--primary, var(--green-400-2));"></i>Insight (This Month)
-        </span>
-        <i class="bi bi-chevron-up chevron" [class.rotated]="!insightOpen"></i>
+    <!-- Insight -->
+    <div class="ui-collapse">
+      <button type="button" class="ui-collapse-head" [class.open]="insightOpen" (click)="insightOpen = !insightOpen" [attr.aria-expanded]="insightOpen">
+        <span><i class="bi bi-bar-chart-fill"></i> Insight (This Month)</span>
+        <i class="bi bi-chevron-down ui-collapse-chevron"></i>
       </button>
-
-      <div class="al-section-body" [class.open]="insightOpen">
-        <div class="al-section-body-inner">
-          <div class="al-stat-grid">
-            <div class="al-stat-card">
-              <i class="bi bi-calendar-check"></i>
-              <div class="al-stat-val">{{ insightWorkingDays }}</div>
-              <div class="al-stat-label">WORKING DAYS</div>
-            </div>
-            <div class="al-stat-card">
-              <i class="bi bi-fingerprint"></i>
-              <div class="al-stat-val">{{ insightTotalPunches }}</div>
-              <div class="al-stat-label">TOTAL PUNCHES</div>
-            </div>
-            <div class="al-stat-card">
-              <i class="bi bi-clock-history"></i>
-              <div class="al-stat-val">{{ insightTotalHours }}</div>
-              <div class="al-stat-label">TOTAL HOURS</div>
-            </div>
+      <div class="ui-collapse-body" [class.open]="insightOpen">
+        <div class="ui-collapse-inner">
+          <div class="stat-grid mb-0">
+            <div class="stat-card stat-card-stacked"><div class="stat-card-body">
+              <span class="stat-card-icon"><i class="bi bi-calendar-check"></i></span>
+              <div class="stat-card-text"><div class="stat-card-label">Working Days</div></div>
+              <div class="stat-card-value">{{ insightWorkingDays }}</div>
+            </div></div>
+            <div class="stat-card stat-card-stacked stat-tone-blue"><div class="stat-card-body">
+              <span class="stat-card-icon"><i class="bi bi-fingerprint"></i></span>
+              <div class="stat-card-text"><div class="stat-card-label">Total Punches</div></div>
+              <div class="stat-card-value">{{ insightTotalPunches }}</div>
+            </div></div>
+            <div class="stat-card stat-card-stacked stat-tone-violet"><div class="stat-card-body">
+              <span class="stat-card-icon"><i class="bi bi-clock-history"></i></span>
+              <div class="stat-card-text"><div class="stat-card-label">Total Hours</div></div>
+              <div class="stat-card-value">{{ insightTotalHours }}</div>
+            </div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</aside>
 }
 
-<!-- =========================================================
-     ADD / EDIT PUNCH MODAL
-========================================================== -->
+<!-- Add / edit punch -->
 @if (addPunchModalOpen && selectedEmp) {
 <div class="modal-backdrop-custom" (click)="closeAddPunchModal()"></div>
-<div class="modal-custom-dialog-wrap">
-  <div class="modal-dialog modal-dialog-centered modal-custom-content" style="max-width: 520px;">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="ap-header">
-        <img [src]="'./assets/img/' + selectedEmp.avatar" class="avatar" alt="Profile" />
-        <div class="info">
-          <div class="name">{{ isEditMode ? 'Edit Punch' : selectedEmp.name }}</div>
-          <div class="sub">
+<div class="ui-dialog" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="ui-media p-0">
+        <img [src]="'./assets/img/' + selectedEmp.avatar" class="ui-avatar" alt="" />
+        <div>
+          <h5 class="modal-title">{{ isEditMode ? 'Edit Punch' : selectedEmp.name }}</h5>
+          <div class="ui-media-sub">
             @if (isEditMode) {
-            <span>Update punch entry</span>
+            Update punch entry
             } @else {
-            <span>{{ selectedEmp.emp_id }}</span> &middot; <span>{{ selectedEmp.role }}</span>
+            {{ selectedEmp.emp_id }} &middot; {{ selectedEmp.role }}
             }
           </div>
         </div>
-        <div class="ap-date-pill">
-          <i class="bi bi-calendar3 me-1"></i>{{ selectedDateHeader?.full }}
-        </div>
-        <button type="button" class="ap-close" (click)="closeAddPunchModal()" aria-label="Close modal">
-          <i class="bi bi-x-lg"></i>
+      </div>
+      <span class="ui-count-chip ms-auto"><i class="bi bi-calendar3"></i> {{ selectedDateHeader?.full }}</span>
+      <button type="button" class="btn-close-custom" (click)="closeAddPunchModal()" aria-label="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <label class="form-label">Punch Type</label>
+      <div role="tablist" class="view-toggle mb-3">
+        <button role="tab" type="button" class="view-toggle-btn" [class.active]="punchType === 'in'" (click)="punchType = 'in'" [attr.aria-selected]="punchType === 'in'">
+          <i class="bi bi-box-arrow-in-right"></i> In
+        </button>
+        <button role="tab" type="button" class="view-toggle-btn" [class.active]="punchType === 'out'" (click)="punchType = 'out'" [attr.aria-selected]="punchType === 'out'">
+          <i class="bi bi-box-arrow-right"></i> Out
         </button>
       </div>
 
-      <!-- Modal Body -->
-      <div class="ap-body">
-        <!-- Punch Type Segmented Control -->
-        <div class="ap-toggle-wrap">
-          <div class="ap-toggle-label">
-            <i class="bi bi-arrow-left-right"></i> Punch Type
-          </div>
-          <div role="tablist" class="ap-toggle">
-            <button role="tab" type="button" class="ap-toggle-btn" [class.active]="punchType === 'in'" (click)="punchType = 'in'" [attr.aria-selected]="punchType === 'in'">
-              <i class="bi bi-box-arrow-in-right"></i> In
-            </button>
-            <button role="tab" type="button" class="ap-toggle-btn" [class.active]="punchType === 'out'"
-              (click)="punchType = 'out'" [attr.aria-selected]="punchType === 'out'">
-              <i class="bi bi-box-arrow-right"></i> Out
-            </button>
-          </div>
-        </div>
-
-        <!-- Punch Time Input Row -->
-        <div class="ap-time-row" [ngClass]="punchType === 'out' ? 'out-theme' : 'in-theme'">
-          <label class="ap-time-label">
-            <i class="bi bi-clock"></i>
-            {{ punchType === 'in' ? 'Punch In Time' : 'Punch Out Time' }}
-          </label>
-          <div class="ap-time-input-wrap">
-            <input type="text" class="form-control ap-time-input" [(ngModel)]="punchTimeInput"
-              placeholder="HH:MM AM/PM" />
-          </div>
-
-          <!-- Quick Preset Times -->
-          <div class="ap-preset-times">
-            @if (punchType === 'in') {
-            @for (t of inPresetTimes; track t) {
-            <button type="button" class="ap-preset" (click)="setPresetTime(t)">{{ t }}</button>
-            }
-            } @else {
-            @for (t of outPresetTimes; track t) {
-            <button type="button" class="ap-preset" (click)="setPresetTime(t)">{{ t }}</button>
-            }
-            }
-          </div>
-        </div>
-
-        <!-- Info Note -->
-        <div class="ap-note">
-          <i class="bi bi-info-circle me-1"></i>
-          Select the punch type and enter the correct time. This will be updated on the employee's attendance record.
-        </div>
+      <label class="form-label" for="punchTime">{{ punchType === 'in' ? 'Punch In Time' : 'Punch Out Time' }}</label>
+      <input id="punchTime" type="text" class="form-control" [(ngModel)]="punchTimeInput" placeholder="HH:MM AM/PM" />
+      <div class="d-flex flex-wrap gap-2 mt-2 mb-3">
+        @for (t of (punchType === 'in' ? inPresetTimes : outPresetTimes); track t) {
+        <button type="button" class="btn btn-outline-primary btn-xs" (click)="setPresetTime(t)">{{ t }}</button>
+        }
       </div>
 
-      <!-- Modal Footer -->
-      <div class="ap-footer">
-        <button type="button" class="btn btn-secondary btn-cancel-punch" (click)="closeAddPunchModal()">
-          Cancel
-        </button>
-        <button type="button" class="btn btn-primary ap-save-btn" [disabled]="isSavingPunch" (click)="savePunch()">
-          @if (!isSavingPunch) {
-          <span><i class="bi bi-check2"></i> Save Punch</span>
-          } @else {
-          <span><i class="bi bi-check-circle-fill"></i> Saved</span>
-          }
-        </button>
-      </div>
+      <div class="ui-hint"><i class="bi bi-info-circle"></i> Select the punch type and enter the correct time. This updates the employee's attendance record.</div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeAddPunchModal()">Cancel</button>
+      <button type="button" class="btn btn-primary" [disabled]="isSavingPunch" (click)="savePunch()">
+        @if (!isSavingPunch) {
+        <i class="bi bi-check2"></i> Save Punch
+        } @else {
+        <i class="bi bi-check-circle-fill"></i> Saved
+        }
+      </button>
     </div>
   </div>
 </div>
 }
 
-<!-- =========================================================
-     TOAST NOTIFICATION
-========================================================== -->
-@if (showToast) {
-<div class="perm-report-toast">
-  <i class="bi bi-check-circle-fill me-2"></i>
+<div class="ui-toast" [class.show]="showToast" role="status">
+  <i class="bi bi-check-circle-fill"></i>
   <span>{{ toastMessage }}</span>
 </div>
-}

@@ -59,6 +59,12 @@
      Drawer               .ui-drawer-backdrop + .ui-drawer > .ui-drawer-head (> .ui-drawer-title)
                             + .ui-drawer-body + .ui-drawer-foot
      Number stepper       .ui-stepper > button + input + button
+   — toolbars —
+     Active filters       .ui-filter-bar > .ui-filter-label + .ui-filter-chip (> .chip-key + text + button)
+                            … + .ui-filter-clear
+     Dropdown menu        .ui-menu-wrap > trigger + .ui-menu > .ui-menu-item[.is-danger]
+     Collapsible section  .ui-collapse > .ui-collapse-head[.open] (> text + i.ui-collapse-chevron)
+                            + .ui-collapse-body[.open] > .ui-collapse-inner
    Existing globals used alongside: .form-label, .field-error, .field-hint,
    .req, .card-custom*, .card-footer-note, .empty-state (shared-ui.scss).
 ============================================================= */
@@ -1482,6 +1488,10 @@
   to   { opacity: 1; transform: none; }
 }
 
+/* a dialog opened from inside a drawer stacks above it */
+.ui-drawer ~ .modal-backdrop-custom { z-index: 10008; }
+.ui-drawer ~ .ui-dialog { z-index: 10010; }
+
 /* ---------------- drawer (slides in from the right) ---------------- */
 .ui-drawer-backdrop {
   position: fixed;
@@ -1594,4 +1604,156 @@
 
     &:focus { box-shadow: none !important; }
   }
+}
+
+/* =============================================================
+   TOOLBARS
+============================================================= */
+
+/* ---------------- active filter chips ---------------- */
+.ui-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+}
+
+.ui-filter-label {
+  color: var(--text-light);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ui-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+
+  .chip-key { color: var(--text-light); font-weight: 500; }
+
+  button {
+    width: 18px;
+    height: 18px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(var(--primary-rgb), .15);
+    color: inherit;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover { background: rgba(var(--primary-rgb), .28); }
+  }
+}
+
+.ui-filter-clear {
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+}
+
+/* ---------------- dropdown menu ---------------- */
+.ui-menu-wrap { position: relative; display: inline-block; }
+
+.ui-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 1050;
+  min-width: 140px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--chrome-popover-shadow);
+}
+
+.ui-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover { background: var(--bg-muted); color: var(--gh-heading); }
+
+  &.is-danger { color: var(--danger); }
+  &.is-danger:hover { background: var(--danger-soft); color: var(--danger); }
+}
+
+/* ---------------- collapsible section ---------------- */
+.ui-collapse {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+}
+
+.ui-collapse-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  background: var(--bg-soft);
+  color: var(--gh-heading);
+  font-size: 13.5px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover { background: var(--bg-muted); }
+  &:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
+
+  > span > i { color: var(--primary); }
+}
+
+.ui-collapse-chevron {
+  font-size: 12px;
+  transition: transform .25s ease;
+
+  .ui-collapse-head.open & { transform: rotate(180deg); }
+}
+
+.ui-collapse-body {
+  display: none;
+
+  &.open { display: block; }
+}
+
+.ui-collapse-inner {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--border);
 }

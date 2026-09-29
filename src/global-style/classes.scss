@@ -2181,6 +2181,39 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   }
 }
 
+/* frozen columns in a wide scrolling table: add .is-sticky to the th/td and set
+   `left` per column in the page (layout); the background keeps rows opaque */
+:root :is(#{$table}) > :is(thead, tbody) > tr > .is-sticky {
+  position: sticky;
+  z-index: 2;
+  background: var(--surface);
+}
+:root :is(#{$table}) > thead > tr > .is-sticky {
+  z-index: 3;
+  background: var(--table-head-bg);
+}
+
+/* Bootstrap pagination in brand colours */
+:root .pagination {
+  --bs-pagination-color: var(--text);
+  --bs-pagination-bg: var(--surface);
+  --bs-pagination-border-color: var(--border);
+  --bs-pagination-hover-color: var(--primary-dark);
+  --bs-pagination-hover-bg: var(--primary-soft);
+  --bs-pagination-hover-border-color: var(--border);
+  --bs-pagination-focus-color: var(--primary-dark);
+  --bs-pagination-focus-bg: var(--primary-soft);
+  --bs-pagination-focus-box-shadow: var(--focus-ring);
+  --bs-pagination-active-color: var(--white);
+  --bs-pagination-active-bg: var(--primary);
+  --bs-pagination-active-border-color: var(--primary);
+  --bs-pagination-disabled-color: var(--text-muted);
+  --bs-pagination-disabled-bg: var(--surface);
+  --bs-pagination-disabled-border-color: var(--border);
+  --bs-pagination-border-radius: var(--radius-sm);
+  --bs-pagination-font-size: 13px;
+}
+
 /* empty state row */
 .data-table-empty {
   padding: 40px 16px !important;
