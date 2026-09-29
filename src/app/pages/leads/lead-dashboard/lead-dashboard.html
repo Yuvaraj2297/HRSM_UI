@@ -13,10 +13,8 @@
 
     <form class="ld-period" (submit)="$event.preventDefault(); applyPeriod()">
       <i class="bi bi-calendar3"></i>
-      <p-select [options]="monthOptions" [ngModel]="monthInput()" (ngModelChange)="monthInput.set($event)" name="month"
-        optionLabel="label" optionValue="value" ariaLabel="Month" appendTo="body" styleClass="ld-period-select" />
-      <p-select [options]="yearOptions" [ngModel]="yearInput()" (ngModelChange)="yearInput.set($event)" name="year"
-        optionLabel="label" optionValue="value" ariaLabel="Year" appendTo="body" styleClass="ld-period-select" />
+      <app-select class="ld-period-select" [ngModel]="monthInput()" (ngModelChange)="monthInput.set($event)" name="month" ariaLabel="Month" [options]="monthOptions" optionLabel="label" optionValue="value" />
+      <app-select class="ld-period-select" [ngModel]="yearInput()" (ngModelChange)="yearInput.set($event)" name="year" ariaLabel="Year" [options]="yearOptions" optionLabel="label" optionValue="value" />
       <button type="submit" class="btn btn-primary btn-sm px-3" [disabled]="loading()">Apply</button>
     </form>
   </div>
@@ -139,8 +137,7 @@
       <div class="mt-3">
         <app-dash-section icon="bi-funnel" title="Sales funnel overview" [subtitle]="periodLabel()">
           <div section-actions class="d-flex align-items-center gap-2 flex-wrap">
-            <p-select [options]="funnelStaffOptions()" [ngModel]="funnelStaff()" (ngModelChange)="onFunnelStaff($event)"
-              optionLabel="label" optionValue="value" ariaLabel="Staff" appendTo="body" styleClass="ld-staff-select" />
+            <app-select class="ld-staff-select" [ngModel]="funnelStaff()" (ngModelChange)="onFunnelStaff($event)" ariaLabel="Staff" [options]="funnelStaffOptions()" optionLabel="label" optionValue="value" />
             <div class="ld-seg" role="group" aria-label="Funnel period">
               @for (p of funnelPeriods; track p.key) {
               <button type="button" [class.active]="funnelPeriod() === p.key" [attr.aria-pressed]="funnelPeriod() === p.key"

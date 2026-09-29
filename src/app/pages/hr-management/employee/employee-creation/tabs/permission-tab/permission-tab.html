@@ -35,16 +35,13 @@
   <!-- ROLE -->
   <div class="col-lg-4 col-md-6">
 
-    <label class="form-label">
-
-      <span class="ne-req">*</span>
+    <label class="form-label required-label">
 
       Role
 
     </label>
 
-    <p-select formControlName="role" [options]="fs.roles" optionLabel="label" optionValue="value" [filter]="true"
-      filterBy="label" [showClear]="true" styleClass="w-100" appendTo="body" (onChange)="applyRole($event.value)" />
+    <app-select formControlName="role" (ngModelChange)="applyRole($event)" [options]="fs.roles" optionLabel="label" optionValue="value" placeholder="—" />
 
   </div>
 

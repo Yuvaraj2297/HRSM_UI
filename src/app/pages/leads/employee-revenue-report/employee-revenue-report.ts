@@ -96,7 +96,7 @@ const formatMoney = (v: number): string =>
 
 @Component({
   selector: 'app-employee-revenue-report',
-  imports: [FormsModule, DatePicker, CalendarDatepickerDirective, AppStatCard],
+  imports: [FormsModule,  CalendarDatepickerDirective, AppStatCard],
   templateUrl: './employee-revenue-report.html',
   styleUrl: './employee-revenue-report.scss',
 })

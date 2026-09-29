@@ -4,19 +4,18 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 
 import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 import { CalendarDatepickerDirective } from '../../../../../../common/directives/datepicker';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-relieving-tab',
   standalone: true,
-  imports: [
+  imports: [AppSelect, 
     CommonModule,
     ReactiveFormsModule,
-    SelectModule,
     DatePickerModule,
     CalendarDatepickerDirective,
     InputTextModule,

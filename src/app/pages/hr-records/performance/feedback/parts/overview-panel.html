@@ -1,0 +1,77 @@
+@let counts = store.statusCounts();
+@let st = store.statusFilter();
+
+<div class="panel-toolbar mb-3">
+  <nav class="page-tabs page-tabs-sm" role="tablist" aria-label="Status">
+    <button type="button" role="tab" class="page-tab" [class.active]="st === null" [attr.aria-selected]="st === null"
+      (click)="store.statusFilter.set(null)">
+      All <span class="page-tab-count">{{ store.rows().length }}</span>
+    </button>
+    <button type="button" role="tab" class="page-tab" [class.active]="st === 'not_started'"
+      [attr.aria-selected]="st === 'not_started'" (click)="store.statusFilter.set('not_started')">
+      Not started <span class="page-tab-count">{{ counts.not_started }}</span>
+    </button>
+    <button type="button" role="tab" class="page-tab" [class.active]="st === 'in_progress'"
+      [attr.aria-selected]="st === 'in_progress'" (click)="store.statusFilter.set('in_progress')">
+      In progress <span class="page-tab-count">{{ counts.in_progress }}</span>
+    </button>
+    <button type="button" role="tab" class="page-tab" [class.active]="st === 'published'"
+      [attr.aria-selected]="st === 'published'" (click)="store.statusFilter.set('published')">
+      Published <span class="page-tab-count">{{ counts.published }}</span>
+    </button>
+  </nav>
+
+  <app-select class="panel-toolbar-select" [ngModel]="store.deptFilter()" (ngModelChange)="store.deptFilter.set($event)" ariaLabel="Department" [options]="deptOptions()" optionLabel="label" optionValue="value" placeholder="All departments" />
+</div>
+
+<app-primedatatable [modalHeader]="header" [columns]="columns" [data]="store.filteredRows()"
+  searchPlaceholder="Search employee, cycle..." [showColumnsButton]="false" exportFileName="360-feedback-reviews"
+  (actionClick)="onAction($event)">
+  <ng-template #cellTemplate let-row let-col="col">
+    @switch (col.field) {
+      @case ('name') {
+        <div class="d-flex align-items-center gap-2">
+          @if (row.avatar) {
+            <img [src]="row.avatar" [alt]="row.name" class="rounded-circle fb-avatar" />
+          } @else {
+            <div class="emp-initials-avatar fb-initials">{{ initials(row.name) }}</div>
+          }
+          <div>
+            <div class="emp-name-line">{{ row.name }}</div>
+            <div class="emp-code-line">{{ row.role }} • {{ row.dept }}</div>
+          </div>
+        </div>
+      }
+      @case ('cycle') {
+        <div>{{ row.cycle }}</div>
+        <div class="emp-code-line" [class.text-danger]="row.stage < 4 && row.daysLeft < 0">
+          Due {{ fmtDate(row.due) }}
+          @if (row.stage < 4) { · {{ row.daysLeft < 0 ? (-row.daysLeft) + 'd overdue' : row.daysLeft + 'd left' }} }
+        </div>
+      }
+      @case ('mgrScore') { <span class="fb-score" [class.is-empty]="row.mgrScore === null">{{ row.mgrScore?.toFixed(1) ?? '—' }}</span> }
+      @case ('tlScore')  { <span class="fb-score" [class.is-empty]="row.tlScore === null">{{ row.tlScore?.toFixed(1) ?? '—' }}</span> }
+      @case ('hrScore')  { <span class="fb-score" [class.is-empty]="row.hrScore === null">{{ row.hrScore?.toFixed(1) ?? '—' }}</span> }
+      @case ('overall') {
+        @if (row.overall !== null && row.stage === 4) {
+          <span class="fb-overall"><i class="bi bi-star-fill"></i> {{ row.overall.toFixed(1) }} <small>/ 5</small></span>
+        } @else if (row.overall !== null) {
+          <span class="fb-overall is-partial" title="Provisional — not all evaluators have submitted">
+            {{ row.overall.toFixed(1) }} <small>so far</small>
+          </span>
+        } @else {
+          <span class="text-muted">—</span>
+        }
+      }
+      @case ('stage') {
+        <span class="status-pill" [ngClass]="stageClass(row)">{{ stageLabel(row) }}</span>
+        <div class="fb-mini-steps" [attr.aria-label]="'Stage ' + row.stage + ' of 4'">
+          @for (n of [1, 2, 3, 4]; track n) {
+          <span [class.done]="n < row.stage || row.stage === 4" [class.current]="n === row.stage && row.stage < 4"
+            [title]="stageTitle(n)"></span>
+          }
+        </div>
+      }
+    }
+  </ng-template>
+</app-primedatatable>

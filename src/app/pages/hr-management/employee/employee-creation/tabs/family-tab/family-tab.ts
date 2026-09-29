@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-family-tab',
-  imports: [CommonModule,ReactiveFormsModule,SelectModule,InputTextModule,TextareaModule],
+  imports: [AppSelect, CommonModule,ReactiveFormsModule,InputTextModule,TextareaModule],
   templateUrl: './family-tab.html',
   styleUrl: './family-tab.scss',
 })

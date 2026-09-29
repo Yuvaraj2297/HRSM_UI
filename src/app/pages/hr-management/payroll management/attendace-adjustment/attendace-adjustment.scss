@@ -44,36 +44,9 @@ button {
   outline-offset: 2px;
 }
 
-/* ------------------------------------------------------------ card */
-.adj-card {
-  position: relative;
-  color: var(--adj-ink-700);
-}
-
-.adj-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  border-bottom: 1px solid var(--adj-border);
-}
-
-.adj-chip {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: var(--adj-primary-soft);
-  color: var(--adj-primary-dark);
-}
-
-.adj-title {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--adj-ink-900);
-}
+/* ------------------------------------------------------------ card
+   Card, header, icon tile and title: global .card-custom set. */
+.adj-card { position: relative; }
 
 /* ------------------------------------------------------------ legend */
 .adj-legend {
@@ -182,26 +155,8 @@ button {
   }
 }
 
-.select-wrap {
-  position: relative;
-  min-width: 200px;
-
-  select {
-    width: 100%;
-    font: 500 14px/1 inherit;
-
-  }
-}
-
-.select-caret {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  width: 16px;
-  height: 16px;
-  transform: translateY(-50%);
-  fill: var(--neutral-500-2);
-  pointer-events: none;
+.branch-select {
+  width: 220px;
 }
 
 .btn-save {
@@ -244,7 +199,7 @@ button {
   padding: 6px;
   border: 1px solid var(--adj-border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.12);
 }
 
@@ -283,7 +238,7 @@ button {
   padding: 0 12px;
   border: 1px solid var(--adj-border);
   border-radius: var(--card-radius);
-  background: var(--white);
+  background: var(--surface);
   color: var(--adj-ink-500);
 
   &:focus-within {
@@ -329,7 +284,7 @@ button {
 
   tbody td {
     padding: 8px 10px;
-    background: var(--white);
+    background: var(--surface);
     color: var(--adj-ink-700);
     font-size: 12px;
     font-weight: 600;
@@ -488,7 +443,7 @@ button {
     right: -3px;
     width: 7px;
     height: 7px;
-    border: 1.5px solid var(--white);
+    border: 1.5px solid var(--surface);
     border-radius: 50%;
     background: var(--adj-primary);
   }
@@ -502,7 +457,7 @@ button {
   padding: 4px;
   border: 1px solid var(--adj-border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.12);
 }
 
@@ -538,7 +493,7 @@ button {
   }
 
   &.active .dot {
-    background: var(--white);
+    background: var(--surface);
   }
 }
 
@@ -563,7 +518,7 @@ button {
 
 @media (max-width: 640px) {
   .month-nav,
-  .select-wrap {
+  .branch-select {
     width: 100%;
   }
   .btn-save {

@@ -27,20 +27,29 @@ export class MasterTableFacade {
 
   getTableConfig(masterType: MasterType): MasterTableConfig {
     switch (masterType) {
+
       case 'department':
         return this.getDepartmentConfig();
 
-      case 'team':
-        return this.getTeamConfig();
+      case 'job_type':
 
-      case 'position':
-        return this.getPositionConfig();
+        return this.getJobTypeConfig();
 
-      case 'document':
-        return this.getDocumentConfig();
+      case 'designation':
+
+      return this.getDesignationConfig();
+
+      case 'branch':
+        return this.getBranchConfig();
+
+      case 'employee':
+        return this.getEmployeeTypeConfig();
 
       case 'work':
         return this.getWorkConfig();
+
+       case 'country':
+          return this.getCountryConfig();
 
       case 'state':
         return this.getStateConfig();
@@ -54,14 +63,29 @@ export class MasterTableFacade {
       case 'shift':
         return this.getShiftConfig();
 
+        case 'relieving_type':
+
+        return this.getRelievingTypeConfig();
+
+        case 'notice_period':
+          return this.getNoticePeriodConfig();
+
+
+        case 'holiday':
+          return this.getHolidayConfig();
+
+          case 'permission':
+        return this.getPermissionConfig();
+
+      case 'role':
+        return this.getRoleConfig();
+
+
       default:
         return this.getDepartmentConfig();
     }
   }
 
-  // =========================================================
-  // DEPARTMENT
-  // =========================================================
 
   private getDepartmentConfig(): MasterTableConfig {
     return {
@@ -139,18 +163,14 @@ export class MasterTableFacade {
     };
   }
 
-  // =========================================================
-  // TEAM
-  // =========================================================
-
-  private getTeamConfig(): MasterTableConfig {
+   private getJobTypeConfig(): MasterTableConfig {
     return {
       header: {
-        title: 'Teams',
-        icon: 'ti ti-users',
+        title: 'Job Type',
+        icon: 'ti ti-sitemap',
       },
 
-      searchPlaceholder: 'Search team',
+      searchPlaceholder: 'Search Job Type',
 
       columns: [
         {
@@ -159,29 +179,8 @@ export class MasterTableFacade {
         },
 
         {
-          field: 'teamName',
-          header: 'Team Name',
-          type: 'text',
-          sortable: true,
-        },
-
-        {
-          field: 'department',
-          header: 'Department',
-          type: 'text',
-          sortable: true,
-        },
-
-        {
-          field: 'teamLead',
-          header: 'Team Lead',
-          type: 'text',
-          sortable: true,
-        },
-
-        {
-          field: 'members',
-          header: 'Members',
+          field: 'jobType',
+          header: 'Job Type',
           type: 'text',
           sortable: true,
         },
@@ -211,40 +210,28 @@ export class MasterTableFacade {
       data: [
         {
           id: 1,
-          teamName: 'UI Team',
-          department: 'Design',
-          teamLead: 'Arun',
-          members: 5,
+          jobType: 'Remote',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 2,
-          teamName: 'Frontend Team',
-          department: 'Development',
-          teamLead: 'Karthik',
-          members: 8,
+          jobType: 'Work from Office',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 3,
-          teamName: 'Backend Team',
-          department: 'Development',
-          teamLead: 'Suresh',
-          members: 6,
+          jobType: 'Work from Home',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 4,
-          teamName: 'HR Team',
-          department: 'HR',
-          teamLead: 'Priya',
-          members: 4,
+          jobType: 'Hybrid',
           status: 'Disable',
           date: '18-12-2025',
         },
@@ -252,18 +239,14 @@ export class MasterTableFacade {
     };
   }
 
-  // =========================================================
-  // POSITION
-  // =========================================================
-
-  private getPositionConfig(): MasterTableConfig {
+   private getDesignationConfig(): MasterTableConfig {
     return {
       header: {
-        title: 'Position',
-        icon: 'ti ti-briefcase',
+        title: 'Designation',
+        icon: 'bi bi-person-badge',
       },
 
-      searchPlaceholder: 'Search position',
+      searchPlaceholder: 'Search designation',
 
       columns: [
         {
@@ -272,8 +255,8 @@ export class MasterTableFacade {
         },
 
         {
-          field: 'position',
-          header: 'Position Name',
+          field: 'designationName',
+          header: 'Designation',
           type: 'text',
           sortable: true,
         },
@@ -303,28 +286,28 @@ export class MasterTableFacade {
       data: [
         {
           id: 1,
-          position: 'Software Developer',
+          designationName: 'UI/UX Designer',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 2,
-          position: 'Senior Software Developer',
+          designationName: 'Product Designer',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 3,
-          position: 'Project Manager',
+          designationName: 'iOS Developer',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 4,
-          position: 'HR Executive',
+          designationName: 'Business Analyst',
           status: 'Disable',
           date: '18-12-2025',
         },
@@ -332,18 +315,14 @@ export class MasterTableFacade {
     };
   }
 
-  // =========================================================
-  // DOCUMENT UPLOAD
-  // =========================================================
-
-  private getDocumentConfig(): MasterTableConfig {
+   private getBranchConfig(): MasterTableConfig {
     return {
       header: {
-        title: 'Document Upload',
-        icon: 'ti ti-file-upload',
+        title: 'Branch',
+        icon: 'bi bi-buildings',
       },
 
-      searchPlaceholder: 'Search document',
+      searchPlaceholder: 'Search branch',
 
       columns: [
         {
@@ -352,8 +331,8 @@ export class MasterTableFacade {
         },
 
         {
-          field: 'document',
-          header: 'Document Name',
+          field: 'branchName',
+          header: 'Branch',
           type: 'text',
           sortable: true,
         },
@@ -383,28 +362,28 @@ export class MasterTableFacade {
       data: [
         {
           id: 1,
-          document: 'Aadhar Card',
+          branchName: 'Chennai',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 2,
-          document: 'PAN Card',
+          branchName: 'Bengaluru',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 3,
-          document: 'Driving License',
+          branchName: 'Hyderabad',
           status: 'Enable',
           date: '18-12-2025',
         },
 
         {
           id: 4,
-          document: 'Passport',
+          branchName: 'Mumbai',
           status: 'Disable',
           date: '18-12-2025',
         },
@@ -412,9 +391,81 @@ export class MasterTableFacade {
     };
   }
 
-  // =========================================================
-  // WORK LOCATION
-  // =========================================================
+   private getEmployeeTypeConfig(): MasterTableConfig {
+    return {
+      header: {
+        title: 'Employee Type',
+        icon: 'bi bi-person-workspace',
+      },
+
+      searchPlaceholder: 'Search Employee Type',
+
+      columns: [
+        {
+          field: 'sno',
+          header: 'S.No',
+        },
+
+        {
+          field: 'employeeTypeName',
+          header: 'Employee Type Name',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'status',
+          header: 'Status',
+          type: 'status',
+          sortable: true,
+        },
+
+        {
+          field: 'date',
+          header: 'Create Date',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'actions',
+          header: 'Action',
+          type: 'actions',
+          width: '120px',
+        },
+      ],
+
+      data: [
+        {
+          id: 1,
+          employeeTypeName: 'Confirmation',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 2,
+          employeeTypeName: 'Contract',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 3,
+          employeeTypeName: 'Intern',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 4,
+          employeeTypeName: 'Probation',
+          status: 'Disable',
+          date: '18-12-2025',
+        },
+      ],
+    };
+  }
 
   private getWorkConfig(): MasterTableConfig {
     return {
@@ -492,10 +543,69 @@ export class MasterTableFacade {
     };
   }
 
-  // =========================================================
-  // STATE
-  // =========================================================
+   private getCountryConfig(): MasterTableConfig {
+    return {
+      header: {
+        title: 'Country',
+        icon: '  bi bi-globe',
+      },
 
+      searchPlaceholder: 'Search country',
+
+      columns: [
+        {
+          field: 'sno',
+          header: 'S.No',
+        },
+
+        {
+          field: 'country',
+          header: 'Country Name',
+          type: 'text',
+          sortable: true,
+        },
+
+
+        {
+          field: 'status',
+          header: 'Status',
+          type: 'status',
+          sortable: true,
+        },
+
+        {
+          field: 'date',
+          header: 'Create Date',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'actions',
+          header: 'Action',
+          type: 'actions',
+          width: '120px',
+        },
+      ],
+
+      data: [
+        {
+          id: 1,
+          country: 'India',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 2,
+          country: 'UK',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+      ],
+    };
+  }
+ 
   private getStateConfig(): MasterTableConfig {
     return {
       header: {
@@ -594,10 +704,6 @@ export class MasterTableFacade {
     };
   }
 
-  // =========================================================
-  // DISTRICT
-  // =========================================================
-
   private getDistrictConfig(): MasterTableConfig {
     return {
       header: {
@@ -684,10 +790,6 @@ export class MasterTableFacade {
       ],
     };
   }
-
-  // =========================================================
-  // LEAVE TYPE
-  // =========================================================
 
   private getLeaveConfig(): MasterTableConfig {
     return {
@@ -776,10 +878,6 @@ export class MasterTableFacade {
     };
   }
 
-  // =========================================================
-  // SHIFT
-  // =========================================================
-
   private getShiftConfig(): MasterTableConfig {
     return {
       header: {
@@ -852,6 +950,337 @@ export class MasterTableFacade {
           status: 'Disable',
           date: '18-12-2025',
         },
+      ],
+    };
+  }
+
+
+    private getRelievingTypeConfig(): MasterTableConfig {
+    return {
+      header: {
+        title: 'Relieving Type',
+        icon: 'bi bi-box-arrow-right',
+      },
+
+      searchPlaceholder: 'Search relieving type',
+
+      columns: [
+        {
+          field: 'sno',
+          header: 'S.No',
+        },
+
+        {
+          field: 'relievingType',
+          header: 'Relieving Type',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'status',
+          header: 'Status',
+          type: 'status',
+          sortable: true,
+        },
+
+        {
+          field: 'date',
+          header: 'Create Date',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'actions',
+          header: 'Action',
+          type: 'actions',
+          width: '120px',
+        },
+      ],
+
+      data: [
+        {
+          id: 1,
+          relievingType: 'Absconded',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 2,
+          relievingType: 'Contract End',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 3,
+          relievingType: 'Resignation',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 4,
+          relievingType: 'Retirement',
+          status: 'Disable',
+          date: '18-12-2025',
+        },
+      ],
+    };
+  }
+
+    private getNoticePeriodConfig(): MasterTableConfig {
+    return {
+      header: {
+        title: 'Notice Period',
+        icon: 'bi bi-clock',
+      },
+
+      searchPlaceholder: 'Search notice period',
+
+      columns: [
+        {
+          field: 'sno',
+          header: 'S.No',
+        },
+
+        {
+          field: 'noticePeriod',
+          header: 'Notice Period',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'status',
+          header: 'Status',
+          type: 'status',
+          sortable: true,
+        },
+
+        {
+          field: 'date',
+          header: 'Create Date',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'actions',
+          header: 'Action',
+          type: 'actions',
+          width: '120px',
+        },
+      ],
+
+      data: [
+        {
+          id: 1,
+          noticePeriod: 'Immediate',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 2,
+          noticePeriod: '90 Days',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 3,
+          noticePeriod: '60 Days',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 4,
+          noticePeriod: '30 Days',
+          status: 'Disable',
+          date: '18-12-2025',
+        },
+      ],
+    };
+  }
+  
+    private  getHolidayConfig(): MasterTableConfig {
+    return {
+      header: {
+        title: 'Holiday Type',
+        icon: 'bi bi-calendar-event',
+      },
+
+      searchPlaceholder: 'Search holiday type',
+
+      columns: [
+        {
+          field: 'sno',
+          header: 'S.No',
+        },
+
+        {
+          field: 'holidayType',
+          header: 'Holiday Type',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'status',
+          header: 'Status',
+          type: 'status',
+          sortable: true,
+        },
+
+        {
+          field: 'date',
+          header: 'Create Date',
+          type: 'text',
+          sortable: true,
+        },
+
+        {
+          field: 'actions',
+          header: 'Action',
+          type: 'actions',
+          width: '120px',
+        },
+      ],
+
+      data: [
+        {
+          id: 1,
+          holidayType: 'Company Holiday',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 2,
+          holidayType: 'Optional Holiday',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 3,
+          holidayType: 'Public Holiday',
+          status: 'Enable',
+          date: '18-12-2025',
+        },
+
+        {
+          id: 4,
+          holidayType: 'Restricted Holiday',
+          status: 'Disable',
+          date: '18-12-2025',
+        },
+      ],
+    };
+  }
+
+  private getPermissionConfig(): MasterTableConfig {
+    const caps = (
+      viewOwn = false,
+      viewGlobal = false,
+      create = false,
+      edit = false,
+      del = false,
+    ) => ({ viewOwn, viewGlobal, create, edit, delete: del });
+
+    // capabilitiesText is only used by the search box (see meta.filterFields)
+    const withText = (row: any) => ({
+      ...row,
+      capabilitiesText: Object.entries({
+        viewOwn: 'View(Own)',
+        viewGlobal: 'View(Global)',
+        create: 'Create',
+        edit: 'Edit',
+        delete: 'Delete',
+      })
+        .filter(([key]) => row.capabilities[key])
+        .map(([, label]) => label)
+        .join(' '),
+    });
+
+    return {
+      header: {
+        title: 'Permission Modules',
+        icon: 'bi bi-shield-lock',
+      },
+
+      searchPlaceholder: 'Search permission modules',
+
+      columns: [
+        { field: 'sno', header: 'S.No' },
+
+        { field: 'group', header: 'Group', type: 'text', sortable: true },
+
+        { field: 'module', header: 'Module', type: 'text', sortable: true },
+
+        {
+          field: 'capabilities',
+          header: 'Capabilities',
+          type: 'chips',
+          sortable: false,
+          meta: {
+            labels: {
+              viewOwn: 'View(Own)',
+              viewGlobal: 'View(Global)',
+              create: 'Create',
+              edit: 'Edit',
+              delete: 'Delete',
+            },
+            filterFields: ['capabilitiesText'],
+          },
+        },
+
+        { field: 'actions', header: 'Action', type: 'actions', width: '120px' },
+      ],
+
+      data: [
+        { id: 1, group: 'HR Management', module: 'HR Dashboard', capabilities: caps(true) },
+        { id: 2, group: 'HR Management', module: 'Organization', capabilities: caps(true, true, true, true, true) },
+        { id: 3, group: 'HR Management', module: 'Employees (Records)', capabilities: caps(true, true, true, true, true) },
+        { id: 4, group: 'HR Management', module: 'Shift Management', capabilities: caps(true, true, true, true, true) },
+        { id: 5, group: 'HR Management', module: 'Loan & Advances', capabilities: caps(true, true, true, true, true) },
+        { id: 6, group: 'HR Management', module: 'Payroll Management', capabilities: caps(true, true, true, true, true) },
+        { id: 7, group: 'Timesheet & Leave', module: 'Timesheet Check In Out', capabilities: caps(true) },
+      ].map(withText),
+    };
+  }
+
+  private getRoleConfig(): MasterTableConfig {
+    return {
+      header: {
+        title: 'Role',
+        icon: 'bi bi-person-gear',
+      },
+
+      searchPlaceholder: 'Search role',
+
+      columns: [
+        { field: 'sno', header: 'S.No' },
+
+        { field: 'roleName', header: 'Role Name', type: 'text', sortable: true },
+
+        { field: 'status', header: 'Status', type: 'status', sortable: true },
+
+        { field: 'date', header: 'Create Date', type: 'text', sortable: true },
+
+        { field: 'actions', header: 'Action', type: 'actions', width: '150px' },
+      ],
+
+      data: [
+        { id: 1, roleName: 'Manager', status: 'Enable', date: '20-12-2025' },
+        { id: 2, roleName: 'HR Admin', status: 'Enable', date: '22-12-2025' },
+        { id: 3, roleName: 'Finance', status: 'Enable', date: '05-01-2026' },
+        { id: 4, roleName: 'Employee', status: 'Enable', date: '18-12-2025' },
+        { id: 5, roleName: 'Admin', status: 'Enable', date: '10-01-2026' },
       ],
     };
   }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface LeaveBalance {
   type: string;
   available: number;
@@ -52,7 +52,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-leave-hoilday-report',
   standalone: true,
-  imports: [CommonModule, FormsModule,  SelectModule],
+  imports: [AppSelect, CommonModule, FormsModule],
   templateUrl: './leave-hoilday-report.html',
   styleUrl: './leave-hoilday-report.scss',
 })

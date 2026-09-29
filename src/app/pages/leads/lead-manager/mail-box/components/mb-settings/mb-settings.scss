@@ -1,37 +1,6 @@
-:host {
-  display: block;
-}
-
-.set-card {
-  margin-bottom: 16px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--card-radius);
-  background: var(--bg-soft);
-
-  h3 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 0 12px;
-    font-size: 14.5px;
-    font-weight: 800;
-    color: var(--gh-heading);
-
-    i { color: var(--primary); }
-  }
-}
-
-.field {
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-}
+/* Cards, headers, titles, labels and errors are global
+   (.card-custom set, .form-label, .field-error). Radio row only. */
+:host { display: block; }
 
 .radio-row {
   display: flex;
@@ -45,9 +14,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  color: var(--text);
   font-size: 13px;
   font-weight: 700;
-  color: var(--text);
 
   i { color: var(--primary); }
 }
@@ -60,9 +29,4 @@
   cursor: pointer;
 
   input { accent-color: var(--primary); }
-}
-
-.footer {
-  display: flex;
-  justify-content: flex-end;
 }

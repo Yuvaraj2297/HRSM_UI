@@ -32,9 +32,7 @@
       <!-- Branch (PrimeNG p-select) -->
       <div class="col-md-4">
         <label class="form-label text-muted small fw-semibold mb-1">Branch</label>
-        <p-select [options]="branchOptions" [(ngModel)]="selectedBranch" optionLabel="label" optionValue="value"
-          styleClass="w-100 punch-branch-pselect" appendTo="body" placeholder="Choose Branch">
-        </p-select>
+        <app-select class="punch-branch-pselect" [(ngModel)]="selectedBranch" [options]="branchOptions" optionLabel="label" optionValue="value" placeholder="Choose Branch" />
       </div>
 
       <!-- Search Button -->
@@ -202,12 +200,7 @@
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 report-footer p-3 border-top">
       <div class="d-flex gap-2 align-items-center">
         <span class="small text-muted text-nowrap">Show:</span>
-        <select class="form-select form-select-sm" style="width: auto;" [(ngModel)]="pageSize"
-          (change)="onPageSizeChange()">
-          @for (opt of pageSizeOptions; track opt) {
-          <option [value]="opt">{{ opt }}</option>
-          }
-        </select>
+        <app-select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" [filter]="false" [showClear]="false" [options]="pageSizeOptions" size="sm" />
         <span class="small text-muted text-nowrap">
           Showing <strong>{{ startIndex }}</strong>&ndash;<strong>{{ endIndex }}</strong> of <strong>{{
             filteredEmployees.length }}</strong>

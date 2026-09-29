@@ -52,9 +52,7 @@
           Relieving Type
         </label>
 
-        <p-select formControlName="type" [options]="fs.relievingTypes" optionLabel="label" optionValue="value"
-          placeholder="Select Relieving Type" [showClear]="true" [filter]="true" filterBy="label" styleClass="w-100"
-          appendTo="body" />
+        <app-select formControlName="type" [options]="fs.relievingTypes" optionLabel="label" optionValue="value" placeholder="Select Relieving Type" />
 
         <div class="validation-message" *ngIf="isInvalid('type')">
           Please select relieving type.
@@ -120,8 +118,7 @@
           Notice Period
         </label>
 
-        <p-select formControlName="noticePeriod" [options]="fs.noticePeriods" optionLabel="label" optionValue="value"
-          placeholder="Select notice period" [showClear]="true" styleClass="w-100" appendTo="body" />
+        <app-select formControlName="noticePeriod" [options]="fs.noticePeriods" optionLabel="label" optionValue="value" placeholder="Select notice period" />
 
       </div>
 

@@ -10,7 +10,7 @@
     <!-- =========================================================
        FILTERS CARD
   ========================================================== -->
-    <div class="card-custom mb-3 filters-card">
+    <div class="card-custom p-3 mb-3 filters-card">
 
         <div class="filters-toggle-row">
             <span class="fw-semibold" style="font-size:14.5px;color:var(--ink-900);">
@@ -32,34 +32,22 @@
 
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <label class="form-label">Status</label>
-                    <select class="form-select" [(ngModel)]="filters.status">
-                        <option value="">All Status</option>
-                        <option *ngFor="let s of statusFilterOptions" [value]="s">{{ s }}</option>
-                    </select>
+                    <app-select [(ngModel)]="filters.status" [options]="statusFilterOptions" placeholder="All Status" />
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <label class="form-label">Assigned</label>
-                    <select class="form-select" [(ngModel)]="filters.assigned">
-                        <option value="">All Assigned</option>
-                        <option *ngFor="let a of assignedFilterOptions" [value]="a">{{ a }}</option>
-                    </select>
+                    <app-select [(ngModel)]="filters.assigned" [options]="assignedFilterOptions" placeholder="All Assigned" />
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <label class="form-label">Lead Source</label>
-                    <select class="form-select" [(ngModel)]="filters.source">
-                        <option value="">All Sources</option>
-                        <option *ngFor="let s of sourceFilterOptions" [value]="s">{{ s }}</option>
-                    </select>
+                    <app-select [(ngModel)]="filters.source" [options]="sourceFilterOptions" placeholder="All Sources" />
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <label class="form-label">Year</label>
-                    <select class="form-select" [(ngModel)]="filters.year">
-                        <option value="">All Years</option>
-                        <option *ngFor="let y of yearFilterOptions" [value]="y">{{ y }}</option>
-                    </select>
+                    <app-select [(ngModel)]="filters.year" [options]="yearFilterOptions" placeholder="All Years" />
                 </div>
 
                 <div class="col-lg-4 col-md-6 align-self-end">
@@ -231,26 +219,18 @@
 
             <div class="mce-field">
                 <label style="text-transform:uppercase;">Send email using (SMTP)</label>
-                <select class="form-select" [(ngModel)]="emailSmtp">
-                    <option>USE SYSTEM SMTP ( info@gharuda-hrms.in )</option>
-                </select>
+                <app-select [(ngModel)]="emailSmtp" [options]="['USE SYSTEM SMTP ( info@gharuda-hrms.in )']"
+                    [showClear]="false" />
             </div>
 
             <div class="mce-field">
                 <label>Templates</label>
-                <select class="form-select" [(ngModel)]="emailTemplate" (ngModelChange)="onEmailTemplateChange()">
-                    <option value="">Non selected</option>
-                    <option value="Standard Quotation">Standard Quotation</option>
-                    <option value="Solar Installation">Solar Installation</option>
-                </select>
+                <app-select [(ngModel)]="emailTemplate" (ngModelChange)="onEmailTemplateChange()" [options]="[{ label: 'Standard Quotation', value: 'Standard Quotation' }, { label: 'Solar Installation', value: 'Solar Installation' }]" optionLabel="label" optionValue="value" placeholder="Non selected" />
             </div>
 
             <div class="mce-field">
                 <label>Email To</label>
-                <select class="form-select" [(ngModel)]="emailTo">
-                    <option value="">Non selected</option>
-                    <option *ngFor="let l of emailToOptions" [value]="l.email">{{ l.name }} ( {{ l.email }} )</option>
-                </select>
+                <app-select [(ngModel)]="emailTo" [options]="emailToOptions" optionLabel="name" optionValue="email" optionSub="email" placeholder="Non selected" />
             </div>
 
             <div class="mce-field">

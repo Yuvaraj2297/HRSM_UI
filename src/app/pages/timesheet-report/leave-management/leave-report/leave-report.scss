@@ -69,7 +69,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border-soft);
   border-radius: var(--card-radius);
   padding: 10px 16px;
@@ -391,7 +391,7 @@
   padding: 10px 12px;
   border-radius: var(--card-radius);
   border: 1px solid var(--border-soft);
-  background: var(--white);
+  background: var(--surface);
   transition: all 0.15s ease;
 
   &.status-approved {
@@ -455,7 +455,7 @@
       height: 32px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-soft);
-      background: var(--white);
+      background: var(--surface);
       display: inline-flex;
       align-items: center;
       justify-content: center;

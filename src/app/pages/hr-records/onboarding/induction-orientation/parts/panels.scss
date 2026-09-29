@@ -1,0 +1,39 @@
+/* Shared layout for the Sessions and Clearance panels.
+   Colours, pills, progress bars and the table come from classes.scss. */
+
+:host {
+  display: block;
+}
+
+/* three filters + Reset */
+.panel-filter-card {
+  grid-template-columns: repeat(3, minmax(170px, 1fr)) auto;
+
+  @media (max-width: 991.98px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-filter-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* table cells that should wrap instead of widening the column */
+.panel-wrap-cell {
+  white-space: normal;
+}
+
+.module-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  white-space: normal;
+}

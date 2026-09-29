@@ -125,15 +125,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Classification <span class="text-danger">*</span>
           </label>
-          <p-select
-            [options]="categoryOptions"
-            formControlName="category"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select classification"
-            appendTo="body"
-            styleClass="w-100 modal-p-select"
-          />
+          <app-select class="modal-p-select" formControlName="category" [options]="categoryOptions" optionLabel="label" optionValue="value" placeholder="Select classification" />
         </div>
 
         <!-- Annual Interest Rate -->
@@ -188,15 +180,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Min Service Required
           </label>
-          <p-select
-            [options]="eligibilityOptions"
-            formControlName="eligibility"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select eligibility criteria"
-            appendTo="body"
-            styleClass="w-100 modal-p-select"
-          />
+          <app-select class="modal-p-select" formControlName="eligibility" [options]="eligibilityOptions" optionLabel="label" optionValue="value" placeholder="Select eligibility criteria" />
         </div>
 
         <!-- Status -->
@@ -204,14 +188,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Status
           </label>
-          <p-select
-            [options]="statusOptions"
-            formControlName="status"
-            optionLabel="label"
-            optionValue="value"
-            appendTo="body"
-            styleClass="w-100 modal-p-select"
-          />
+          <app-select class="modal-p-select" formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" />
         </div>
       </div>
     </div>

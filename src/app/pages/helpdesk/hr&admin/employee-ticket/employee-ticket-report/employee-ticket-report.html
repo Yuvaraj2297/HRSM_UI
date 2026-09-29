@@ -1,5 +1,5 @@
 <!-- Page Header & Breadcrumb -->
-<app-breadcrumb title="Ticket Reports" parent="HR / Admin" icon="bi bi-clipboard-data">
+<!-- <app-breadcrumb title="Ticket Reports" parent="HR / Admin" icon="bi bi-clipboard-data">
   <div breadcrumb-actions class="d-flex gap-2">
     <button class="btn btn-outline-primary btn-sm" type="button" (click)="exportCsv()">
       <i class="bi bi-download"></i> Export Report
@@ -8,7 +8,7 @@
       <i class="bi bi-speedometer2 me-1"></i> Ticket Dashboard
     </a>
   </div>
-</app-breadcrumb>
+</app-breadcrumb> -->
 
 <!-- Summary KPIs -->
 <div class="row g-3 mb-3">
@@ -41,11 +41,11 @@
 <div class="row g-3 mb-3">
   <!-- Category-wise -->
   <div class="col-lg-6">
-    <div class="tr-card">
-      <div class="tr-head">
+    <div class="card-custom overflow-hidden h-100">
+      <div class="card-custom-header card-custom-title justify-content-start gap-2">
         <i class="bi bi-tags"></i> Category-wise Tickets
       </div>
-      <div class="tr-body">
+      <div class="card-custom-body">
         @if (categoryBars.length === 0) {
         <div class="text-center text-muted py-3">No category data</div>
         } @else {
@@ -67,11 +67,11 @@
 
   <!-- Priority-wise -->
   <div class="col-lg-6">
-    <div class="tr-card">
-      <div class="tr-head">
+    <div class="card-custom overflow-hidden h-100">
+      <div class="card-custom-header card-custom-title justify-content-start gap-2">
         <i class="bi bi-flag"></i> Priority-wise Tickets
       </div>
-      <div class="tr-body">
+      <div class="card-custom-body">
         @for (item of priorityBars; track item.label) {
         <div class="tr-bar-row">
           <span class="b-label">
@@ -92,11 +92,11 @@
 <div class="row g-3 mb-3">
   <!-- Department-wise -->
   <div class="col-lg-6">
-    <div class="tr-card">
-      <div class="tr-head">
+    <div class="card-custom overflow-hidden h-100">
+      <div class="card-custom-header card-custom-title justify-content-start gap-2">
         <i class="bi bi-building"></i> Department-wise Tickets
       </div>
-      <div class="tr-body">
+      <div class="card-custom-body">
         @for (item of deptBars; track item.label) {
         <div class="tr-bar-row">
           <span class="b-label">
@@ -114,11 +114,11 @@
 
   <!-- Status Distribution -->
   <div class="col-lg-6">
-    <div class="tr-card">
-      <div class="tr-head">
+    <div class="card-custom overflow-hidden h-100">
+      <div class="card-custom-header card-custom-title justify-content-start gap-2">
         <i class="bi bi-diagram-2"></i> Status Distribution
       </div>
-      <div class="tr-body">
+      <div class="card-custom-body">
         @if (statusBars.length === 0) {
         <div class="text-center text-muted py-3">No status data</div>
         } @else {
@@ -143,11 +143,11 @@
 <div class="row g-3 mb-3">
   <!-- Employee-wise -->
   <div class="col-lg-6">
-    <div class="tr-card">
-      <div class="tr-head">
+    <div class="card-custom overflow-hidden h-100">
+      <div class="card-custom-header card-custom-title justify-content-start gap-2">
         <i class="bi bi-people"></i> Employee-wise Tickets
       </div>
-      <div class="tr-body p-0">
+      <div class="card-custom-body p-0">
         <table class="tr-mini-table">
           <thead>
             <tr>
@@ -182,11 +182,11 @@
 
   <!-- SLA Breach Table -->
   <div class="col-lg-6">
-    <div class="tr-card">
-      <div class="tr-head">
-        <i class="bi bi-exclamation-triangle" style="color: var(--red-550);"></i> SLA Breached Tickets
+    <div class="card-custom overflow-hidden h-100">
+      <div class="card-custom-header card-custom-title justify-content-start gap-2">
+        <i class="bi bi-exclamation-triangle text-danger"></i> SLA Breached Tickets
       </div>
-      <div class="tr-body p-0">
+      <div class="card-custom-body p-0">
         <table class="tr-mini-table">
           <thead>
             <tr>
@@ -233,11 +233,11 @@
 </div>
 
 <!-- Monthly Summary Report -->
-<div class="tr-card mb-3">
-  <div class="tr-head">
+<div class="card-custom overflow-hidden mb-3">
+  <div class="card-custom-header card-custom-title justify-content-start gap-2">
     <i class="bi bi-calendar-month"></i> Monthly Ticket Report
   </div>
-  <div class="tr-body p-0">
+  <div class="card-custom-body p-0">
     <table class="tr-mini-table">
       <thead>
         <tr>

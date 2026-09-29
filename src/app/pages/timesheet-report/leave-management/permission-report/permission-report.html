@@ -4,11 +4,11 @@
   ========================================================== -->
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
     <div>
-      <app-breadcrumb
+      <!-- <app-breadcrumb
         title="Permission Requests"
         parent="Attendance Management"
         icon="bi bi-clock-history">
-      </app-breadcrumb>
+      </app-breadcrumb> -->
     </div>
 
     <!-- Header Actions -->
@@ -51,25 +51,11 @@
     <!-- Month & Year Filter Bar (with PrimeNG p-select) -->
     <div class="d-flex align-items-center flex-wrap gap-2 mb-3 p-3 card-custom">
       <div class="perm-month-wrap">
-        <p-select
-          [options]="monthOptions"
-          [(ngModel)]="selectedMonth"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="perm-filter-select"
-          placeholder="Select month">
-        </p-select>
+        <app-select class="perm-filter-select" [(ngModel)]="selectedMonth" [options]="monthOptions" optionLabel="label" optionValue="value" placeholder="Select month" />
       </div>
 
       <div class="perm-year-wrap">
-        <p-select
-          [options]="yearOptions"
-          [(ngModel)]="selectedYear"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="perm-filter-select"
-          placeholder="Select year">
-        </p-select>
+        <app-select class="perm-filter-select" [(ngModel)]="selectedYear" [options]="yearOptions" optionLabel="label" optionValue="value" placeholder="Select year" />
       </div>
 
       <button
@@ -177,7 +163,7 @@
 
       <!-- Modal Body -->
       <div class="modal-body emp-perm-body">
-        <div class="emp-perm-card">
+        <div class="card-custom emp-perm-card">
           <div class="table-responsive w-100 overflow-x-auto">
             <table class="table-modern data-table-sticky w-100 ep-table">
               <thead>
@@ -321,14 +307,7 @@
           <!-- Permission Type (PrimeNG p-select) -->
           <div class="perm-row mb-3" [class.has-error]="applyFormErrors['type']">
             <label class="form-label required-label">Permission Type</label>
-            <p-select
-              [options]="permissionTypeOptions"
-              [(ngModel)]="applyType"
-              optionLabel="label"
-              optionValue="value"
-              styleClass="w-100"
-              placeholder="Select permission type">
-            </p-select>
+            <app-select [(ngModel)]="applyType" [options]="permissionTypeOptions" optionLabel="label" optionValue="value" placeholder="Select permission type" />
             @if (applyFormErrors['type']) {
             <div class="field-error-msg">Please select a permission type</div>
             }
@@ -371,14 +350,7 @@
           <!-- Approve By (PrimeNG p-select) -->
           <div class="perm-row mb-3" [class.has-error]="applyFormErrors['approver']">
             <label class="form-label required-label">Approve by</label>
-            <p-select
-              [options]="approverOptions"
-              [(ngModel)]="applyApprover"
-              optionLabel="label"
-              optionValue="value"
-              styleClass="w-100"
-              placeholder="Select approver">
-            </p-select>
+            <app-select [(ngModel)]="applyApprover" [options]="approverOptions" optionLabel="label" optionValue="value" placeholder="Select approver" />
             @if (applyFormErrors['approver']) {
             <div class="field-error-msg">Please select an approver</div>
             }

@@ -1,0 +1,104 @@
+@let r = row;
+@let step = previewStep;
+
+<div class="modal-backdrop-custom" (click)="close()"></div>
+<div class="modal-custom modal-lg" role="dialog" aria-modal="true" [attr.aria-label]="'Update progress — ' + r.title">
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div class="modal-header">
+      <div class="d-flex align-items-center gap-2">
+        <span class="modal-icon-circle"><i class="bi bi-pencil-square"></i></span>
+        <div>
+          <h5 class="modal-title">Update Session Progress</h5>
+          <small class="text-muted">Steps 5–10 · Conduct → Attendance → Materials → Assessment → Feedback → Complete</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close-custom" aria-label="Close" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-summary">
+        <div>
+          <div class="fw-semibold">{{ r.title }}</div>
+          <div class="text-muted">{{ r.emp }} ({{ r.empId }}) • {{ moduleMeta(r.module).short }}</div>
+        </div>
+        <div class="text-md-end">
+          <div class="fw-semibold">{{ fmtDate(r.date) }} • {{ r.time }}</div>
+          <div class="text-muted">{{ r.trainer }} • {{ r.mode }}</div>
+        </div>
+      </div>
+
+      <!-- live tracker: updates as you fill the form -->
+      <ol class="mini-steps" [attr.aria-label]="'Step ' + step + ' of 10'">
+        @for (s of steps; track s.no) {
+        <li [class.done]="s.no <= step" [title]="s.no + '. ' + s.label"></li>
+        }
+      </ol>
+      <p class="mini-steps-caption">Step {{ step }} of 10 — {{ steps[step - 1].label }}</p>
+
+      <!-- step 5 -->
+      <fieldset class="modal-step">
+        <legend><span class="modal-step-no">5</span> Session Conducted</legend>
+        <label class="form-check form-switch mb-0">
+          <input type="checkbox" role="switch" class="form-check-input" formControlName="conducted" />
+          <span class="form-check-label">The session has taken place</span>
+        </label>
+      </fieldset>
+
+      <!-- steps 6–9 -->
+      <fieldset class="modal-step" [disabled]="!form.controls.conducted.value">
+        <legend><span class="modal-step-no">6–9</span> Attendance, Materials, Assessment & Feedback</legend>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Attendance</label>
+            <app-select formControlName="attendance" [options]="attendanceOptions" optionLabel="label" optionValue="value" />
+            @if (form.controls.attendance.value === 'Absent') {
+            <div class="field-error">Absent — schedule this module again from the Clearance tab.</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Assessment</label>
+            <app-select formControlName="assessment" [options]="assessmentOptions" optionLabel="label" optionValue="value" />
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="prog-materials">Materials Shared</label>
+            <input id="prog-materials" type="text" class="form-control" formControlName="materials"
+              placeholder="Handbook.pdf, Policy.pdf (comma separated)" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Joiner Rating</label>
+            <app-select formControlName="rating" [options]="ratingOptions" optionLabel="label" optionValue="value" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="prog-feedback">Feedback</label>
+            <input id="prog-feedback" type="text" class="form-control" formControlName="feedback"
+              placeholder="Joiner's comments" />
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- step 10 -->
+      <fieldset class="modal-step mb-0">
+        <legend><span class="modal-step-no">10</span> Session Completed</legend>
+        <label class="form-check mb-0">
+          <input type="checkbox" class="form-check-input" formControlName="completed" />
+          <span class="form-check-label">Mark this session as completed</span>
+        </label>
+        @if (!canComplete) {
+        <small class="text-muted d-block mt-1">
+          Needs the session conducted, the joiner present and the assessment passed.
+        </small>
+        }
+      </fieldset>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg"></i>
+        <span>Save Progress</span>
+      </button>
+    </div>
+  </form>
+</div>

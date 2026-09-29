@@ -1,0 +1,559 @@
+/* Shared layout for the attendance views. Colours come from tokens;
+   cards, pills, tables, modal and stat tiles come from classes.scss. */
+
+:host {
+  display: block;
+
+  /* ONE status palette for every view — pills, register cells, dots, bars.
+     Change a colour here and it changes everywhere. */
+  --att-present:  var(--primary);      /* green  */
+  --att-late:     var(--warning);      /* amber  */
+  --att-half:     var(--blue-450);     /* blue   */
+  --att-leave:    var(--purple-500);   /* violet */
+  --att-absent:   var(--danger);       /* red    */
+  --att-weekoff:  var(--text-faint);   /* grey   */
+  --att-overtime: var(--teal-350);     /* teal   */
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gh-heading);
+
+  i { color: var(--primary); }
+}
+
+.att-avatar {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.att-initials {
+  background: var(--primary);
+}
+
+.att-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 48px 16px;
+  text-align: center;
+
+  > i { font-size: 32px; color: var(--text-muted); }
+}
+
+.att-ot {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--att-overtime) 14%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--att-overtime) 75%, black);
+}
+
+/* ================================================================
+   Daily — worked hours
+================================================================ */
+.att-hours {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 600;
+
+  small { font-weight: 400; color: var(--text-muted); }
+}
+
+.att-hours-bar {
+  width: 110px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    background: var(--primary);
+
+    &.is-short { background: var(--warning); }
+  }
+}
+
+/* ================================================================
+   Status colours — any element with data-status gets --st.
+   Components read it as var(--st, fallback), never set a default,
+   so these rules always win.
+================================================================ */
+[data-status='present']  { --st: var(--att-present); }
+[data-status='late']     { --st: var(--att-late); }
+[data-status='half']     { --st: var(--att-half); }
+[data-status='leave']    { --st: var(--att-leave); }
+[data-status='absent']   { --st: var(--att-absent); }
+[data-status='weekoff']  { --st: var(--att-weekoff); }
+[data-status='overtime'] { --st: var(--att-overtime); }
+
+/* tinted fill + darker text of the same hue (readable on white) */
+%att-tint {
+  background: color-mix(in srgb, var(--st, var(--border-strong)) 15%, transparent);
+  color: color-mix(in srgb, var(--st, var(--text-muted)) 78%, black);
+}
+
+/* status pill with icon — daily log, punch timeline */
+.att-pill {
+  @extend %att-tint;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid color-mix(in srgb, var(--st, var(--border)) 30%, transparent);
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  i { font-size: 11px; color: var(--st); }
+}
+
+/* short code chip — weekly register, legends */
+.att-cell {
+  @extend %att-tint;
+  min-width: 30px;
+  height: 26px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1;
+
+  &.is-future { background: transparent; color: var(--text-faint); }
+}
+
+/* ================================================================
+   Weekly register
+================================================================ */
+.att-register {
+  padding: 0;
+  overflow: hidden;
+}
+
+.att-register-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.att-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: var(--text-muted);
+
+  .att-cell { min-width: 24px; height: 20px; margin-right: 4px; font-size: 10.5px; }
+}
+
+.att-register-table {
+  th small { font-weight: 500; color: var(--text-muted); }
+  th.is-today { color: var(--primary-dark); }
+}
+
+.att-col-emp { min-width: 220px; }
+.att-col-rate { min-width: 130px; }
+
+.att-emp-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover .emp-name-line { color: var(--primary-dark); text-decoration: underline; }
+}
+
+.att-rate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.att-rate-bar {
+  width: 64px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    background: var(--primary);
+
+    &.is-low { background: var(--warning); }
+  }
+}
+
+/* ================================================================
+   Monthly register — compact grid, employee column sticks on scroll
+================================================================ */
+.att-month-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.att-month {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+
+  th,
+  td {
+    padding: 6px 2px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--table-head-bg, var(--bg-muted));
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--gh-heading);
+  }
+
+  tbody tr:hover > * { background: var(--bg-soft); }
+}
+
+.att-month-emp {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  min-width: 200px;
+  padding: 6px 12px !important;
+  background: var(--surface);
+  text-align: left !important;
+  box-shadow: inset -1px 0 0 var(--border);
+
+  thead & { z-index: 3; }
+}
+
+.att-month-day {
+  min-width: 30px;
+
+  /* header only: day number over weekday — must not touch the body's status cells */
+  @at-root th#{&} {
+    > span { display: block; line-height: 1.1; }
+    > small { font-weight: 500; color: var(--text-muted); }
+  }
+
+  &.is-weekend { background: color-mix(in srgb, var(--bg-muted) 55%, transparent); }
+  &.is-today { color: var(--primary-dark); box-shadow: inset 0 -2px 0 var(--primary); }
+}
+
+.att-month-total {
+  min-width: 38px;
+  padding: 6px 6px !important;
+  font-weight: 600;
+  color: var(--gh-heading);
+}
+
+thead .att-month-total:first-of-type,
+.att-month-total:first-of-type {
+  box-shadow: inset 1px 0 0 var(--border);
+}
+
+.att-month-rate {
+  min-width: 64px;
+  padding: 6px 10px !important;
+}
+
+/* monthly register cell — same tint as the weekly chips, smaller */
+.att-dot-cell {
+  @extend %att-tint;
+  width: 24px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+
+  /* absent + leave get a solid fill so gaps jump out of a month grid */
+  &[data-status='absent'],
+  &[data-status='leave'] {
+    background: var(--st);
+    color: var(--white);
+  }
+
+  &[data-status='weekoff'] { background: transparent; }
+}
+
+.att-avatar-sm {
+  width: 26px;
+  height: 26px;
+  object-fit: cover;
+  flex-shrink: 0;
+  font-size: 10px;
+}
+
+.att-rate-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-soft);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--primary-dark);
+
+  &.is-low { background: var(--yellow-50-2); color: var(--orange-400); }
+}
+
+/* ================================================================
+   Department table
+================================================================ */
+.att-row-link {
+  cursor: pointer;
+}
+
+.att-dept-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  strong { color: var(--gh-heading); }
+}
+
+.att-dept-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  font-size: 14px;
+  color: var(--primary-dark);
+}
+
+.att-col-stack { min-width: 160px; }
+
+.att-stack {
+  display: flex;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+  overflow: hidden;
+
+  > span { background: var(--st); }
+}
+
+.att-step {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+
+  &:hover { border-color: var(--primary); color: var(--primary); }
+}
+
+.att-table-note {
+  margin: 0;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ================================================================
+   Summary strip — one slim card of headline numbers
+================================================================ */
+.strip {
+  display: flex;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.strip-item {
+  flex: 1 0 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 16px;
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 3px solid transparent;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+
+  &:last-child { border-right: 0; }
+
+  @at-root button#{&} {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover { background: var(--bg-soft); }
+    &:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
+  }
+
+  &.active {
+    border-bottom-color: var(--primary);
+    background: var(--primary-soft);
+  }
+}
+
+.strip-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.strip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--st);
+}
+
+.strip-value {
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--gh-heading);
+}
+
+.strip-hint {
+  overflow: hidden;
+  font-size: 11.5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-muted);
+}
+
+/* ================================================================
+   Punch timeline modal
+================================================================ */
+.tl-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 0 0 20px;
+
+  > div {
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-soft);
+    text-align: center;
+  }
+
+  dt { font-size: 11.5px; font-weight: 500; color: var(--text-muted); }
+  dd { margin: 2px 0 0; font-size: 16px; font-weight: 700; color: var(--gh-heading); }
+
+  @media (max-width: 575.98px) { grid-template-columns: repeat(2, 1fr); }
+}
+
+.tl-list {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 44px;
+  list-style: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 15px;
+    width: 2px;
+    background: var(--border);
+  }
+}
+
+.tl-item {
+  --k: var(--primary);
+
+  position: relative;
+  margin-bottom: 10px;
+
+  &[data-kind='break'] { --k: var(--warning); }
+  &[data-kind='lunch'] { --k: var(--teal-350); }
+}
+
+.tl-node {
+  position: absolute;
+  top: 8px;
+  left: -44px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--k);
+  border-radius: 50%;
+  background: var(--surface);
+  font-size: 14px;
+  color: var(--k);
+}
+
+.tl-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--k);
+  border-radius: var(--radius-sm);
+}
+
+.tl-label { font-weight: 700; color: var(--gh-heading); }
+.tl-meta { font-size: 12px; color: var(--text-muted); }
+.tl-time { font-weight: 700; color: var(--gh-heading); }
+
+.tl-gap {
+  display: inline-block;
+  margin: 6px 0 0;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+
+  &.is-long { background: var(--yellow-50-2); color: var(--orange-400); }
+}

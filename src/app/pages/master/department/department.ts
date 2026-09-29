@@ -20,15 +20,15 @@ import {
 } from '../../../shared/primedatatable/primedatatable';
 
 import { CommonModule } from '@angular/common';
-import { SelectModule } from 'primeng/select';
 
+import { AppSelect } from '../../../shared/app-select/app-select';
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-department',
   standalone: true,
 
-  imports: [ReactiveFormsModule, PrimeDataTable, SelectModule, CommonModule],
+  imports: [AppSelect, ReactiveFormsModule, PrimeDataTable, CommonModule],
 
   templateUrl: './department.html',
   styleUrl: './department.scss',

@@ -125,19 +125,7 @@
                 Department
               </label>
 
-              <p-select
-                [options]="departmentData"
-                formControlName="status"
-                optionLabel="department"
-                optionValue="department"
-                placeholder="Select Department"
-                [filter]="true"
-                filterBy="department"
-                [showClear]="true"
-                appendTo="body"
-                styleClass="w-100">
-
-              </p-select>
+              <app-select formControlName="status" [options]="departmentData" optionLabel="department" optionValue="department" placeholder="Select Department" />
 
             </div>
 
@@ -202,21 +190,7 @@
               Status
             </label>
 
-            <p-select
-              [options]="statusOptions"
-              formControlName="status"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Select Status"
-              [filter]="true"
-              filterBy="label"
-              filterPlaceholder="Search status..."
-              [showClear]="true"
-              [resetFilterOnHide]="true"
-              appendTo="body"
-              styleClass="w-100">
-
-            </p-select>
+            <app-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Select Status" />
 
           </div>
 

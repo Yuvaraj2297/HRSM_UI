@@ -9,7 +9,7 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
@@ -42,7 +42,7 @@
     justify-content: center;
     font-size: 19px;
     color: var(--primary-dark);
-    background: var(--white);
+    background: var(--surface);
 
     &.is-text { font-size: 10px; font-weight: 800; letter-spacing: 0.3px; }
   }
@@ -112,7 +112,7 @@
     height: 7px;
     border-radius: 50%;
     background: var(--green-300);
-    border: 1.5px solid var(--white);
+    border: 1.5px solid var(--surface);
   }
 }
 
@@ -163,7 +163,7 @@
     height: 10px;
     border-radius: 50%;
     background: var(--green-300);
-    border: 2px solid var(--white);
+    border: 2px solid var(--surface);
   }
 
   &.off::after { background: var(--text-faint); }

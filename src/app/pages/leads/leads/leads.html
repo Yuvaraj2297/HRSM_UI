@@ -80,17 +80,11 @@
       <div class="row g-3">
         <div class="col-lg-3 col-md-4 col-sm-6">
           <label class="form-label">Staff Members</label>
-          <select class="form-select" [(ngModel)]="filters.staff">
-            <option value="">Assigned</option>
-            <option *ngFor="let o of staffOptions" [value]="o">{{ o }}</option>
-          </select>
+          <app-select [(ngModel)]="filters.staff" [options]="staffOptions" placeholder="Assigned" />
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <label class="form-label">Sourcer</label>
-          <select class="form-select" [(ngModel)]="filters.sourcer">
-            <option value="">Sourcer</option>
-            <option *ngFor="let o of sourcerOptions" [value]="o">{{ o }}</option>
-          </select>
+          <app-select [(ngModel)]="filters.sourcer" [options]="sourcerOptions" placeholder="Sourcer" />
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <label class="form-label">Lead Status</label>
@@ -100,10 +94,7 @@
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <label class="form-label">Lead Score</label>
-          <select class="form-select" [(ngModel)]="filters.source">
-            <option value="">Source</option>
-            <option *ngFor="let o of sourceOptions" [value]="o">{{ o }}</option>
-          </select>
+          <app-select [(ngModel)]="filters.source" [options]="sourceOptions" placeholder="Source" />
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <label class="form-label">From date</label>
@@ -115,16 +106,11 @@
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <label class="form-label">Lead Type</label>
-          <select class="form-select" [(ngModel)]="filters.type">
-            <option value="">Additional Filters</option>
-            <option *ngFor="let o of typeOptions" [value]="o">{{ o }}</option>
-          </select>
+          <app-select [(ngModel)]="filters.type" [options]="typeOptions" placeholder="Additional Filters" />
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <label class="form-label">Closure Date Period</label>
-          <select class="form-select" [(ngModel)]="filters.closurePeriod">
-            <option *ngFor="let o of closurePeriodOptions" [value]="o">{{ o }}</option>
-          </select>
+          <app-select [(ngModel)]="filters.closurePeriod" [options]="closurePeriodOptions" />
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 align-self-end">
           <div class="d-flex gap-2">

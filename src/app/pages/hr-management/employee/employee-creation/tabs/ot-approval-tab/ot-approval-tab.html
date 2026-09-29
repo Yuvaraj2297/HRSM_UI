@@ -6,8 +6,7 @@
       <div class="ne-otapp-row">
         <div class="ne-otapp-col">
           <label>{{ ordinal(i + 1) }} Level Approval</label>
-          <p-select [formControlName]="i" [options]="fs.managers" optionLabel="label" optionValue="value"
-                    placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+          <app-select [formControlName]="i" [options]="fs.managers" optionLabel="label" optionValue="value" placeholder="Non selected" />
         </div>
 
         <button *ngIf="i === 0" type="button" class="ne-otapp-btn-add" title="Add approval level" (click)="addLevel()">+</button>

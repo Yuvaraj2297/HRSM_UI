@@ -67,7 +67,7 @@
     height: 32px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-soft);
-    background: var(--white);
+    background: var(--surface);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -103,7 +103,7 @@
   flex-shrink: 0;
 
   .summary-card {
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--border-soft);
     border-radius: var(--card-radius);
     padding: 12px 10px;

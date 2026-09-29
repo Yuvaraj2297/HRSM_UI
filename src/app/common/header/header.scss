@@ -360,6 +360,11 @@
     display: none;
   }
 
+  /* …except dark / light mode, which has no other home */
+  .header-icon-button--secondary.header-theme-toggle {
+    display: inline-flex;
+  }
+
   .profile-wrapper {
     margin-left: 0;
     padding-left: 0;

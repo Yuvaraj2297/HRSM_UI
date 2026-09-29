@@ -1,5 +1,7 @@
 import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, ElementRef, HostListener, Injector, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AppSelect } from '../../../../shared/app-select/app-select';
 import { BiIcon, BiName } from '../bi-icon';
 
 type Kind = 'earning' | 'deduction';
@@ -68,7 +70,7 @@ const SEED: SalaryComponent[] = [
 
 @Component({
   selector: 'app-salary-structure',
-  imports: [BiIcon, AppStatCard],
+  imports: [BiIcon, AppStatCard, AppSelect, FormsModule],
   templateUrl: './salary-structure.html',
   styleUrl: './salary-structure.scss',
 })

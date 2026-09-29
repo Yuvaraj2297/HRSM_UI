@@ -67,8 +67,7 @@
     <div class="leave-holidays-head">
       <div class="leave-holidays-heading">
         <div class="leave-holidays-heading-copy" style="min-width: 280px;">
-          <p-select [options]="categoryOptions" [(ngModel)]="selectedCategory" optionLabel="label" optionValue="value"
-            appendTo="body" styleClass="w-100 leave-filter-pselect"></p-select>
+          <app-select class="leave-filter-pselect" [(ngModel)]="selectedCategory" [options]="categoryOptions" optionLabel="label" optionValue="value" />
         </div>
       </div>
 
@@ -207,14 +206,12 @@
           <div class="leave-apply-form">
             <div class="leave-apply-row">
               <label class="form-label required-label">Leave type</label>
-              <p-select [options]="leaveTypeOptions" [(ngModel)]="applyForm.leaveType" optionLabel="label" optionValue="value"
-                placeholder="Select Leave Type" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+              <app-select [(ngModel)]="applyForm.leaveType" [options]="leaveTypeOptions" optionLabel="label" optionValue="value" placeholder="Select Leave Type" />
             </div>
 
             <div class="leave-apply-row">
               <label class="form-label required-label">Reporting Manager</label>
-              <p-select [options]="reportingManagerOptions" [(ngModel)]="applyForm.reportingManager" optionLabel="label" optionValue="value"
-                placeholder="Select Reporting Manager" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+              <app-select [(ngModel)]="applyForm.reportingManager" [options]="reportingManagerOptions" optionLabel="label" optionValue="value" placeholder="Select Reporting Manager" />
             </div>
 
             <div class="leave-apply-row">
@@ -232,8 +229,7 @@
             <div class="leave-apply-summary-row">
               <span class="summary-date w-100">{{ applyDateSummary }}</span>
               <div style="min-width: 140px;">
-                <p-select [options]="dayTypeOptions" [(ngModel)]="applyForm.dayType" optionLabel="label" optionValue="value"
-                  appendTo="body" styleClass="w-100"></p-select>
+                <app-select [(ngModel)]="applyForm.dayType" [options]="dayTypeOptions" optionLabel="label" optionValue="value" />
               </div>
             </div>
 
@@ -329,14 +325,12 @@
     <div class="single-holiday-section">
       <div class="assign-form-row">
         <label class="form-label required-label">Select Employee</label>
-        <p-select [options]="employeeOptions" [(ngModel)]="assignForm.employeeId" optionLabel="label" optionValue="value"
-          placeholder="Select Employee" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+        <app-select [(ngModel)]="assignForm.employeeId" [options]="employeeOptions" optionLabel="label" optionValue="value" placeholder="Select Employee" />
       </div>
 
       <div class="assign-form-row">
         <label class="form-label required-label">Leave Type</label>
-        <p-select [options]="leaveTypeOptions" [(ngModel)]="assignForm.leaveType" optionLabel="label" optionValue="value"
-          placeholder="Select Leave Type" [filter]="true" filterBy="label" appendTo="body" styleClass="w-100"></p-select>
+        <app-select [(ngModel)]="assignForm.leaveType" [options]="leaveTypeOptions" optionLabel="label" optionValue="value" placeholder="Select Leave Type" />
       </div>
 
       <div class="assign-form-row">
@@ -361,8 +355,7 @@
 
       <div class="assign-form-row">
         <label class="form-label">Leave Year</label>
-        <p-select [options]="yearOptions" [(ngModel)]="assignForm.year" optionLabel="label" optionValue="value"
-          placeholder="Select Year" appendTo="body" styleClass="w-100"></p-select>
+        <app-select [(ngModel)]="assignForm.year" [options]="yearOptions" optionLabel="label" optionValue="value" placeholder="Select Year" />
       </div>
 
       <div class="assign-form-row mb-0">
@@ -490,14 +483,12 @@
 
       <div class="holiday-form-row">
         <label class="form-label required-label">Holiday Type</label>
-        <p-select [options]="holidayTypeOptions" [(ngModel)]="holidayForm.type" optionLabel="label" optionValue="value"
-          placeholder="Select Holiday Type" appendTo="body" styleClass="w-100"></p-select>
+        <app-select [(ngModel)]="holidayForm.type" [options]="holidayTypeOptions" optionLabel="label" optionValue="value" placeholder="Select Holiday Type" />
       </div>
 
       <div class="holiday-form-row mb-0">
         <label class="form-label">Holiday Year</label>
-        <p-select [options]="yearOptions" [(ngModel)]="holidayForm.year" optionLabel="label" optionValue="value"
-          placeholder="Select Holiday Year" appendTo="body" styleClass="w-100"></p-select>
+        <app-select [(ngModel)]="holidayForm.year" [options]="yearOptions" optionLabel="label" optionValue="value" placeholder="Select Holiday Year" />
       </div>
     </div>
     }
@@ -588,8 +579,7 @@
 
           <div class="leave-apply-row">
             <label class="form-label required-label">Approve by</label>
-            <p-select [options]="approverOptions" [(ngModel)]="permissionForm.approver" optionLabel="label" optionValue="value"
-              placeholder="Select Approver" appendTo="body" styleClass="w-100"></p-select>
+            <app-select [(ngModel)]="permissionForm.approver" [options]="approverOptions" optionLabel="label" optionValue="value" placeholder="Select Approver" />
           </div>
 
           <div class="leave-apply-row mb-0">

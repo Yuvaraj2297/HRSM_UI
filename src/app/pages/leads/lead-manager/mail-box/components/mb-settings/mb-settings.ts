@@ -1,16 +1,16 @@
 import { Component, effect, inject, input, output, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 
 import { ENCRYPTIONS, Encryption, MailSettings } from '../../mail-box.model';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 const PORT = [Validators.min(1), Validators.max(65535), Validators.pattern(/^\d*$/)];
 
 /** Outgoing (SMTP) + incoming (IMAP) mail server settings */
 @Component({
   selector: 'app-mb-settings',
   standalone: true,
-  imports: [ReactiveFormsModule, SelectModule],
+  imports: [AppSelect, ReactiveFormsModule],
   templateUrl: './mb-settings.html',
   styleUrl: './mb-settings.scss',
 })

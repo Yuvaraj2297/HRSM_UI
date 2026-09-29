@@ -6,28 +6,12 @@
     <div class="d-flex align-items-center gap-3 flex-wrap">
       <div class="d-flex align-items-center gap-2">
         <label class="form-label mb-0 fw-semibold text-muted text-nowrap">Team</label>
-        <p-select
-          [options]="teamOptions"
-          [(ngModel)]="selectedTeam"
-          (ngModelChange)="onTeamChange()"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="team-cal-select"
-          placeholder="All Teams">
-        </p-select>
+        <app-select class="team-cal-select" [(ngModel)]="selectedTeam" (ngModelChange)="onTeamChange()" [options]="teamOptions" optionLabel="label" optionValue="value" placeholder="All Teams" />
       </div>
 
       <div class="d-flex align-items-center gap-2">
         <label class="form-label mb-0 fw-semibold text-muted text-nowrap">Team Member</label>
-        <p-select
-          [options]="filteredMemberOptions"
-          [(ngModel)]="selectedMemberId"
-          (ngModelChange)="onMemberChange()"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="member-cal-select"
-          placeholder="Select Team Member">
-        </p-select>
+        <app-select class="member-cal-select" [(ngModel)]="selectedMemberId" (ngModelChange)="onMemberChange()" [options]="filteredMemberOptions" optionLabel="label" optionValue="value" placeholder="Select Team Member" />
       </div>
     </div>
 

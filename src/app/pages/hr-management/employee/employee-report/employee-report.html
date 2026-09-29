@@ -1,9 +1,11 @@
 <!-- =========================================================
      PAGE HEADER — title + view tabs on one row
 ========================================================= -->
-<div class="er-head">
 
-  <nav class="page-tabs page-tabs-sm er-tabs" role="tablist" aria-label="Employee views">
+<div class="card-custom">
+
+
+  <nav class="page-tabs page-tabs-sm er-tabs mt-2" role="tablist" aria-label="Employee views">
     @for (view of views; track view.key) {
     <button type="button" role="tab" class="page-tab" [class.active]="activeView === view.key"
       [attr.aria-selected]="activeView === view.key" (click)="setView(view.key)">
@@ -13,17 +15,17 @@
     </button>
     }
   </nav>
-</div>
+
+<div class="">
 
 
-<!-- =========================================================
-     ALL EMPLOYEES - STAT CARDS
-========================================================= -->
+<!-- 
+    
 <div *ngIf="activeView === 'all'" class="stat-grid">
   <app-stat-card *ngFor="let card of statCards"
     [label]="card.label" [value]="card.value" [icon]="card.icon"
     [tone]="card.theme" [sub]="card.delta" [subTone]="card.deltaClass" />
-</div>
+</div> -->
 
 
 <!-- =========================================================
@@ -38,8 +40,6 @@
   </app-primedatatable>
 
 </div>
-
-
 <!-- =========================================================
      TEAM VIEW
 ========================================================= -->
@@ -143,6 +143,11 @@
   </ng-template>
 
 </div>
+</div>
+</div>
+
+
+
 
 
 <!-- =========================================================
@@ -250,99 +255,99 @@
           <div class="row g-3">
 
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Employment Information</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Employment Information</div>
 
-                <div class="info-row">
-                  <span class="info-label">Employee ID</span>
-                  <span class="info-value">{{ selectedEmployee.empId }}</span>
+                <div class="ui-info-row">
+                  <span>Employee ID</span>
+                  <span class="ui-info-val">{{ selectedEmployee.empId }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Employment Type</span>
-                  <span class="info-value">{{ selectedEmployee.empType || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Employment Type</span>
+                  <span class="ui-info-val">{{ selectedEmployee.empType || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Date of Joining</span>
-                  <span class="info-value">{{ selectedEmployee.joined }}</span>
+                <div class="ui-info-row">
+                  <span>Date of Joining</span>
+                  <span class="ui-info-val">{{ selectedEmployee.joined }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Confirmation Date</span>
-                  <span class="info-value">{{ selectedEmployee.confirmDate || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Confirmation Date</span>
+                  <span class="ui-info-val">{{ selectedEmployee.confirmDate || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Probation Period</span>
-                  <span class="info-value">{{ selectedEmployee.probation || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Probation Period</span>
+                  <span class="ui-info-val">{{ selectedEmployee.probation || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Status</span>
-                  <span class="info-value">{{ selectedEmployee.status }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Organization Information</div>
-
-                <div class="info-row">
-                  <span class="info-label">Department</span>
-                  <span class="info-value">{{ selectedEmployee.dept }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Designation</span>
-                  <span class="info-value">{{ selectedEmployee.position }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Grade</span>
-                  <span class="info-value">{{ selectedEmployee.grade || '—' }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Branch</span>
-                  <span class="info-value">{{ selectedEmployee.branch || '—' }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Location</span>
-                  <span class="info-value">{{ selectedEmployee.location || selectedEmployee.office }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Cost Center</span>
-                  <span class="info-value">{{ selectedEmployee.costCenter || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Status</span>
+                  <span class="ui-info-val">{{ selectedEmployee.status }}</span>
                 </div>
               </div>
             </div>
 
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Contact Information</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Organization Information</div>
 
-                <div class="info-row">
-                  <span class="info-label">Mobile</span>
-                  <span class="info-value">{{ selectedEmployee.phone }}</span>
+                <div class="ui-info-row">
+                  <span>Department</span>
+                  <span class="ui-info-val">{{ selectedEmployee.dept }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Official Email</span>
-                  <span class="info-value">{{ selectedEmployee.email }}</span>
+                <div class="ui-info-row">
+                  <span>Designation</span>
+                  <span class="ui-info-val">{{ selectedEmployee.position }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Personal Email</span>
-                  <span class="info-value">{{ selectedEmployee.personalEmail || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Grade</span>
+                  <span class="ui-info-val">{{ selectedEmployee.grade || '—' }}</span>
                 </div>
 
-                <div class="info-row" style="align-items:flex-start;">
-                  <span class="info-label">Current Address</span>
-                  <span class="info-value" style="max-width:60%;">{{ selectedEmployee.address || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Branch</span>
+                  <span class="ui-info-val">{{ selectedEmployee.branch || '—' }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Location</span>
+                  <span class="ui-info-val">{{ selectedEmployee.location || selectedEmployee.office }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Cost Center</span>
+                  <span class="ui-info-val">{{ selectedEmployee.costCenter || '—' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Contact Information</div>
+
+                <div class="ui-info-row">
+                  <span>Mobile</span>
+                  <span class="ui-info-val">{{ selectedEmployee.phone }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Official Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.email }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Personal Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.personalEmail || '—' }}</span>
+                </div>
+
+                <div class="ui-info-row" style="align-items:flex-start;">
+                  <span>Current Address</span>
+                  <span class="ui-info-val" style="max-width:60%;">{{ selectedEmployee.address || '—' }}</span>
                 </div>
 
                 <a class="info-viewmore" href (click)="setModalTab('personal'); $event.preventDefault()">
@@ -363,59 +368,59 @@
           <div class="row g-3">
 
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Personal Details</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Personal Details</div>
 
-                <div class="info-row">
-                  <span class="info-label">Full Name</span>
-                  <span class="info-value">{{ selectedEmployee.name }}</span>
+                <div class="ui-info-row">
+                  <span>Full Name</span>
+                  <span class="ui-info-val">{{ selectedEmployee.name }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Date of Birth</span>
-                  <span class="info-value">{{ selectedEmployee.dob || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Date of Birth</span>
+                  <span class="ui-info-val">{{ selectedEmployee.dob || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Blood Group</span>
-                  <span class="info-value">{{ selectedEmployee.bloodGroup || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Blood Group</span>
+                  <span class="ui-info-val">{{ selectedEmployee.bloodGroup || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Marital Status</span>
-                  <span class="info-value">{{ selectedEmployee.maritalStatus || '—' }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Contact Details</div>
-
-                <div class="info-row">
-                  <span class="info-label">Mobile</span>
-                  <span class="info-value">{{ selectedEmployee.phone }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Official Email</span>
-                  <span class="info-value">{{ selectedEmployee.email }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Personal Email</span>
-                  <span class="info-value">{{ selectedEmployee.personalEmail || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Marital Status</span>
+                  <span class="ui-info-val">{{ selectedEmployee.maritalStatus || '—' }}</span>
                 </div>
               </div>
             </div>
 
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Address</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Contact Details</div>
 
-                <div class="info-row" style="align-items:flex-start;">
-                  <span class="info-label">Current Address</span>
-                  <span class="info-value" style="max-width:65%;">{{ selectedEmployee.address || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Mobile</span>
+                  <span class="ui-info-val">{{ selectedEmployee.phone }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Official Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.email }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Personal Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.personalEmail || '—' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Address</div>
+
+                <div class="ui-info-row" style="align-items:flex-start;">
+                  <span>Current Address</span>
+                  <span class="ui-info-val" style="max-width:65%;">{{ selectedEmployee.address || '—' }}</span>
                 </div>
               </div>
             </div>
@@ -432,93 +437,93 @@
           <div class="row g-3">
 
             <div class="col-lg-6">
-              <div class="info-card">
-                <div class="info-card-title">Employment Details</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Employment Details</div>
 
-                <div class="info-row">
-                  <span class="info-label">Employment Type</span>
-                  <span class="info-value">{{ selectedEmployee.empType || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Employment Type</span>
+                  <span class="ui-info-val">{{ selectedEmployee.empType || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Date of Joining</span>
-                  <span class="info-value">{{ selectedEmployee.joined }}</span>
+                <div class="ui-info-row">
+                  <span>Date of Joining</span>
+                  <span class="ui-info-val">{{ selectedEmployee.joined }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Confirmation Date</span>
-                  <span class="info-value">{{ selectedEmployee.confirmDate || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Confirmation Date</span>
+                  <span class="ui-info-val">{{ selectedEmployee.confirmDate || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Probation Period</span>
-                  <span class="info-value">{{ selectedEmployee.probation || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Probation Period</span>
+                  <span class="ui-info-val">{{ selectedEmployee.probation || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Status</span>
-                  <span class="info-value">{{ selectedEmployee.status }}</span>
+                <div class="ui-info-row">
+                  <span>Status</span>
+                  <span class="ui-info-val">{{ selectedEmployee.status }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Notice Period</span>
-                  <span class="info-value">{{ selectedEmployee.noticePeriod || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Notice Period</span>
+                  <span class="ui-info-val">{{ selectedEmployee.noticePeriod || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Work Location</span>
-                  <span class="info-value">{{ selectedEmployee.workLocation || selectedEmployee.office }}</span>
+                <div class="ui-info-row">
+                  <span>Work Location</span>
+                  <span class="ui-info-val">{{ selectedEmployee.workLocation || selectedEmployee.office }}</span>
                 </div>
               </div>
             </div>
 
             <div class="col-lg-6">
-              <div class="info-card">
-                <div class="info-card-title">Experience Details</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Experience Details</div>
 
-                <div class="info-row">
-                  <span class="info-label">Previous Company</span>
-                  <span class="info-value">{{ selectedEmployee.prevCompany || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Previous Company</span>
+                  <span class="ui-info-val">{{ selectedEmployee.prevCompany || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Previous Designation</span>
-                  <span class="info-value">{{ selectedEmployee.prevDesignation || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Previous Designation</span>
+                  <span class="ui-info-val">{{ selectedEmployee.prevDesignation || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Industry</span>
-                  <span class="info-value">{{ selectedEmployee.industry || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Industry</span>
+                  <span class="ui-info-val">{{ selectedEmployee.industry || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Total Experience (Years)</span>
-                  <span class="info-value">{{ selectedEmployee.totalExp || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Total Experience (Years)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.totalExp || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Relevant Experience (Years)</span>
-                  <span class="info-value">{{ selectedEmployee.relevantExp || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Relevant Experience (Years)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.relevantExp || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Previous CTC (Annual)</span>
-                  <span class="info-value">{{ selectedEmployee.prevCtc || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Previous CTC (Annual)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.prevCtc || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Expected CTC (Annual)</span>
-                  <span class="info-value">{{ selectedEmployee.expectedCtc || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Expected CTC (Annual)</span>
+                  <span class="ui-info-val">{{ selectedEmployee.expectedCtc || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Reason for Leaving</span>
-                  <span class="info-value">{{ selectedEmployee.reasonLeaving || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Reason for Leaving</span>
+                  <span class="ui-info-val">{{ selectedEmployee.reasonLeaving || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Skills</span>
-                  <span class="info-value">{{ selectedEmployee.skills || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Skills</span>
+                  <span class="ui-info-val">{{ selectedEmployee.skills || '—' }}</span>
                 </div>
               </div>
             </div>
@@ -535,64 +540,64 @@
           <div class="row g-3">
 
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Organization Structure</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Organization Structure</div>
 
-                <div class="info-row">
-                  <span class="info-label">Department</span>
-                  <span class="info-value">{{ selectedEmployee.dept }}</span>
+                <div class="ui-info-row">
+                  <span>Department</span>
+                  <span class="ui-info-val">{{ selectedEmployee.dept }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Team</span>
-                  <span class="info-value">{{ selectedEmployee.team }}</span>
+                <div class="ui-info-row">
+                  <span>Team</span>
+                  <span class="ui-info-val">{{ selectedEmployee.team }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Designation</span>
-                  <span class="info-value">{{ selectedEmployee.position }}</span>
+                <div class="ui-info-row">
+                  <span>Designation</span>
+                  <span class="ui-info-val">{{ selectedEmployee.position }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Grade</span>
-                  <span class="info-value">{{ selectedEmployee.grade || '—' }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Location</div>
-
-                <div class="info-row">
-                  <span class="info-label">Office</span>
-                  <span class="info-value">{{ selectedEmployee.office }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Branch</span>
-                  <span class="info-value">{{ selectedEmployee.branch || '—' }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Cost Center</span>
-                  <span class="info-value">{{ selectedEmployee.costCenter || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>Grade</span>
+                  <span class="ui-info-val">{{ selectedEmployee.grade || '—' }}</span>
                 </div>
               </div>
             </div>
 
             <div class="col-md-4">
-              <div class="info-card">
-                <div class="info-card-title">Reporting Line</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Location</div>
 
-                <div class="info-row">
-                  <span class="info-label">Reporting Manager</span>
-                  <span class="info-value">{{ selectedEmployee.manager }}</span>
+                <div class="ui-info-row">
+                  <span>Office</span>
+                  <span class="ui-info-val">{{ selectedEmployee.office }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Manager Email</span>
-                  <span class="info-value">{{ selectedEmployee.managerEmail }}</span>
+                <div class="ui-info-row">
+                  <span>Branch</span>
+                  <span class="ui-info-val">{{ selectedEmployee.branch || '—' }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Cost Center</span>
+                  <span class="ui-info-val">{{ selectedEmployee.costCenter || '—' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Reporting Line</div>
+
+                <div class="ui-info-row">
+                  <span>Reporting Manager</span>
+                  <span class="ui-info-val">{{ selectedEmployee.manager }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Manager Email</span>
+                  <span class="ui-info-val">{{ selectedEmployee.managerEmail }}</span>
                 </div>
               </div>
             </div>
@@ -606,10 +611,10 @@
         ============================================== -->
         <div class="modal-tab-panels" *ngIf="activeModalTab === 'documents'">
 
-          <div class="info-card p-0">
+          <div class="card-custom p-0 h-100">
 
             <div class="d-flex align-items-center justify-content-between p-3">
-              <div class="info-card-title mb-0">Documents</div>
+              <div class="ui-sec-title mb-0">Documents</div>
               <button type="button" class="btn btn-primary btn-sm">
                 <i class="bi bi-upload"></i>Upload Document
               </button>
@@ -656,7 +661,7 @@
              ATTENDANCE TAB (placeholder)
         ============================================== -->
         <div class="modal-tab-panels" *ngIf="activeModalTab === 'attendance'">
-          <div class="info-card">
+          <div class="card-custom p-3 h-100">
             <div class="modal-empty-state">
               <i class="bi bi-clock-history"></i>
               <strong>Attendance records coming soon</strong>
@@ -669,7 +674,7 @@
              LEAVE TAB (placeholder)
         ============================================== -->
         <div class="modal-tab-panels" *ngIf="activeModalTab === 'leave'">
-          <div class="info-card">
+          <div class="card-custom p-3 h-100">
             <div class="modal-empty-state">
               <i class="bi bi-calendar-x"></i>
               <strong>No leave records yet</strong>
@@ -686,84 +691,84 @@
           <div class="row g-3">
 
             <div class="col-lg-4">
-              <div class="info-card">
-                <div class="info-card-title">Salary Information</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Salary Information</div>
 
-                <div class="info-row">
-                  <span class="info-label">Salary Structure</span>
-                  <span class="info-value">CTC Structure 2024</span>
+                <div class="ui-info-row">
+                  <span>Salary Structure</span>
+                  <span class="ui-info-val">CTC Structure 2024</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">CTC</span>
-                  <span class="info-value">{{ selectedEmployee.ctc || '—' }}</span>
+                <div class="ui-info-row">
+                  <span>CTC</span>
+                  <span class="ui-info-val">{{ selectedEmployee.ctc || '—' }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Effective From</span>
-                  <span class="info-value">{{ selectedEmployee.joined }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-4">
-              <div class="info-card">
-                <div class="info-card-title">Earnings</div>
-
-                <div class="info-row">
-                  <span class="info-label">Basic Salary</span>
-                  <span class="info-value">{{ money(selectedEmployee.basic) }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">HRA</span>
-                  <span class="info-value">{{ money(selectedEmployee.hra) }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Special Allowance</span>
-                  <span class="info-value">{{ money(selectedEmployee.specialAllowance) }}</span>
-                </div>
-
-                <div class="info-row">
-                  <span class="info-label">Other Allowance</span>
-                  <span class="info-value">{{ money(selectedEmployee.otherAllowance) }}</span>
-                </div>
-
-                <div class="info-row ">
-                  <span class="info-label">Gross Salary</span>
-                  <span class="info-value">{{ money(grossSalary) }}</span>
+                <div class="ui-info-row">
+                  <span>Effective From</span>
+                  <span class="ui-info-val">{{ selectedEmployee.joined }}</span>
                 </div>
               </div>
             </div>
 
             <div class="col-lg-4">
-              <div class="info-card">
-                <div class="info-card-title">Deductions</div>
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Earnings</div>
 
-                <div class="info-row">
-                  <span class="info-label">PF</span>
-                  <span class="info-value">{{ money(selectedEmployee.pf) }}</span>
+                <div class="ui-info-row">
+                  <span>Basic Salary</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.basic) }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Professional Tax</span>
-                  <span class="info-value">{{ money(selectedEmployee.professionalTax) }}</span>
+                <div class="ui-info-row">
+                  <span>HRA</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.hra) }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">TDS</span>
-                  <span class="info-value">{{ money(selectedEmployee.tds) }}</span>
+                <div class="ui-info-row">
+                  <span>Special Allowance</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.specialAllowance) }}</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">Total Deductions</span>
-                  <span class="info-value">{{ money(totalDeductions) }}</span>
+                <div class="ui-info-row">
+                  <span>Other Allowance</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.otherAllowance) }}</span>
                 </div>
 
-                <div class="info-row ">
-                  <span class="info-label">Net Salary</span>
-                  <span class="info-value">{{ money(netSalary) }}</span>
+                <div class="ui-info-row ">
+                  <span>Gross Salary</span>
+                  <span class="ui-info-val">{{ money(grossSalary) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="card-custom p-3 h-100">
+                <div class="ui-sec-title">Deductions</div>
+
+                <div class="ui-info-row">
+                  <span>PF</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.pf) }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Professional Tax</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.professionalTax) }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>TDS</span>
+                  <span class="ui-info-val">{{ money(selectedEmployee.tds) }}</span>
+                </div>
+
+                <div class="ui-info-row">
+                  <span>Total Deductions</span>
+                  <span class="ui-info-val">{{ money(totalDeductions) }}</span>
+                </div>
+
+                <div class="ui-info-row ">
+                  <span>Net Salary</span>
+                  <span class="ui-info-val">{{ money(netSalary) }}</span>
                 </div>
               </div>
             </div>
@@ -782,7 +787,7 @@
              ASSETS TAB (placeholder)
         ============================================== -->
         <div class="modal-tab-panels" *ngIf="activeModalTab === 'assets'">
-          <div class="info-card">
+          <div class="card-custom p-3 h-100">
             <div class="modal-empty-state">
               <i class="bi bi-laptop"></i>
               <strong>No assets assigned</strong>
@@ -795,7 +800,7 @@
              PERFORMANCE TAB (placeholder)
         ============================================== -->
         <div class="modal-tab-panels" *ngIf="activeModalTab === 'performance'">
-          <div class="info-card">
+          <div class="card-custom p-3 h-100">
             <div class="modal-empty-state">
               <i class="bi bi-graph-up-arrow"></i>
               <strong>No performance reviews yet</strong>
@@ -808,7 +813,7 @@
              TRAINING TAB (placeholder)
         ============================================== -->
         <div class="modal-tab-panels" *ngIf="activeModalTab === 'training'">
-          <div class="info-card">
+          <div class="card-custom p-3 h-100">
             <div class="modal-empty-state">
               <i class="bi bi-mortarboard"></i>
               <strong>No training records yet</strong>
@@ -821,8 +826,8 @@
              HISTORY TAB
         ============================================== -->
         <div class="modal-tab-panels" *ngIf="activeModalTab === 'history'">
-          <div class="info-card">
-            <div class="info-card-title">Employee History</div>
+          <div class="card-custom p-3 h-100">
+            <div class="ui-sec-title">Employee History</div>
 
             <div class="modal-timeline">
               <div class="modal-timeline-item" *ngFor="let entry of selectedEmployee.history || []">

@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
-import { SelectModule } from 'primeng/select';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 /** Master list of leave types the dropdown offers. Extend freely. */
 const ALL_LEAVE_TYPES = [ 'Earned Leave', 'Maternity Leave', 'Paternity Leave'];
 
@@ -18,7 +18,7 @@ const DEFAULT_LEAVE_TYPES = ['Casual Leave', 'Sick Leave'];
 @Component({
   selector: 'app-leave-rules-tab',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, SelectModule, ToggleSwitchModule, InputTextModule],
+  imports: [AppSelect, CommonModule, ReactiveFormsModule, FormsModule, ToggleSwitchModule, InputTextModule],
   templateUrl: './leave-rules-tab.html',
   styles: [`
     .rules-hint2 { display:block; margin-top:6px; font-size:12px; color:var(--aw-ink-500,var(--neutral-450)); }

@@ -47,19 +47,7 @@
                 @switch (f.type) {
 
                   @case ('select') {
-                    <p-select
-                      [inputId]="'rm-' + f.key"
-                      [formControlName]="f.key"
-                      [options]="f.options || []"
-                      optionLabel="label"
-                      optionValue="value"
-                      [placeholder]="f.placeholder || 'Select'"
-                      [filter]="!!f.filter"
-                      filterBy="label"
-                      [showClear]="!!f.showClear"
-                      appendTo="body"
-                      styleClass="w-100">
-                    </p-select>
+                    <app-select [inputId]="'rm-' + f.key" [formControlName]="f.key" [options]="f.options || []" optionLabel="label" optionValue="value" [placeholder]="f.placeholder || 'Select'" />
                   }
 
                   @case ('date') {
@@ -72,12 +60,19 @@
                       [id]="'rm-' + f.key"
                       [rows]="f.rows || 3"
                       [formControlName]="f.key"
+                      [attr.maxlength]="f.maxLength ?? null"
+                      (input)="onFieldInput($event, f)"
                       [placeholder]="f.placeholder || ''"></textarea>
+
+                    @if (f.maxLength) {
+                      <div class="char-count">{{ form.get(f.key)?.value?.length || 0 }}/{{ f.maxLength }}</div>
+                    }
                   }
 
                   @case ('number') {
                     <input
                       type="number"
+                      (input)="onFieldInput($event, f)"
                       class="form-control"
                       [id]="'rm-' + f.key"
                       [formControlName]="f.key"
@@ -140,8 +135,11 @@
                       [type]="f.type"
                       [id]="'rm-' + f.key"
                       [formControlName]="f.key"
+                      [attr.maxlength]="f.maxLength ?? null"
                       [placeholder]="f.placeholder || ''"
-                      autocomplete="off">
+                      autocomplete="off"
+                       (input)="onFieldInput($event, f)"
+                      (blur)="onFieldBlur($event, f)">
                   }
                 }
 

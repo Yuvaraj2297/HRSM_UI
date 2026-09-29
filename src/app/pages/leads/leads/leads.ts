@@ -12,6 +12,7 @@ import { ImportLeadsModal } from './lead-model/import-leads-modal';
 import { LeadDetailModal, LeadRow } from './lead-model/lead-detail-modal';
 import { CalendarDatepickerDirective } from '../../../common/directives/datepicker';
 
+import { AppSelect } from '../../../shared/app-select/app-select';
 interface StatsRow {
   label: string;
   danger?: boolean;
@@ -21,7 +22,7 @@ interface StatsRow {
 @Component({
   selector: 'app-leads',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReuseModal, PrimeDataTable, ImportLeadsModal, LeadDetailModal,CalendarDatepickerDirective],
+  imports: [AppSelect, CommonModule, FormsModule, ReuseModal, PrimeDataTable, ImportLeadsModal, LeadDetailModal,CalendarDatepickerDirective],
   templateUrl: './leads.html',
   styleUrl: './leads.scss',
 })

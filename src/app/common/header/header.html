@@ -10,11 +10,11 @@
         alt="JAILS CORP"
         class="header-logo"
       />
-      <img
+      <!-- <img
         src="/assets/logo-text.png"
         alt=""
         class="header-logo header-logo--text"
-      />
+      /> -->
     </div>
 
     <!-- Burger -->
@@ -61,6 +61,18 @@
 
   <!-- ============ RIGHT: Actions ============ -->
   <div class="header-actions">
+
+    <!-- Dark / Light mode: shows the mode you'd switch TO -->
+    <button
+      type="button"
+      class="header-icon-button header-icon-button--secondary header-theme-toggle"
+      (click)="toggleTheme()"
+      [attr.aria-label]="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+      [attr.aria-pressed]="isDark"
+      [title]="isDark ? 'Light mode' : 'Dark mode'"
+    >
+      <i class="ti" [class.ti-sun]="isDark" [class.ti-moon]="!isDark"></i>
+    </button>
 
     <button
       type="button"

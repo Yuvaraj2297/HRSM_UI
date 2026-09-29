@@ -60,54 +60,9 @@ $themes: (
 
 /* ---------- Summary cards: <app-stat-card> (global) ---------- */
 
-/* ---------- Filters ---------- */
-.filters-card {
-  display: grid;
-  grid-template-columns: minmax(240px, 1.35fr) minmax(160px, 1fr) minmax(160px, 1fr) auto;
-  gap: 24px;
-  align-items: end;
-  padding: 24px 28px;
-}
+/* ---------- Filters: global .report-filter-card ---------- */
 
-.filter-field {
-  min-width: 0;
-
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: $ink-900;
-  }
-}
-
-.rev-input,
-.rev-datepicker ::ng-deep input {
-  width: 100%;
-
-}
-
-.rev-datepicker {
-  display: block;
-  width: 100%;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 12px;
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    white-space: nowrap;
-
-    &:active { transform: translateY(1px); }
-  }
-}
-
-/* ---------- Employee cards ---------- */
+/* ---------- Employee cards (card shell: global .card-custom) ---------- */
 .rev-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -117,16 +72,6 @@ $themes: (
 .rev-card {
   height: 100%;
   overflow: hidden;
-  background: var(--white);
-  border: 1px solid var(--bg-muted);
-  border-radius: var(--card-radius);
-  box-shadow: 0 2px 10px rgba(var(--neutral-950-rgb), 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(var(--neutral-900-3-rgb), 0.1);
-  }
 }
 
 .rev-banner {
@@ -156,8 +101,8 @@ $themes: (
   justify-content: center;
   overflow: hidden;
   border-radius: 50%;
-  background: var(--white);
-  border: 2px solid var(--white);
+  background: var(--surface);
+  border: 2px solid var(--surface);
   color: $ink-900;
   font-size: 30px;
   box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.15);
@@ -266,37 +211,15 @@ $themes: (
   &.neg { background: linear-gradient(90deg, var(--red-500), var(--red-350)); }
 }
 
-.rev-empty {
-  padding: 48px 16px;
-  text-align: center;
-  color: $ink-500;
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 20px rgba(var(--neutral-900-rgb), 0.05);
-
-  i {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 34px;
-  }
-}
-
 /* ---------- Responsive ---------- */
 @media (max-width: 1199px) {
-  .rev-grid  { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rev-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 991px) {
-  .rev-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-  .filters-card { grid-template-columns: 1fr 1fr; }
-  .filter-search { grid-column: 1 / -1; }
-  .filter-actions { grid-column: 1 / -1; justify-content: flex-end; }
+  .rev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 575px) {
-  .rev-grid,
-  .filters-card { grid-template-columns: 1fr; }
-
-  .filters-card { padding: 20px; }
+  .rev-grid { grid-template-columns: 1fr; }
 }

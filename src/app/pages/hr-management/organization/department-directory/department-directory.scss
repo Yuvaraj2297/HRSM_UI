@@ -89,7 +89,7 @@
 
     .org-dept-count {
       color: var(--primary-dark);
-      background: var(--white);
+      background: var(--surface);
     }
   }
 
@@ -125,7 +125,7 @@
 }
 
 .org-content-head {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
@@ -189,7 +189,7 @@
   --status-color: var(--text-faint);
   --status-soft: var(--bg-muted);
   height: 100%;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
@@ -221,7 +221,7 @@
 
 .org-emp-card-top {
   padding: 20px 16px 40px;
-  background: linear-gradient(180deg, var(--status-soft) 0%, var(--white) 100%);
+  background: linear-gradient(180deg, var(--status-soft) 0%, var(--surface) 100%);
 }
 
 .org-emp-actions {
@@ -233,7 +233,7 @@
   button {
     width: 28px;
     height: 28px;
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 50%;
     padding: 0;
@@ -266,7 +266,7 @@
   object-fit: cover;
   display: block;
   background: var(--bg-muted);
-  border: 3px solid var(--white);
+  border: 3px solid var(--surface);
   box-shadow: 0 0 0 3px var(--status-soft);
 }
 
@@ -277,7 +277,7 @@
   height: 15px;
   border-radius: 50%;
   background: var(--status-color);
-  border: 3px solid var(--white);
+  border: 3px solid var(--surface);
 }
 
 .org-emp-card-body {

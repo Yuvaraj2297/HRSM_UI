@@ -2,13 +2,13 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
 import {
   EmployeeTicketService,
   TicketCategory,
   EmployeeTicket
 } from '../../../../services/employee-ticket.service';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 interface SelectOption {
   label: string;
   value: string;
@@ -17,7 +17,7 @@ interface SelectOption {
 @Component({
   selector: 'app-employee-create-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule],
+  imports: [AppSelect, CommonModule, FormsModule, RouterLink],
   templateUrl: './employee-create-ticket.html',
   styleUrl: './employee-create-ticket.scss',
 })
@@ -127,7 +127,6 @@ export class EmployeeCreateTicket implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       if (file.size > 5 * 1024 * 1024) {
-        alert('File is larger than 5 MB. Please choose a smaller file.');
         input.value = '';
         return;
       }

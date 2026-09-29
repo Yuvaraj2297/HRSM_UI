@@ -33,8 +33,7 @@
   </div>
   <div class="col-lg-4 col-md-6">
     <label class="form-label">Marital status</label>
-    <p-select formControlName="maritalStatus" [options]="fs.maritalStatuses" optionLabel="label" optionValue="value"
-              placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body" />
+    <app-select formControlName="maritalStatus" [options]="fs.maritalStatuses" optionLabel="label" optionValue="value" placeholder="Non selected" />
   </div>
   <div class="col-lg-4 col-md-6">
     <label class="form-label">Spouse Name</label>

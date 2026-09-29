@@ -64,7 +64,7 @@ const formatDMY = (d: Date): string =>
 
 @Component({
   selector: 'app-employee-lead-report',
-  imports: [FormsModule, DatePicker, PrimeDataTable,CalendarDatepickerDirective],
+  imports: [FormsModule,  PrimeDataTable,CalendarDatepickerDirective],
   templateUrl: './employee-lead-report.html',
   styleUrl: './employee-lead-report.scss',
 })

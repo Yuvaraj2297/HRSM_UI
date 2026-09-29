@@ -1,0 +1,49 @@
+<button #trigger type="button" class="form-select app-select-trigger" [class.form-select-sm]="size() === 'sm'"
+  [class.has-clear]="showClear() && hasValue() && !disabled()" [id]="inputId() ?? null"
+  [attr.aria-label]="ariaLabel() ?? null" aria-haspopup="listbox" [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? listId : null" [disabled]="disabled()" (click)="toggle()"
+  (keydown)="onTriggerKey($event)">
+  <span class="app-select-value" [class.is-placeholder]="!hasValue()">
+    {{ hasValue() ? selected()!.label : placeholder() }}
+  </span>
+</button>
+
+@if (showClear() && hasValue() && !disabled()) {
+<button type="button" class="app-select-clear" tabindex="-1" aria-label="Clear selection" (click)="clear($event)">
+  <i class="bi bi-x-lg"></i>
+</button>
+}
+
+@if (open()) {
+<!-- opening upward: anchor at the trigger's top edge and shift up by the panel's own height -->
+<div #panel class="app-select-panel" [class.is-up]="dropUp()" [class.is-sm]="size() === 'sm'"
+  [style.top.px]="pos().top" [style.left.px]="pos().left" [style.width.px]="pos().width"
+  [style.transform]="dropUp() ? 'translateY(-100%)' : null">
+
+  @if (filter()) {
+  <div class="app-select-search">
+    <i class="bi bi-search" aria-hidden="true"></i>
+    <input #search type="text" placeholder="Search…" autocomplete="off" [value]="query()"
+      [attr.aria-controls]="listId" aria-label="Search options"
+      [attr.aria-activedescendant]="visible().length ? listId + '-' + active() : null"
+      (input)="onSearch($any($event.target).value)" (keydown)="onListKey($event)" />
+  </div>
+  }
+
+  <ul class="app-select-list" role="listbox" [id]="listId" tabindex="-1" (keydown)="onListKey($event)">
+    @for (it of visible(); track $index) {
+    <li role="option" [id]="listId + '-' + $index" class="app-select-option" [class.is-active]="$index === active()"
+      [class.is-selected]="isSelected(it)" [attr.aria-selected]="isSelected(it)" (mousedown)="$event.preventDefault()"
+      (mouseenter)="active.set($index)" (click)="choose(it)">
+      <span class="app-select-option-text">
+        <span>{{ it.label }}</span>
+        @if (it.sub) { <small>{{ it.sub }}</small> }
+      </span>
+      @if (isSelected(it)) { <i class="bi bi-check2" aria-hidden="true"></i> }
+    </li>
+    } @empty {
+    <li class="app-select-empty">{{ emptyMessage() }}</li>
+    }
+  </ul>
+</div>
+}

@@ -24,34 +24,6 @@
 
 @if (viewMode === 'list') {
 <!-- =========================================================
-     PAGE TITLE & TOP ACTIONS (LIST VIEW)
-========================================================== -->
-<div class="page-title-bar d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
-  <div>
-    <h1 class="page-title page-main-title mb-1">Salary Advance & Company Loans</h1>
-    <div class="page-breadcrumbs d-flex align-items-center gap-2 text-muted small">
-      <i class="bi bi-cash-coin text-success"></i>
-      <span>Loan & Advances</span>
-      <i class="bi bi-chevron-right text-secondary" style="font-size: 10px;"></i>
-      <span class=" text-dark">Salary Advance & Loans</span>
-    </div>
-  </div>
-
-  <div class="d-flex align-items-center gap-2 flex-wrap">
-    <button type="button" class="btn btn-outline-success btn-sm px-3 d-flex align-items-center gap-1"
-      (click)="openQuickAdvance()">
-      <i class="bi bi-lightning-charge-fill text-warning"></i>
-      <span>Quick 1-Month Advance</span>
-    </button>
-    <button type="button" class="btn btn-success btn-sm px-3 d-flex align-items-center gap-1"
-      (click)="openApplyView()">
-      <i class="bi bi-plus-lg"></i>
-      <span>Request Salary Advance</span>
-    </button>
-  </div>
-</div>
-
-<!-- =========================================================
      KPI SUMMARY CARDS
 ========================================================== -->
 <div class="stat-grid">
@@ -103,8 +75,7 @@
       <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
         <i class="bi bi-tag text-success"></i> Category
       </label>
-      <p-select [(ngModel)]="selectedCategory" [options]="categoryOptions" (onChange)="applyFilters()"
-        optionLabel="label" optionValue="value" placeholder="All Categories" appendTo="body" styleClass="w-100" />
+      <app-select [(ngModel)]="selectedCategory" (ngModelChange)="applyFilters()" [options]="categoryOptions" optionLabel="label" optionValue="value" placeholder="All Categories" />
     </div>
 
     <!-- Department -->
@@ -112,8 +83,7 @@
       <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
         <i class="bi bi-building text-info"></i> Department
       </label>
-      <p-select [(ngModel)]="selectedDept" [options]="departmentOptions" (onChange)="applyFilters()"
-        optionLabel="label" optionValue="value" placeholder="All Departments" appendTo="body" styleClass="w-100" />
+      <app-select [(ngModel)]="selectedDept" (ngModelChange)="applyFilters()" [options]="departmentOptions" optionLabel="label" optionValue="value" placeholder="All Departments" />
     </div>
 
     <!-- Status -->
@@ -121,8 +91,7 @@
       <label class="form-label small  text-muted text-uppercase mb-1 d-flex align-items-center gap-1">
         <i class="bi bi-shield-check text-warning"></i> Status
       </label>
-      <p-select [(ngModel)]="selectedStatus" [options]="statusOptions" (onChange)="applyFilters()"
-        optionLabel="label" optionValue="value" placeholder="All Statuses" appendTo="body" styleClass="w-100" />
+      <app-select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="All Statuses" />
     </div>
 
     <!-- Buttons -->
@@ -172,16 +141,21 @@
       [columns]="columns"
       [data]="displayedLoans"
       [searchPlaceholder]="searchPlaceholder"
-      [showColumnsButton]="true"
+      [showColumnsButton]="false"
       [showExportButton]="true"
       [exportFileName]="'salary-advance-and-loans-report'"
       [rows]="10"
     >
-      <!-- Projected Toolbar Action: Active filter indicator -->
-      <div table-toolbar-actions class="d-flex align-items-center">
-        <span class="badge-filter-active">
-          Filter Active: {{ selectedStatus ? (selectedStatus === 'approved' ? 'Active / Approved' : (selectedStatus === 'pending' ? 'Pending Approval' : (selectedStatus === 'completed' ? 'Completed / Settled' : 'Rejected'))) : 'All Records' }}
-        </span>
+      <!-- Page actions, shown after the search box -->
+      <div table-header-actions class="d-flex align-items-center gap-2 flex-wrap">
+        <button type="button" class="btn btn-outline-primary" (click)="openQuickAdvance()">
+          <i class="bi bi-lightning-charge-fill text-warning"></i>
+          <span>Quick 1-Month Advance</span>
+        </button>
+        <button type="button" class="btn btn-primary" (click)="openApplyView()">
+          <i class="bi bi-plus-lg"></i>
+          <span>Request Salary Advance</span>
+        </button>
       </div>
 
       <!-- Custom Cell Template for Table Columns -->
@@ -341,7 +315,7 @@
 
 <div class="loan-apply-form">
   <!-- Employee Eligibility -->
-  <div class="form-section mb-3">
+  <div class="card-custom form-section mb-3">
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
       <h6 class=" text-dark mb-0 d-flex align-items-center gap-2">
         <i class="bi bi-person-check text-success fs-5"></i> Employee Eligibility
@@ -349,8 +323,7 @@
       <!-- Employee Select (p-select) -->
       <div class="d-flex align-items-center gap-2">
         <label class="small text-muted fw-semibold text-nowrap">Employee:</label>
-        <p-select [(ngModel)]="applyForm.employeeId" [options]="employeeOptions"
-          optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" style="min-width: 260px;" />
+        <app-select [(ngModel)]="applyForm.employeeId" style="min-width: 260px;" [options]="employeeOptions" optionLabel="label" optionValue="value" />
       </div>
     </div>
 
@@ -371,7 +344,7 @@
   </div>
 
   <!-- Loan Details Form -->
-  <div class="form-section mb-3">
+  <div class="card-custom form-section mb-3">
     <h6 class=" text-dark mb-3 d-flex align-items-center gap-2">
       <i class="bi bi-file-earmark-text text-primary fs-5"></i> Advance Details
     </h6>
@@ -379,8 +352,7 @@
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label  small text-dark">Advance Type <span class="text-danger">*</span></label>
-          <p-select [(ngModel)]="applyForm.advanceType" [options]="advanceTypeOptions" name="advType"
-            optionLabel="label" optionValue="value" placeholder="Select Type" appendTo="body" styleClass="w-100" />
+          <app-select [(ngModel)]="applyForm.advanceType" name="advType" [options]="advanceTypeOptions" optionLabel="label" optionValue="value" placeholder="Select Type" />
         </div>
         <div class="col-md-6">
           <label class="form-label  small text-dark">Amount (₹) <span class="text-danger">*</span></label>
@@ -395,8 +367,7 @@
         </div>
         <div class="col-md-6">
           <label class="form-label  small text-dark">Repayment Tenure <span class="text-danger">*</span></label>
-          <p-select [(ngModel)]="applyForm.tenure" [options]="tenureOptions" name="advTenure"
-            optionLabel="label" optionValue="value" placeholder="Select Tenure" appendTo="body" styleClass="w-100" />
+          <app-select [(ngModel)]="applyForm.tenure" name="advTenure" [options]="tenureOptions" optionLabel="label" optionValue="value" placeholder="Select Tenure" />
         </div>
         <div class="col-md-6">
           <label class="form-label  small text-dark">Preferred Start Date</label>
@@ -412,7 +383,7 @@
   </div>
 
   <!-- Repayment Summary -->
-  <div class="form-section mb-3">
+  <div class="card-custom form-section mb-3">
     <h6 class=" text-dark mb-3 d-flex align-items-center gap-2">
       <i class="bi bi-calculator text-success fs-5"></i> Repayment Summary
     </h6>
@@ -486,8 +457,7 @@
     <form (ngSubmit)="submitQuickAdvance()">
       <div class="mb-3">
         <label class="form-label small  text-dark">Select Employee *</label>
-        <p-select [(ngModel)]="quickAdvanceData.employee" [options]="quickAdvanceEmployeeOptions" name="emp"
-          optionLabel="label" optionValue="value" placeholder="Choose Employee..." appendTo="body" styleClass="w-100" />
+        <app-select [(ngModel)]="quickAdvanceData.employee" name="emp" [options]="quickAdvanceEmployeeOptions" optionLabel="label" optionValue="value" placeholder="Choose Employee..." />
         <small class="text-muted" style="font-size: 11px;">Maximum advance: Up to 50% of monthly net salary.</small>
       </div>
 
@@ -499,8 +469,7 @@
 
       <div class="mb-3">
         <label class="form-label small  text-dark">Recovery Installments *</label>
-        <p-select [(ngModel)]="quickAdvanceData.tenure" [options]="quickAdvanceTenureOptions" name="tenure"
-          optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" />
+        <app-select [(ngModel)]="quickAdvanceData.tenure" name="tenure" [options]="quickAdvanceTenureOptions" optionLabel="label" optionValue="value" />
       </div>
 
       <div class="mb-3">
@@ -941,13 +910,11 @@
 
           <div class="col-md-6">
             <label class="form-label small  text-dark">Transaction Type *</label>
-            <p-select [(ngModel)]="ledgerPaymentForm.type" [options]="ledgerTypeOptions" name="payType"
-              optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" />
+            <app-select [(ngModel)]="ledgerPaymentForm.type" name="payType" [options]="ledgerTypeOptions" optionLabel="label" optionValue="value" />
           </div>
           <div class="col-md-6">
             <label class="form-label small  text-dark">Payment Mode / Channel *</label>
-            <p-select [(ngModel)]="ledgerPaymentForm.mode" [options]="ledgerModeOptions" name="payMode"
-              optionLabel="label" optionValue="value" appendTo="body" styleClass="w-100" />
+            <app-select [(ngModel)]="ledgerPaymentForm.mode" name="payMode" [options]="ledgerModeOptions" optionLabel="label" optionValue="value" />
           </div>
 
           <div class="col-md-6">

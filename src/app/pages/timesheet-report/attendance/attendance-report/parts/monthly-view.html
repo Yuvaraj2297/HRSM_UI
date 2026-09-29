@@ -1,0 +1,77 @@
+<app-att-summary-strip class="mb-3" label="Monthly summary" [items]="strip()" />
+
+<section class="card-custom att-register">
+  <header class="att-register-head">
+    <ul class="att-legend" aria-label="Legend">
+      @for (s of legend; track s) {
+      <li><span class="att-dot-cell" [attr.data-status]="s">{{ s === 'weekoff' ? '—' : meta[s].short }}</span> {{ meta[s].label }}</li>
+      }
+    </ul>
+    <button type="button" class="btn btn-outline-primary btn-sm" (click)="exportCsv()">
+      <i class="bi bi-download"></i>
+      <span>Export CSV</span>
+    </button>
+  </header>
+
+  <div class="att-month-scroll">
+    <table class="att-month">
+      <thead>
+        <tr>
+          <th class="att-month-emp" scope="col">Employee</th>
+          @for (d of days(); track d.iso) {
+          <th scope="col" class="att-month-day" [class.is-weekend]="d.weekend" [class.is-today]="d.today">
+            <span>{{ d.day }}</span>
+            <small>{{ d.dow }}</small>
+          </th>
+          }
+          <th scope="col" class="att-month-total">P</th>
+          <th scope="col" class="att-month-total">L</th>
+          <th scope="col" class="att-month-total">LV</th>
+          <th scope="col" class="att-month-total">A</th>
+          <th scope="col" class="att-month-total">Hrs</th>
+          <th scope="col" class="att-month-rate">Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of store.monthlyRows(); track r.empId) {
+        <tr>
+          <th scope="row" class="att-month-emp">
+            <button type="button" class="att-emp-link" (click)="store.calendarEmpId.set(r.empId)"
+              [title]="'Monthly calendar — ' + r.name">
+              @if (r.avatar) {
+                <img [src]="r.avatar" [alt]="r.name" class="rounded-circle att-avatar-sm" />
+              } @else {
+                <span class="emp-initials-avatar att-initials att-avatar-sm">{{ initials(r.name) }}</span>
+              }
+              <span>
+                <span class="emp-name-line d-block">{{ r.name }}</span>
+                <span class="emp-code-line">{{ r.dept }}</span>
+              </span>
+            </button>
+          </th>
+          @for (d of r.days; track $index) {
+            @let col = days()[$index];
+          <td class="att-month-day" [class.is-weekend]="col.weekend">
+            @if (d) {
+              <span class="att-dot-cell" [attr.data-status]="d.status" [title]="cellTitle(col.iso, d)">
+                {{ d.status === 'weekoff' ? '' : meta[d.status].short }}
+              </span>
+            }
+          </td>
+          }
+          <td class="att-month-total">{{ r.present }}</td>
+          <td class="att-month-total">{{ r.late || '' }}</td>
+          <td class="att-month-total">{{ r.leave || '' }}</td>
+          <td class="att-month-total" [class.text-danger]="r.absent > 0">{{ r.absent || '' }}</td>
+          <td class="att-month-total">{{ r.hours }}</td>
+          <td class="att-month-rate">
+            <span class="att-rate-pill" [class.is-low]="r.rate < 80">{{ r.rate }}%</span>
+          </td>
+        </tr>
+        } @empty {
+        <tr><td class="data-table-empty" [attr.colspan]="days().length + 7">No employees match these filters.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

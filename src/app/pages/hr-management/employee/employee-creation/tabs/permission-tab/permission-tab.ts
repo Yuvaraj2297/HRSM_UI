@@ -5,7 +5,6 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
-import { SelectModule } from 'primeng/select';
 
 import {
   ALL_PERMISSIONS,
@@ -18,15 +17,15 @@ import {
 
 import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-permission-tab',
 
   standalone: true,
 
-  imports: [
+  imports: [AppSelect, 
     CommonModule,
-    ReactiveFormsModule,
-    SelectModule
+    ReactiveFormsModule
   ],
 
   templateUrl: './permission-tab.html',

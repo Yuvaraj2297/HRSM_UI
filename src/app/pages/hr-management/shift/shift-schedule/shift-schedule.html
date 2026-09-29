@@ -1,7 +1,7 @@
 <!-- =========================================================
      PAGE HEADER & BREADCRUMB
 ========================================================== -->
-<app-breadcrumb>
+<!-- <app-breadcrumb>
   <div breadcrumb-actions class="d-flex align-items-center gap-2">
     <button type="button" class="btn btn-shift-requests btn-sm px-3" (click)="openShiftRequestsModal()">
       <i class="bi bi-arrow-left-right"></i> Shift Requests
@@ -16,7 +16,7 @@
       <i class="bi bi-upload"></i> Bulk Upload
     </button>
   </div>
-</app-breadcrumb>
+</app-breadcrumb> -->
 
 <!-- =========================================================
      STATS SUMMARY CARDS
@@ -88,39 +88,31 @@
       <!-- Shift Name -->
       <div class="col-lg-3 col-md-4 col-sm-6">
         <label class="form-label small fw-semibold">Shift Name</label>
-        <p-select formControlName="shiftId" [options]="shiftOptions" optionLabel="label" optionValue="value"
-          placeholder="All Shifts" [filter]="true" filterBy="label" [showClear]="true" appendTo="body"
-          styleClass="w-100" />
+        <app-select formControlName="shiftId" [options]="shiftOptions" optionLabel="label" optionValue="value" placeholder="All Shifts" />
       </div>
 
       <!-- Shift Type -->
       <div class="col-lg-3 col-md-4 col-sm-6">
         <label class="form-label small fw-semibold">Shift Type</label>
-        <p-select formControlName="shiftType" [options]="shiftTypeOptions" optionLabel="label" optionValue="value"
-          placeholder="All Types" appendTo="body" styleClass="w-100" />
+        <app-select formControlName="shiftType" [options]="shiftTypeOptions" optionLabel="label" optionValue="value" placeholder="All Types" />
       </div>
 
       <!-- Department -->
       <div class="col-lg-3 col-md-4 col-sm-6">
         <label class="form-label small fw-semibold">Department</label>
-        <p-select formControlName="department" [options]="departmentOptions" optionLabel="label" optionValue="value"
-          placeholder="All Departments" [filter]="true" filterBy="label" [showClear]="true" appendTo="body"
-          styleClass="w-100" />
+        <app-select formControlName="department" [options]="departmentOptions" optionLabel="label" optionValue="value" placeholder="All Departments" />
       </div>
 
       <!-- Position -->
       <div class="col-lg-3 col-md-4 col-sm-6">
         <label class="form-label small fw-semibold">Position</label>
-        <p-select formControlName="position" [options]="positionOptions" optionLabel="label" optionValue="value"
-          placeholder="All Positions" [filter]="true" filterBy="label" [showClear]="true" appendTo="body"
-          styleClass="w-100" />
+        <app-select formControlName="position" [options]="positionOptions" optionLabel="label" optionValue="value" placeholder="All Positions" />
       </div>
 
       <!-- Schedule Type -->
       <div class="col-lg-3 col-md-4 col-sm-6">
         <label class="form-label small fw-semibold">Schedule Type</label>
-        <p-select formControlName="scheduleType" [options]="scheduleTypeOptions" optionLabel="label" optionValue="value"
-          placeholder="All Types" appendTo="body" styleClass="w-100" />
+        <app-select formControlName="scheduleType" [options]="scheduleTypeOptions" optionLabel="label" optionValue="value" placeholder="All Types" />
       </div>
 
       <!-- Filter Actions -->
@@ -190,8 +182,7 @@
       <!-- Projected Header Actions: Month Selector & Weekly/Monthly Toggle -->
       <div table-header-actions class="d-flex align-items-center gap-2 flex-wrap">
         @if (viewMode === 'monthly') {
-        <p-select [(ngModel)]="selectedMonth" [options]="monthOptions" optionLabel="label" optionValue="value"
-          (onChange)="onMonthChange()" appendTo="body" styleClass="month-p-select" />
+        <app-select class="month-p-select" [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()" [options]="monthOptions" optionLabel="label" optionValue="value" />
         }
 
         <!-- View Switcher -->
@@ -342,9 +333,7 @@
       <label class="form-label small fw-semibold text-dark mb-1">
         Change To <span class="text-danger">*</span>
       </label>
-      <p-select [options]="shiftOptionsForModal" [(ngModel)]="assignShiftId"
-        (onChange)="onRequestedShiftSelect($event.value)" optionLabel="label" optionValue="value"
-        placeholder="Select the shift you want" [filter]="false" appendTo="body" styleClass="w-100 modal-p-select" />
+      <app-select class="modal-p-select" [(ngModel)]="assignShiftId" (ngModelChange)="onRequestedShiftSelect($event)" [options]="shiftOptionsForModal" optionLabel="label" optionValue="value" placeholder="Select the shift you want" />
     </div>
 
     <!-- 4. Reason * and Apply For (p-select) in 2 columns -->
@@ -353,16 +342,14 @@
         <label class="form-label small fw-semibold text-dark mb-1">
           Reason <span class="text-danger">*</span>
         </label>
-        <p-select [options]="reasonOptions" [(ngModel)]="changeReason" optionLabel="label" optionValue="value"
-          placeholder="Select reason" appendTo="body" styleClass="w-100 modal-p-select" />
+        <app-select class="modal-p-select" [(ngModel)]="changeReason" [options]="reasonOptions" optionLabel="label" optionValue="value" placeholder="Select reason" />
       </div>
 
       <div class="col-6">
         <label class="form-label small fw-semibold text-dark mb-1">
           Apply For
         </label>
-        <p-select [options]="applyForOptions" [(ngModel)]="assignDurationType" optionLabel="label" optionValue="value"
-          appendTo="body" styleClass="w-100 modal-p-select" />
+        <app-select class="modal-p-select" [(ngModel)]="assignDurationType" [options]="applyForOptions" optionLabel="label" optionValue="value" />
       </div>
     </div>
 

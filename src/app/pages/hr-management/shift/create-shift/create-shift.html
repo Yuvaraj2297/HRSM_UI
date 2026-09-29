@@ -1,7 +1,7 @@
 <!-- =========================================================
      PAGE HEADER & BREADCRUMB
 ========================================================== -->
-<app-breadcrumb>
+<!-- <app-breadcrumb>
   <div breadcrumb-actions class="d-flex align-items-center gap-2">
     <a routerLink="/shift/manage-shift" class="btn btn-cancel btn-sm px-3">
       Cancel
@@ -10,7 +10,7 @@
       <i class="bi bi-save"></i> Save Shift
     </button>
   </div>
-</app-breadcrumb>
+</app-breadcrumb> -->
 
 <!-- =========================================================
      ALERTS
@@ -33,9 +33,7 @@
       <label class="form-label fw-semibold" for="create_shift_name">
         Shift Name <span class="text-danger">*</span>
       </label>
-      <p-select inputId="create_shift_name" formControlName="shiftName" [options]="shiftNameOptions" optionLabel="label"
-        optionValue="value" placeholder="Select or enter shift" [filter]="true" filterBy="label" [showClear]="true"
-        [resetFilterOnHide]="true" appendTo="body" (onChange)="onShiftNameChange($event.value)" styleClass="w-100" />
+      <app-select inputId="create_shift_name" formControlName="shiftName" (ngModelChange)="onShiftNameChange($event)" [options]="shiftNameOptions" optionLabel="label" optionValue="value" placeholder="Select or enter shift" />
     </div>
 
     <!-- Department (p-select with filter & clear) -->
@@ -43,9 +41,7 @@
       <label class="form-label fw-semibold" for="create_shift_dept">
         Department <span class="text-danger">*</span>
       </label>
-      <p-select inputId="create_shift_dept" formControlName="department" [options]="departmentOptions"
-        optionLabel="label" optionValue="value" placeholder="Select Department" [filter]="true" filterBy="label"
-        [showClear]="true" [resetFilterOnHide]="true" appendTo="body" styleClass="w-100" />
+      <app-select inputId="create_shift_dept" formControlName="department" [options]="departmentOptions" optionLabel="label" optionValue="value" placeholder="Select Department" />
     </div>
 
     <!-- Position (p-select with filter & clear) -->
@@ -53,9 +49,7 @@
       <label class="form-label fw-semibold" for="create_shift_position">
         Position <span class="text-danger">*</span>
       </label>
-      <p-select inputId="create_shift_position" formControlName="position" [options]="positionOptions"
-        optionLabel="label" optionValue="value" placeholder="Select Position" [filter]="true" filterBy="label"
-        [showClear]="true" [resetFilterOnHide]="true" appendTo="body" styleClass="w-100" />
+      <app-select inputId="create_shift_position" formControlName="position" [options]="positionOptions" optionLabel="label" optionValue="value" placeholder="Select Position" />
     </div>
 
     <!-- Colors (p-select with filter & clear) -->
@@ -63,24 +57,7 @@
       <label class="form-label fw-semibold" for="create_shift_color">
         Colors <span class="text-danger">*</span>
       </label>
-      <p-select inputId="create_shift_color" formControlName="color" [options]="shiftColors" optionLabel="name"
-        placeholder="Choose your shift color" [filter]="true" filterBy="name" [showClear]="true"
-        [resetFilterOnHide]="true" appendTo="body" styleClass="w-100">
-        <ng-template #selectedItem let-selectedOption>
-          @if (selectedOption) {
-          <div class="d-flex align-items-center gap-2">
-            <span class="color-picker-dot" [style.background]="selectedOption.hex"></span>
-            <span class="fw-semibold text-dark">{{ selectedOption.name }}</span>
-          </div>
-          }
-        </ng-template>
-        <ng-template #item let-color>
-          <div class="d-flex align-items-center gap-2 py-1">
-            <span class="color-picker-dot" [style.background]="color.hex"></span>
-            <span>{{ color.name }}</span>
-          </div>
-        </ng-template>
-      </p-select>
+      <app-select inputId="create_shift_color" formControlName="color" [options]="shiftColors" optionLabel="name" placeholder="Choose your shift color" />
     </div>
 
   </div>

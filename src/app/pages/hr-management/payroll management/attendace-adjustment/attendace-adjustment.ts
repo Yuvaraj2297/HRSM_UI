@@ -1,4 +1,6 @@
 import { Component, DestroyRef, HostListener, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AppSelect } from '../../../../shared/app-select/app-select';
 
 export type AttendanceStatus = 'FD' | 'HD' | 'A' | 'WO' | 'LWP';
 type SortKey = 'name' | 'role' | 'branch';
@@ -127,7 +129,7 @@ const escapeHtml = (v: string) =>
 
 @Component({
   selector: 'app-attendace-adjustment',
-  imports: [],
+  imports: [AppSelect, FormsModule],
   templateUrl: './attendace-adjustment.html',
   styleUrl: './attendace-adjustment.scss',
 })

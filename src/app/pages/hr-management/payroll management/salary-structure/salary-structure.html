@@ -39,18 +39,18 @@
 <!-- Earnings + Deductions -->
 <div class="structure-grid">
   @for (g of groups(); track g.kind) {
-    <section class="structure-card" [attr.aria-labelledby]="'title-' + g.kind">
-      <div class="card-head">
-        <h2 class="card-title" [id]="'title-' + g.kind">
+    <section class="card-custom" [attr.aria-labelledby]="'title-' + g.kind">
+      <header class="card-custom-header">
+        <h2 class="card-custom-title d-flex align-items-center gap-2" [id]="'title-' + g.kind">
           <bi-icon class="title-icon" [class]="g.kind" [name]="g.icon" />
           {{ g.title }}
         </h2>
-        <button type="button" class="btn-add" (click)="openModal(g.kind, $event)">
+        <button type="button" class="btn btn-outline-primary btn-sm" (click)="openModal(g.kind, $event)">
           <bi-icon name="plus-lg" /> Add
         </button>
-      </div>
+      </header>
 
-      <ul class="items">
+      <ul class="items card-custom-body">
         @for (r of g.rows; track r.id) {
           <li class="item">
             <div class="item-name"><bi-icon [name]="r.icon" /> <span>{{ r.name }}</span></div>
@@ -100,18 +100,14 @@
         <div class="field-row">
           <div class="field">
             <label class="form-label" for="compType">Type</label>
-            <select id="compType" class="form-select" (change)="patch({ kind: $any(value($event)) })">
-              <option value="earning" [selected]="draft().kind === 'earning'">Earning</option>
-              <option value="deduction" [selected]="draft().kind === 'deduction'">Deduction</option>
-            </select>
+            <app-select inputId="compType" [ngModel]="draft().kind" (ngModelChange)="$event && patch({ kind: $event })"
+              [options]="[{ label: 'Earning', value: 'earning' }, { label: 'Deduction', value: 'deduction' }]"
+              optionLabel="label" optionValue="value" [showClear]="false" />
           </div>
           <div class="field">
             <label class="form-label" for="compCategory">Category</label>
-            <select id="compCategory" class="form-select" (change)="patch({ category: $any(value($event)) })">
-              @for (c of categories; track c) {
-                <option [value]="c" [selected]="draft().category === c">{{ c }}</option>
-              }
-            </select>
+            <app-select inputId="compCategory" [ngModel]="draft().category"
+              (ngModelChange)="$event && patch({ category: $event })" [options]="categories" [showClear]="false" />
           </div>
         </div>
 

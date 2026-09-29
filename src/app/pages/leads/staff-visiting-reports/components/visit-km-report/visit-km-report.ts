@@ -3,7 +3,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, finalize } from 'rxjs';
-import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 
 import {
@@ -32,6 +31,7 @@ import {
 } from '../../staff-visiting-reports.utils';
 import { CalendarDatepickerDirective } from '../../../../../common/directives/datepicker';
 
+import { AppSelect } from '../../../../../shared/app-select/app-select';
 /**
  * Visiting Report — how far ONE staff travelled each day in a date range.
  * Filter: Staff (required) + From / To.
@@ -39,7 +39,7 @@ import { CalendarDatepickerDirective } from '../../../../../common/directives/da
 @Component({
   selector: 'app-visit-km-report',
   standalone: true,
-  imports: [FormsModule, SelectModule, DatePickerModule, PrimeDataTable,CalendarDatepickerDirective],
+  imports: [AppSelect, FormsModule, DatePickerModule, PrimeDataTable,CalendarDatepickerDirective],
   templateUrl: './visit-km-report.html',
   styleUrl: './visit-km-report.scss',
 })

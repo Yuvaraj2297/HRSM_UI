@@ -113,27 +113,7 @@
   }
 }
 
-.structure-card {
-  padding: 20px;
-}
-
-.card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.card-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--sal-ink-900);
-}
-
+/* card, header and title: global .card-custom set */
 .title-icon {
   font-size: 16px;
 
@@ -145,13 +125,8 @@
   }
 }
 
-.btn-add {
-  font-family: inherit;
-}
-
 .items {
   margin: 0;
-  padding: 0;
   list-style: none;
 }
 

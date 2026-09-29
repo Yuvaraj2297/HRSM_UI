@@ -3,7 +3,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, finalize } from 'rxjs';
-import { SelectModule } from 'primeng/select';
 import { ChartModule } from 'primeng/chart';
 
 import { DashSection } from '../../../shared/dashboard/dash-section/dash-section';
@@ -48,12 +47,12 @@ import {
   sum,
 } from './lead-dashboard.utils';
 
+import { AppSelect } from '../../../shared/app-select/app-select';
 @Component({
   selector: 'app-lead-dashboard',
   standalone: true,
-  imports: [
+  imports: [AppSelect, 
     FormsModule,
-    SelectModule,
     ChartModule,
     DashSection,
     PrimeDataTable,

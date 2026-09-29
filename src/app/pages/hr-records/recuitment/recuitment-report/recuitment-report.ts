@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PrimeDataTable, PrimeTableColumn, PrimeTableRowAction } from '../../../../shared/primedatatable/primedatatable';
 
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 // =============================================================
 // ROW MODEL
 // =============================================================
@@ -38,7 +39,7 @@ interface StatusOption {
 @Component({
   selector: 'app-recuitment-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeDataTable, AppStatCard],
+  imports: [AppSelect, CommonModule, FormsModule, PrimeDataTable, AppStatCard],
   templateUrl: './recuitment-report.html',
   styleUrl: './recuitment-report.scss',
 })

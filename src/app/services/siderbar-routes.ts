@@ -49,18 +49,35 @@ export class SidebarRoutes {
       title: 'Master',
       items: [
         { title: 'Department', route: 'master/department', icon: 'bi bi-diagram-3' },
-        { title: 'Team', route: 'master/teams', icon: 'bi bi-people-fill' },
-        { title: 'Position', route: 'master/position', icon: 'bi bi-briefcase' },
-        {
-          title: 'Document Upload',
-          route: 'master/document-upload',
-          icon: 'bi bi-file-earmark-arrow-up',
-        },
+        { title: 'Job Type', route: 'master/job', icon: 'bi bi-briefcase' },
+        { title: 'Desgination', route: 'master/designation', icon: 'bi bi-person-badge' },
+        { title: 'Branch', route: 'master/branch', icon: 'bi bi-buildings' },
+
+        { title: 'Employee Type', route: 'master/employee', icon: 'bi bi-person-workspace' },
+
         { title: 'Work Location', route: 'master/work-location', icon: 'bi bi-geo-alt' },
+
+        { title: 'Country', route: 'master/country', icon: '  bi bi-globe' },
+
         { title: 'State', route: 'master/state', icon: 'bi bi-map' },
         { title: 'District', route: 'master/district', icon: 'bi bi-pin-map' },
-        { title: 'Leave Type', route: 'master/leave-type', icon: 'bi bi-pin-map' },
+
+        { title: 'Relieving Type', route: 'master/relieving-type', icon: 'bi bi-box-arrow-right' },
+
+        { title: 'Notice Period', route: 'master/notice-period', icon: 'bi bi-clock' },
+
         { title: 'Shift', route: 'master/shift', icon: 'bi bi-clock-history' },
+
+        { title: 'Permission Modules', route: 'master/permission', icon: 'bi bi-shield-lock' },
+
+        { title: 'Role', route: 'master/role', icon: 'bi bi-person-gear' },
+
+        { title: 'Leave Type', route: 'master/leave-type', icon: 'bi bi-pin-map' },
+
+        { title: 'Holiday Type', route: 'master/holiday', icon: 'bi bi-calendar-event' },
+
+
+        
       ],
     },
     HRM: {

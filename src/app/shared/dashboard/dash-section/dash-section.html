@@ -1,24 +1,24 @@
-<section class="dash-section">
-  <div class="dash-section-head">
+<section class="card-custom dash-section">
+  <header class="card-custom-header">
+    <span class="card-header-icon"><i class="bi {{ icon() }}"></i></span>
     <div class="dash-section-title-wrap">
-      <div class="dash-section-icon"><i class="bi {{ icon() }}"></i></div>
-      <div>
-        <h3 class="dash-section-title">{{ title() }}</h3>
-        @if (subtitle()) {
-        <div class="dash-section-sub">{{ subtitle() }}</div>
-        }
-      </div>
+      <h3 class="card-custom-title">{{ title() }}</h3>
+      @if (subtitle()) {
+      <div class="dash-section-sub">{{ subtitle() }}</div>
+      }
     </div>
 
-    <div class="dash-section-actions">
+    <div class="card-header-actions">
       <ng-content select="[section-actions]" />
       @if (meta()) {
-      <span class="dash-section-meta">
+      <span class="ui-count-chip">
         @if (metaIcon()) { <i class="bi {{ metaIcon() }} me-1"></i> }{{ meta() }}
       </span>
       }
     </div>
-  </div>
+  </header>
 
-  <ng-content />
+  <div class="card-custom-body">
+    <ng-content />
+  </div>
 </section>

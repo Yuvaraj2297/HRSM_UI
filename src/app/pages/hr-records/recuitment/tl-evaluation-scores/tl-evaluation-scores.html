@@ -1,15 +1,8 @@
 <!-- Title & Action Bar -->
 <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
   <div>
-    <h1 class="page-title mb-1">
-      Team Lead Candidate Evaluations &amp; Scorecards
-    </h1>
-    <nav class="d-flex align-items-center gap-2 text-muted" style="font-size:13px;">
-      <i class="bi bi-briefcase fs-6"></i>
-      <span>Recruitment</span>
-      <i class="bi bi-chevron-right"></i>
-      <span class=" text-dark">Team Lead Evaluations</span>
-    </nav>
+   
+    
   </div>
   <div class="d-flex gap-2 flex-wrap">
     <button class="btn btn-outline-secondary" type="button" (click)="goToSocialApplicants()">
@@ -23,15 +16,6 @@
     </button>
   </div>
 </div>
-
-<!-- KPI Cards -->
-<div class="stat-grid">
-  <app-stat-card label="Total Resumes to TLs" [value]="totalAssigned" icon="bi bi-send-check" tone="primary" sub="Active Shortlisting" subTone="success" />
-  <app-stat-card label="Evaluations Completed" [value]="totalEvaluated" icon="bi bi-file-earmark-bar-graph" tone="blue" sub="Scorecards Submitted" />
-  <app-stat-card label="Strong Hire Recommended" [value]="strongHires" icon="bi bi-star-fill" tone="amber" sub="Score > 8.5 / 10" subTone="success" />
-  <app-stat-card label="Pending HR Action" [value]="pendingHrAction" icon="bi bi-hourglass-split" tone="red" sub="Awaiting Offer Release" />
-</div>
-
 
 <!-- Tabs Filter -->
 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
@@ -56,6 +40,7 @@
   [columns]="columns"
   [data]="filteredEvaluations"
   [rows]="10"
+  [modalHeader]="modalHeader"
   [paginator]="true"
   [dataKey]="'eval_id'"
   [searchPlaceholder]="'Search candidate, TL, score...'"
@@ -194,22 +179,11 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label class="form-label fw-semibold" style="font-size:13px;">Select Next Interview Round *</label>
-              <select class="form-select" [(ngModel)]="scheduleForm.round">
-                <option value="Technical Round 2 (System Arch / Live Coding)">Technical Round 2 (System Arch / Live Coding)</option>
-                <option value="HR & Culture Fit Round">HR &amp; Culture Fit Discussion</option>
-                <option value="Managerial & Executive Discussion">Managerial &amp; Executive Discussion</option>
-                <option value="Final Salary & Offer Negotiation">Final Salary &amp; Offer Negotiation</option>
-              </select>
+              <app-select [(ngModel)]="scheduleForm.round" [options]="[{ label: 'Technical Round 2 (System Arch / Live Coding)', value: 'Technical Round 2 (System Arch / Live Coding)' }, { label: 'HR &amp; Culture Fit Discussion', value: 'HR & Culture Fit Round' }, { label: 'Managerial &amp; Executive Discussion', value: 'Managerial & Executive Discussion' }, { label: 'Final Salary &amp; Offer Negotiation', value: 'Final Salary & Offer Negotiation' }]" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-6">
               <label class="form-label fw-semibold" style="font-size:13px;">Assigned Interviewer / Panel *</label>
-              <select class="form-select" [(ngModel)]="scheduleForm.interviewer">
-                <option value="Santhosh Kumar (Frontend Tech Lead)">Santhosh Kumar (Frontend Tech Lead)</option>
-                <option value="Karthik V (Backend Tech Lead)">Karthik V (Backend Tech Lead)</option>
-                <option value="Anitha R (iOS Mobile Tech Lead)">Anitha R (iOS Mobile Tech Lead)</option>
-                <option value="Deepak (Lead UI/UX Designer)">Deepak (Lead UI/UX Designer)</option>
-                <option value="Sarah Mitchell (HR Head)">Sarah Mitchell (HR Head)</option>
-              </select>
+              <app-select [(ngModel)]="scheduleForm.interviewer" [options]="[{ label: 'Santhosh Kumar (Frontend Tech Lead)', value: 'Santhosh Kumar (Frontend Tech Lead)' }, { label: 'Karthik V (Backend Tech Lead)', value: 'Karthik V (Backend Tech Lead)' }, { label: 'Anitha R (iOS Mobile Tech Lead)', value: 'Anitha R (iOS Mobile Tech Lead)' }, { label: 'Deepak (Lead UI/UX Designer)', value: 'Deepak (Lead UI/UX Designer)' }, { label: 'Sarah Mitchell (HR Head)', value: 'Sarah Mitchell (HR Head)' }]" optionLabel="label" optionValue="value" />
             </div>
           </div>
 
@@ -224,11 +198,7 @@
             </div>
             <div class="col-md-4">
               <label class="form-label fw-semibold" style="font-size:13px;">Duration</label>
-              <select class="form-select" [(ngModel)]="scheduleForm.duration">
-                <option value="30 mins">30 minutes</option>
-                <option value="45 mins">45 minutes</option>
-                <option value="60 mins">60 minutes</option>
-              </select>
+              <app-select [(ngModel)]="scheduleForm.duration" [options]="[{ label: '30 minutes', value: '30 mins' }, { label: '45 minutes', value: '45 mins' }, { label: '60 minutes', value: '60 mins' }]" optionLabel="label" optionValue="value" />
             </div>
           </div>
 

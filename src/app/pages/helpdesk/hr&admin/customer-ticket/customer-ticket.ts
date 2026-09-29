@@ -3,7 +3,6 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import {
   CustomerTicketService,
@@ -13,6 +12,7 @@ import {
   TicketConversation
 } from '../../../../services/customer-ticket.service';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 interface SelectOption {
   label: string;
   value: string;
@@ -58,7 +58,7 @@ interface IssueSplitData {
 @Component({
   selector: 'app-customer-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule, Breadcrumb, AppStatCard],
+  imports: [AppSelect, CommonModule, FormsModule, RouterLink, Breadcrumb, AppStatCard],
   templateUrl: './customer-ticket.html',
   styleUrl: './customer-ticket.scss',
 })

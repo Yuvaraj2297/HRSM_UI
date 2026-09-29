@@ -37,10 +37,6 @@
   z-index: 50;
 }
 
-.card-custom {
-  padding: 16px 16px;
-}
-
 .filters-toggle-row {
   display: flex;
   align-items: center;
@@ -76,7 +72,7 @@
   margin-bottom: 12px;
   border: 1px solid var(--bg-muted);
   border-radius: var(--card-radius);
-  background: var(--white);
+  background: var(--surface);
 }
 
 .ml-active-label {
@@ -376,7 +372,7 @@
 }
 
 .ml-modal {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--card-radius);
   width: 100%;
   max-height: 90vh;
@@ -471,7 +467,7 @@
   justify-content: center;
   flex: 0 0 auto;
   border: 1px solid var(--border-strong);
-  background: var(--white);
+  background: var(--surface);
   color: var(--neutral-750);
   border-radius: 7px;
   cursor: pointer;
@@ -544,7 +540,7 @@
 }
 
 .mrv-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--neutral-50-3);
   border-radius: var(--radius-sm);
   padding: 12px 16px 12px;
@@ -697,7 +693,7 @@
 }
 
 .mlv-act-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--neutral-50-3);
   border-radius: var(--card-radius);
   padding: 12px 16px 12px;

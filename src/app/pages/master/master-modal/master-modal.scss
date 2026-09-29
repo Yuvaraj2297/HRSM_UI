@@ -30,6 +30,104 @@
   .master-select {
     width: 100%;
   }
+
+  /* =======================================================
+     CAPABILITIES CHECKBOXES
+  ======================================================= */
+
+  .capabilities-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .capability-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--bg-soft);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      background: var(--primary-soft);
+    }
+
+    /* hide native checkbox but keep it accessible */
+    input[type='checkbox'] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkmark {
+      position: relative;
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      background: var(--surface);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 5px;
+      transition: all 0.2s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 1.5px;
+        width: 5px;
+        height: 10px;
+        border: solid var(--white);
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg) scale(0);
+        transition: transform 0.15s ease;
+      }
+    }
+
+    .capability-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* checked */
+    input:checked ~ .checkmark {
+      background: var(--primary);
+      border-color: var(--primary);
+
+      &::after {
+        transform: rotate(45deg) scale(1);
+      }
+    }
+
+    input:checked ~ .capability-label {
+      color: var(--primary-dark);
+    }
+
+    /* selected pill look */
+    &:has(input:checked) {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+    }
+
+    /* keyboard focus */
+    input:focus-visible ~ .checkmark {
+      box-shadow: var(--focus-ring);
+    }
+  }
+
+  .field-error {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--danger);
+  }
 }
 
 @keyframes fieldSlideUp {

@@ -21,7 +21,7 @@
 
 /* ================= Team cards ================= */
 .team-card {
-  background: var(--white, var(--white));
+  background: var(--surface);
   border: 1px solid var(--border-soft, var(--orange-100-2));
   border-radius: var(--card-radius);
   padding: 24px;
@@ -79,7 +79,7 @@
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--white);
+    border: 2px solid var(--surface);
     margin-left: -6px;
 
     &:first-child {
@@ -99,7 +99,7 @@
     font-size: 11px;
     font-weight: 700;
     margin-left: -8px;
-    border: 2px solid var(--white);
+    border: 2px solid var(--surface);
   }
 }
 
@@ -115,7 +115,7 @@
 }
 
 .employee-modal {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--card-radius);
   width: min(1200px, 95vw);
   max-height: 90vh;
@@ -236,39 +236,7 @@
 
 }
 
-.info-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  height: 100%;
-}
-
-.info-card-title {
-  color: var(--green-400);
-  font-weight: 700;
-  font-size: 0.85rem;
-  border-bottom: 2px solid var(--green-400);
-  display: inline-block;
-  padding-bottom: 4px;
-  margin-bottom: 12px;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed var(--border);
-  font-size: 0.85rem;
-}
-
-.info-label {
-  color: var(--neutral-350);
-}
-
-.info-value {
-  font-weight: 600;
-}
+/* info cards: global .card-custom + ui-kit .ui-sec-title / .ui-info-row */
 
 .employee-modal-footer {
   padding: 12px 24px;

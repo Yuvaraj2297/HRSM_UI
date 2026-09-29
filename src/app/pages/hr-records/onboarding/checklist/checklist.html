@@ -1,325 +1,204 @@
-<div class="onboarding-page">
-
-    <!-- =====================================================
-       PAGE HEADER
-  ====================================================== -->
-
-    <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
-
-        <div>
-
-            <app-breadcrumb></app-breadcrumb>
-
-        </div>
-
-        <div class="d-flex gap-2">
-
-            <button type="button" class="btn btn-primary" (click)="openAddModal()">
-
-                <i class="bi bi-plus-lg"></i>
-
-                Add Checklist Task
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-       TABLE
-  ====================================================== -->
-
-    <app-primedatatable [columns]="columns" [data]="tableData" [searchPlaceholder]="searchPlaceholder"
-        [Accessactions]="actions" [showGlobalFilter]="true" [showColumnsButton]="true" [showExportButton]="true"
-        (actionClick)="onTableAction($event)">
-
-    </app-primedatatable>
-
-
-    <!-- =====================================================
-       ADD / EDIT MODAL
-  ====================================================== -->
-
-    @if (showTaskModal) {
-
-    <!-- BACKDROP -->
-
-    <div class="custom-modal-backdrop" (click)="closeModal()">
-    </div>
-
-
-    <!-- MODAL WRAPPER -->
-
-    <div class="custom-modal-wrapper">
-
-        <div class="custom-task-modal modal-content">
-
-
-            <!-- =================================================
-             MODAL HEADER
-        ================================================== -->
-
-            <div class="modal-header">
-
-                <h5 class="modal-title ">
-
-                    @if (modalType === 'add') {
-
-                    <i class="bi bi-check2-square text-primary me-2">
-                    </i>
-
-                    Add Onboarding Checklist Task
-
-                    }
-
-                    @if (modalType === 'edit') {
-
-                    <i class="bi bi-pencil-square text-primary me-2">
-                    </i>
-
-                    Edit Onboarding Task
-
-                    }
-
-                </h5>
-
-
-                <button type="button" class="modal-close" (click)="closeModal()">
-
-                    ×
-
-                </button>
-
-            </div>
-
-
-            <!-- =================================================
-             REACTIVE FORM
-        ================================================== -->
-
-            <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
-
-
-                <!-- =================================================
-               MODAL BODY
-          ================================================== -->
-
-                <div class="modal-body p-4">
-
-                    <div class="row g-3">
-
-
-                        <!-- =================================================
-                   TASK TITLE
-              ================================================== -->
-
-                        <div class="col-12">
-
-                            <label class="form-label">
-
-                                Task Title 
-
-                            </label>
-
-
-                            <input type="text" class="form-control" formControlName="taskTitle"
-                                placeholder="e.g. Enroll in Corporate Health Insurance">
-
-
-                            @if (
-                            taskForm.get('taskTitle')?.touched &&
-                            taskForm.get('taskTitle')?.hasError('required')
-                            ) {
-
-                            <small class="text-danger">
-
-                                Task title is required.
-
-                            </small>
-
-                            }
-
-                        </div>
-
-
-                        <!-- =================================================
-                   MILESTONE PHASE
-              ================================================== -->
-
-                        <div class="col-md-6">
-
-                            <label class="form-label">
-
-                                Milestone Phase 
-
-                            </label>
-
-
-                            <p-select [options]="milestoneOptions" formControlName="milestonePhase" optionLabel="label"
-                                optionValue="value" placeholder="Select milestone phase" [filter]="true"
-                                filterPlaceholder="Search milestone..." [showClear]="false" appendTo="body"
-                                styleClass="w-100">
-
-                            </p-select>
-
-
-                            @if (
-                            taskForm.get('milestonePhase')?.touched &&
-                            taskForm.get('milestonePhase')?.hasError('required')
-                            ) {
-
-                            <small class="text-danger">
-
-                                Milestone phase is required.
-
-                            </small>
-
-                            }
-
-                        </div>
-
-
-                        <!-- =================================================
-                   JOINER
-              ================================================== -->
-
-                        <div class="col-md-6">
-
-                            <label class="form-label ">
-
-                                Assign to Joiner
-
-                            </label>
-
-
-                            <p-select [options]="joinerOptions" formControlName="taskJoiner" optionLabel="label"
-                                optionValue="value" placeholder="Select joiner" [filter]="true"
-                                filterPlaceholder="Search joiner..." [showClear]="false" appendTo="body"
-                                styleClass="w-100">
-
-                            </p-select>
-
-                        </div>
-
-
-                        <!-- =================================================
-                   TASK OWNER
-              ================================================== -->
-
-                        <div class="col-md-6">
-
-                            <label class="form-label">
-
-                                Task Owner
-
-                            </label>
-
-
-                            <input type="text" class="form-control" formControlName="taskOwner"
-                                placeholder="e.g. HR Ops, IT Support">
-
-                        </div>
-
-
-                        <!-- =================================================
-                   DUE DATE
-              ================================================== -->
-
-                        <div class="col-md-6">
-
-                            <label class="form-label">
-
-                                Due Date
-
-                            </label>
-
-
-                           <input type="text" class="form-control" placeholder="DD/MM/YYYY" appCalendarDatepicker>
-
-                        </div>
-
-
-                        <!-- =================================================
-                   STATUS - EDIT ONLY
-              ================================================== -->
-
-                        @if (modalType === 'edit') {
-
-                        <div class="col-12">
-
-                            <label class="form-label ">
-
-                                Status
-
-                            </label>
-
-
-                            <p-select [options]="statusOptions" formControlName="taskStatus" optionLabel="label"
-                                optionValue="value" placeholder="Select status" [showClear]="true" appendTo="body"
-                                styleClass="w-100">
-
-                            </p-select>
-
-                        </div>
-
-                        }
-
-
-                    </div>
-
-                </div>
-
-
-                <!-- =================================================
-               MODAL FOOTER
-          ================================================== -->
-
-                <div class="modal-footer">
-
-
-                    <button type="button" class="btn btn-secondary" (click)="closeModal()">
-
-                        Cancel
-
-                    </button>
-
-
-                    <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">
-
-
-                        @if (modalType === 'add') {
-
-                        <i class="bi bi-plus-circle">
-                        </i>
-
-                        Add Task
-
-                        }
-
-
-                        @if (modalType === 'edit') {
-
-                        <i class="bi bi-check-lg">
-                        </i>
-
-                        Update Task
-
-                        }
-
-
-                    </button>
-
-                </div>
-
-
-            </form>
-
-        </div>
-
-    </div>
-
-    }
-
+@let s = stats();
+@let counts = milestoneCounts();
+
+<!-- =========================================================
+     KPI — click a card to filter
+========================================================== -->
+<div class="stat-grid">
+  <app-stat-card label="Total Tasks" [value]="s.total" icon="bi bi-list-check" tone="primary"
+    [clickable]="true" [active]="statusFilter() === null" (click)="toggleStatus(null)" />
+  <app-stat-card label="Completed" [value]="s.completed" icon="bi bi-check2-circle" tone="teal"
+    [sub]="s.completedPct + '% of all tasks'" subTone="success"
+    [clickable]="true" [active]="statusFilter() === 'Completed'" (click)="toggleStatus('Completed')" />
+  <app-stat-card label="In Progress" [value]="s.inProgress" icon="bi bi-arrow-repeat" tone="amber"
+    [clickable]="true" [active]="statusFilter() === 'In Progress'" (click)="toggleStatus('In Progress')" />
+  <app-stat-card label="Overdue" [value]="s.overdue" icon="bi bi-alarm" tone="red" sub="Past due, not completed"
+    [clickable]="true" [active]="statusFilter() === 'overdue'" (click)="toggleStatus('overdue')" />
 </div>
+
+<!-- =========================================================
+     MILESTONE TABS
+========================================================== -->
+<nav class="page-tabs mb-3" role="tablist">
+  <button type="button" role="tab" class="page-tab" [class.active]="milestone() === null"
+    [attr.aria-selected]="milestone() === null" (click)="milestone.set(null)">
+    <i class="bi bi-grid"></i> All Milestones
+    <span class="page-tab-count">{{ statusFilter() ? rows().length : s.total }}</span>
+  </button>
+  @for (m of milestones; track m.value) {
+  <button type="button" role="tab" class="page-tab" [class.active]="milestone() === m.value"
+    [attr.aria-selected]="milestone() === m.value" (click)="milestone.set(m.value)">
+    <i [class]="m.icon"></i> {{ m.value }}
+    @if (counts[m.value]) {
+    <span class="page-tab-count">{{ counts[m.value] }}</span>
+    }
+  </button>
+  }
+</nav>
+
+<!-- =========================================================
+     CHECKLIST TABLE
+========================================================== -->
+<app-primedatatable
+  [modalHeader]="tableHeader"
+  [columns]="columns"
+  [data]="rows()"
+  [Accessactions]="tableActions"
+  actionsMode="inline"
+  searchPlaceholder="Search task, joiner, owner..."
+  [showColumnsButton]="false"
+  exportFileName="onboarding-checklist"
+  (actionClick)="onAction($event)"
+>
+  <div table-header-actions>
+    <button type="button" class="btn btn-primary" (click)="openAdd()">
+      <i class="bi bi-plus-lg"></i>
+      <span>Add Task</span>
+    </button>
+  </div>
+
+  <ng-template #cellTemplate let-row let-col="col">
+    @switch (col.field) {
+      @case ('title') {
+        <label class="task-cell" (click)="$event.stopPropagation()">
+          <input type="checkbox" class="form-check-input" [checked]="row.status === 'Completed'"
+            [attr.aria-label]="'Mark ' + row.title + ' complete'"
+            (change)="toggleComplete(row, $any($event.target).checked)" />
+          <span [class.task-done]="row.status === 'Completed'">{{ row.title }}</span>
+        </label>
+      }
+
+      @case ('milestone') {
+        @let m = milestoneMeta(row.milestone);
+        <span class="category-pill-badge" [style.color]="m.tone">
+          <i [class]="m.icon + ' me-1'"></i>{{ row.milestone }}
+        </span>
+      }
+
+      @case ('joiner') {
+        @if (row.joiner) {
+          <div class="emp-name-line">{{ row.joiner }}</div>
+          <div class="emp-code-line">{{ row.role }} • {{ row.department }}</div>
+        } @else {
+          <span class="text-muted">All joiners</span>
+          <div class="emp-code-line">Template default</div>
+        }
+      }
+
+      @case ('dueDate') {
+        <span [class.text-danger]="row.overdue" [class.fw-semibold]="row.overdue">
+          @if (row.overdue) { <i class="bi bi-alarm"></i> }
+          {{ fmtDate(row.dueDate) }}
+        </span>
+      }
+
+      @case ('status') {
+        <span class="status-pill gap-1" [ngClass]="statusClass(row.status)">
+          @switch (row.status) {
+            @case ('Completed') { <i class="bi bi-check-circle-fill"></i> }
+            @case ('In Progress') { <i class="bi bi-arrow-repeat"></i> }
+            @case ('Pending') { <i class="bi bi-hourglass-split"></i> }
+            @default { <i class="bi bi-calendar-event"></i> }
+          }
+          {{ row.status }}
+        </span>
+      }
+    }
+  </ng-template>
+</app-primedatatable>
+
+<!-- =========================================================
+     ADD / EDIT MODAL
+========================================================== -->
+@if (modalOpen()) {
+<div class="modal-backdrop-custom" (click)="closeModal()"></div>
+<div class="modal-custom modal-lg" role="dialog" aria-modal="true"
+  [attr.aria-label]="editingId === null ? 'Add checklist task' : 'Edit checklist task'">
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div class="modal-header">
+      <div class="d-flex align-items-center gap-2">
+        <span class="modal-icon-circle">
+          <i class="bi" [class.bi-plus-lg]="editingId === null" [class.bi-pencil-square]="editingId !== null"></i>
+        </span>
+        <h5 class="modal-title">{{ editingId === null ? 'Add Checklist Task' : 'Edit Checklist Task' }}</h5>
+      </div>
+      <button type="button" class="btn-close-custom" aria-label="Close" (click)="closeModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label" for="task-title"><span class="text-danger">*</span> Task Title</label>
+          <input id="task-title" type="text" class="form-control" formControlName="title" maxlength="150"
+            placeholder="e.g. Enroll in Corporate Health Insurance" [class.is-invalid]="invalid('title')" />
+          @if (invalid('title')) {
+          <div class="field-error">Task title is required.</div>
+          }
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label"><span class="text-danger">*</span> Milestone</label>
+          <app-select formControlName="milestone" [options]="milestoneOptions" optionLabel="label" optionValue="value" placeholder="Select milestone" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Assign to Joiner</label>
+          <app-select formControlName="joiner" [options]="joinerOptions" optionLabel="label" optionValue="value" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="task-owner">Task Owner</label>
+          <input id="task-owner" type="text" class="form-control" formControlName="owner"
+            placeholder="e.g. HR Ops, IT Support" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="task-due">Due Date</label>
+          <input id="task-due" type="text" class="form-control" formControlName="dueDate"
+            placeholder="DD/MM/YYYY" appCalendarDatepicker />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Status</label>
+          <app-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi" [class.bi-plus-lg]="editingId === null" [class.bi-check-lg]="editingId !== null"></i>
+        <span>{{ editingId === null ? 'Add Task' : 'Update Task' }}</span>
+      </button>
+    </div>
+  </form>
+</div>
+}
+
+<!-- =========================================================
+     DELETE CONFIRM
+========================================================== -->
+@if (deleting(); as d) {
+<div class="modal-backdrop-custom" (click)="deleting.set(null)"></div>
+<div class="modal-custom modal-sm" role="alertdialog" aria-modal="true" aria-label="Delete task">
+  <div class="modal-header">
+    <h5 class="modal-title">Delete task?</h5>
+    <button type="button" class="btn-close-custom" aria-label="Close" (click)="deleting.set(null)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    “{{ d.title }}” will be removed from the checklist.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="deleting.set(null)">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="confirmDelete()">
+      <i class="bi bi-trash"></i>
+      <span>Delete</span>
+    </button>
+  </div>
+</div>
+}

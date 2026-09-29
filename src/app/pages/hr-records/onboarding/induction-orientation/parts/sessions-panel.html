@@ -1,0 +1,93 @@
+<!-- filters (the workflow step filter lives on the workflow bar above) -->
+<div class="card-custom report-filter-card panel-filter-card mb-3">
+  <div class="report-filter-field">
+    <label>Module</label>
+    <app-select [ngModel]="store.moduleFilter()" (ngModelChange)="store.moduleFilter.set($event)" [options]="moduleOptions" optionLabel="label" optionValue="value" placeholder="All Modules" />
+  </div>
+  <div class="report-filter-field">
+    <label>Department</label>
+    <app-select [ngModel]="store.deptFilter()" (ngModelChange)="store.deptFilter.set($event)" [options]="deptOptions()" optionLabel="label" optionValue="value" placeholder="All Departments" />
+  </div>
+  <div class="report-filter-field">
+    <label>Attendance</label>
+    <app-select [ngModel]="store.attendanceFilter()" (ngModelChange)="store.attendanceFilter.set($event)" [options]="attendanceOptions" optionLabel="label" optionValue="value" placeholder="Any Attendance" />
+  </div>
+  <div class="report-filter-actions">
+    <button type="button" class="btn btn-secondary" [disabled]="!store.hasSessionFilters()"
+      (click)="store.resetSessionFilters()">
+      <i class="bi bi-arrow-counterclockwise"></i>
+      <span>Reset</span>
+    </button>
+  </div>
+</div>
+
+@if (store.stepFilter(); as step) {
+<div class="panel-filter-note mb-2">
+  <i class="bi bi-funnel"></i>
+  Showing sessions at step <strong>{{ step }}. {{ stepLabel(step) }}</strong>
+  <button type="button" class="btn btn-link btn-sm p-0 ms-2" (click)="store.stepFilter.set(null)">Clear</button>
+</div>
+}
+
+<app-primedatatable
+  [modalHeader]="tableHeader"
+  [columns]="columns"
+  [data]="store.filteredRows()"
+  searchPlaceholder="Search joiner, session, trainer..."
+  [showColumnsButton]="false"
+  exportFileName="induction-sessions"
+  (actionClick)="onAction($event)"
+>
+  <div table-header-actions>
+    <button type="button" class="btn btn-primary" (click)="store.open({ kind: 'schedule' })">
+      <i class="bi bi-calendar-plus"></i>
+      <span>Schedule Session</span>
+    </button>
+  </div>
+
+  <ng-template #cellTemplate let-row let-col="col">
+    @switch (col.field) {
+      @case ('emp') {
+        <div class="emp-name-line">{{ row.emp }}</div>
+        <div class="emp-code-line">{{ row.empId }} • {{ row.dept }}</div>
+      }
+
+      @case ('title') {
+        @let m = moduleMeta(row.module);
+        <div class="panel-wrap-cell">
+          <div class="fw-semibold">{{ row.title }}</div>
+          <span class="category-pill-badge mt-1"><i [class]="m.icon + ' me-1'"></i>{{ m.short }}</span>
+        </div>
+      }
+
+      @case ('date') {
+        <div>{{ fmtDate(row.date) }} <span class="text-muted">• {{ row.mode }}</span></div>
+        <div class="emp-code-line">{{ row.time }}</div>
+      }
+
+      @case ('step') {
+        <div class="repayment-progress-wrap">
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="fw-semibold">Step {{ row.step }} / 10</span>
+          </div>
+          <div class="progress" role="progressbar" [attr.aria-valuenow]="row.step" aria-valuemin="0" aria-valuemax="10">
+            <div class="progress-bar" [class.bg-success]="row.step === 10" [class.bg-warning]="row.step < 10"
+              [style.width.%]="row.step * 10"></div>
+          </div>
+          <div class="emp-code-line mt-1">{{ stepLabel(row.step) }}</div>
+        </div>
+      }
+
+      @case ('attendance') {
+        <span class="status-pill" [ngClass]="attendanceClass(row.attendance)">{{ row.attendance }}</span>
+      }
+
+      @case ('status') {
+        <span class="status-pill" [ngClass]="statusClass(row.status)">{{ row.status }}</span>
+        @if (!row.notified) {
+        <div class="emp-code-line mt-1 text-danger"><i class="bi bi-bell-slash"></i> Not notified</div>
+        }
+      }
+    }
+  </ng-template>
+</app-primedatatable>

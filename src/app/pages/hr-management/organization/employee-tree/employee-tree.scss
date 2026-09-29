@@ -3,7 +3,7 @@
 ============================================================= */
 .view-toggle-card {
   border-radius: var(--radius-lg);
-  background: var(--white);
+  background: var(--surface);
   display: inline-flex;
 
 }
@@ -56,7 +56,7 @@
   box-shadow: var(--shadow-card);
   align-self: flex-start;
   flex-shrink: 0;
-  background: var(--white);
+  background: var(--surface);
 
   &:hover {
     border-color: var(--primary);
@@ -115,7 +115,7 @@
 .dept-count-badge {
   position: relative;
   z-index: 2;
-  background: var(--white) !important;
+  background: var(--surface) !important;
   border: 1.5px solid var(--border);
   color: var(--text-light);
   font-weight: 700;
@@ -162,7 +162,7 @@
   font-size: .74rem;
   font-weight: 700;
   color: var(--text-light);
-  background: var(--white);
+  background: var(--surface);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   box-shadow: 0 1px 3px rgba(16, 24, 40, .04);
@@ -242,7 +242,7 @@
   box-shadow: var(--shadow-card);
   z-index: 2;
   flex-shrink: 0;
-  background: var(--white);
+  background: var(--surface);
 
   &:hover {
     border-color: var(--primary);
@@ -274,7 +274,7 @@
   height: 38px;
   padding: 0;
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   color: var(--text-light);
   font-size: 14px;
   cursor: pointer;
@@ -303,7 +303,7 @@
   bottom: 0;
   width: 340px;
   max-width: 90vw;
-  background: var(--white);
+  background: var(--surface);
   border-left: 1px solid var(--border);
   box-shadow: -8px 0 24px rgba(var(--neutral-900-rgb), .08);
   padding: 24px 20px;

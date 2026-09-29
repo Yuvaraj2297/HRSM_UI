@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PrimeDataTable, PrimeTableColumn, PrimeTableRowAction } from '../../../../../shared/primedatatable/primedatatable';
 import { ModalField, ModalSaveEvent, ReuseModal } from '../../../../../shared/reuse-model/reuse-model';
+import { ValidationMethods } from '../../../../../shared/validation/validation-methods';
 
 
 interface PolicyRow {
@@ -52,7 +53,11 @@ export class Policy implements OnInit {
       label: 'Policy Name',
       type: 'text',
       required: true,
+      capitalizeFirst: true,
+      sanitizer: 'alphabets',
+      validators: [ValidationMethods.alphabetOnly(),],
       placeholder: 'e.g. Leave Policy 2026',
+      maxLength:100
     },
     {
       key: 'category',
@@ -95,6 +100,7 @@ export class Policy implements OnInit {
       type: 'textarea',
       rows: 3,
       placeholder: 'Brief description about this policy...',
+      maxLength:500
     },
     {
       key: 'fileName',

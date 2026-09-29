@@ -66,13 +66,7 @@
 <div class="card p-4 mb-4">
 
   <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
-    <select class="form-select form-select-sm border-0 fw-semibold shadow-sm rounded-3 px-3 py-2 text-dark"
-      style="width: auto; min-width: 170px; background-color: var(--bg-muted); font-size: 13.5px;"
-      [ngModel]="currentDept" (ngModelChange)="onDepartmentChange($event)">
-      @for (d of departments; track d) {
-        <option [value]="d">{{ d }}</option>
-      }
-    </select>
+    <app-select class="border-0 fw-semibold shadow-sm rounded-3 px-3 py-2 text-dark" [ngModel]="currentDept" (ngModelChange)="onDepartmentChange($event)" [options]="departments" size="sm" />
   </div>
 
   <app-primedatatable

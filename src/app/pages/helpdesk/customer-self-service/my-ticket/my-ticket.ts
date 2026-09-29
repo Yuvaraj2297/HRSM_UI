@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
 import {
   CustomerTicketService,
   CustomerTicket,
@@ -10,6 +9,7 @@ import {
   TicketIssueType
 } from '../../../../services/customer-ticket.service';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 interface StepItem {
   name: string;
   isDone: boolean;
@@ -25,7 +25,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-my-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule],
+  imports: [AppSelect, CommonModule, FormsModule, RouterLink],
   templateUrl: './my-ticket.html',
   styleUrl: './my-ticket.scss',
 })

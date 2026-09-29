@@ -112,7 +112,7 @@
 .leave-balance-card {
   flex: 0 0 auto;
   width: 185px;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border-soft);
   border-radius: var(--card-radius);
   padding: 20px 16px;
@@ -204,7 +204,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px 16px;
-  background: var(--white);
+  background: var(--surface);
   border-bottom: 1px solid var(--border-soft);
 }
 
@@ -245,7 +245,7 @@
   padding: 12px 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
@@ -672,7 +672,7 @@
   width: 440px;
   max-width: calc(100vw - 20px);
   height: calc(100vh - 20px);
-  background: var(--white);
+  background: var(--surface);
   z-index: 2050;
   border-radius: 25px;
   box-shadow: -20px 0 60px rgba(var(--black-rgb), 0.18);
@@ -684,7 +684,7 @@
   .offcanvas-header {
     flex-shrink: 0;
     padding: 16px 24px;
-    background: var(--white);
+    background: var(--surface);
     border-bottom: 1px solid var(--neutral-50-3);
     display: flex;
     align-items: center;
@@ -768,7 +768,7 @@
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 1px 3px rgba(var(--neutral-900-rgb), 0.05);
 
   button {
@@ -799,7 +799,7 @@
 
 .assign-chip {
   border: 1px dashed var(--primary);
-  background: var(--white);
+  background: var(--surface);
   color: var(--primary);
   font-size: 12px;
   font-weight: 800;
@@ -817,7 +817,7 @@
 
 .assign-summary-box {
   margin-top: 16px;
-  background: linear-gradient(135deg, var(--green-50) 0%, var(--white) 70%);
+  background: linear-gradient(135deg, var(--green-50) 0%, var(--surface) 70%);
   border: 1px solid var(--green-100);
   border-radius: var(--card-radius);
   padding: 12px 16px;
@@ -843,7 +843,7 @@
     font-size: 11px;
     font-weight: 800;
     color: var(--ink-500);
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--border-soft);
     padding: 2px 10px;
     border-radius: 999px;

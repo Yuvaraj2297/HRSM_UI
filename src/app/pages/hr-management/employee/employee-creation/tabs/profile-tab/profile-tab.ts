@@ -2,7 +2,6 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
@@ -11,10 +10,11 @@ import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 import { CalendarDatepickerDirective } from '../../../../../../common/directives/datepicker';
 import { ValidationMethods } from '../../../../../../shared/validation/validation-methods';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-profile-tab',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,CalendarDatepickerDirective, SelectModule, DatePickerModule, InputTextModule, TextareaModule, CheckboxModule],
+  imports: [AppSelect, CommonModule, ReactiveFormsModule,CalendarDatepickerDirective, DatePickerModule, InputTextModule, TextareaModule, CheckboxModule],
   templateUrl: './profile-tab.html',
   styles: [`
     .pw-meter { height:4px; background:var(--neutral-50-8); border-radius:2px; margin-top:6px; overflow:hidden; }

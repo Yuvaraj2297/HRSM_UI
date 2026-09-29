@@ -3,7 +3,6 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import {
   EmployeeTicketService,
@@ -12,6 +11,7 @@ import {
   EmployeeTicketConversation
 } from '../../../../services/employee-ticket.service';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export type { IEmployeeTicket };
 
 interface SelectOption {
@@ -48,7 +48,7 @@ interface AttentionItem {
 @Component({
   selector: 'app-employee-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule, Breadcrumb, AppStatCard],
+  imports: [AppSelect, CommonModule, FormsModule, RouterLink, Breadcrumb, AppStatCard],
   templateUrl: './employee-ticket.html',
   styleUrl: './employee-ticket.scss',
 })

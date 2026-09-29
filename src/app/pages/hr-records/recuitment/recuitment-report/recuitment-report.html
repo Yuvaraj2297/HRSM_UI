@@ -24,11 +24,7 @@
   <div class="row g-2 align-items-end">
     <div class="col-lg-3 col-md-4">
       <label class="form-label  small mb-1"><i class="bi bi-calendar-range me-1 text-primary"></i> Date Filter Preset</label>
-      <select class="form-select form-select-sm" [(ngModel)]="datePreset" (ngModelChange)="onPresetChange()">
-        @for (opt of datePresetOptions; track opt.value) {
-          <option [value]="opt.value">{{ opt.label }}</option>
-        }
-      </select>
+      <app-select [(ngModel)]="datePreset" (ngModelChange)="onPresetChange()" [options]="datePresetOptions" optionLabel="label" optionValue="value" size="sm" />
     </div>
     <div class="col-lg-2 col-md-3">
       <label class="form-label  small mb-1">From Date (Datepicker)</label>
@@ -40,11 +36,7 @@
     </div>
     <div class="col-lg-3 col-md-6">
       <label class="form-label  small mb-1"><i class="bi bi-funnel me-1 text-primary"></i> Employee Status</label>
-      <select class="form-select form-select-sm" [(ngModel)]="statusFilter">
-        @for (opt of statusOptions; track opt.value) {
-          <option [value]="opt.value">{{ opt.label }}</option>
-        }
-      </select>
+      <app-select [(ngModel)]="statusFilter" [options]="statusOptions" optionLabel="label" optionValue="value" size="sm" />
     </div>
     <div class="col-lg-2 col-md-6 d-flex gap-1">
       <button type="button" class="btn btn-sm btn-primary w-100" (click)="applyFilters()">

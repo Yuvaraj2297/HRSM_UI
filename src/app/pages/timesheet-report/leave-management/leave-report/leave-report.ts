@@ -1,16 +1,15 @@
-import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import {
-    PrimeDataTable,
-    PrimeTableActions,
-    PrimeTableColumn,
-    PrimeTableHeader,
-    PrimeTableRowAction,
+  PrimeDataTable,
+  PrimeTableActions,
+  PrimeTableColumn,
+  PrimeTableHeader,
+  PrimeTableRowAction,
 } from '../../../../shared/primedatatable/primedatatable';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
 export interface LeaveRequestRow {
   id: string;
@@ -51,10 +50,11 @@ export interface SelectOption {
 
 import { Calendar } from '../../../../shared/calendar/calendar';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-leave-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, Breadcrumb, SelectModule, PrimeDataTable, Calendar, AppStatCard],
+  imports: [AppSelect, CommonModule, FormsModule, Breadcrumb, PrimeDataTable, Calendar, AppStatCard],
   templateUrl: './leave-report.html',
   styleUrl: './leave-report.scss',
 })

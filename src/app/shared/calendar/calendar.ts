@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 
+import { AppSelect } from '../app-select/app-select';
 export interface TeamMember {
   id: string;
   name: string;
@@ -33,7 +33,7 @@ export interface CalendarSummary {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, SelectModule],
+  imports: [AppSelect, CommonModule, FormsModule],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss',
 })

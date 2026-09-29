@@ -12,10 +12,10 @@ import { CommonModule } from '@angular/common';
 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { SelectModule } from 'primeng/select';
 
 import { MasterFormFacade, MasterType } from '../facade/master-form.facade';
 
+import { AppSelect } from '../../../shared/app-select/app-select';
 declare var bootstrap: any;
 
 /* =========================================================
@@ -27,7 +27,7 @@ export interface ModalField {
 
   label: string;
 
-  type: 'text' | 'number' | 'select';
+  type: 'text' | 'number' | 'select' | 'checkbox';
 
   placeholder?: string;
 
@@ -36,6 +36,11 @@ export interface ModalField {
   options?: {
     label: string;
     value: any;
+  }[];
+
+  checkboxOptions?: {
+    key: string;
+    label: string;
   }[];
 
   filter?: boolean;
@@ -54,7 +59,7 @@ export interface ModalField {
 
   standalone: true,
 
-  imports: [CommonModule, ReactiveFormsModule, SelectModule],
+  imports: [AppSelect, CommonModule, ReactiveFormsModule],
 
   templateUrl: './master-modal.html',
 
@@ -71,8 +76,7 @@ export class MasterModal implements AfterViewInit {
      MODAL
   ======================================================= */
 
-  @ViewChild('masterModal')
-  masterModal!: ElementRef;
+  @ViewChild('masterModal') masterModal!: ElementRef;
 
   private modalInstance: any;
 
@@ -80,8 +84,7 @@ export class MasterModal implements AfterViewInit {
      OUTPUT
   ======================================================= */
 
-  @Output()
-  saveClicked = new EventEmitter<any>();
+  @Output() saveClicked = new EventEmitter<any>();
 
   /* =======================================================
      FORM
@@ -203,101 +206,66 @@ export class MasterModal implements AfterViewInit {
       },
     ],
 
-    /* =====================================================
-       TEAM
-    ===================================================== */
 
-    team: [
+      job_type: [
       {
-        name: 'teamName',
+        name: 'jobType',
 
-        label: 'Team Name',
+        label: 'Job Type',
 
         type: 'text',
 
-        placeholder: 'Enter team name',
-
-        required: true,
-      },
-
-      {
-        name: 'department',
-
-        label: 'Department',
-
-        type: 'select',
-
-        placeholder: 'Select department',
-
-        required: true,
-
-        filter: true,
-
-        options: this.departmentOptions,
-      },
-
-      {
-        name: 'teamLead',
-
-        label: 'Team Lead',
-
-        type: 'text',
-
-        placeholder: 'Enter team lead name',
-
-        required: true,
-      },
-
-      {
-        name: 'members',
-
-        label: 'Number of Members',
-
-        type: 'number',
-
-        placeholder: 'Enter number of members',
-
-        required: true,
-
-        min: 1,
-      },
-    ],
-
-    /* =====================================================
-       POSITION
-    ===================================================== */
-
-    position: [
-      {
-        name: 'positionName',
-
-        label: 'Position Name',
-
-        type: 'text',
-
-        placeholder: 'Enter position name',
+        placeholder: 'Enter Job Type',
 
         required: true,
       },
     ],
 
-    /* =====================================================
-       DOCUMENT
-    ===================================================== */
 
-    document: [
+      designation: [
       {
-        name: 'documentName',
+        name: 'designation',
 
-        label: 'Document Name',
+        label: 'Designation',
 
         type: 'text',
 
-        placeholder: 'Enter document name',
+        placeholder: 'Enter Designation',
 
         required: true,
       },
     ],
+
+ 
+      branch: [
+      {
+        name: 'branchName',
+
+        label: 'Branch',
+
+        type: 'text',
+
+        placeholder: 'Enter Branch',
+
+        required: true,
+      },
+    ],
+
+
+      employee: [
+      {
+        name: 'employeeTypeName',
+
+        label: 'Employee Type Name',
+
+        type: 'text',
+
+        placeholder: 'Enter Employee Type Name',
+
+        required: true,
+      },
+    ],
+    
 
     /* =====================================================
        WORK LOCATION
@@ -317,6 +285,21 @@ export class MasterModal implements AfterViewInit {
       },
     ],
 
+
+     country: [
+      {
+        name: 'countryName',
+
+        label: 'Country Name',
+
+        type: 'text',
+
+        placeholder: 'Enter country name',
+
+        required: true,
+      },
+
+    ],
     /* =====================================================
        STATE
     ===================================================== */
@@ -444,6 +427,102 @@ export class MasterModal implements AfterViewInit {
         required: true,
       },
     ],
+
+
+
+    relieving_type:[
+
+      {
+        name: 'relievingType',
+
+        label: 'Relieving Type',
+
+        type: 'text',
+
+        placeholder: 'Enter relieving type',
+
+        required: true,
+      },
+
+    ],
+
+    
+    notice_period:[
+
+      {
+        name: 'noticePeriod',
+
+        label: 'Notice Period',
+
+        type: 'text',
+
+        placeholder: 'Enter Notice Period (e.g. 30 Days)',
+
+        required: true,
+      },
+
+    ],
+
+
+     holiday: [
+      {
+        name: 'holidayType',
+
+        label: 'Holiday Type',
+
+        type: 'text',
+
+        placeholder: 'Enter Holiday Type',
+
+        required: true,
+      },
+    ],
+
+
+
+    role: [
+      {
+        name: 'roleName',
+        label: 'Role Name',
+        type: 'text',
+        placeholder: 'Enter role name',
+        required: true,
+      },
+    ],
+
+    permission: [
+      {
+        name: 'group',
+        label: 'Group',
+        type: 'text',
+        placeholder: 'e.g. HR Management',
+        required: true,
+      },
+
+      {
+        name: 'module',
+        label: 'Module Name',
+        type: 'text',
+        placeholder: 'e.g. HR Dashboard',
+        required: true,
+      },
+
+      {
+        name: 'capabilities',
+        label: 'Capabilities',
+        type: 'checkbox',
+        required: true,
+        checkboxOptions: [
+          { key: 'viewOwn', label: 'View (Own)' },
+          { key: 'viewGlobal', label: 'View (Global)' },
+          { key: 'create', label: 'Create' },
+          { key: 'edit', label: 'Edit' },
+          { key: 'delete', label: 'Delete' },
+        ],
+      },
+    ],
+
+
   };
 
   /* =======================================================
@@ -481,17 +560,22 @@ export class MasterModal implements AfterViewInit {
      MODAL TITLE
   ======================================================= */
 
-  getTitle(): string {
+   getTitle(): string {
+
     const titles: Record<MasterType, string> = {
       department: 'Department',
 
-      team: 'Team',
+      job_type:'Job Type',
 
-      position: 'Position',
+      designation:'Designation',
 
-      document: 'Document',
+      branch:'Branch',
+
+      employee:'Employee Type',
 
       work: 'Work Location',
+
+      country:'Country',
 
       state: 'State',
 
@@ -499,7 +583,19 @@ export class MasterModal implements AfterViewInit {
 
       leave: 'Leave Type',
 
+      relieving_type:'Relieving Type',
+
       shift: 'Shift',
+
+      notice_period:'Notice Period',
+
+      holiday:'Holiday',
+
+      permission: 'Module',
+
+      role: 'Role',
+
+      
     };
 
     const title = titles[this.masterType];

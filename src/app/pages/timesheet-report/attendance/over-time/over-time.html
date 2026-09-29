@@ -121,34 +121,20 @@
       </div>
 
       <!-- Filter Bar for Tab 1 -->
-      <div class="card mb-3 filter-card">
+      <div class="card-custom mb-3">
         <div class="card-body p-3">
           <div class="row g-2 align-items-center">
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-building me-1"></i> Filter Department
               </label>
-              <p-select
-                [options]="deptOptions"
-                [(ngModel)]="queueDeptFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="queueDeptFilter" [options]="deptOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-person me-1"></i> Filter Employee
               </label>
-              <p-select
-                [options]="empOptions"
-                [(ngModel)]="queueEmpFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="queueEmpFilter" [options]="empOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
@@ -292,7 +278,7 @@
   ========================================================== -->
   @if (activeTab === 'history') {
     <div class="tab-content-sec">
-      <div class="card mb-3 filter-card">
+      <div class="card-custom mb-3">
         <div class="card-body p-3">
           <h6 class=" mb-3 text-dark d-flex align-items-center gap-2">
             <i class="bi bi-funnel-fill text-success"></i> Filter OT History Archive
@@ -300,36 +286,15 @@
           <div class="row g-3">
             <div class="col-md-3">
               <label class="form-label small  text-muted mb-1">Department</label>
-              <p-select
-                [options]="deptOptions"
-                [(ngModel)]="histDeptFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="histDeptFilter" [options]="deptOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-3">
               <label class="form-label small  text-muted mb-1">Employee</label>
-              <p-select
-                [options]="empOptions"
-                [(ngModel)]="histEmpFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="histEmpFilter" [options]="empOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-3">
               <label class="form-label small  text-muted mb-1">Approval Status</label>
-              <p-select
-                [options]="histStatusOptions"
-                [(ngModel)]="histStatusFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="histStatusFilter" [options]="histStatusOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-3">
               <label class="form-label small  text-muted mb-1">Search Employee / ID</label>
@@ -417,34 +382,20 @@
   ========================================================== -->
   @if (activeTab === 'validation') {
     <div class="tab-content-sec">
-      <div class="card mb-3 filter-card">
+      <div class="card-custom mb-3">
         <div class="card-body p-3">
           <div class="row g-2 align-items-center">
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-building me-1"></i> Filter Department
               </label>
-              <p-select
-                [options]="deptOptions"
-                [(ngModel)]="valDeptFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="valDeptFilter" [options]="deptOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-person me-1"></i> Filter Employee
               </label>
-              <p-select
-                [options]="empOptions"
-                [(ngModel)]="valEmpFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="valEmpFilter" [options]="empOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
@@ -537,34 +488,20 @@
   ========================================================== -->
   @if (activeTab === 'payroll') {
     <div class="tab-content-sec">
-      <div class="card mb-3 filter-card">
+      <div class="card-custom mb-3">
         <div class="card-body p-3">
           <div class="row g-2 align-items-center">
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-building me-1"></i> Filter Department
               </label>
-              <p-select
-                [options]="deptOptions"
-                [(ngModel)]="payDeptFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="payDeptFilter" [options]="deptOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-person me-1"></i> Filter Employee
               </label>
-              <p-select
-                [options]="empOptions"
-                [(ngModel)]="payEmpFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="payEmpFilter" [options]="empOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
@@ -647,34 +584,20 @@
   @if (activeTab === 'reports') {
     <div class="tab-content-sec">
       <!-- Filter Bar for Tab 5 -->
-      <div class="card mb-3 filter-card">
+      <div class="card-custom mb-3">
         <div class="card-body p-3">
           <div class="row g-2 align-items-center">
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-building me-1"></i> Filter Department
               </label>
-              <p-select
-                [options]="deptOptions"
-                [(ngModel)]="rptDeptFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="rptDeptFilter" [options]="deptOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-person me-1"></i> Filter Employee
               </label>
-              <p-select
-                [options]="empOptions"
-                [(ngModel)]="rptEmpFilter"
-                optionLabel="label"
-                optionValue="value"
-                appendTo="body"
-                styleClass="w-100 ot-select">
-              </p-select>
+              <app-select class="ot-select" [(ngModel)]="rptEmpFilter" [options]="empOptions" optionLabel="label" optionValue="value" />
             </div>
             <div class="col-md-4">
               <label class="form-label small  text-muted mb-1">
@@ -853,17 +776,7 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label small  text-dark">Select Employee <span class="text-danger">*</span></label>
-                <select
-                  class="form-select"
-                  [(ngModel)]="asgnForm.empName"
-                  name="asgnEmpName"
-                  (ngModelChange)="onAsgnEmpChange($event)"
-                  required>
-                  <option value="">-- Choose Employee --</option>
-                  @for (e of employeeDirectory; track e.id) {
-                    <option [value]="e.name">{{ e.name }} ({{ e.id }})</option>
-                  }
-                </select>
+                <app-select [(ngModel)]="asgnForm.empName" name="asgnEmpName" (ngModelChange)="onAsgnEmpChange($event)" [options]="employeeDirectory" optionLabel="name" optionValue="name" optionSub="id" placeholder="-- Choose Employee --" />
               </div>
               <div class="col-md-6">
                 <label class="form-label small  text-dark">Department</label>
@@ -893,15 +806,7 @@
               </div>
               <div class="col-md-4">
                 <label class="form-label small  text-dark">OT Type <span class="text-danger">*</span></label>
-                <select
-                  class="form-select"
-                  [(ngModel)]="asgnForm.otType"
-                  name="asgnOtType"
-                  required>
-                  @for (ot of otTypeOptions; track ot.value) {
-                    <option [value]="ot.value">{{ ot.label }}</option>
-                  }
-                </select>
+                <app-select [(ngModel)]="asgnForm.otType" name="asgnOtType" [options]="otTypeOptions" optionLabel="label" optionValue="value" />
               </div>
               <div class="col-md-4">
                 <label class="form-label small  text-dark">OT Start Time <span class="text-danger">*</span></label>
@@ -986,15 +891,7 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label small  text-dark">Select Employee <span class="text-danger">*</span></label>
-                <select
-                  class="form-select"
-                  [(ngModel)]="reqForm.empId"
-                  name="reqEmpId"
-                  required>
-                  @for (e of employeeDirectory; track e.id) {
-                    <option [value]="e.id">{{ e.name }} ({{ e.id }})</option>
-                  }
-                </select>
+                <app-select [(ngModel)]="reqForm.empId" name="reqEmpId" [options]="employeeDirectory" optionLabel="name" optionValue="id" optionSub="id" />
               </div>
               <div class="col-md-6">
                 <label class="form-label small  text-dark">OT Date <span class="text-danger">*</span></label>
@@ -1123,14 +1020,7 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label small  text-dark">Approval Decision <span class="text-danger">*</span></label>
-                <select
-                  class="form-select "
-                  [(ngModel)]="reviewForm.decision"
-                  name="revDecision"
-                  required>
-                  <option value="Approved" class="text-success ">✓ Approve OT</option>
-                  <option value="Rejected" class="text-danger ">✗ Reject OT</option>
-                </select>
+                <app-select [(ngModel)]="reviewForm.decision" name="revDecision" [options]="[{ label: '✓ Approve OT', value: 'Approved' }, { label: '✗ Reject OT', value: 'Rejected' }]" optionLabel="label" optionValue="value" />
               </div>
               <div class="col-md-6">
                 <label class="form-label small  text-dark">Approved OT Hours <span class="text-danger">*</span></label>
@@ -1144,13 +1034,7 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label small  text-dark">OT Rate Multiplier</label>
-                <select
-                  class="form-select"
-                  [(ngModel)]="reviewForm.rateMultiplier"
-                  name="revMultiplier">
-                  <option [value]="1.5">Standard 1.5x Hourly Rate</option>
-                  <option [value]="2.0">Holiday / Sunday 2.0x Hourly Rate</option>
-                </select>
+                <app-select [(ngModel)]="reviewForm.rateMultiplier" name="revMultiplier" [options]="[{ label: 'Standard 1.5x Hourly Rate', value: 1.5 }, { label: 'Holiday / Sunday 2.0x Hourly Rate', value: 2.0 }]" optionLabel="label" optionValue="value" />
               </div>
               <div class="col-md-6">
                 <label class="form-label small  text-dark">Base Hourly Rate (₹)</label>

@@ -2,29 +2,8 @@
   display: block;
 }
 
-/* ===== Report Cards ===== */
-.tr-card {
-  overflow: hidden;
-  height: 100%;
-
-  .tr-head {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-soft, var(--bg-muted));
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font: 700 13.5px var(--font-family-display);
-    color: var(--ink-900, var(--neutral-900-2));
-
-    i {
-      color: var(--blue-550);
-    }
-  }
-
-  .tr-body {
-    padding: 12px 16px;
-  }
-}
+/* report cards: global .card-custom / -header / -title / -body */
+.card-custom-title > i { color: var(--primary); }
 
 /* ===== Horizontal Bar Rows ===== */
 .tr-bar-row {

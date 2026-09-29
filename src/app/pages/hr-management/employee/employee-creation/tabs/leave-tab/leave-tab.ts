@@ -6,17 +6,16 @@ import {
   FormGroup,
   ReactiveFormsModule
 } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 
 import { EmployeeFormFacade } from '../../facade/employee-form.facade';
 
+import { AppSelect } from '../../../../../../shared/app-select/app-select';
 @Component({
   selector: 'app-leave-tab',
   standalone: true,
-  imports: [
+  imports: [AppSelect, 
     CommonModule,
-    ReactiveFormsModule,
-    SelectModule
+    ReactiveFormsModule
   ],
   templateUrl: './leave-tab.html',
   styleUrl: './leave-tab.scss'

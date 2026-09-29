@@ -41,25 +41,23 @@
       @case (1) {
         <div class="split">
           <!-- Request form -->
-          <section class="req-card" aria-labelledby="reqTitle">
-            <h2 class="card-title" id="reqTitle"><bi-icon class="accent" name="file-earmark-plus" /> Request Payslip</h2>
+          <section class="card-custom" aria-labelledby="reqTitle">
+            <header class="card-custom-header">
+              <h2 class="card-custom-title" id="reqTitle"><bi-icon class="accent" name="file-earmark-plus" /> Request Payslip</h2>
+            </header>
+            <div class="card-custom-body">
 
             <div class="field">
               <label for="reqEmployee">Select Employee</label>
-              <select id="reqEmployee" class="form-select" disabled>
-                @for (e of employees; track e.id) {
-                  <option [value]="e.id" [selected]="e.id === me.id">{{ e.empId }} — {{ e.name }}</option>
-                }
-              </select>
+              <!-- employees can only request their own payslip, so this stays locked on "me" -->
+              <app-select inputId="reqEmployee" [ngModel]="me.id" [disabled]="true" [options]="employees"
+                optionLabel="name" optionValue="id" optionSub="empId" />
             </div>
 
             <div class="field">
               <label for="reqPeriod">Pay Period</label>
-              <select id="reqPeriod" class="form-select" (change)="period.set(value($event))">
-                @for (p of periods; track p.value) {
-                  <option [value]="p.value" [selected]="period() === p.value">{{ p.label }}</option>
-                }
-              </select>
+              <app-select inputId="reqPeriod" [ngModel]="period()" (ngModelChange)="$event && period.set($event)"
+                [options]="periods" optionLabel="label" optionValue="value" [showClear]="false" />
             </div>
 
             <div class="field">
@@ -74,12 +72,13 @@
                 <bi-icon name="send" /> Submit Payslip Request
               }
             </button>
+            </div>
           </section>
 
           <!-- My requests -->
-          <section class="card table-card" aria-labelledby="myReqTitle">
-            <div class="card-head">
-              <h2 class="card-title" id="myReqTitle"><bi-icon class="accent" name="clock-history" /> My Payslip Requests</h2>
+          <section class="card-custom table-card" aria-labelledby="myReqTitle">
+            <div class="card-custom-header">
+              <h2 class="card-custom-title" id="myReqTitle"><bi-icon class="accent" name="clock-history" /> My Payslip Requests</h2>
               <div class="badges">
                 <span class="badge pending">{{ myPending().length }} Pending</span>
                 <span class="badge approved">{{ myApproved().length + myGenerated().length }} Approved</span>
@@ -96,9 +95,9 @@
       }
 
       @case (2) {
-        <section class="card table-card" aria-labelledby="pendTitle">
-          <div class="card-head">
-            <h2 class="card-title" id="pendTitle"><bi-icon class="amber" name="hourglass-split" /> My Pending Requests</h2>
+        <section class="card-custom table-card" aria-labelledby="pendTitle">
+          <div class="card-custom-header">
+            <h2 class="card-custom-title" id="pendTitle"><bi-icon class="amber" name="hourglass-split" /> My Pending Requests</h2>
           </div>
           <div class="table-wrap" role="region" aria-label="My pending requests" tabindex="0">
             <table class="ps-table">
@@ -125,9 +124,9 @@
       }
 
       @case (3) {
-        <section class="card table-card" aria-labelledby="apprTitle">
-          <div class="card-head">
-            <h2 class="card-title" id="apprTitle"><bi-icon class="green" name="check-circle" /> Approved Requests</h2>
+        <section class="card-custom table-card" aria-labelledby="apprTitle">
+          <div class="card-custom-header">
+            <h2 class="card-custom-title" id="apprTitle"><bi-icon class="green" name="check-circle" /> Approved Requests</h2>
           </div>
           <div class="table-wrap" role="region" aria-label="Approved requests" tabindex="0">
             <table class="ps-table">
@@ -154,9 +153,9 @@
       }
 
       @case (4) {
-        <section class="card table-card" aria-labelledby="genTitle">
-          <div class="card-head">
-            <h2 class="card-title" id="genTitle"><bi-icon class="blue" name="file-earmark-pdf" /> Generated Payslips</h2>
+        <section class="card-custom table-card" aria-labelledby="genTitle">
+          <div class="card-custom-header">
+            <h2 class="card-custom-title" id="genTitle"><bi-icon class="blue" name="file-earmark-pdf" /> Generated Payslips</h2>
           </div>
           <div class="table-wrap" role="region" aria-label="Generated payslips" tabindex="0">
             <table class="ps-table">
@@ -201,9 +200,9 @@
     </section>
 
     <!-- Pending requests -->
-    <section class="card table-card spaced" aria-labelledby="adminPendTitle">
-      <div class="card-head wrap">
-        <h2 class="card-title" id="adminPendTitle"><bi-icon class="amber" name="inbox" /> Pending Requests</h2>
+    <section class="card-custom table-card mb-3" aria-labelledby="adminPendTitle">
+      <div class="card-custom-header">
+        <h2 class="card-custom-title" id="adminPendTitle"><bi-icon class="amber" name="inbox" /> Pending Requests</h2>
         @if (pendingSelected().length) {
           <div class="bulk">
             <button type="button" class="btn btn-outline-primary" (click)="bulkApprove()"><bi-icon name="check-all" /> Approve Selected</button>
@@ -275,9 +274,9 @@
     </section>
 
     <!-- Approved: generate payslip -->
-    <section class="card table-card" aria-labelledby="adminApprTitle" [class.is-scrolled]="scrolled()">
-      <div class="card-head wrap">
-        <h2 class="card-title" id="adminApprTitle"><bi-icon class="green" name="check-circle" /> Approved — Generate Payslip</h2>
+    <section class="card-custom table-card" aria-labelledby="adminApprTitle" [class.is-scrolled]="scrolled()">
+      <div class="card-custom-header">
+        <h2 class="card-custom-title" id="adminApprTitle"><bi-icon class="green" name="check-circle" /> Approved — Generate Payslip</h2>
         @if (approvedSelected().length) {
           <div class="bulk">
             <span class="bulk-count">{{ approvedSelected().length }} selected</span>

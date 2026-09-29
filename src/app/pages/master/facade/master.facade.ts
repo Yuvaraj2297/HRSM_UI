@@ -162,7 +162,7 @@ export class MasterFacade {
   // GET URL
   // =========================================================
 
-  private getUrl(
+private getUrl(
     type: MasterType,
     action:
       | 'list'
@@ -175,13 +175,17 @@ export class MasterFacade {
 
       department: 'department',
 
-      team: 'team',
+      job_type:'job_type',
 
-      position: 'position',
+      designation:'designation',
 
-      document: 'document',
+      branch:'branch',
+
+      employee:'employee',
 
       work: 'work',
+
+      country:'country',
 
       state: 'state',
 
@@ -189,10 +193,19 @@ export class MasterFacade {
 
       leave: 'leave',
 
-      shift: 'shift'
+      shift: 'shift',
+
+      relieving_type:'relieving',
+
+      notice_period:'notice-period',
+
+      holiday:'holiday',
+
+      permission:'permission',
+
+      role:'role'
 
     };
-
 
     const prefix = prefixMap[type];
 
@@ -201,7 +214,6 @@ export class MasterFacade {
 
     return this.urls[key];
   }
-
 
   // =========================================================
   // CAPITALIZE

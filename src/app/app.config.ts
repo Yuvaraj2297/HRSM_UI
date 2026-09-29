@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: '.app-dark-mode', // only activates if this class is present
+          darkModeSelector: '.dark-theme', // same body class the header's dark-mode toggle sets
           cssLayer: false
         }
       },

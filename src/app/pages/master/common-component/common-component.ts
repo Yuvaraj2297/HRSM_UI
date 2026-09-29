@@ -8,6 +8,11 @@ import { PrimeDataTable } from '../../../shared/primedatatable/primedatatable';
 
 import { MasterModal } from '../master-modal/master-modal';
 
+import {
+  RolePermissionModal,
+  RolePermissionSaveEvent,
+} from '../role-permission-modal/role-permission-modal';
+
 import { MasterFacade } from '../facade/master.facade';
 
 import { MasterType } from '../facade/master-form.facade';
@@ -19,7 +24,7 @@ import { MasterTableFacade } from '../facade/master-table.facade';
 
   standalone: true,
 
-  imports: [CommonModule, PrimeDataTable, MasterModal],
+  imports: [CommonModule, PrimeDataTable, MasterModal, RolePermissionModal],
 
   templateUrl: './common-component.html',
 
@@ -42,6 +47,9 @@ export class CommonComponent {
 
   @ViewChild('masterModal')
   masterModal!: MasterModal;
+
+  @ViewChild('rolePermissionModal')
+  rolePermissionModal!: RolePermissionModal;
 
   // =========================================================
   // MASTER TYPE
@@ -68,12 +76,14 @@ export class CommonComponent {
   // ACTIONS
   // =========================================================
 
-  actions = {
+  actions: { add: boolean; edit: boolean; delete: boolean; permission?: boolean } = {
     add: true,
 
     edit: true,
 
     delete: true,
+
+    permission: false,
   };
 
   // =========================================================
@@ -98,6 +108,9 @@ export class CommonComponent {
 
 
       this.masterType = type;
+
+      // shield (permission) button only on the Role page
+      this.actions = { ...this.actions, permission: type === 'role' };
 
       // =====================================================
       // GET TABLE CONFIGURATION FROM FACADE
@@ -132,6 +145,11 @@ export class CommonComponent {
 
     const row = event.row;
 
+    if (action === 'permission') {
+      this.rolePermissionModal.open(row, this.getRolePermissions(row));
+      return;
+    }
+
     if (action === 'edit') {
       this.masterModal.open(this.masterType, 'edit', row);
     }
@@ -139,6 +157,39 @@ export class CommonComponent {
     if (action === 'delete') {
       this.deleteMaster(row);
     }
+  }
+
+  // =========================================================
+  // ROLE PERMISSIONS SAVE
+  // =========================================================
+
+  // demo persistence (same as the PHP page: localStorage keyed by role name).
+  // Replace with your API: load in getRolePermissions(), save in onPermissionSaved().
+  private readonly ROLE_PERMS_KEY = 'gharuda_role_permissions';
+
+  private readAllRolePermissions(): Record<string, string[]> {
+    try {
+      return JSON.parse(localStorage.getItem(this.ROLE_PERMS_KEY) ?? '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  private getRolePermissions(row: any): string[] {
+    const name = row?.roleName ?? row?.name ?? '';
+    return this.readAllRolePermissions()[name] ?? row?.permissions ?? [];
+  }
+
+  onPermissionSaved(event: RolePermissionSaveEvent): void {
+    try {
+      const all = this.readAllRolePermissions();
+      all[event.roleName] = event.permissions;
+      localStorage.setItem(this.ROLE_PERMS_KEY, JSON.stringify(all));
+    } catch {
+      /* storage unavailable */
+    }
+
+    console.log('Role permissions saved:', event);
   }
 
   // =========================================================

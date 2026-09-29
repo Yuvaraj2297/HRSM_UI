@@ -1,0 +1,81 @@
+<app-att-summary-strip class="mb-3" label="Weekly summary" [items]="strip()" />
+
+<section class="card-custom att-register">
+  <header class="att-register-head">
+    <ul class="att-legend" aria-label="Legend">
+      @for (s of legend; track s) {
+      <li><span class="att-cell" [attr.data-status]="s">{{ meta[s].short }}</span> {{ meta[s].label }}</li>
+      }
+    </ul>
+    <button type="button" class="btn btn-outline-primary btn-sm" (click)="exportCsv()">
+      <i class="bi bi-download"></i>
+      <span>Export CSV</span>
+    </button>
+  </header>
+
+  <div class="data-table-wrap">
+    <table class="data-table data-table-sm att-register-table">
+      <thead>
+        <tr>
+          <th class="att-col-emp">Employee</th>
+          @for (d of store.week(); track d) {
+            @let h = dayHead(d);
+            <th class="text-center" [class.is-today]="d === store.today">
+              <div>{{ h.dow }}</div>
+              <small>{{ h.day }}</small>
+            </th>
+          }
+          <th class="text-end">Attended</th>
+          <th class="text-end">Hours</th>
+          <th class="text-end">OT</th>
+          <th class="att-col-rate">Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of store.weeklyRows(); track r.empId) {
+        <tr>
+          <td class="att-col-emp">
+            <button type="button" class="att-emp-link" (click)="store.calendarEmpId.set(r.empId)"
+              [title]="'Monthly calendar — ' + r.name">
+              @if (r.avatar) {
+                <img [src]="r.avatar" [alt]="r.name" class="rounded-circle att-avatar" />
+              } @else {
+                <span class="emp-initials-avatar att-initials">{{ initials(r.name) }}</span>
+              }
+              <span>
+                <span class="emp-name-line d-block">{{ r.name }}</span>
+                <span class="emp-code-line">{{ r.dept }}</span>
+              </span>
+            </button>
+          </td>
+          @for (d of r.days; track $index) {
+          <td class="text-center">
+            @if (d) {
+              <span class="att-cell" [attr.data-status]="d.status"
+                [title]="meta[d.status].label + (d.checkIn !== null ? ' · ' + fmtTime(d.checkIn) + ' – ' + fmtTime(d.checkOut) + ' · ' + d.hours + 'h' : '')">
+                {{ meta[d.status].short }}
+              </span>
+            } @else {
+              <span class="att-cell is-future" title="Not yet">·</span>
+            }
+          </td>
+          }
+          <td class="text-end cell-strong">{{ r.attended }}/{{ r.working }}</td>
+          <td class="text-end">{{ r.hours }}h</td>
+          <td class="text-end">
+            @if (r.overtime) { <span class="att-ot">+{{ r.overtime }}h</span> } @else { <span class="text-muted">—</span> }
+          </td>
+          <td class="att-col-rate">
+            <div class="att-rate">
+              <span class="att-rate-bar"><span [style.width.%]="r.rate" [class.is-low]="r.rate < 80"></span></span>
+              <span>{{ r.rate }}%</span>
+            </div>
+          </td>
+        </tr>
+        } @empty {
+        <tr><td class="data-table-empty" colspan="12">No employees match these filters.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

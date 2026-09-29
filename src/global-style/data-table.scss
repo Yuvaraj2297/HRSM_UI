@@ -29,7 +29,7 @@ app-primedatatable {
     gap: 10px 16px;
     margin-bottom: 12px;
     padding: 10px 12px;
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--table-border);
     border-radius: var(--card-radius);
   }
@@ -178,6 +178,36 @@ app-primedatatable {
 
     .p-datatable-tbody > tr > td {
       white-space: nowrap;
+    }
+
+    /* Frozen (pinned-right) column — Action by default.
+       Body cells are normally transparent, so the pinned cell gets a
+       solid base with the row's hover / selected tint layered on top,
+       and a soft shadow on its left edge while content scrolls under it. */
+    .p-datatable-table > :is(thead, tbody) > tr > .col-frozen-right {
+      position: sticky;
+      right: 0;
+      z-index: 1;
+      box-shadow: inset 1px 0 0 var(--table-row-border), -8px 0 10px -8px rgba(var(--black-rgb), 0.18);
+    }
+
+    .p-datatable-table > thead > tr > th.col-frozen-right {
+      z-index: 2;
+      background: var(--table-head-bg);
+    }
+
+    .p-datatable-table > tbody > tr > td.col-frozen-right {
+      --frozen-tint: transparent;
+      background-color: var(--surface);
+      background-image: linear-gradient(var(--frozen-tint), var(--frozen-tint));
+    }
+
+    .p-datatable-table > tbody > tr:hover > td.col-frozen-right {
+      --frozen-tint: var(--table-row-hover);
+    }
+
+    .p-datatable-table > tbody > tr:is(.selected, .active, .p-datatable-row-selected) > td.col-frozen-right {
+      --frozen-tint: var(--table-row-selected);
     }
 
     .p-checkbox,
@@ -508,304 +538,105 @@ app-primedatatable {
   }
 
   /* =========================================================
-     COLUMNS VISIBILITY OFFCANVAS
+     COLUMNS DROPDOWN — compact checklist under the Columns
+     button (same shell as the Export menu below)
   ========================================================= */
 
-  .columns-offcanvas-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(var(--black-rgb), 0.35);
-    z-index: 2040;
-    animation: fadeInBackdrop 0.2s ease;
-  }
-
-  @keyframes fadeInBackdrop {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-
-  /* =========================================================
-     OFFCANVAS PANEL
-  ========================================================= */
-
-  .columns-offcanvas-panel {
-    position: fixed;
-
-    top: 10px !important;
-    right: 10px !important;
-
-    width: 400px;
-    max-width: 92vw;
-
-    height: calc(100vh - 20px);
-
-    background: var(--white);
-
-    z-index: 2050;
-
-    border-radius: 25px;
-
-    box-shadow: -20px 0 60px rgba(var(--black-rgb), 0.18);
-
-    display: flex;
-    flex-direction: column;
-
-    /* Panel itself should not scroll */
-    overflow: hidden;
-
-    animation: slideInPanel 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  @keyframes slideInPanel {
-    from {
-      transform: translateX(100%);
-    }
-
-    to {
-      transform: translateX(0);
-    }
-  }
-
-  /* =========================================================
-     HEADER - FIXED
-  ========================================================= */
-
-  .columns-offcanvas-header {
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 20px 24px;
-
-    background: var(--white);
-
-    border-bottom: 1px solid var(--neutral-100-2);
-
-    z-index: 2;
-  }
-
-  .columns-offcanvas-title {
-    margin: 0;
-
-    font-size: 22px;
-    font-weight: 700;
-
-    color: var(--neutral-950);
-  }
-
-  .columns-offcanvas-close {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-
-    border-radius: 50%;
-
-    border: 1px solid var(--border);
-
-    background: var(--white);
-
-    color: var(--neutral-800);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    transition:
-      background 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  .columns-offcanvas-close:hover {
-    background: var(--neutral-50-2);
-    transform: rotate(90deg);
-  }
-
-  /* =========================================================
-     BODY - ONLY BODY SCROLLS
-  ========================================================= */
-
-  .columns-offcanvas-body {
-    flex: 1 1 auto;
-
-    min-height: 0;
-
-    padding: 16px 24px 24px;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 12px;
-
-    /* Scroll only here */
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    scroll-behavior: smooth;
-  }
-
-  /* =========================================================
-     SCROLLBAR
-  ========================================================= */
-
-  .columns-offcanvas-body::-webkit-scrollbar {
-    width: 7px;
-  }
-
-  .columns-offcanvas-body::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .columns-offcanvas-body::-webkit-scrollbar-thumb {
-    background: var(--neutral-150);
-    border-radius: var(--radius-sm);
-  }
-
-  .columns-offcanvas-body::-webkit-scrollbar-thumb:hover {
-    background: var(--neutral-250-2);
-  }
-
-  /* =========================================================
-     COLUMN ROW
-  ========================================================= */
-
-  .column-visibility-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 16px 16px;
-
-    border: 1px solid var(--neutral-50-3);
-
-    border-radius: var(--radius-md);
-
-    background: var(--white);
-
-    flex-shrink: 0;
-  }
-
-  .column-visibility-label {
-    font-size: 16px;
-    font-weight: 500;
-
-    color: var(--neutral-800);
-  }
-
-  /* =========================================================
-     TOGGLE SWITCH
-  ========================================================= */
-
-  .column-toggle-switch {
-    width: 46px;
-    height: 26px;
-
-    border-radius: 999px;
-
-    border: none;
-
-    background: var(--border-strong);
-
+  .columns-wrapper {
     position: relative;
-
-    cursor: pointer;
-
-    transition: background 0.2s ease;
-
-    flex-shrink: 0;
-
-    padding: 0;
+    display: inline-block;
   }
 
-  .column-toggle-switch.on {
-    background: var(--green-400-2);
-  }
-
-  .column-toggle-knob {
-    position: absolute;
-
-    top: 3px;
-    left: 3px;
-
-    width: 20px;
-    height: 20px;
-
-    border-radius: 50%;
-
-    background: var(--white);
-
-    box-shadow: 0 2px 5px rgba(var(--black-rgb), 0.15);
-
-    transition: transform 0.2s ease;
-  }
-
-  .column-toggle-switch.on .column-toggle-knob {
-    transform: translateX(20px);
-  }
-
-  /* =========================================================
-     RESTORE ALL
-  ========================================================= */
-
-  .btn-restore-all {
-    align-self: flex-start;
-
-    margin-top: 4px;
-
-    padding: 10px 16px;
-
-    border-radius: var(--radius-md);
-
-    border: 1px solid var(--green-400-2);
-
-    background: var(--white);
-
-    color: var(--green-400-2);
-
-    font-size: 15px;
+  .columns-hidden-count {
+    padding: 1px 7px;
+    border-radius: var(--radius-pill);
+    background: rgba(var(--black-rgb), 0.08);
+    font-size: 11px;
     font-weight: 600;
+  }
 
+  .columns-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 240px;
+    max-width: calc(100vw - 32px);
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 15px 40px rgba(var(--black-rgb), 0.15);
+    z-index: 950;
+    animation: exportMenuFadeIn 0.15s ease;
+  }
+
+  .columns-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .columns-menu-reset {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--primary);
     cursor: pointer;
 
-    transition: background 0.2s ease;
-
-    flex-shrink: 0;
+    &:hover:not(:disabled) { text-decoration: underline; }
+    &:disabled { color: var(--text-faint); cursor: default; }
   }
 
-  .btn-restore-all:hover {
-    background: var(--green-50);
+  .columns-menu-list {
+    max-height: min(320px, 55vh);
+    padding: 6px;
+    overflow-y: auto;
   }
 
-  /* =========================================================
-     MOBILE
-  ========================================================= */
+  .columns-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 7px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    color: var(--neutral-800);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
 
-  @media (max-width: 768px) {
+    &:hover { background: var(--neutral-50-5); }
 
-    .columns-offcanvas-panel {
-      width: calc(100vw - 20px);
-      max-width: none;
-
-      height: calc(100vh - 20px);
-
-      top: 10px !important;
-      right: 10px !important;
+    .form-check-input {
+      flex-shrink: 0;
+      margin: 0;
+      cursor: inherit;
     }
 
-    .columns-offcanvas-header {
-      padding: 16px 20px;
+    > span {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
-    .columns-offcanvas-body {
-      padding: 16px 20px 20px;
+    /* the last visible column can't be hidden */
+    &.is-locked {
+      cursor: not-allowed;
+      opacity: 0.6;
     }
   }
 
@@ -837,7 +668,7 @@ app-primedatatable {
     top: calc(100% + 8px);
     left: 0;
     min-width: 190px;
-    background: var(--white);
+    background: var(--surface);
     border-radius: var(--radius-md);
     box-shadow: 0 15px 40px rgba(var(--black-rgb), 0.15);
     padding: 8px;
@@ -911,7 +742,7 @@ app-primedatatable {
     z-index: 2000;
     width: 180px;
     padding: 8px;
-    background: var(--white);
+    background: var(--surface);
     border-radius: var(--radius-md);
     box-shadow: 0 10px 30px rgba(var(--neutral-900-rgb), 0.15);
     border: 1px solid var(--border);
@@ -993,5 +824,39 @@ app-primedatatable {
       opacity: 0.5;
       cursor: not-allowed;
     }
+  }
+}
+
+
+/* Styles live in src/global-style/data-table.scss (scoped to app-primedatatable). */
+
+/* =========================================================
+   CHIPS CELL (type: 'chips') — e.g. permission capabilities
+   Fixed colors + !important so global table styles and
+   theme variables can't strip the badge look.
+========================================================= */
+
+.chips-cell {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  .cell-chip {
+    display: inline-flex !important;
+    align-items: center;
+    padding: 3px 12px !important;
+    border-radius: 999px !important;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: #1f3b2d !important;
+    background-color: #e6f5ec !important;
+  }
+
+  .cell-chip-empty {
+    color: #9aa3a0;
   }
 }

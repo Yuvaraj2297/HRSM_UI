@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+
+/* At least one checkbox in the group must be ticked */
+const atLeastOneChecked = (group: AbstractControl): ValidationErrors | null =>
+  Object.values(group.value ?? {}).some(Boolean) ? null : { noneSelected: true };
 
 /* =========================================================
    MASTER TYPE
@@ -8,14 +12,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export type MasterType =
   | 'department'
-  | 'team'
-  | 'position'
-  | 'document'
+  | 'job_type'
+  | 'designation'
+  | 'branch'
+  | 'employee'
   | 'work'
+  | 'country'
   | 'state'
   | 'district'
+  |'relieving_type'
   | 'leave'
-  | 'shift';
+  | 'shift'
+  |'notice_period'
+  |'holiday'
+  | 'permission'
+  | 'role';
 
 /* =========================================================
    FACADE
@@ -41,23 +52,14 @@ export class MasterFormFacade {
 
       departmentName: [''],
 
+      designation: [''],
+
       /* Team */
+      jobType: [''],
 
-      teamName: [''],
+      branchName: [''],
 
-      department: [''],
-
-      teamLead: [''],
-
-      members: [''],
-
-      /* Position */
-
-      positionName: [''],
-
-      /* Document */
-
-      documentName: [''],
+      employeeTypeName: [''],
 
       /* Work Location */
 
@@ -68,6 +70,8 @@ export class MasterFormFacade {
       stateName: [''],
 
       stateCode: [''],
+
+      countryName: [''],
 
       country: [''],
 
@@ -86,6 +90,27 @@ export class MasterFormFacade {
       /* Shift */
 
       shiftName: [''],
+
+
+      relievingType:[''],
+
+      noticePeriod:[''],
+      
+      holidayType:[''],
+
+      group:[''],
+      module:[''],
+
+      
+     capabilities: this.fb.group({
+      viewOwn: [false],
+      viewGlobal: [false],
+      create: [false],
+      edit: [false],
+      delete: [false],
+    }),
+    
+      roleName: [''],
 
       /* Common */
 
@@ -114,25 +139,20 @@ export class MasterFormFacade {
 
         break;
 
-      case 'team':
-        form.get('teamName')?.setValidators(Validators.required);
-
-        form.get('department')?.setValidators(Validators.required);
-
-        form.get('teamLead')?.setValidators(Validators.required);
-
-        form.get('members')?.setValidators([Validators.required, Validators.min(1)]);
-
+      case 'job_type':
+        form.get('jobType')?.setValidators(Validators.required);
         break;
 
-      case 'position':
-        form.get('positionName')?.setValidators(Validators.required);
-
+      case 'designation':
+        form.get('designation')?.setValidators(Validators.required);
         break;
 
-      case 'document':
-        form.get('documentName')?.setValidators(Validators.required);
+      case 'branch':
+        form.get('branchName')?.setValidators(Validators.required);
+        break;
 
+      case 'employee':
+        form.get('employeeTypeName')?.setValidators(Validators.required);
         break;
 
       case 'work':
@@ -147,6 +167,10 @@ export class MasterFormFacade {
 
         form.get('country')?.setValidators(Validators.required);
 
+        break;
+
+      case 'country':
+        form.get('countryName')?.setValidators(Validators.required);
         break;
 
       case 'district':
@@ -167,6 +191,33 @@ export class MasterFormFacade {
         form.get('shiftName')?.setValidators(Validators.required);
 
         break;
+
+        case 'relieving_type':
+        form.get('relievingType')?.setValidators(Validators.required);
+
+        break;
+
+        case 'notice_period':
+          form.get('noticePeriod')?.setValidators(Validators.required);
+          break;
+
+
+           case 'holiday':
+          form.get('holidayType')?.setValidators(Validators.required);
+          break;
+
+        case 'permission':
+          form.get('group')?.setValidators(Validators.required);
+          form.get('module')?.setValidators(Validators.required);
+          form.get('capabilities')?.setValidators(atLeastOneChecked);
+          break;
+
+        case 'role':
+          form.get('roleName')?.setValidators(Validators.required);
+          break;
+
+
+
     }
 
     /* Status */
@@ -203,60 +254,46 @@ export class MasterFormFacade {
 
         break;
 
-      /* ===================================================
-         TEAM
-      =================================================== */
+      case 'job_type':
+        form.patchValue({
+          id: row.id,
+          jobType: row.jobType ?? row.job_type ?? '',
+          status: row.status ?? 'Enable',
+        });
+        break;
 
-      case 'team':
+      case 'designation':
         form.patchValue({
           id: row.id,
 
-          teamName: row.teamName ?? '',
-
-          department: row.department ?? '',
-
-          teamLead: row.teamLead ?? row.lead ?? '',
-
-          members: row.members ?? '',
+          designation: row.designationName ?? row.designation ?? '',
 
           status: row.status ?? 'Enable',
         });
 
         break;
 
-      /* ===================================================
-         POSITION
-      =================================================== */
-
-      case 'position':
+      case 'branch':
         form.patchValue({
           id: row.id,
 
-          positionName: row.positionName ?? row.position ?? '',
+          branchName: row.branchName ?? row.branch ?? '',
 
           status: row.status ?? 'Enable',
         });
 
         break;
 
-      /* ===================================================
-         DOCUMENT
-      =================================================== */
-
-      case 'document':
+      case 'employee':
         form.patchValue({
           id: row.id,
 
-          documentName: row.documentName ?? row.document ?? '',
+          employeeTypeName: row.employeeTypeName ?? row.employee ?? '',
 
           status: row.status ?? 'Enable',
         });
 
         break;
-
-      /* ===================================================
-         WORK LOCATION
-      =================================================== */
 
       case 'work':
         form.patchValue({
@@ -269,9 +306,15 @@ export class MasterFormFacade {
 
         break;
 
-      /* ===================================================
-         STATE
-      =================================================== */
+      case 'country':
+        form.patchValue({
+          id: row.id,
+
+          countryName: row.countryName ?? row.country ?? '',
+          status: row.status ?? 'Enable',
+        });
+
+        break;
 
       case 'state':
         form.patchValue({
@@ -287,10 +330,6 @@ export class MasterFormFacade {
         });
 
         break;
-
-      /* ===================================================
-         DISTRICT
-      =================================================== */
 
       case 'district':
         form.patchValue({
@@ -336,8 +375,80 @@ export class MasterFormFacade {
         });
 
         break;
+
+
+         case 'relieving_type':
+        form.patchValue({
+          id: row.id,
+
+          relievingType: row.relievingType ?? row.relieving ?? '',
+
+          status: row.status ?? 'Enable',
+        });
+
+        break;
+
+
+
+         case 'notice_period':
+        form.patchValue({
+          id: row.id,
+
+          noticePeriod: row.noticePeriod ?? row.notice ?? '',
+
+          status: row.status ?? 'Enable',
+        });
+
+        break;
+
+      case 'holiday':
+        form.patchValue({
+          id: row.id,
+
+          holidayType: row.holidayType ?? row.holiday ?? '',
+
+          status: row.status ?? 'Enable',
+        });
+
+        break;
+
+      case 'permission':
+        form.patchValue({
+          id: row.id,
+
+          group: row.group ?? '',
+
+          module: row.module ?? row.moduleName ?? '',
+
+          capabilities: {
+            viewOwn: row.capabilities?.viewOwn ?? false,
+            viewGlobal: row.capabilities?.viewGlobal ?? false,
+            create: row.capabilities?.create ?? false,
+            edit: row.capabilities?.edit ?? false,
+            delete: row.capabilities?.delete ?? false,
+          },
+
+          status: row.status ?? 'Enable',
+        });
+
+        break;
+
+      case 'role':
+        form.patchValue({
+          id: row.id,
+
+          roleName: row.roleName ?? row.role ?? '',
+
+          status: row.status ?? 'Enable',
+        });
+
+        break;
     }
-  }
+
+
+    }
+
+
 
   /* =======================================================
      RESET FORM
@@ -347,57 +458,40 @@ export class MasterFormFacade {
     form.reset({
       id: null,
 
-      /* Department */
-
       departmentName: '',
-
-      /* Team */
-
-      teamName: '',
-
-      department: '',
-
-      teamLead: '',
-
-      members: '',
-
-      /* Position */
-
-      positionName: '',
-
-      /* Document */
-
-      documentName: '',
-
-      /* Work */
-
+      designation: '',
+      jobType: '',
+      branchName: '',
+      employeeTypeName: '',
       workLocation: '',
 
-      /* State */
-
       stateName: '',
-
       stateCode: '',
-
+      countryName: '',
       country: '',
 
-      /* District */
-
       districtName: '',
-
       state: '',
 
-      /* Leave */
-
       leaveType: '',
-
       totalDays: '',
 
-      /* Shift */
-
       shiftName: '',
+      relievingType: '',
+      noticePeriod: '',
+      holidayType: '',
 
-      /* Common */
+      roleName: '',
+
+      group: '',
+      module: '',
+      capabilities: {
+        viewOwn: false,
+        viewGlobal: false,
+        create: false,
+        edit: false,
+        delete: false,
+      },
 
       status: 'Enable',
     });

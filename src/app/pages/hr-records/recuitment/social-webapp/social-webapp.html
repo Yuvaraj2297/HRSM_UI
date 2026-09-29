@@ -4,12 +4,7 @@
 <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
   <div>
     <h1 class="page-title mb-1">Social &amp; Web Candidate Applications</h1>
-    <nav class="breadcrumb-line">
-      <i class="ti ti-briefcase"></i>
-      <span>Recruitment</span>
-      <i class="ti ti-chevron-right"></i>
-      <span class=" text-dark">Social &amp; Web Applicants</span>
-    </nav>
+    
   </div>
 
   <div class="d-flex gap-2 flex-wrap">
@@ -25,32 +20,14 @@
       <i class="ti ti-share"></i>
       <span>Post Job Link</span>
     </button>
-    <button type="button" class="btn-header-custom btn-primary" (click)="openAddModal()">
+    <!-- <button type="button" class="btn-header-custom btn-primary" (click)="openAddModal()">
       <i class="ti ti-user-plus"></i>
       <span>Add Candidate</span>
-    </button>
+    </button> -->
   </div>
 </div>
 
-<!-- =========================================================
-     KPI METRICS
-========================================================== -->
-<div class="row g-3 mb-3">
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="Total Social &amp; Web Applicants" value="{{ totalCount }}" icon="ti ti-share" tone="primary">
-  <span sub class="stat-card-sub"><i class="ti ti-arrow-up"></i> Live count</span>
-</app-stat-card>
-  </div>
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="LinkedIn Easy Apply" value="{{ easyApplyCount }}" icon="ti ti-bolt" tone="primary" sub="Direct Profile Imports" />
-  </div>
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="Shortlisted / Interviewing" value="{{ shortlistedCount }}" icon="ti ti-id-badge-2" tone="primary" sub="Across all pipeline stages" />
-  </div>
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="Hired &amp; Offered" value="{{ hiredCount }}" icon="ti ti-circle-check-filled" tone="primary" sub="Conversion tracked live" />
-  </div>
-</div>
+
 
 <!-- =========================================================
      SOURCE TABS
@@ -96,8 +73,6 @@
   [Accessactions]="{ add: true, addLabel: 'Add Candidate', addIcon: 'ti ti-user-plus' }"
   [rowActions]="rowActions"
   [headerButtons]="headerButtons"
-  [globalFilterFields]="globalFilterFields"
-  searchPlaceholder="Search applicant, job, skills..."
   exportFileName="linkedin-applicants-report"
   (addClicked)="openAddModal()"
   (actionClick)="onAction($event)"
@@ -239,20 +214,12 @@
 
                 <div class="mb-3">
                   <label class="form-label-sm">Update Stage</label>
-                  <select class="form-select" [(ngModel)]="draftStage">
-                    @for (opt of stageOptions; track opt.value) {
-                      <option [value]="opt.value">{{ opt.label }}</option>
-                    }
-                  </select>
+                  <app-select [(ngModel)]="draftStage" [options]="stageOptions" optionLabel="label" optionValue="value" />
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label-sm">Candidate Evaluation Rating</label>
-                  <select class="form-select" [(ngModel)]="draftRating">
-                    @for (opt of ratingOptions; track opt.value) {
-                      <option [value]="opt.value">{{ opt.label }}</option>
-                    }
-                  </select>
+                  <app-select [(ngModel)]="draftRating" [options]="ratingOptions" optionLabel="label" optionValue="value" />
                 </div>
 
                 <div class="d-grid gap-2">
@@ -293,11 +260,7 @@
       <div class="modal-body p-4">
         <div class="mb-3">
           <label class="form-label-sm">Select Job Opening</label>
-          <select class="form-select" [(ngModel)]="selectedJobId" (ngModelChange)="onShareJobChange()">
-            @for (job of jobShareOptions; track job.jobId) {
-              <option [value]="job.jobId">{{ job.title }} ({{ job.jobId }})</option>
-            }
-          </select>
+          <app-select [(ngModel)]="selectedJobId" (ngModelChange)="onShareJobChange()" [options]="jobShareOptions" optionLabel="title" optionValue="jobId" optionSub="jobId" />
         </div>
 
         <div class="mb-3">

@@ -2,9 +2,9 @@ import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface QueueItem {
   id: string;
   sno: number;
@@ -116,7 +116,7 @@ export interface ToastMessage {
 @Component({
   selector: 'app-over-time',
   standalone: true,
-  imports: [CommonModule, FormsModule, SelectModule, Breadcrumb, AppStatCard],
+  imports: [AppSelect, CommonModule, FormsModule, Breadcrumb, AppStatCard],
   templateUrl: './over-time.html',
   styleUrl: './over-time.scss',
 })

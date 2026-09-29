@@ -8,7 +8,10 @@
 
 .sidebar-area {
   --rail-width: var(--sidebar-collapsed-width);
-  --rail-item-size: 42px;
+  --rail-item-width: calc(var(--rail-width) - 16px);
+  --rail-item-height: 50px;
+  --rail-gap: calc((var(--rail-width) - var(--rail-item-width)) / 2); /* tile edge → rail edge */
+  --panel-inset: 12px; /* gap above / right of the open panel card */
 
   position: fixed;
   top: var(--header-height);
@@ -73,11 +76,6 @@
   min-width: var(--rail-width);
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--chrome-border);
-}
-
-.sidebar-area.active .module-rail {
-  border-right: 0;
 }
 
 .module-list {
@@ -96,16 +94,21 @@
 .module-item {
   position: relative;
   flex-shrink: 0;
-  width: var(--rail-item-size);
-  height: var(--rail-item-size);
+  width: var(--rail-item-width);
+  height: var(--rail-item-height);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
+  box-sizing: border-box;
   color: var(--chrome-icon);
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease),
     color var(--duration-fast) var(--ease);
 
   &:hover {
@@ -115,6 +118,7 @@
 
   &.active {
     background: var(--chrome-active-bg);
+    border-color: var(--chrome-accent);
     color: var(--chrome-active-text);
   }
 }
@@ -132,12 +136,19 @@
 }
 
 .module-short-icon {
-  font-size: 10px;
-  font-weight: 800;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-/* Accent bar on the rail edge marks the active module */
+/* Active module marker:
+   - panel open  → connector line from the tile into the panel's border
+   - panel closed → accent bar on the rail's left edge */
 .module-active-dot {
   display: none;
 }
@@ -146,13 +157,19 @@
   display: block;
   position: absolute;
   top: 50%;
-  left: calc((var(--rail-width) - var(--rail-item-size)) / -2);
-  width: 3px;
-  height: 20px;
+  left: calc(100% + 1px);
+  width: var(--rail-gap);
+  height: 1px;
   transform: translateY(-50%);
-  border-radius: 0 3px 3px 0;
   background: var(--chrome-accent);
   pointer-events: none;
+}
+
+.sidebar-area.active .module-item.active .module-active-dot {
+  left: calc(var(--rail-gap) * -1 - 1px);
+  width: 3px;
+  height: 20px;
+  border-radius: 0 3px 3px 0;
 }
 
 .rail-footer {
@@ -194,11 +211,19 @@
    NAVIGATION PANEL
 ============================================================= */
 
+/* Open panel = a card bordered in the accent colour, joined to the
+   active rail tile by the connector line (.module-active-dot) */
 .navigation-panel {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
+  margin: var(--panel-inset) var(--panel-inset) 0 0;
+  border: 1px solid var(--chrome-accent);
+  border-bottom: 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--chrome-bg);
+  overflow: hidden;
 }
 
 .sidebar-area.active .navigation-panel {
@@ -338,8 +363,8 @@
     top: 0;
     bottom: 8px;
     left: 19px;
-    width: 1px;
-    background: var(--chrome-border);
+    width: 0;
+    border-left: 1px dashed var(--chrome-accent);
   }
 }
 
@@ -348,7 +373,7 @@
   width: auto;
   min-height: 34px;
   padding: 6px 10px;
-  margin-left: 32px;
+  margin-left: 28px;
   color: var(--chrome-text-muted);
 
   .navigation-item-text {
@@ -359,21 +384,10 @@
     color: var(--chrome-text-strong);
   }
 
-  /* active child: accent tick on the guide line */
+  /* active child: soft accent background (from .navigation-item.active-menu) */
   &.active-menu {
     color: var(--chrome-active-text);
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: -14px;
-      width: 3px;
-      height: 16px;
-      transform: translateY(-50%);
-      border-radius: var(--radius-pill);
-      background: var(--chrome-accent);
-    }
+    font-weight: 500;
   }
 }
 

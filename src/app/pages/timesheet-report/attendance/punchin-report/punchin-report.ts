@@ -1,8 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface PunchItem {
   time: string;
   warn?: boolean;
@@ -44,7 +44,7 @@ export interface TimelinePunchDisplay {
 @Component({
   selector: 'app-punchin-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, SelectModule],
+  imports: [AppSelect, CommonModule, FormsModule],
   templateUrl: './punchin-report.html',
   styleUrl: './punchin-report.scss',
 })

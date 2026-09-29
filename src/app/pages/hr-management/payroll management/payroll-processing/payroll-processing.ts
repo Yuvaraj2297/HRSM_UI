@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface PayrollRow {
   sno: number;
   img?:any;
@@ -44,7 +45,7 @@ type RunType = 'bulk' | 'department' | 'individual' | '';
 @Component({
   selector: 'app-payroll-processing',
   standalone: true,
-  imports: [CommonModule, FormsModule, AppStatCard],
+  imports: [AppSelect, CommonModule, FormsModule, AppStatCard],
   templateUrl: './payroll-processing.html',
   styleUrl: './payroll-processing.scss',
 })

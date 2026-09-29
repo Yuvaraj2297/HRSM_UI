@@ -1,115 +1,205 @@
+@let s = stats();
+@let counts = categoryCounts();
+
 <!-- =========================================================
-     PAGE HEADER
-========================================================= -->
-
-<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
-
-    <!-- =======================================================
-       TITLE
-  ======================================================== -->
-
-    <div>
-
-        <h1 class="page-title mb-1">
-            Document Verification &amp; KYC Portal
-        </h1>
-
-
-        <!-- Breadcrumb -->
-
-        <nav class="d-flex align-items-center gap-2 text-neutral" style="font-size: 13px;" aria-label="Breadcrumb">
-
-            <i class="bi bi-person-check fs-6"></i>
-
-            <span>
-                Onboarding
-            </span>
-
-            <i class="bi bi-chevron-right"></i>
-
-            <span class=" text-dark">
-                Document Verification
-            </span>
-
-        </nav>
-
-    </div>
-
-
-    <!-- =======================================================
-       HEADER ACTIONS
-  ======================================================== -->
-
-    <div class="d-flex gap-2">
-
-        <!-- Send Reminders -->
-
-        <button type="button" class="btn btn-outline-secondary" (click)="sendReminders()">
-
-            <i class="bi bi-envelope-arrow-up"></i>
-
-            Send Reminders
-
-        </button>
-
-
-        <!-- Upload Documents -->
-
-        <button type="button" class="btn btn-primary" (click)="openCreateModal()" style="
-        background: var(--primary, var(--green-550));
-        border-color: var(--primary, var(--green-550));
-      ">
-
-            <i class="bi bi-file-earmark-plus"></i>
-
-            Upload &amp; Submit Documents
-
-        </button>
-
-    </div>
-
+     FEEDBACK
+========================================================== -->
+@if (feedback(); as f) {
+<div class="alert d-flex align-items-center justify-content-between gap-2 py-2 px-3 mb-3"
+  [class.alert-success]="f.type === 'success'" [class.alert-warning]="f.type === 'warning'" role="status">
+  <span class="small fw-semibold">
+    <i class="bi" [class.bi-check-circle-fill]="f.type === 'success'"
+      [class.bi-exclamation-triangle-fill]="f.type === 'warning'"></i>
+    {{ f.text }}
+  </span>
+  <button type="button" class="btn-close" aria-label="Close" (click)="feedback.set(null)"></button>
 </div>
-
-
+}
 
 <!-- =========================================================
-     STATS BAR
-========================================================= -->
+     KPI — click a card to filter by that status
+========================================================== -->
 <div class="stat-grid">
-    <app-stat-card label="Total Uploaded" [value]="stats.totalUploaded" icon="bi bi-folder-check" tone="primary" />
-    <app-stat-card label="Verified & Approved" [value]="stats.verified" icon="bi bi-shield-check" tone="teal" />
-    <app-stat-card label="Pending HR Review" [value]="stats.pendingReview" icon="bi bi-hourglass-split" tone="amber" />
-    <app-stat-card label="Resubmission Needed" [value]="stats.resubmissionNeeded" icon="bi bi-exclamation-triangle" tone="red" />
+  <app-stat-card label="Total Uploaded" [value]="s.total" icon="bi bi-folder-check" tone="primary"
+    [clickable]="true" [active]="status() === null" (click)="toggleStatus(null)" />
+  <app-stat-card label="Verified & Approved" [value]="s.verified" icon="bi bi-shield-check" tone="teal"
+    [clickable]="true" [active]="status() === 'Verified'" (click)="toggleStatus('Verified')" />
+  <app-stat-card label="Pending HR Review" [value]="s.pending" icon="bi bi-hourglass-split" tone="amber"
+    [clickable]="true" [active]="status() === 'Pending HR Review'" (click)="toggleStatus('Pending HR Review')" />
+  <app-stat-card label="Resubmission Needed" [value]="s.rejected" icon="bi bi-exclamation-triangle" tone="red"
+    [clickable]="true" [active]="status() === 'Rejected'" (click)="toggleStatus('Rejected')" />
 </div>
 
 <!-- =========================================================
-     CATEGORY QUICK FILTER BAR
-========================================================= -->
-
-<div class="d-flex align-items-center gap-2 overflow-auto pb-2 mb-3">
-
-    <span *ngFor="let cat of categories" class="category-pill" [class.active]="activeCategory === cat.value"
-        (click)="selectCategory(cat.value)">
-
-        <i class="bi me-1" [ngClass]="cat.icon"></i>
-
-        {{ cat.label }}
-
-        <ng-container *ngIf="cat.count">
-            ({{ cat.count }})
-        </ng-container>
-
-    </span>
-
-</div>
-
-
+     CATEGORY TABS
+========================================================== -->
+<nav class="page-tabs mb-3" role="tablist">
+  <button type="button" role="tab" class="page-tab" [class.active]="category() === null"
+    [attr.aria-selected]="category() === null" (click)="category.set(null)">
+    <i class="bi bi-grid"></i> All Categories
+    <span class="page-tab-count">{{ status() ? rows().length : s.total }}</span>
+  </button>
+  @for (c of categories; track c.value) {
+  <button type="button" role="tab" class="page-tab" [class.active]="category() === c.value"
+    [attr.aria-selected]="category() === c.value" (click)="category.set(c.value)">
+    <i [class]="c.icon"></i> {{ c.value }}
+    @if (counts[c.value]) {
+    <span class="page-tab-count">{{ counts[c.value] }}</span>
+    }
+  </button>
+  }
+</nav>
 
 <!-- =========================================================
-     DOCUMENT TABLE
-========================================================= -->
+     DOCUMENTS TABLE
+========================================================== -->
+<app-primedatatable
+  [modalHeader]="tableHeader"
+  [columns]="columns"
+  [data]="rows()"
+  searchPlaceholder="Search joiner or document..."
+  [showColumnsButton]="false"
+  exportFileName="document-verification"
+  (actionClick)="onAction($event)"
+>
+  <div table-header-actions class="d-flex align-items-center gap-2 flex-wrap">
+    <button type="button" class="btn btn-outline-primary" (click)="sendReminders()">
+      <i class="bi bi-envelope-arrow-up"></i>
+      <span>Send Reminders</span>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="uploadDocuments()">
+      <i class="bi bi-file-earmark-plus"></i>
+      <span>Upload Documents</span>
+    </button>
+  </div>
 
-<app-primedatatable  [columns]="columns" [data]="tableData"
-    [searchPlaceholder]="searchPlaceholder" [Accessactions]="tableActions" (addClicked)="openCreateModal()"
-    (actionClick)="onTableAction($event)">
+  <ng-template #cellTemplate let-row let-col="col">
+    @switch (col.field) {
+      @case ('name') {
+        <div class="d-flex align-items-center gap-2">
+          @if (row.avatar) {
+            <img [src]="row.avatar" [alt]="row.name" class="rounded-circle doc-avatar" />
+          } @else {
+            <div class="emp-initials-avatar" [style.background]="categoryMeta(row.category).tone">{{ initials(row.name) }}</div>
+          }
+          <div>
+            <div class="emp-name-line">{{ row.name }}</div>
+            <div class="emp-code-line">{{ row.designation }}</div>
+          </div>
+        </div>
+      }
+
+      @case ('category') {
+        @let meta = categoryMeta(row.category);
+        <span class="category-pill-badge" [style.color]="meta.tone">
+          <i [class]="meta.icon + ' me-1'"></i>{{ row.category }}
+        </span>
+      }
+
+      @case ('docType') {
+        <div class="fw-semibold">{{ row.docType }}</div>
+        <div class="emp-code-line">{{ row.docNumber }}</div>
+      }
+
+      @case ('fileName') {
+        <button type="button" class="doc-file-link" (click)="openReview(row)" [title]="'Open ' + row.fileName">
+          <i [class]="fileIcon(row.fileName)"></i>
+          <span>{{ row.fileName }}</span>
+        </button>
+      }
+
+      @case ('uploadDate') { {{ fmtDate(row.uploadDate) }} }
+
+      @case ('status') {
+        @switch (row.status) {
+          @case ('Verified') {
+            <span class="status-pill status-success gap-1"><i class="bi bi-check-circle-fill"></i> Verified</span>
+          }
+          @case ('Pending HR Review') {
+            <span class="status-pill status-pending gap-1"><i class="bi bi-hourglass-split"></i> Pending Review</span>
+          }
+          @default {
+            <span class="status-pill status-rejected gap-1" [title]="row.remarks || ''">
+              <i class="bi bi-arrow-repeat"></i> Resubmit
+            </span>
+          }
+        }
+      }
+
+      @case ('verifiedBy') {
+        <span [class.text-muted]="!row.verifiedBy">{{ row.verifiedBy || 'Unassigned' }}</span>
+      }
+    }
+  </ng-template>
 </app-primedatatable>
+
+<!-- =========================================================
+     REVIEW MODAL
+========================================================== -->
+@if (reviewing(); as d) {
+<div class="modal-backdrop-custom" (click)="closeReview()"></div>
+<div class="modal-custom modal-lg" role="dialog" aria-modal="true" [attr.aria-label]="'Review ' + d.docType">
+  <div class="modal-header">
+    <div class="d-flex align-items-center gap-2">
+      <span class="modal-icon-circle"><i [class]="categoryMeta(d.category).icon"></i></span>
+      <div>
+        <h5 class="modal-title">{{ d.docType }}</h5>
+        <small class="text-muted">{{ d.name }} • {{ d.designation }}</small>
+      </div>
+    </div>
+    <button type="button" class="btn-close-custom" aria-label="Close" (click)="closeReview()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!-- file preview placeholder — swap for an <iframe>/<img> once files come from the API -->
+    <div class="doc-preview mb-3">
+      <i [class]="fileIcon(d.fileName)"></i>
+      <span class="fw-semibold">{{ d.fileName }}</span>
+      <small class="text-muted">Uploaded {{ fmtDate(d.uploadDate) }}</small>
+    </div>
+
+    <dl class="doc-details">
+      <dt>Category</dt><dd>{{ d.category }}</dd>
+      <dt>Document / ID No.</dt><dd>{{ d.docNumber }}</dd>
+      <dt>Status</dt><dd>{{ d.status === 'Rejected' ? 'Resubmission needed' : d.status }}</dd>
+      <dt>Verified By</dt><dd>{{ d.verifiedBy || 'Unassigned' }}</dd>
+      @if (d.remarks) {
+      <dt>Remarks</dt><dd class="text-danger">{{ d.remarks }}</dd>
+      }
+    </dl>
+
+    @if (rejectMode) {
+    <div class="mt-3">
+      <label class="form-label" for="reject-reason">Reason for resubmission</label>
+      <textarea id="reject-reason" class="form-control" rows="3" [(ngModel)]="rejectReason"
+        placeholder="Tell the joiner what to fix, e.g. 'Scan is blurred'"></textarea>
+    </div>
+    }
+  </div>
+
+  <div class="modal-footer">
+    @if (d.status === 'Pending HR Review') {
+      @if (rejectMode) {
+        <button type="button" class="btn btn-secondary" (click)="rejectMode = false">Back</button>
+        <button type="button" class="btn btn-danger" [disabled]="!rejectReason.trim()" (click)="reject()">
+          <i class="bi bi-arrow-repeat"></i>
+          <span>Request Resubmission</span>
+        </button>
+      } @else {
+        <button type="button" class="btn btn-cancel" (click)="rejectMode = true">
+          <i class="bi bi-x-lg"></i>
+          <span>Reject</span>
+        </button>
+        <button type="button" class="btn btn-primary" (click)="approve()">
+          <i class="bi bi-check-lg"></i>
+          <span>Approve</span>
+        </button>
+      }
+    } @else {
+      <button type="button" class="btn btn-secondary" (click)="closeReview()">Close</button>
+    }
+  </div>
+</div>
+}

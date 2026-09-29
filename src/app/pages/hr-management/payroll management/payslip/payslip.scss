@@ -150,7 +150,7 @@ button {
   height: 36px;
   border: 2px solid var(--ps-line);
   border-radius: 50%;
-  background: var(--white);
+  background: var(--surface);
   color: var(--ps-faint);
   font-size: 14px;
   transition: all 0.2s;
@@ -185,54 +185,18 @@ button {
   color: var(--ps-primary-dark);
 }
 
-/* ------------------------------------------------------------ cards */
-
-.req-card {
-  padding: 24px;
-}
-
-.card.spaced {
-  margin-bottom: 16px;
-}
-
-.card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--ps-line);
-
-  &.wrap {
-    flex-wrap: wrap;
-  }
-}
-
-.card-title {
+/* ------------------------------------------------------------ cards
+   Card, header and title are the global .card-custom set; only the
+   coloured title icons are page-specific. */
+.card-custom-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
 
-  .accent {
-    color: var(--ps-primary);
-  }
-  .amber {
-    color: var(--orange-550);
-  }
-  .green {
-    color: var(--green-550);
-  }
-  .blue {
-    color: var(--blue-550);
-  }
-}
-
-.req-card .card-title {
-  margin-bottom: 16px;
-  font-size: 15px;
+  .accent { color: var(--primary); }
+  .amber  { color: var(--warning); }
+  .green  { color: var(--success); }
+  .blue   { color: var(--accent-blue); }
 }
 
 .split {
@@ -372,7 +336,7 @@ button {
   }
 
   thead th.group {
-    border-bottom-color: var(--white);
+    border-bottom-color: var(--surface);
     text-align: center;
   }
   thead th.sub {
@@ -381,7 +345,7 @@ button {
 
   tbody td {
     padding: 8px 12px;
-    background: var(--white);
+    background: var(--surface);
     color: var(--neutral-700);
     font-size: 12px;
     font-weight: 600;
@@ -538,7 +502,7 @@ button {
   height: 28px;
   border: 1px solid var(--ps-line);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   color: var(--ps-ink);
   cursor: pointer;
 
@@ -556,7 +520,7 @@ button {
   padding: 8px;
   border: 1px solid var(--ps-line);
   border-radius: var(--card-radius);
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 14px 32px rgba(var(--neutral-900-3-rgb), 0.14);
 
   button {
@@ -611,7 +575,7 @@ button {
   max-height: 92vh;
   overflow: hidden;
   border-radius: var(--card-radius);
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 20px 60px rgba(var(--black-rgb), 0.2);
   animation: modalIn 0.25s ease;
 

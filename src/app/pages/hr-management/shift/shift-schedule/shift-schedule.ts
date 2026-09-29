@@ -2,10 +2,10 @@ import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import { PrimeDataTable, PrimeTableColumn, PrimeTableHeader } from '../../../../shared/primedatatable/primedatatable';
 
+import { AppSelect } from '../../../../shared/app-select/app-select';
 export interface ShiftMaster {
   id: number;
   shift_name: string;
@@ -69,7 +69,7 @@ export interface ShiftChangeRequest {
 @Component({
   selector: 'app-shift-schedule',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SelectModule, Breadcrumb, PrimeDataTable, AppStatCard],
+  imports: [AppSelect, CommonModule, FormsModule, ReactiveFormsModule, Breadcrumb, PrimeDataTable, AppStatCard],
   templateUrl: './shift-schedule.html',
   styleUrl: './shift-schedule.scss'
 })

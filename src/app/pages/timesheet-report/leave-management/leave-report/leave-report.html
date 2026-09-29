@@ -2,12 +2,12 @@
   <!-- =========================================================
        BREADCRUMB & HEADER
   ========================================================== -->
-  <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-1">
+  <!-- <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-1">
     <div>
       <app-breadcrumb title="Leave Reports" parent="Leave Management" icon="bi bi-calendar-heart">
       </app-breadcrumb>
     </div>
-  </div>
+  </div> -->
 
   <!-- =========================================================
        REPORT TABS
@@ -68,17 +68,13 @@
           <!-- Leave Type (PrimeNG p-select) -->
           <div class="col-lg-3 col-md-4 col-sm-6">
             <label class="form-label">Leave Type</label>
-            <p-select [options]="leaveTypeFilterOptions" [(ngModel)]="selectedLeaveType" optionLabel="label"
-              optionValue="value" styleClass="leave-filter-pselect w-100" placeholder="Select Type">
-            </p-select>
+            <app-select class="leave-filter-pselect" [(ngModel)]="selectedLeaveType" [options]="leaveTypeFilterOptions" optionLabel="label" optionValue="value" placeholder="Select Type" />
           </div>
 
           <!-- Status (PrimeNG p-select) -->
           <div class="col-lg-3 col-md-4 col-sm-6">
             <label class="form-label">Status</label>
-            <p-select [options]="statusFilterOptions" [(ngModel)]="selectedStatus" optionLabel="label"
-              optionValue="value" styleClass="leave-filter-pselect w-100" placeholder="Select Status">
-            </p-select>
+            <app-select class="leave-filter-pselect" [(ngModel)]="selectedStatus" [options]="statusFilterOptions" optionLabel="label" optionValue="value" placeholder="Select Status" />
           </div>
 
           <!-- Applied Date Range -->
@@ -437,9 +433,7 @@
             <!-- Leave Type (PrimeNG p-select) -->
             <div class="leave-apply-row">
               <label class="form-label required-label">Leave Type</label>
-              <p-select [options]="applyLeaveTypeOptions" [(ngModel)]="applyLeaveType" optionLabel="label"
-                optionValue="value" styleClass="w-100" placeholder="Select Leave Type">
-              </p-select>
+              <app-select [(ngModel)]="applyLeaveType" [options]="applyLeaveTypeOptions" optionLabel="label" optionValue="value" placeholder="Select Leave Type" />
             </div>
 
             <!-- Date Range -->
@@ -461,9 +455,7 @@
                 &mdash; {{ applyToDate }}
                 }
               </span>
-              <p-select [options]="applyDayTypeOptions" [(ngModel)]="applyDayType" (ngModelChange)="onApplyDateChange()"
-                optionLabel="label" optionValue="value" styleClass="daytype-select">
-              </p-select>
+              <app-select class="daytype-select" [(ngModel)]="applyDayType" (ngModelChange)="onApplyDateChange()" [options]="applyDayTypeOptions" optionLabel="label" optionValue="value" />
             </div>
 
             <!-- Total -->

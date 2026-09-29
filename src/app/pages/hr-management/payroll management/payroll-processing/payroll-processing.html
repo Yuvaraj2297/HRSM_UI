@@ -36,7 +36,7 @@
 </div>
 
 <!-- Filters card -->
-<div class="card-custom mb-3 filters-card">
+<div class="card-custom p-3 mb-3 filters-card">
   <div class="filters-toggle-row">
     <span class="filter-title-text">
       <i class="bi bi-funnel me-1"></i> Filter Payroll
@@ -55,24 +55,19 @@
       </div>
       <div class="col-lg-2 col-md-3 col-sm-6">
         <label class="form-label">Department</label>
-        <select class="form-select" [(ngModel)]="filterDept">
-          <option>All Departments</option>
-          <option *ngFor="let d of departments">{{ d }}</option>
-        </select>
+        <!-- 'All Departments' is this page's "no filter" value: shown as the placeholder, ✕ sets it back -->
+        <app-select [ngModel]="filterDept === 'All Departments' ? null : filterDept"
+          (ngModelChange)="filterDept = $event ?? 'All Departments'" [options]="departments" placeholder="All Departments" />
       </div>
       <div class="col-lg-2 col-md-3 col-sm-6">
         <label class="form-label">Pay Period</label>
-        <select class="form-select" [(ngModel)]="filterPeriod">
-          <option>All Periods</option>
-          <option *ngFor="let p of payPeriods">{{ p }}</option>
-        </select>
+        <app-select [ngModel]="filterPeriod === 'All Periods' ? null : filterPeriod"
+          (ngModelChange)="filterPeriod = $event ?? 'All Periods'" [options]="payPeriods" placeholder="All Periods" />
       </div>
       <div class="col-lg-2 col-md-3 col-sm-6">
         <label class="form-label">Status</label>
-        <select class="form-select" [(ngModel)]="filterStatus">
-          <option>All Status</option>
-          <option *ngFor="let s of statusOptions">{{ s }}</option>
-        </select>
+        <app-select [ngModel]="filterStatus === 'All Status' ? null : filterStatus"
+          (ngModelChange)="filterStatus = $event ?? 'All Status'" [options]="statusOptions" placeholder="All Status" />
       </div>
       <div class="col-lg-4 col-md-6 align-self-end">
         <div class="d-flex gap-2">
@@ -221,10 +216,7 @@
         <div *ngIf="runStep === 2 && selectedType === 'bulk'">
           <div class="mb-3">
             <label class="form-label  small">Pay Period</label>
-            <select class="form-select" [(ngModel)]="rpBulkPeriod">
-              <option value="">Select month...</option>
-              <option *ngFor="let p of payPeriods" [value]="p">{{ p }}</option>
-            </select>
+            <app-select [(ngModel)]="rpBulkPeriod" [options]="payPeriods" placeholder="Select month..." />
           </div>
           <div class="summary-box mb-3">
             <div class="summary-row"><span>Pay Period</span><strong>{{ rpBulkPeriod || '—' }}</strong></div>
@@ -242,17 +234,11 @@
         <div *ngIf="runStep === 2 && selectedType === 'department'">
           <div class="mb-3">
             <label class="form-label  small">Select Department</label>
-            <select class="form-select" [(ngModel)]="rpDeptSelected">
-              <option value="">Choose a department...</option>
-              <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
-            </select>
+            <app-select [(ngModel)]="rpDeptSelected" [options]="departments" placeholder="Choose a department..." />
           </div>
           <div class="mb-3">
             <label class="form-label  small">Pay Period</label>
-            <select class="form-select" [(ngModel)]="rpDeptPeriod">
-              <option value="">Select month...</option>
-              <option *ngFor="let p of payPeriods" [value]="p">{{ p }}</option>
-            </select>
+            <app-select [(ngModel)]="rpDeptPeriod" [options]="payPeriods" placeholder="Select month..." />
           </div>
           <div class="summary-box mb-3">
             <div class="summary-row"><span>Department</span><strong>{{ rpDeptSelected || '—' }}</strong></div>
@@ -270,17 +256,11 @@
         <div *ngIf="runStep === 2 && selectedType === 'individual'">
           <div class="mb-3">
             <label class="form-label  small">Select Employee</label>
-            <select class="form-select" [(ngModel)]="rpEmpSelected">
-              <option value="">Choose an employee...</option>
-              <option *ngFor="let e of employees" [value]="e.id">{{ e.name }} ({{ e.id }})</option>
-            </select>
+            <app-select [(ngModel)]="rpEmpSelected" [options]="employees" optionLabel="name" optionValue="id" optionSub="id" placeholder="Choose an employee..." />
           </div>
           <div class="mb-3">
             <label class="form-label  small">Pay Period</label>
-            <select class="form-select" [(ngModel)]="rpIndPeriod">
-              <option value="">Select month...</option>
-              <option *ngFor="let p of payPeriods" [value]="p">{{ p }}</option>
-            </select>
+            <app-select [(ngModel)]="rpIndPeriod" [options]="payPeriods" placeholder="Select month..." />
           </div>
           <div class="info-box">
             <i class="bi bi-info-circle"></i>
@@ -488,10 +468,7 @@
           <div class="row g-3">
             <div class="col-12">
               <label class="form-label fw-semibold form-label-sm">Select Employee</label>
-              <select class="form-select" [(ngModel)]="add.employeeId">
-                <option value="">Choose an employee...</option>
-                <option *ngFor="let e of employees" [value]="e.id">{{ e.name }} ({{ e.id }})</option>
-              </select>
+              <app-select [(ngModel)]="add.employeeId" [options]="employees" optionLabel="name" optionValue="id" optionSub="id" placeholder="Choose an employee..." />
             </div>
             <div class="col-12">
               <div class="info-box">

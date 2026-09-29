@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { CustomizerSettingsService } from '../customizer-settings/customizer-settings-service.service';
 import { Toggle } from '../toggle.service';
 
 @Component({
@@ -32,7 +33,8 @@ export class Header {
 
   constructor(
     private toggleService: Toggle,
-    private router: Router
+    private router: Router,
+    private themeService: CustomizerSettingsService
   ) {
     this.toggleService.isToggled$.subscribe(v => this.isToggled = v);
   }
@@ -59,6 +61,15 @@ export class Header {
     if (!target.closest('.profile-wrapper')) {
       this.isProfileMenuOpen = false;
     }
+  }
+
+  /** Dark / Light mode — saved per browser, first visit follows the OS setting. */
+  get isDark(): boolean {
+    return this.themeService.isDark();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   openHistory(): void {

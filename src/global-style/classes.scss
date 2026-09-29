@@ -57,16 +57,17 @@
    Header / body / footer are optional; a card with none of them is
    just a padded-by-you container (p-3, p-0 + overflow-hidden for a
    table…). Bootstrap's .card / .card-header / .card-body /
-   .card-footer render the same. The page-specific card names below
-   are legacy aliases from the PHP conversion.
+   .card-footer render the same. Always put .card-custom on the element —
+   page-specific names (filters-card, dash-section …) may be added next to
+   it for layout, but never re-draw the card themselves.
 ============================================================= */
 
-$card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-card, .cm-card, .am-card, .cv-card, .form-section, .adj-card, .req-card, .structure-card, .journey-stepper-card, .filter-toolbar-card, .content-hub-card, .topbar-card, .tr-card, .dash-section, .emp-perm-card, .table-card-container, .mbx-side, .mbx-main, .org-dept-panel, .ml-list-card';
+$card: '.card-custom';
 
 :root :is(#{$card}, .card):not(.bg-light):not(.border-start):not(.card-plain) {
   --card-radius: var(--radius-md);
   color: var(--text);
-  background: var(--white) !important;
+  background: var(--surface) !important;
   border: 1px solid var(--border) !important;
   border-radius: var(--card-radius) !important;
   box-shadow: var(--shadow-card) !important;
@@ -152,7 +153,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   flex-wrap: wrap;
   gap: 10px;
   padding: 12px 20px;
-  background: var(--white) !important;
+  background: var(--surface) !important;
   border: 0 !important;
   border-top: 1px solid var(--border) !important;
   border-radius: 0 0 var(--radius-md) var(--radius-md) !important;
@@ -215,7 +216,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   gap: 10px;
   width: 100%;
   padding: 8px 12px;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--text-faint);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -274,7 +275,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: 0 12px 32px rgba(var(--neutral-900-rgb), 0.14);
@@ -350,7 +351,7 @@ $card: '.card-custom, .filters-card, .ct-form-card, .ticket-form-card, .tkt-fs-c
   top: calc(100% + 6px);
   left: 0;
   min-width: 270px;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 12px;
@@ -617,7 +618,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-padding-x: 0;
   --bs-btn-padding-y: 0;
   --bs-btn-color: var(--text-light);
-  --bs-btn-bg: var(--white);
+  --bs-btn-bg: var(--surface);
   --bs-btn-border-color: var(--border);
   --bs-btn-hover-color: var(--primary-dark);
   --bs-btn-hover-bg: var(--primary-soft);
@@ -626,7 +627,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-active-bg: var(--primary-soft);
   --bs-btn-active-border-color: var(--primary);
   --bs-btn-disabled-color: var(--text-muted);
-  --bs-btn-disabled-bg: var(--white);
+  --bs-btn-disabled-bg: var(--surface);
   --bs-btn-disabled-border-color: var(--border);
   --btn-h: 32px;
   width: 32px;
@@ -686,7 +687,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 
 :root :is(#{$btn-secondary}) {
   --bs-btn-color: var(--text);
-  --bs-btn-bg: var(--white);
+  --bs-btn-bg: var(--surface);
   --bs-btn-border-color: var(--border-strong);
   --bs-btn-hover-color: var(--gh-heading);
   --bs-btn-hover-bg: var(--bg-muted);
@@ -695,7 +696,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   --bs-btn-active-bg: var(--border);
   --bs-btn-active-border-color: var(--border-strong);
   --bs-btn-disabled-color: var(--text-muted);
-  --bs-btn-disabled-bg: var(--white);
+  --bs-btn-disabled-bg: var(--surface);
   --bs-btn-disabled-border-color: var(--border);
 }
 
@@ -930,7 +931,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
   min-height: var(--field-h, var(--control-h, 38px)) !important;
   border-radius: var(--field-radius, var(--control-radius, var(--radius-sm))) !important;
   border: 1px solid var(--border-strong) !important;
-  background-color: var(--white) !important;
+  background-color: var(--surface) !important;
   display: flex;
   align-items: center;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -988,7 +989,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
 .p-select-overlay-panel,
 .p-overlay,
 .p-popover {
-  background: var(--white) !important;
+  background: var(--surface) !important;
   border: 1px solid var(--border) !important;
   border-radius: var(--radius-sm) !important;
   box-shadow: 0 12px 32px rgba(var(--neutral-900-rgb), 0.18) !important;
@@ -1013,7 +1014,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
       font-size: 13.5px !important;
       border: 1px solid var(--text-faint) !important;
       border-radius: var(--radius-xs) !important;
-      background: var(--white) !important;
+      background: var(--surface) !important;
 
       &:focus {
         border-color: var(--primary) !important;
@@ -1092,6 +1093,7 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
      Dropdown (native)                 <select class="form-select">
      Dropdown (PrimeNG)                <p-select> (styled below, no class needed)
      Multi-line                        <textarea class="form-control">
+     Checkbox / radio / switch         <input class="form-check-input"> (brand green)
      Label                             <label class="form-label">
      Error text                        <div class="field-error">Message</div>
      Invalid field                     add .is-invalid to the field
@@ -1105,6 +1107,33 @@ $btn-standalone: '#{$btn-primary}, #{$btn-secondary}, #{$btn-soft}, #{$btn-dange
    .p-inputnumber, textarea[pTextarea]) are folded into this system
    so a page never needs to add its own field styling.
 ============================================================= */
+
+/* Checkbox / radio / switch (Bootstrap .form-check-input) — brand green
+   instead of Bootstrap blue. :root prefix outranks bootstrap.min.css. */
+:root .form-check-input {
+  border-color: var(--border-strong);
+  cursor: pointer;
+
+  &:checked,
+  &[type='checkbox']:indeterminate {
+    background-color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: var(--focus-ring);
+  }
+
+  /* switch knob turns green-tinted while focused but off */
+  &[role='switch']:focus:not(:checked) {
+    --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgb(26, 156, 83)'/%3e%3c/svg%3e");
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
 
 $field: '.form-control, .form-select, select:not([class]), .p-inputtext, .p-inputnumber-input, textarea[pTextarea], .p-datepicker-input';
 $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
@@ -1125,7 +1154,7 @@ $field-box: '#{$field}, .p-select, .p-inputnumber, .p-datepicker';
   font-weight: 500;
   line-height: 1.4;
   color: var(--gh-heading);
-  background-color: var(--white);
+  background-color: var(--surface);
   background-clip: padding-box;
   border: 1px solid var(--border-strong);
   border-radius: var(--field-radius);
@@ -1381,7 +1410,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   transform: translate(-50%, -50%);
   width: 92%;
   max-width: 530px;
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   z-index: 10005;
   overflow: hidden;
@@ -1400,7 +1429,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     justify-content: space-between;
     padding: 16px 24px;
     border-bottom: 1px solid var(--bg-muted);
-    background: var(--white);
+    background: var(--surface);
 
     .modal-title {
       font-size: 1.15rem;
@@ -1441,7 +1470,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     gap: 10px;
     padding: 12px 24px;
     border-top: 1px solid var(--bg-muted);
-    background: var(--white);
+    background: var(--surface);
 
   }
 }
@@ -1462,7 +1491,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 :root :is(.modal-content, .modal-content-custom) {
   display: flex;
   flex-direction: column;
-  background: var(--white);
+  background: var(--surface);
   border: 0;
   border-radius: var(--radius-lg);
   box-shadow: 0 20px 60px rgba(var(--neutral-900-rgb), 0.18);
@@ -1475,7 +1504,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     gap: 12px;
     flex-shrink: 0;
     padding: 16px 24px;
-    background: var(--white);
+    background: var(--surface);
     border-bottom: 1px solid var(--bg-muted);
   }
 
@@ -1499,7 +1528,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     gap: 10px;
     flex-shrink: 0;
     padding: 12px 24px;
-    background: var(--white);
+    background: var(--surface);
     border-top: 1px solid var(--bg-muted);
 
     > * { margin: 0; }
@@ -1508,14 +1537,14 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
 
 :root .modal-backdrop.show {
   opacity: 0.48;
-  background-color: var(--neutral-900);
+  background-color: var(--surface-inverse);
   backdrop-filter: blur(3px);
 }
 
 /* Modal Summary Banner (Employee Banner Card) */
 .emp-banner-card,
 .modal-summary-banner {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 12px 16px;
@@ -1625,7 +1654,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   }
 
   .approver-pill-badge {
-    background: var(--white);
+    background: var(--surface);
     color: var(--primary);
     border: 1px solid var(--green-150);
     border-radius: 999px;
@@ -1789,7 +1818,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
       }
 
       &.active {
-        background: var(--white);
+        background: var(--surface);
         color: var(--green-550-2);
         font-weight: 600;
         box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.08);
@@ -1805,7 +1834,7 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   }
 
   .shift-requests-card {
-    background: var(--white);
+    background: var(--surface);
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
     box-shadow: 0 4px 20px rgba(var(--neutral-900-rgb), 0.05);
@@ -2143,7 +2172,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   overflow-x: auto;
   border: 1px solid var(--table-border);
   border-radius: var(--radius-md, var(--radius-md));
-  background: var(--white);
+  background: var(--surface);
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
 
@@ -2438,7 +2467,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   color: var(--white);
   font-size: 12px;
   font-weight: 700;
-  border: 2px solid var(--white);
+  border: 2px solid var(--surface);
   box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.45);
 }
 
@@ -2550,7 +2579,7 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   display: block;
   height: 100%;
   padding: 12px 16px;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
@@ -2843,7 +2872,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   gap: 6px;
   padding: 4px 8px;
   list-style: none;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
@@ -2891,7 +2920,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   font-weight: 700;
   line-height: 1;
   color: var(--primary-dark);
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 50%;
   box-shadow: 0 0 0 8px rgba(var(--white-rgb), 0.92), 0 0 14px 8px rgba(var(--white-rgb), 0.92);
@@ -2926,7 +2955,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
     flex: 0 0 36px;
     align-self: stretch;
     margin-left: -32px;
-    background: linear-gradient(to right, rgba(var(--white-rgb), 0), var(--white));
+    background: linear-gradient(to right, transparent, var(--surface));
     pointer-events: none;
   }
 }
@@ -3159,7 +3188,7 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
 
   :is(#{$tab-underline}).active & {
     color: var(--primary-dark);
-    background: var(--white);
+    background: var(--surface);
   }
 
   :is(#{$tab-pill}).active & {
@@ -3262,41 +3291,265 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
     }
   }
 }
+/* =============================================================
+   COMMON CALENDAR — themed to the brand green / soft green / gray
+   palette. Uses the app's design tokens so it stays in sync with
+   buttons, tabs, and fields.
+============================================================= */
 .common-calendar {
+  --cal-green:       var(--primary);
+  --cal-green-dark:  var(--primary-dark);
+  --cal-green-soft:  var(--primary-soft);
+  --cal-green-tint:  rgba(var(--primary-rgb), 0.10);
+  --cal-green-hover: rgba(var(--primary-rgb), 0.16);
+  --cal-gray-bg:     var(--bg-soft);
+  --cal-gray-line:   var(--border);
+  --cal-gray-text:   var(--text-light);
+  --cal-radius:      var(--radius-md);
+
   position: absolute;
   z-index: 1000;
-  background: #fff;
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  padding: 16px;
-  font-family: inherit;
+  min-width: 300px;
+  padding: 14px 14px 10px;
+  background: var(--surface);
+  border: 1px solid var(--cal-gray-line);
+  border-radius: var(--cal-radius);
+  box-shadow:
+    0 1px 0 rgba(var(--primary-rgb), 0.10) inset,
+    0 10px 30px rgba(var(--neutral-900-rgb), 0.12),
+    0 2px 6px rgba(var(--neutral-900-rgb), 0.06);
+  font-family: var(--font-family-base);
   font-size: 14px;
+  color: var(--gh-heading);
+  animation: calPop 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---------- header ---------- */
+  .hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
+
+  .hdr button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: var(--cal-gray-bg);
+    color: var(--cal-green-dark);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease,
+                transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      background: var(--cal-green-soft);
+      color: var(--cal-green-dark);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.14);
+    }
+    &:active { transform: scale(0.94); }
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.30);
+    }
+  }
+
+  /* ---------- month / year custom selects ---------- */
+  .calendar-custom-select {
+    position: relative;
+  }
+
+  .calendar-select-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,
+                var(--cal-green) 0%,
+                var(--cal-green-dark) 100%);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 3px 8px rgba(var(--primary-rgb), 0.30);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(var(--primary-rgb), 0.38);
+    }
+    &:active { transform: translateY(0); }
+
+    &::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid rgba(255, 255, 255, 0.9);
+      margin-left: 2px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  .calendar-custom-select.open .calendar-select-trigger::after {
+    transform: rotate(180deg);
+  }
+
+  .calendar-select-options {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 92px;
+    max-height: 220px;
+    padding: 6px;
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--cal-gray-line);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 12px 28px rgba(var(--neutral-900-rgb), 0.16);
+    z-index: 10;
+
+    &::-webkit-scrollbar { width: 5px; }
+    &::-webkit-scrollbar-thumb {
+      background: var(--cal-green-soft);
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track { background: transparent; }
+  }
+
+  .calendar-custom-select.open .calendar-select-options {
+    display: block;
+    animation: calPop 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .calendar-select-option {
+    padding: 7px 12px;
+    border-radius: var(--radius-xs);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.12s ease, color 0.12s ease;
+
+    &:hover {
+      background: var(--cal-green-soft);
+      color: var(--cal-green-dark);
+    }
+
+    &.selected {
+      background: var(--cal-green);
+      color: var(--white);
+      font-weight: 700;
+    }
+  }
+
+  /* ---------- day grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+  }
+
+  .dow {
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--cal-gray-text);
+  }
+
+  .day {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    margin: 1px;
+    border-radius: 50%;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--gh-heading);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease,
+                transform 0.12s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      background: var(--cal-green-hover);
+      color: var(--cal-green-dark);
+      transform: scale(1.06);
+    }
+    &:active { transform: scale(0.96); }
+  }
+
+  .day.muted {
+    color: var(--text-faint);
+    font-weight: 400;
+
+    &:hover {
+      background: var(--cal-gray-bg);
+      color: var(--text-muted);
+      transform: none;
+    }
+  }
+
+  .day.today {
+    border: 1.5px solid var(--cal-green);
+    background: var(--cal-green-tint);
+    color: var(--cal-green-dark);
+    font-weight: 700;
+  }
+
+  .day.sel {
+    background: linear-gradient(135deg,
+                var(--cal-green) 0%,
+                var(--cal-green-dark) 100%);
+    color: var(--white);
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.35);
+    transform: scale(1.02);
+
+    &:hover {
+      color: var(--white);
+      transform: scale(1.06);
+    }
+  }
+
+  /* disabled (out of min/max) — the template sets these inline; override here */
+  .day[data-disabled='true'] {
+    background: transparent !important;
+    color: var(--text-faint) !important;
+    opacity: 0.55 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      background: transparent !important;
+      color: var(--text-faint) !important;
+    }
+  }
 }
 
-.common-calendar .hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 8px;
-}
-
-.common-calendar .hdr button {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 50%;
-  background: #f3f4f6;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-}
-.common-calendar .hdr button:hover {
-  background: #e5e7eb;
-}
-
-.calendar-custom-select {
-  position: relative;
+/* ---------- pop animation ---------- */
+@keyframes calPop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 .calendar-select-trigger {
   display: flex;
@@ -3412,5 +3665,270 @@ $tab-sm: '.page-tabs-sm > .page-tab, .page-tabs-sm > * > .page-tab, .tab-nav-btn
   .p-tooltip-arrow {
     border-right-color: var(--sidebar-tooltip-bg) !important;
     border-left-color: var(--sidebar-tooltip-bg) !important;
+  }
+}
+
+
+/* =============================================================
+   ROLE PERMISSIONS MODAL (GLOBAL)
+   Ported 1:1 from the PHP role page (.role-perm-modal block),
+   with the design tokens replacing the hard-coded colours.
+   Markup: <app-role-permission-modal> (role-permission-modal.html)
+   Paste at the end of classes.scss (replace any earlier
+   "ROLE PERMISSIONS MODAL (GLOBAL)" block).
+============================================================= */
+
+.role-perm-modal {
+
+  .modal-content {
+    border: 0;
+    border-radius: var(--radius-lg);
+    max-height: calc(100vh - 60px);
+  }
+
+  /* ---------- head ---------- */
+  .rp-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rp-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: var(--gh-heading);
+    font-size: 16px;
+    font-weight: 800;
+
+    .icon-chip {
+      width: 38px;
+      height: 38px;
+    }
+  }
+
+  .rp-role-name {
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .rp-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .rp-search-wrap {
+    position: relative;
+
+    > i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    input {
+      width: 210px;
+      padding: 8px 14px 8px 34px;
+      font-size: 12.5px;
+    }
+  }
+
+  .rp-count-chip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .rp-links {
+    font-size: 12px;
+    white-space: nowrap;
+
+    a {
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .rp-link-primary { color: var(--primary); }
+    .rp-link-muted { color: var(--text-light); }
+    .rp-links-sep { margin: 0 4px; color: var(--border-strong); }
+  }
+
+  /* ---------- body ---------- */
+  .rp-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0;
+    overflow-y: auto;
+  }
+
+  .rp-perm-wrapper {
+    border-top: 1px solid var(--border);
+  }
+
+  .rp-perm-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 110px;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 22px;
+    background: var(--bg-muted);
+    color: var(--text-light);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .rp-group-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px 8px;
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    i {
+      font-size: 14px;
+    }
+  }
+
+  .rp-perm-row {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 110px;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 22px;
+    border-top: 1px solid var(--border);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: var(--bg-soft);
+    }
+  }
+
+  .rp-feature {
+    color: var(--gh-heading);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .rp-caps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .rp-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-muted);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+
+    input {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    &:has(input:checked) {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+  }
+
+  .rp-check-all {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+
+    &:hover {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  /* ---------- foot ---------- */
+  .rp-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-soft);
+  }
+
+  /* ---------- tablet / phone ---------- */
+  @media (max-width: 767.98px) {
+    .rp-perm-header {
+      display: none;
+    }
+
+    .rp-perm-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .rp-perm-row > div:last-child {
+      text-align: left;
+    }
+
+    .rp-search-wrap input {
+      width: 100%;
+    }
   }
 }

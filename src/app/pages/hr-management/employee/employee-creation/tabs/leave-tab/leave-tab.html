@@ -7,9 +7,7 @@
         <div class="ne-approval-row">
           <div class="ne-approval-col">
             <label>{{ ordinal(i + 1) }} Level Approval</label>
-            <p-select [formControlName]="i" [options]="fs.managers" optionLabel="label" optionValue="value"  [filter]="true"
-    filterBy="value"  [showClear]="true" 
-                      placeholder="Non selected" styleClass="w-100" [showClear]="true" appendTo="body"  />
+            <app-select [formControlName]="i" [options]="fs.managers" optionLabel="label" optionValue="value" placeholder="Non selected" />
           </div>
 
           <button *ngIf="i === 0" type="button" class="ne-approval-btn-add" title="Add approval level" (click)="addLevel()">+</button>
@@ -21,8 +19,7 @@
     <div class="col-lg-6">
       <div class="ne-approval-col">
         <label>Follower</label>
-        <p-select formControlName="follower" [options]="fs.managers" optionLabel="label" optionValue="value"
-                  placeholder="None" styleClass="w-100" [showClear]="true" appendTo="body" />
+        <app-select formControlName="follower" [options]="fs.managers" optionLabel="label" optionValue="value" placeholder="None" />
       </div>
     </div>
   </div>

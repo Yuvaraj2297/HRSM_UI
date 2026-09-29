@@ -1,4 +1,4 @@
-<div class="table-card-container">
+<div class="card-custom table-card-container">
 
   <!-- =========================================================
        HEAD ROW — one line: title on the left; Columns · Export ·
@@ -30,10 +30,40 @@
     <div class="table-head-actions">
 
       @if (showColumnsButton) {
-      <button type="button" class="btn-tool btn-columns" (click)="onColumns()" title="Manage Columns">
-        <i class="ti ti-eye"></i>
-        <span>Columns</span>
-      </button>
+      <div class="columns-wrapper">
+        <button type="button" class="btn-tool btn-columns" (click)="onColumns()" title="Manage Columns"
+          aria-haspopup="true" [attr.aria-expanded]="columnsPanelOpen">
+          <i class="ti ti-eye"></i>
+          <span>Columns</span>
+          @if (hiddenCount) {
+          <span class="columns-hidden-count">{{ hiddenCount }} hidden</span>
+          }
+        </button>
+
+        @if (columnsPanelOpen) {
+        <div class="export-menu-backdrop" (click)="closeColumnsPanel()"></div>
+        <div class="columns-menu" role="menu">
+          <div class="columns-menu-head">
+            <span>Show columns</span>
+            <button type="button" class="columns-menu-reset" [disabled]="!hiddenCount" (click)="restoreAllColumns()">
+              Show all
+            </button>
+          </div>
+
+          <div class="columns-menu-list">
+            @for (col of columns; track col.field) {
+            @let on = isColumnVisible(col.field);
+            <label class="columns-menu-item" [class.is-locked]="on && visibleColumns.length === 1">
+              <input type="checkbox" class="form-check-input" [checked]="on"
+                [disabled]="on && visibleColumns.length === 1"
+                (change)="toggleColumnVisibility(col.field)" />
+              <span>{{ col.header || col.field }}</span>
+            </label>
+            }
+          </div>
+        </div>
+        }
+      </div>
       }
 
       @if (showExportButton) {
@@ -147,7 +177,8 @@
         @for (col of visibleColumns; track col.field) {
 
         <th [pSortableColumn]="col.sortable ? col.field : undefined" [pSortableColumnDisabled]="!col.sortable"
-          [style.width]="col.width" class="th-col" [ngClass]="[col.cellClass || '', col.headerClass || '']">
+          [style.width]="col.width" class="th-col" [class.col-frozen-right]="isFrozen(col)"
+          [ngClass]="[col.cellClass || '', col.headerClass || '']">
 
           <div class="th-content">
 
@@ -184,7 +215,7 @@
 
         @for (col of visibleColumns; track col.field) {
 
-        <td class="td-col" [ngClass]="col.cellClass || ''" [style.width]="col.width">
+        <td class="td-col" [class.col-frozen-right]="isFrozen(col)" [ngClass]="col.cellClass || ''" [style.width]="col.width">
 
           @switch (kind(col)) {
 
@@ -254,6 +285,16 @@
           }
           }
 
+          @case ('chips') {
+          <div class="chips-cell">
+            @for (chip of chipsFor(col, row); track chip) {
+            <span class="cell-chip">{{ chip }}</span>
+            } @empty {
+            <span class="cell-chip-empty">—</span>
+            }
+          </div>
+          }
+
           @case ('progress') {
           <div class="whrs-wrap">
             <div class="whrs-label">{{ row[col.field] }}h / {{ row.hoursExpected }}h</div>
@@ -283,6 +324,11 @@
             }
 
             } @else {
+            @if (Accessactions.permission) {
+            <button type="button" class="btn-action-icon btn-permission" title="Permissions" (click)="onAction('permission', row)">
+              <i class="ti ti-shield-lock"></i>
+            </button>
+            }
             @if (Accessactions.edit) {
             <button type="button" class="btn-action-icon btn-edit" title="Edit" (click)="onAction('edit', row)">
               <i class="ti ti-pencil"></i>
@@ -342,7 +388,15 @@
           }
 
           @default {
+          @if (isChipValue(row[col.field])) {
+          <div class="chips-cell">
+            @for (chip of chipsFor(col, row); track chip) {
+            <span class="cell-chip">{{ chip }}</span>
+            }
+          </div>
+          } @else {
           <span class="cell-text">{{ row[col.field] }}</span>
+          }
           }
           }
 
@@ -361,11 +415,7 @@
 
         <span class="show-label">Show:</span>
 
-        <select class="form-select show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)">
-          @for (opt of rowsPerPageOptions; track opt) {
-          <option [value]="opt">{{ opt }}</option>
-          }
-        </select>
+        <app-select class="show-select" [(ngModel)]="rows" (ngModelChange)="onRowsChange($event)" [filter]="false" [showClear]="false" [options]="rowsPerPageOptions" />
 
         <span class="showing-range">
           Showing {{ getTotal() ? ((dt.first || 0) + 1) : 0 }} - {{ getEndIndex() }} of {{ getTotal() }}
@@ -392,44 +442,6 @@
   </p-table>
 
 </div>
-
-
-<!-- =========================================================
-     COLUMNS VISIBILITY OFFCANVAS
-========================================================== -->
-
-@if (columnsPanelOpen) {
-
-<div class="columns-offcanvas-backdrop" (click)="closeColumnsPanel()"></div>
-
-<div class="columns-offcanvas-panel">
-
-  <div class="columns-offcanvas-header">
-    <h3 class="columns-offcanvas-title">Columns Visibility</h3>
-    <button type="button" class="columns-offcanvas-close" (click)="closeColumnsPanel()" aria-label="Close">
-      <i class="ti ti-x"></i>
-    </button>
-  </div>
-
-  <div class="columns-offcanvas-body">
-
-    @for (col of columns; track col.field) {
-    <div class="column-visibility-row">
-      <span class="column-visibility-label">{{ col.header }}</span>
-      <button [attr.aria-label]="'Show ' + col.header + ' column'" type="button" class="column-toggle-switch" [class.on]="isColumnVisible(col.field)"
-        (click)="toggleColumnVisibility(col.field)" [attr.aria-pressed]="isColumnVisible(col.field)">
-        <span class="column-toggle-knob"></span>
-      </button>
-    </div>
-    }
-
-    <button type="button" class="btn-restore-all" (click)="restoreAllColumns()">Restore All</button>
-
-  </div>
-
-</div>
-
-}
 
 
 <!-- =========================================================
