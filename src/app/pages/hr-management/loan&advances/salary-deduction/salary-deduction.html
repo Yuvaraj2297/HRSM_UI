@@ -155,22 +155,22 @@
   </div>
 
   <div class="modal-body">
-    <div class="statement-summary mb-3">
-      <div>
-        <span class="text-muted small">Sanctioned</span>
-        <div class="fw-semibold">{{ inr(a.disbursed) }}</div>
+    <div class="ui-meta-grid ui-meta-grid--4 mb-3">
+<div>
+        <div class="ui-meta-label">Sanctioned</div>
+        <div class="ui-meta-value">{{ inr(a.disbursed) }}</div>
       </div>
       <div>
-        <span class="text-muted small">Recovered</span>
-        <div class="fw-semibold text-success">{{ inr(a.recovered) }}</div>
+        <div class="ui-meta-label">Recovered</div>
+        <div class="ui-meta-value text-success">{{ inr(a.recovered) }}</div>
       </div>
       <div>
-        <span class="text-muted small">Balance Due</span>
-        <div class="fw-semibold" [class.text-danger]="a.balance > 0">{{ inr(a.balance) }}</div>
+        <div class="ui-meta-label">Balance Due</div>
+        <div class="ui-meta-value" [class.text-danger]="a.balance > 0">{{ inr(a.balance) }}</div>
       </div>
       <div>
-        <span class="text-muted small">Scheme &amp; Rate</span>
-        <div class="fw-semibold">{{ a.category }} ({{ a.interestRate }}%)</div>
+        <div class="ui-meta-label">Scheme &amp; Rate</div>
+        <div class="ui-meta-value">{{ a.category }} ({{ a.interestRate }}%)</div>
       </div>
     </div>
 

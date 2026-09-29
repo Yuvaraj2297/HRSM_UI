@@ -1,5 +1,4 @@
-/* Layout only — colours, pills, avatars, progress bars and the modal
-   all come from global-style/classes.scss. */
+/* Layout only — every look comes from the global UI library. */
 
 :host {
   display: block;
@@ -15,20 +14,5 @@
 
   @media (max-width: 575.98px) {
     grid-template-columns: 1fr;
-  }
-}
-
-/* sanction / recovered / balance / scheme strip in the statement modal */
-.statement-summary {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  padding: 12px 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-soft);
-
-  @media (max-width: 767.98px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

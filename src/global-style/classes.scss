@@ -2063,6 +2063,15 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
 }
 
 
+/* a status pill that toggles the status on click */
+button.status-pill {
+  cursor: pointer;
+  transition: box-shadow .15s ease;
+
+  &:hover,
+  &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+}
+
 /* Repayment Progress Wrap */
 .repayment-progress-wrap {
   min-width: 150px;
