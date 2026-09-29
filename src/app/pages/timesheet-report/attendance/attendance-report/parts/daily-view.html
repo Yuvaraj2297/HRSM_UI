@@ -1,10 +1,10 @@
 @let f = store.statusFilter();
 
 @if (store.isWeekoff()) {
-<div class="card-custom att-empty">
-  <i class="bi bi-moon-stars"></i>
-  <div class="fw-semibold">Week off</div>
-  <small class="text-muted">No attendance is recorded on weekends. Use the arrows to pick a working day.</small>
+<div class="card-custom empty-state">
+  <div class="e-ico"><i class="bi bi-moon-stars"></i></div>
+  <div class="e-title">Week off</div>
+  <div class="e-sub">No attendance is recorded on weekends. Use the arrows to pick a working day.</div>
 </div>
 } @else {
 <!-- summary — click a status to filter the log -->
@@ -19,9 +19,9 @@
       @case ('name') {
         <div class="d-flex align-items-center gap-2">
           @if (row.avatar) {
-            <img [src]="row.avatar" [alt]="row.name" class="rounded-circle att-avatar" />
+            <img [src]="row.avatar" [alt]="row.name" class="ui-avatar" />
           } @else {
-            <div class="emp-initials-avatar att-initials">{{ initials(row.name) }}</div>
+            <span class="ui-avatar">{{ initials(row.name) }}</span>
           }
           <div>
             <div class="emp-name-line">{{ row.name }}</div>
@@ -35,18 +35,18 @@
       @case ('checkOut') { {{ fmtTime(row.checkOut) }} }
       @case ('hours') {
         @if (row.checkIn !== null) {
-        <div class="att-hours">
-          <span>{{ row.hours }}h <small>/ {{ shiftHours }}h</small></span>
-          <span class="att-hours-bar"><span [style.width.%]="pct(row.hours)" [class.is-short]="row.hours < shiftHours - 1"></span></span>
+        <div class="hours-cell">
+          <span class="cell-strong">{{ row.hours }}h</span> <span class="ui-cell-sub">/ {{ shiftHours }}h</span>
+          <div class="ui-meter"><span [style.width.%]="pct(row.hours)" [class.is-warn]="row.hours < shiftHours - 1"></span></div>
         </div>
         } @else { <span class="text-muted">—</span> }
       }
       @case ('overtime') {
-        @if (row.overtime) { <span class="att-ot">+{{ row.overtime }}h</span> } @else { <span class="text-muted">—</span> }
+        @if (row.overtime) { <span class="ui-status-pill" data-status="overtime">+{{ row.overtime }}h</span> } @else { <span class="text-muted">—</span> }
       }
       @case ('status') {
         @let m = statusMeta(row.status);
-        <span class="att-pill" [attr.data-status]="row.status">
+        <span class="ui-status-pill" [attr.data-status]="row.status">
           <i [class]="m.icon"></i> {{ m.label }}
         </span>
       }

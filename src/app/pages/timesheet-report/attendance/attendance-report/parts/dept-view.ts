@@ -10,15 +10,15 @@ import { StripItem, SummaryStrip } from './summary-strip';
   template: `
     <app-att-summary-strip class="mb-3" label="Department summary" [items]="strip()" />
 
-    <section class="card-custom att-register">
+    <section class="card-custom overflow-hidden">
       <div class="data-table-wrap">
-        <table class="data-table att-dept-table">
+        <table class="data-table data-table-left">
           <thead>
             <tr>
               <th>Department</th>
               <th class="text-end">People</th>
-              <th class="att-col-rate">Attendance</th>
-              <th class="att-col-stack">Breakdown</th>
+              <th class="col-rate">Attendance</th>
+              <th class="col-stack">Breakdown</th>
               <th class="text-end">Late</th>
               <th class="text-end">Leave</th>
               <th class="text-end">Absent</th>
@@ -29,22 +29,22 @@ import { StripItem, SummaryStrip } from './summary-strip';
           </thead>
           <tbody>
             @for (d of store.deptRows(); track d.name) {
-            <tr class="att-row-link" (click)="store.openDept(d.name)">
+            <tr role="button" class="row-link" (click)="store.openDept(d.name)">
               <td>
-                <span class="att-dept-name">
-                  <span class="att-dept-icon"><i [class]="d.icon"></i></span>
-                  <strong>{{ d.name }}</strong>
+                <span class="d-inline-flex align-items-center gap-2">
+                  <span class="ui-ico ui-ico--sm"><i [class]="d.icon"></i></span>
+                  <span class="cell-strong">{{ d.name }}</span>
                 </span>
               </td>
               <td class="text-end">{{ d.headcount }}</td>
-              <td class="att-col-rate">
-                <div class="att-rate">
-                  <span class="att-rate-bar"><span [style.width.%]="d.rate" [class.is-low]="d.rate < 80"></span></span>
-                  <span [class.text-warning]="d.rate < 80">{{ d.rate }}%</span>
+              <td class="col-rate">
+                <div class="rate-cell">
+                  <div class="ui-meter"><span [style.width.%]="d.rate" [class.is-warn]="d.rate < 80"></span></div>
+                  <span class="cell-strong">{{ d.rate }}%</span>
                 </div>
               </td>
-              <td class="att-col-stack">
-                <div class="att-stack" role="img"
+              <td class="col-stack">
+                <div class="ui-status-stack" role="img"
                   [attr.aria-label]="d.present + ' present, ' + d.late + ' late, ' + d.half + ' half day, ' + d.leave + ' leave, ' + d.absent + ' absent'">
                   @for (s of parts(d); track s.key) {
                     @if (s.n) { <span [attr.data-status]="s.key" [style.flex-grow]="s.n" [title]="s.label + ': ' + s.n"></span> }
@@ -55,9 +55,9 @@ import { StripItem, SummaryStrip } from './summary-strip';
               <td class="text-end">{{ d.leave || '—' }}</td>
               <td class="text-end" [class.text-danger]="d.absent > 0">{{ d.absent || '—' }}</td>
               <td class="text-end">{{ d.avgHours }}</td>
-              <td class="text-end">@if (d.overtime) { <span class="att-ot">+{{ d.overtime }}h</span> } @else { — }</td>
+              <td class="text-end">@if (d.overtime) { <span class="ui-status-pill" data-status="overtime">+{{ d.overtime }}h</span> } @else { — }</td>
               <td class="text-end">
-                <button type="button" class="att-step" [attr.aria-label]="'Open ' + d.name"
+                <button type="button" class="btn-icon btn-sm" [attr.aria-label]="'Open ' + d.name"
                   (click)="$event.stopPropagation(); store.openDept(d.name)">
                   <i class="bi bi-chevron-right"></i>
                 </button>
@@ -67,7 +67,7 @@ import { StripItem, SummaryStrip } from './summary-strip';
           </tbody>
         </table>
       </div>
-      <p class="att-table-note">
+      <p class="card-custom-footer justify-content-start field-hint m-0">
         Click a department to open its {{ openLabel[store.deptScope()] }}.
       </p>
     </section>

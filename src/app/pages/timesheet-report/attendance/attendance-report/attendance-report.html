@@ -9,47 +9,47 @@
      ONE TOOLBAR — report type · period · filters
 ========================================================== -->
 <div class="card-custom att-bar mb-3">
-  <div class="att-seg" role="tablist" aria-label="Report type">
-    <button type="button" role="tab" [class.active]="view === 'daily'" [attr.aria-selected]="view === 'daily'"
+  <div class="view-toggle" role="tablist" aria-label="Report type">
+    <button type="button" role="tab" class="view-toggle-btn" [class.active]="view === 'daily'" [attr.aria-selected]="view === 'daily'"
       (click)="store.view.set('daily')">
       <i class="bi bi-calendar-day"></i> Daily
     </button>
-    <button type="button" role="tab" [class.active]="view === 'weekly'" [attr.aria-selected]="view === 'weekly'"
+    <button type="button" role="tab" class="view-toggle-btn" [class.active]="view === 'weekly'" [attr.aria-selected]="view === 'weekly'"
       (click)="store.view.set('weekly')">
       <i class="bi bi-calendar-week"></i> Weekly
     </button>
-    <button type="button" role="tab" [class.active]="view === 'monthly'" [attr.aria-selected]="view === 'monthly'"
+    <button type="button" role="tab" class="view-toggle-btn" [class.active]="view === 'monthly'" [attr.aria-selected]="view === 'monthly'"
       (click)="store.view.set('monthly')">
       <i class="bi bi-calendar3"></i> Monthly
     </button>
-    <button type="button" role="tab" [class.active]="view === 'dept'" [attr.aria-selected]="view === 'dept'"
+    <button type="button" role="tab" class="view-toggle-btn" [class.active]="view === 'dept'" [attr.aria-selected]="view === 'dept'"
       (click)="store.view.set('dept')">
       <i class="bi bi-building"></i> Department
     </button>
   </div>
 
   <div class="att-period" role="group" aria-label="Period">
-    <button type="button" class="att-step" (click)="store.stepPeriod(-1)" [attr.aria-label]="'Previous ' + periodName()">
+    <button type="button" class="btn-icon btn-sm" (click)="store.stepPeriod(-1)" [attr.aria-label]="'Previous ' + periodName()">
       <i class="bi bi-chevron-left"></i>
     </button>
-    <span class="att-period-label">{{ periodLabel() }}</span>
-    <button type="button" class="att-step" (click)="store.stepPeriod(1)" [disabled]="store.atLatest()"
+    <span class="att-period-label cell-strong">{{ periodLabel() }}</span>
+    <button type="button" class="btn-icon btn-sm" (click)="store.stepPeriod(1)" [disabled]="store.atLatest()"
       [attr.aria-label]="'Next ' + periodName()">
       <i class="bi bi-chevron-right"></i>
     </button>
     @if (!store.atLatest()) {
-    <button type="button" class="att-today" (click)="store.goToday()">Today</button>
+    <button type="button" class="btn btn-outline-primary btn-xs" (click)="store.goToday()">Today</button>
     }
   </div>
 
   <div class="att-filters">
     @if (view === 'dept') {
-    <div class="att-seg att-seg-sm" role="tablist" aria-label="Department scope">
-      <button type="button" role="tab" [class.active]="store.deptScope() === 'day'"
+    <div class="view-toggle" role="tablist" aria-label="Department scope">
+      <button type="button" role="tab" class="view-toggle-btn" [class.active]="store.deptScope() === 'day'"
         [attr.aria-selected]="store.deptScope() === 'day'" (click)="store.deptScope.set('day')">Day</button>
-      <button type="button" role="tab" [class.active]="store.deptScope() === 'week'"
+      <button type="button" role="tab" class="view-toggle-btn" [class.active]="store.deptScope() === 'week'"
         [attr.aria-selected]="store.deptScope() === 'week'" (click)="store.deptScope.set('week')">Week</button>
-      <button type="button" role="tab" [class.active]="store.deptScope() === 'month'"
+      <button type="button" role="tab" class="view-toggle-btn" [class.active]="store.deptScope() === 'month'"
         [attr.aria-selected]="store.deptScope() === 'month'" (click)="store.deptScope.set('month')">Month</button>
     </div>
     } @else {

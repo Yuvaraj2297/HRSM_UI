@@ -2183,6 +2183,19 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   }
 }
 
+/* dense grid (month registers, 30+ narrow columns) */
+:root .data-table-dense {
+  --table-cell-px: 4px;
+  --table-cell-py: 6px;
+  --table-font: 12.5px;
+
+  > thead > tr > :is(th, td) { font-size: 11.5px; }
+}
+
+/* calendar-style columns: weekend shading, today marker */
+:root :is(#{$table}) > :is(thead, tbody) > tr > .is-weekend { background: color-mix(in srgb, var(--bg-muted) 55%, transparent); }
+:root :is(#{$table}) > thead > tr > .is-today { color: var(--primary-dark); box-shadow: inset 0 -2px 0 var(--primary); }
+
 /* frozen columns in a wide scrolling table: add .is-sticky to the th/td and set
    `left` per column in the page (layout); the background keeps rows opaque */
 :root :is(#{$table}) > :is(thead, tbody) > tr > .is-sticky {

@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { STATUS_META, Status, fmtDate, fmtTime, initials } from '../attendance.model';
 import { AttendanceStore } from '../attendance.store';
@@ -7,7 +8,7 @@ import { StripItem, SummaryStrip } from './summary-strip';
 @Component({
   selector: 'app-att-monthly-view',
   standalone: true,
-  imports: [SummaryStrip],
+  imports: [NgClass, SummaryStrip],
   templateUrl: './monthly-view.html',
   styleUrl: './parts.scss',
 })

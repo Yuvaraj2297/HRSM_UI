@@ -22,9 +22,9 @@ interface Punch {
       <div class="modal-header">
         <div class="d-flex align-items-center gap-2">
           @if (r.avatar) {
-            <img [src]="r.avatar" [alt]="r.name" class="rounded-circle att-avatar" />
+            <img [src]="r.avatar" [alt]="r.name" class="ui-avatar" />
           } @else {
-            <span class="emp-initials-avatar att-initials">{{ initials(r.name) }}</span>
+            <span class="ui-avatar">{{ initials(r.name) }}</span>
           }
           <div>
             <h5 class="modal-title">{{ r.name }}</h5>
@@ -37,26 +37,26 @@ interface Punch {
       </div>
 
       <div class="modal-body">
-        <dl class="tl-summary">
-          <div><dt>Worked</dt><dd>{{ r.hours }}h</dd></div>
-          <div><dt>Breaks</dt><dd>{{ totals().breaks }}m</dd></div>
-          <div><dt>Lunch</dt><dd>{{ totals().lunch }}m</dd></div>
-          <div><dt>Status</dt><dd><span class="att-pill" [attr.data-status]="r.status"><i [class]="meta[r.status].icon"></i> {{ meta[r.status].label }}</span></dd></div>
-        </dl>
+        <div class="ui-meta-grid ui-meta-grid--4 mb-3">
+          <div><div class="ui-meta-label">Worked</div><div class="ui-meta-value">{{ r.hours }}h</div></div>
+          <div><div class="ui-meta-label">Breaks</div><div class="ui-meta-value">{{ totals().breaks }}m</div></div>
+          <div><div class="ui-meta-label">Lunch</div><div class="ui-meta-value">{{ totals().lunch }}m</div></div>
+          <div><div class="ui-meta-label">Status</div><div class="ui-meta-value"><span class="ui-status-pill" [attr.data-status]="r.status"><i [class]="meta[r.status].icon"></i> {{ meta[r.status].label }}</span></div></div>
+        </div>
 
-        <ol class="tl-list">
+        <ol class="ui-timeline">
           @for (p of punches(); track p.at) {
-          <li class="tl-item" [attr.data-kind]="p.kind">
-            <span class="tl-node"><i [class]="p.icon"></i></span>
-            <div class="tl-card">
+          <li class="ui-timeline-item" [class.stat-tone-amber]="p.kind === 'break'" [class.stat-tone-teal]="p.kind === 'lunch'">
+            <span class="ui-timeline-node"><i [class]="p.icon"></i></span>
+            <div class="ui-timeline-card">
               <div>
-                <div class="tl-label">{{ p.label }}</div>
-                <div class="tl-meta">{{ p.meta }}</div>
+                <div class="cell-strong">{{ p.label }}</div>
+                <div class="ui-cell-sub">{{ p.meta }}</div>
               </div>
-              <time class="tl-time">{{ fmtTime(p.at) }}</time>
+              <time class="cell-strong">{{ fmtTime(p.at) }}</time>
             </div>
             @if (p.gapAfter) {
-            <div class="tl-gap" [class.is-long]="p.gapAfter >= 40"><i class="bi bi-hourglass-split"></i> {{ p.gapAfter }}m away</div>
+            <span class="ui-tag" [class.tone-warning]="p.gapAfter >= 40"><i class="bi bi-hourglass-split"></i> {{ p.gapAfter }}m away</span>
             }
           </li>
           }
@@ -73,7 +73,6 @@ interface Punch {
     </div>
     }
   `,
-  styleUrl: './parts.scss',
 })
 export class PunchTimeline {
   private readonly store = inject(AttendanceStore);

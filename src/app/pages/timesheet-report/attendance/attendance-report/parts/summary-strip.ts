@@ -18,15 +18,15 @@ export interface StripItem {
   selector: 'app-att-summary-strip',
   standalone: true,
   template: `
-    <div class="card-custom strip" role="group" [attr.aria-label]="label()">
+    <div class="card-custom ui-strip" role="group" [attr.aria-label]="label()">
       @for (it of items(); track it.key) {
         @if (clickable()) {
-          <button type="button" class="strip-item" [class.active]="active() === it.key"
+          <button type="button" class="ui-strip-item" [class.active]="active() === it.key"
             [attr.aria-pressed]="active() === it.key" (click)="pick.emit(active() === it.key ? null : it.key)">
             <ng-container *ngTemplateOutlet="body; context: { $implicit: it }" />
           </button>
         } @else {
-          <div class="strip-item">
+          <div class="ui-strip-item">
             <ng-container *ngTemplateOutlet="body; context: { $implicit: it }" />
           </div>
         }
@@ -34,16 +34,15 @@ export interface StripItem {
     </div>
 
     <ng-template #body let-it>
-      <span class="strip-label">
-        @if (it.tone) { <span class="strip-dot" [attr.data-status]="it.tone"></span> }
+      <span class="ui-strip-label">
+        @if (it.tone) { <span class="ui-strip-dot" [attr.data-status]="it.tone"></span> }
         {{ it.label }}
       </span>
-      <span class="strip-value">{{ it.value }}</span>
-      @if (it.hint) { <span class="strip-hint">{{ it.hint }}</span> }
+      <span class="ui-strip-value">{{ it.value }}</span>
+      @if (it.hint) { <span class="ui-strip-hint">{{ it.hint }}</span> }
     </ng-template>
   `,
   imports: [NgTemplateOutlet],
-  styleUrl: './parts.scss',
 })
 export class SummaryStrip {
   readonly items = input.required<StripItem[]>();

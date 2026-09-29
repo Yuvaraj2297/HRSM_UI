@@ -1,10 +1,10 @@
 <app-att-summary-strip class="mb-3" label="Weekly summary" [items]="strip()" />
 
-<section class="card-custom att-register">
-  <header class="att-register-head">
-    <ul class="att-legend" aria-label="Legend">
+<section class="card-custom overflow-hidden">
+  <header class="card-custom-header">
+    <ul class="ui-legend m-0 p-0 list-unstyled" aria-label="Legend">
       @for (s of legend; track s) {
-      <li><span class="att-cell" [attr.data-status]="s">{{ meta[s].short }}</span> {{ meta[s].label }}</li>
+      <li class="ui-legend-item"><span class="ui-status-code" [attr.data-status]="s">{{ meta[s].short }}</span> {{ meta[s].label }}</li>
       }
     </ul>
     <button type="button" class="btn btn-outline-primary btn-sm" (click)="exportCsv()">
@@ -14,7 +14,7 @@
   </header>
 
   <div class="data-table-wrap">
-    <table class="data-table data-table-sm att-register-table">
+    <table class="data-table data-table-sm">
       <thead>
         <tr>
           <th class="att-col-emp">Employee</th>
@@ -22,7 +22,7 @@
             @let h = dayHead(d);
             <th class="text-center" [class.is-today]="d === store.today">
               <div>{{ h.dow }}</div>
-              <small>{{ h.day }}</small>
+              <div class="ui-cell-sub">{{ h.day }}</div>
             </th>
           }
           <th class="text-end">Attended</th>
@@ -35,40 +35,40 @@
         @for (r of store.weeklyRows(); track r.empId) {
         <tr>
           <td class="att-col-emp">
-            <button type="button" class="att-emp-link" (click)="store.calendarEmpId.set(r.empId)"
+            <button type="button" class="ui-media p-0" (click)="store.calendarEmpId.set(r.empId)"
               [title]="'Monthly calendar — ' + r.name">
               @if (r.avatar) {
-                <img [src]="r.avatar" [alt]="r.name" class="rounded-circle att-avatar" />
+                <img [src]="r.avatar" [alt]="r.name" class="ui-avatar" />
               } @else {
-                <span class="emp-initials-avatar att-initials">{{ initials(r.name) }}</span>
+                <span class="ui-avatar">{{ initials(r.name) }}</span>
               }
               <span>
-                <span class="emp-name-line d-block">{{ r.name }}</span>
-                <span class="emp-code-line">{{ r.dept }}</span>
+                <span class="ui-media-title d-block">{{ r.name }}</span>
+                <span class="ui-media-sub">{{ r.dept }}</span>
               </span>
             </button>
           </td>
           @for (d of r.days; track $index) {
           <td class="text-center">
             @if (d) {
-              <span class="att-cell" [attr.data-status]="d.status"
+              <span class="ui-status-code" [attr.data-status]="d.status"
                 [title]="meta[d.status].label + (d.checkIn !== null ? ' · ' + fmtTime(d.checkIn) + ' – ' + fmtTime(d.checkOut) + ' · ' + d.hours + 'h' : '')">
                 {{ meta[d.status].short }}
               </span>
             } @else {
-              <span class="att-cell is-future" title="Not yet">·</span>
+              <span class="ui-status-code is-future" title="Not yet">·</span>
             }
           </td>
           }
           <td class="text-end cell-strong">{{ r.attended }}/{{ r.working }}</td>
           <td class="text-end">{{ r.hours }}h</td>
           <td class="text-end">
-            @if (r.overtime) { <span class="att-ot">+{{ r.overtime }}h</span> } @else { <span class="text-muted">—</span> }
+            @if (r.overtime) { <span class="ui-status-pill" data-status="overtime">+{{ r.overtime }}h</span> } @else { <span class="text-muted">—</span> }
           </td>
           <td class="att-col-rate">
-            <div class="att-rate">
-              <span class="att-rate-bar"><span [style.width.%]="r.rate" [class.is-low]="r.rate < 80"></span></span>
-              <span>{{ r.rate }}%</span>
+            <div class="rate-cell">
+              <div class="ui-meter"><span [style.width.%]="r.rate" [class.is-warn]="r.rate < 80"></span></div>
+              <span class="cell-strong">{{ r.rate }}%</span>
             </div>
           </td>
         </tr>
