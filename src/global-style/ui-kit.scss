@@ -1942,6 +1942,8 @@ button.ui-media {
   &.is-danger:hover { background: var(--danger-soft); color: var(--danger); }
 }
 
+.ui-menu-item.active { background: var(--primary-soft); color: var(--primary-dark); font-weight: 600; }
+
 .ui-menu > hr { margin: 4px 0; border-color: var(--border); opacity: 1; }
 
 /* a menu placed at viewport coordinates (so a scrolling table never clips it) */
@@ -2058,6 +2060,31 @@ button.ui-media {
     &[data-status='weekoff'] { background: transparent; }
   }
 }
+
+/* a status chip that is also a button (editable grids) */
+button.ui-status-code {
+  position: relative;
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &:hover { border-color: var(--primary); }
+  &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+  /* unsaved change marker */
+  &.is-changed::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 7px;
+    height: 7px;
+    border: 1.5px solid var(--surface);
+    border-radius: 50%;
+    background: var(--primary);
+  }
+}
+
+.ui-legend-dot[data-status] { background: var(--st); }
 
 .ui-legend .ui-status-code { min-width: 24px; height: 20px; margin-right: 4px; font-size: 10.5px; }
 

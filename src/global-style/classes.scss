@@ -118,7 +118,7 @@ $card: '.card-custom';
 }
 
 /* title + actions: title grows, actions sit at the end */
-.card-custom-header > :is(.card-custom-title, .card-title):not(:last-child) {
+.card-custom-header > :is(.card-custom-title, .card-title) {
   margin-right: auto;
 }
 .card-custom-header > .card-header-icon + :is(.card-custom-title, .card-title) {
@@ -2196,6 +2196,22 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   > :is(#{$table}) {
     margin-bottom: 0;
   }
+}
+
+/* sortable column header: <th><button class="ui-th-sort">Label <i class="bi bi-arrow-down-up"></i></button></th> */
+.ui-th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  > i { color: var(--text-muted); font-size: 11px; }
+  &.is-sorted > i { color: var(--primary); }
 }
 
 /* group heading row inside a table body (permission matrix, grouped lists) */
