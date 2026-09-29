@@ -1,20 +1,9 @@
 <!-- KPI filter strip -->
-<div class="row g-3 mb-3">
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="All Tickets" value="{{ kpiCounts.all }}" icon="bi bi-ticket-perforated" tone="primary" [clickable]="true" (click)="setKpiFilter('all')" [active]="activeKpiFilter === 'all'" />
-  </div>
-
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="Open / Pending" value="{{ kpiCounts.open }}" icon="bi bi-inbox" tone="primary" [clickable]="true" (click)="setKpiFilter('open')" [active]="activeKpiFilter === 'open'" />
-  </div>
-
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="In Progress / Waiting" value="{{ kpiCounts.progress }}" icon="bi bi-hourglass-split" tone="primary" [clickable]="true" (click)="setKpiFilter('progress')" [active]="activeKpiFilter === 'progress'" />
-  </div>
-
-  <div class="col-sm-6 col-xl-3">
-    <app-stat-card label="Resolved / Closed" value="{{ kpiCounts.resolved }}" icon="bi bi-check-circle" tone="primary" [clickable]="true" (click)="setKpiFilter('resolved')" [active]="activeKpiFilter === 'resolved'" />
-  </div>
+<div class="stat-grid mt-kpis">
+  <app-stat-card label="All Tickets" value="{{ kpiCounts.all }}" icon="bi bi-ticket-perforated" tone="primary" [clickable]="true" (click)="setKpiFilter('all')" [active]="activeKpiFilter === 'all'" />
+  <app-stat-card label="Open / Pending" value="{{ kpiCounts.open }}" icon="bi bi-inbox" tone="primary" [clickable]="true" (click)="setKpiFilter('open')" [active]="activeKpiFilter === 'open'" />
+  <app-stat-card label="In Progress / Waiting" value="{{ kpiCounts.progress }}" icon="bi bi-hourglass-split" tone="primary" [clickable]="true" (click)="setKpiFilter('progress')" [active]="activeKpiFilter === 'progress'" />
+  <app-stat-card label="Resolved / Closed" value="{{ kpiCounts.resolved }}" icon="bi bi-check-circle" tone="primary" [clickable]="true" (click)="setKpiFilter('resolved')" [active]="activeKpiFilter === 'resolved'" />
 </div>
 
 <!-- Main Table Card -->
@@ -38,8 +27,8 @@
   </div>
 
   <!-- Table -->
-  <div class="table-responsive table-modern-wrap overflow-auto column-border">
-    <table class="table-modern w-100 mb-0">
+  <div class="table-responsive table-modern-wrap column-border mt-table-wrap">
+    <table class="table-modern w-100 mb-0 mt-table">
       <thead>
         <tr>
           <th class="text-nowrap">Ticket ID</th>
@@ -65,7 +54,7 @@
               <div class="e-sub">Create a ticket and it will appear here.</div>
               <div class="mt-3">
                 <a routerLink="/helpdesk/ticketing" class="btn btn-primary btn-sm">
-                  <i class="bi bi-plus-lg me-1"></i> Create Ticket
+                  <i class="bi bi-plus-lg"></i> Create Ticket
                 </a>
               </div>
             </div>
@@ -86,7 +75,7 @@
           <td class="text-truncate fw-semibold mtk-subject" [title]="t.subject">
             {{ t.subject }}
           </td>
-          <td>
+          <td data-label="Priority">
             <span class="tkt-priority-badge" [style.background]="ticketService.priorityMeta(t.priority).bg"
               [style.color]="ticketService.priorityMeta(t.priority).color">
               {{ t.priority }}
@@ -96,19 +85,19 @@
             @if (t.assignedTo) {
             <span>{{ t.assignedTo }}</span>
             } @else {
-            <span class="text-muted">—</span>
+            <span class="text-muted">Unassigned</span>
             }
           </td>
-          <td>
+          <td data-label="SLA">
             @if (ticketService.slaState(t) === 'breached') {
-            <span class="badge rounded-pill badge-sla-breached">Breached</span>
+            <span class="sla-badge sla-breached">Breached</span>
             } @else if (ticketService.slaState(t) === 'at-risk') {
-            <span class="badge rounded-pill badge-sla-risk">At Risk</span>
+            <span class="sla-badge sla-risk">At Risk</span>
             } @else {
-            <span class="badge rounded-pill badge-sla-ok">On Track</span>
+            <span class="sla-badge sla-ok">On Track</span>
             }
           </td>
-          <td>
+          <td data-label="Status">
             <span class="tkt-status-badge" [style.background]="ticketService.statusMeta(t.status).bg"
               [style.color]="ticketService.statusMeta(t.status).color">
               <i [class]="'bi ' + ticketService.statusMeta(t.status).icon"></i>
@@ -165,8 +154,6 @@
       </ul>
     </nav>
     }
-  </div>
-</div>
 
 <!-- =========================================================================
      FULLSCREEN TICKET VIEW

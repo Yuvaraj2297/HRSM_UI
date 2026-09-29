@@ -1,14 +1,13 @@
-import { AppStatCard } from '../../../../shared/stat-card/stat-card';
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
 import {
-  EmployeeTicketService,
   EmployeeTicket,
-  EmployeeTicketConversation
+  EmployeeTicketService
 } from '../../../../services/employee-ticket.service';
+import { Breadcrumb } from '../../../../shared/breadcrumb/breadcrumb';
+import { AppStatCard } from '../../../../shared/stat-card/stat-card';
 
 import { AppSelect } from '../../../../shared/app-select/app-select';
 interface SelectOption {
