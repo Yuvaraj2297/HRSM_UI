@@ -71,7 +71,7 @@
    — status & summaries —
      Status colour        [data-status="present|late|half|leave|absent|weekoff|overtime"] sets --st
      Status pill          .ui-status-pill[data-status] (> i + text)
-     Status code chip     .ui-status-code[data-status][.ui-status-code--sm][.is-future]
+     Status code chip     .ui-status-code[data-status | .stat-tone-*][.ui-status-code--sm | --stack][.is-future]
      Status stack bar     .ui-status-stack > span[data-status] (flex-grow = count)
      Summary strip        .ui-strip > .ui-strip-item[.active] (> .ui-strip-label (> .ui-strip-dot) + .ui-strip-value + .ui-strip-hint)
      Timeline             ol.ui-timeline > li.ui-timeline-item[.stat-tone-*] > .ui-timeline-node + .ui-timeline-card
@@ -355,7 +355,8 @@
   cursor: pointer;
   transition: border-color .15s ease, background-color .15s ease;
 
-  &:hover {
+  &:hover,
+  &.is-drag {
     border-color: var(--primary);
     background: var(--primary-soft);
   }
@@ -2020,9 +2021,10 @@ button.ui-media {
 [data-status='overtime'] { --st: var(--teal-350); }
 
 /* tinted fill + darker text of the same hue */
+/* colour comes from [data-status] (--st) or any .stat-tone-* class (--tone) */
 %ui-status-tint {
-  background: color-mix(in srgb, var(--st, var(--border-strong)) 15%, transparent);
-  color: color-mix(in srgb, var(--st, var(--text-muted)) 78%, black);
+  background: color-mix(in srgb, var(--st, var(--tone, var(--border-strong))) 15%, transparent);
+  color: color-mix(in srgb, var(--st, var(--tone, var(--text-muted))) 78%, black);
 }
 
 .ui-status-pill {
@@ -2055,6 +2057,17 @@ button.ui-media {
   vertical-align: middle;
 
   &.is-future { background: transparent; color: var(--text-faint); }
+
+  /* two lines: code over a time or note */
+  &--stack {
+    flex-direction: column;
+    gap: 1px;
+    height: auto;
+    min-width: 64px;
+    padding: 4px 10px;
+
+    small { font-size: 9.5px; font-weight: 500; opacity: .85; }
+  }
 
   /* month grids: smaller; absent and leave solid so gaps jump out */
   &--sm {

@@ -125,7 +125,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Classification <span class="text-danger">*</span>
           </label>
-          <app-select class="modal-p-select" formControlName="category" [options]="categoryOptions" optionLabel="label" optionValue="value" placeholder="Select classification" />
+          <app-select formControlName="category" [options]="categoryOptions" optionLabel="label" optionValue="value" placeholder="Select classification" />
         </div>
 
         <!-- Annual Interest Rate -->
@@ -180,7 +180,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Min Service Required
           </label>
-          <app-select class="modal-p-select" formControlName="eligibility" [options]="eligibilityOptions" optionLabel="label" optionValue="value" placeholder="Select eligibility criteria" />
+          <app-select formControlName="eligibility" [options]="eligibilityOptions" optionLabel="label" optionValue="value" placeholder="Select eligibility criteria" />
         </div>
 
         <!-- Status -->
@@ -188,7 +188,7 @@
           <label class="form-label fw-semibold text-dark small mb-1">
             Status
           </label>
-          <app-select class="modal-p-select" formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" />
+          <app-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" />
         </div>
       </div>
     </div>

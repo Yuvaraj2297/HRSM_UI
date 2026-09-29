@@ -76,11 +76,11 @@ export interface ShiftChangeRequest {
 export class ShiftSchedule implements OnInit {
   // Master shifts (Enable shifts only assignable)
   shifts: ShiftMaster[] = [
-    { id: 1, shift_name: 'General Shift', shift_code: 'GEN', start_time: '09:30 AM', end_time: '06:30 PM', status: 'Enable', badge_class: 'shift-badge-gen' },
-    { id: 2, shift_name: 'Morning Shift', shift_code: 'MOR', start_time: '06:00 AM', end_time: '02:00 PM', status: 'Enable', badge_class: 'shift-badge-mor' },
-    { id: 3, shift_name: 'Evening Shift', shift_code: 'EVE', start_time: '02:00 PM', end_time: '10:00 PM', status: 'Enable', badge_class: 'shift-badge-eve' },
-    { id: 4, shift_name: 'Night Shift', shift_code: 'NGT', start_time: '10:00 PM', end_time: '06:00 AM', status: 'Enable', badge_class: 'shift-badge-ngt' },
-    { id: 5, shift_name: 'Weekend Support Shift', shift_code: 'WKD', start_time: '10:00 AM', end_time: '07:00 PM', status: 'Disable', badge_class: 'shift-badge-wkd' },
+    { id: 1, shift_name: 'General Shift', shift_code: 'GEN', start_time: '09:30 AM', end_time: '06:30 PM', status: 'Enable', badge_class: 'stat-tone-primary' },
+    { id: 2, shift_name: 'Morning Shift', shift_code: 'MOR', start_time: '06:00 AM', end_time: '02:00 PM', status: 'Enable', badge_class: 'stat-tone-blue' },
+    { id: 3, shift_name: 'Evening Shift', shift_code: 'EVE', start_time: '02:00 PM', end_time: '10:00 PM', status: 'Enable', badge_class: 'stat-tone-amber' },
+    { id: 4, shift_name: 'Night Shift', shift_code: 'NGT', start_time: '10:00 PM', end_time: '06:00 AM', status: 'Enable', badge_class: 'stat-tone-violet' },
+    { id: 5, shift_name: 'Weekend Support Shift', shift_code: 'WKD', start_time: '10:00 AM', end_time: '07:00 PM', status: 'Disable', badge_class: 'stat-tone-pink' },
   ];
 
   // Dummy Employee dataset matching PHP
