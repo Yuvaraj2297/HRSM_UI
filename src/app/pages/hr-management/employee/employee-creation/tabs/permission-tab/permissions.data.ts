@@ -703,19 +703,3 @@ export const ROLE_DESCRIPTIONS: Record<string, string> = {
 
   admin: '',
 };
-
-/* =========================================================
-   ROLE BADGE CLASS
-========================================================= */
-
-export const ROLE_BADGE_CLASS: Record<string, string> = {
-  employee: 'ne-role-employee',
-
-  manager: 'ne-role-manager',
-
-  hr_admin: 'ne-role-hr',
-
-  finance: 'ne-role-finance',
-
-  admin: 'ne-role-admin',
-};

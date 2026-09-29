@@ -11,7 +11,6 @@ import {
   PERMISSION_GROUPS,
   PermGroup,
   PermModule,
-  ROLE_BADGE_CLASS,
   ROLE_DESCRIPTIONS
 } from './permissions.data';
 
@@ -95,22 +94,6 @@ export class PermissionsTab {
         ?.value;
 
     return ROLE_DESCRIPTIONS[role] || '';
-
-  }
-
-
-  /* =========================================================
-     ROLE BADGE
-  ========================================================= */
-
-  get badgeClass(): string {
-
-    const role =
-      this.permissions
-        .get('role')
-        ?.value;
-
-    return ROLE_BADGE_CLASS[role] || '';
 
   }
 

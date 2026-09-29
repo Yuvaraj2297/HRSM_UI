@@ -1,30 +1,29 @@
-<div class="ne-section-title"><span class="form-section-icon"><i class="bi bi-arrow-repeat"></i></span>Leave Auto-Update Rules</div>
+<div class="form-section-title"><span class="form-section-icon"><i class="bi bi-arrow-repeat"></i></span>Leave Auto-Update Rules</div>
 
 <div class="row g-3 mb-2">
   <div class="col-lg-4 col-md-6">
     <label class="form-label">Leave Type</label>
     <app-select [(ngModel)]="pendingType" [ngModelOptions]="{ standalone: true }" (ngModelChange)="addLeaveType($event)" [options]="availableLeaveTypes" placeholder="Select Leave Type" />
-    <small class="rules-hint2">
+    <small class="field-hint d-block">
       <i class="bi bi-info-circle me-1"></i> Select a leave type to add it to the rules table.
     </small>
   </div>
 </div>
 
-<div class="ne-kyc-table-wrapper" [formGroup]="form">
-  <table class="ne-kyc-table" formArrayName="leaveRules">
+<div class="data-table-wrap" [formGroup]="form">
+  <table class="data-table data-table-left" formArrayName="leaveRules">
     <thead>
       <tr>
-        <th style="width:22%;">&nbsp;</th>
+        <th class="col-type">Leave Type</th>
         <th class="text-center">Trainee</th>
         <th class="text-center">Probation</th>
         <th class="text-center">Confirmation</th>
         <th class="text-center">No. of Days</th>
-        <th style="width:40px;">&nbsp;</th>
-      </tr>
+              </tr>
     </thead>
     <tbody>
       <tr *ngFor="let row of rules.controls; let i = index" [formGroupName]="i">
-        <td class="">{{ row.value.type }}</td>
+        <td class="cell-strong">{{ row.value.type }}</td>
 
         <td class="text-center">
           <p-toggleswitch formControlName="trainee" (onChange)="cascade(i, 'trainee')" />
@@ -43,7 +42,7 @@
       </tr>
 
       <tr *ngIf="!rules.controls.length">
-        <td colspan="6" class="text-center rules-empty">No leave types added yet. Use the dropdown above to add one.</td>
+        <td colspan="5" class="data-table-empty">No leave types added yet. Use the dropdown above to add one.</td>
       </tr>
     </tbody>
   </table>

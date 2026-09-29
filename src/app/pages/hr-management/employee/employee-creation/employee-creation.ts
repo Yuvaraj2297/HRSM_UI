@@ -219,6 +219,11 @@ export class EmployeeCreation implements AfterViewInit {
     ];
   }
 
+  /** status pill colour for the overall verification state */
+  get vaPillClass(): string {
+    return { pending: 'status-pending', verified: 'status-pending', approved: 'status-approved', rejected: 'status-rejected' }[this.vaStatus];
+  }
+
   vaStateLabel(state: VaStageState): string {
     return { done: 'Completed', current: 'In progress', todo: 'Waiting', rejected: 'Rejected' }[state];
   }

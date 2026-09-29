@@ -183,6 +183,11 @@ $card: '.card-custom';
   text-decoration: none;
 }
 
+/* stacked sections inside one form get room between them */
+:root :is(.form-section-title, .ne-section-title):not(:first-child) {
+  margin-top: 32px;
+}
+
 .form-section-icon {
   display: inline-grid;
   place-items: center;
@@ -2191,6 +2196,17 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
   > :is(#{$table}) {
     margin-bottom: 0;
   }
+}
+
+/* group heading row inside a table body (permission matrix, grouped lists) */
+:root :is(#{$table}) > tbody > tr.row-group > td {
+  padding-block: 8px;
+  background: var(--bg-soft);
+  color: var(--primary-dark);
+  font-size: 12.5px;
+  font-weight: 700;
+
+  i { margin-right: 6px; }
 }
 
 /* dense grid (month registers, 30+ narrow columns) */

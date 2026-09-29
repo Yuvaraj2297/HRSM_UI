@@ -21,13 +21,9 @@ const DEFAULT_LEAVE_TYPES = ['Casual Leave', 'Sick Leave'];
   imports: [AppSelect, CommonModule, ReactiveFormsModule, FormsModule, ToggleSwitchModule, InputTextModule],
   templateUrl: './leave-rules-tab.html',
   styles: [`
-    .rules-hint2 { display:block; margin-top:6px; font-size:12px; color:var(--aw-ink-500,var(--neutral-450)); }
-    .rules-note { font-size:11.5px; color:var(--aw-ink-500,var(--neutral-450)); margin-top:12px; }
-    .rules-empty { padding:24px 12px; color:var(--aw-ink-500,var(--neutral-450)); font-size:13px; }
-    .days-input {
-      width:110px; display:inline-block; text-align:center;
-      border-radius:999px; border-color:var(--primary); color:var(--primary); font-weight:600;
-    }
+    /* layout only */
+    .col-type { width: 22%; }
+    .days-input { width: 110px; display: inline-block; text-align: center; }
   `],
 })
 export class LeaveRulesTab implements OnInit {

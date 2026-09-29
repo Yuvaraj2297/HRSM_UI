@@ -1,8 +1,8 @@
-<!-- ===== Page header ===== -->
-<div class="ne-page-head">
-  <h1 class="page-title ne-title">Add New Employee</h1>
+<!-- Page header -->
+<div class="ui-page-head">
+  <h1 class="page-title">Add New Employee</h1>
 
-  <div class="ne-page-actions">
+  <div class="card-header-actions">
     <a href="assets/excel/HRMS Title Data.xlsx" download class="btn btn-outline-primary btn-sm">
       <i class="bi bi-download"></i> Sample Excel
     </a>
@@ -12,26 +12,22 @@
   </div>
 </div>
 
-<!-- ===== Parent tabs: the four sections of the wizard ===== -->
-<nav class="ne-groups" role="tablist" aria-label="Employee sections">
+<!-- Sections of the wizard -->
+<nav class="page-tabs mb-3" role="tablist" aria-label="Employee sections">
   @for (g of groups; track g.key; let gi = $index) {
-  <button type="button" role="tab" class="ne-group"
-    [class.active]="g === activeGroup" [class.done]="isGroupDone(g)"
+  <button type="button" role="tab" class="page-tab"
+    [class.active]="g === activeGroup" [class.completed]="isGroupDone(g)"
     [attr.aria-selected]="g === activeGroup" (click)="goToStep(g.steps[0])">
-    <span class="ne-group-num" aria-hidden="true">
-      @if (isGroupDone(g)) { <i class="bi bi-check-lg"></i> } @else { {{ gi + 1 }} }
-    </span>
-    <span class="ne-group-label"><i [class]="g.icon"></i> {{ g.label }}</span>
-    <span class="ne-group-meta">{{ g.steps.length }}</span>
+    @if (isGroupDone(g)) { <i class="bi bi-check-lg"></i> } @else { <i>{{ gi + 1 }}</i> }
+    {{ g.label }}
+    <span class="page-tab-count">{{ g.steps.length }}</span>
   </button>
   }
 </nav>
 
-<!-- ===== Wizard card ===== -->
-<div class="card-custom ne-card">
-
-  <!-- Child tabs: the steps of the selected section (global .page-tabs look) -->
-  <nav class="page-tabs page-tabs-sm ne-steps" role="tablist" [attr.aria-label]="activeGroup.label + ' steps'">
+<!-- Wizard card -->
+<div class="card-custom">
+  <nav class="page-tabs page-tabs-sm" role="tablist" [attr.aria-label]="activeGroup.label + ' steps'">
     @for (t of activeGroupTabs; track t.step) {
     <button type="button" role="tab" class="page-tab"
       [class.active]="current === t.step" [class.completed]="isStepDone(t.step)"
@@ -42,8 +38,7 @@
   </nav>
 
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-
-    <div class="ne-body">
+    <div class="card-custom-body">
       @switch (current) {
         @case (1) { <app-profile-tab /> }
         @case (2) { <app-permission-tab /> }
@@ -62,116 +57,100 @@
       }
     </div>
 
-    <!-- ===== Footer: stays at the bottom of the screen while the form scrolls ===== -->
-    <footer class="ne-footer">
-      <div class="ne-footer-status">
-        <div class="ne-footer-step">
-          Step {{ position }} of {{ total }} · <strong>{{ currentTab.label }}</strong>
-        </div>
-        <div class="ne-progress" role="progressbar" [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100">
+    <!-- stays at the bottom of the screen while the step scrolls -->
+    <footer class="ui-sticky-footer">
+      <div class="card-footer-note wizard-status">
+        Step {{ position }} of {{ total }} · <strong>{{ currentTab.label }}</strong>
+        <div class="ui-meter" role="progressbar" [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100">
           <span [style.width.%]="progress"></span>
         </div>
       </div>
 
-      <div class="ne-footer-actions">
-        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-
-        <button type="button" class="btn btn-outline-primary" [disabled]="position === 1" (click)="prev()">
-          <i class="bi bi-arrow-left"></i> Back
-        </button>
-
-        @if (!isLast) {
-        <button type="button" class="btn btn-primary" (click)="next()">
-          Save &amp; Continue <i class="bi bi-arrow-right"></i>
-        </button>
-        } @else {
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-check-lg"></i> Create Employee
-        </button>
-        }
-      </div>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      <button type="button" class="btn btn-outline-primary" [disabled]="position === 1" (click)="prev()">
+        <i class="bi bi-arrow-left"></i> Back
+      </button>
+      @if (!isLast) {
+      <button type="button" class="btn btn-primary" (click)="next()">
+        Save &amp; Continue <i class="bi bi-arrow-right"></i>
+      </button>
+      } @else {
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg"></i> Create Employee
+      </button>
+      }
     </footer>
   </form>
 </div>
 
-<!-- ===== Verification & Approval Status ===== -->
-<section class="card-custom ne-va-card" aria-labelledby="neVaTitle">
-  <header class="ne-va-head">
-    <span class="ne-va-head-icon"><i class="bi bi-shield-check"></i></span>
-    <div class="ne-va-head-text">
-      <h2 id="neVaTitle">Verification &amp; Approval</h2>
-      <p>The record goes live once it is verified and approved.</p>
+<!-- Verification & approval status -->
+<section class="card-custom mt-3" aria-labelledby="neVaTitle">
+  <header class="card-custom-header">
+    <span class="card-header-icon"><i class="bi bi-shield-check"></i></span>
+    <div class="me-auto">
+      <h2 class="card-custom-title" id="neVaTitle">Verification &amp; Approval</h2>
+      <p class="ui-page-sub">The record goes live once it is verified and approved.</p>
     </div>
-    <span class="ne-va-badge" [ngClass]="'status-' + vaStatus">
-      <span class="dot"></span>{{ vaStatus | titlecase }}
-    </span>
+    <span class="status-pill" [ngClass]="vaPillClass">{{ vaStatus | titlecase }}</span>
   </header>
 
-  <ol class="ne-va-flow">
-    @for (st of vaStages; track st.title; let i = $index) {
-    <li class="ne-va-stage" [ngClass]="'is-' + st.state">
-      <div class="ne-va-marker" aria-hidden="true">
-        @switch (st.state) {
-          @case ('done') { <i class="bi bi-check-lg"></i> }
-          @case ('rejected') { <i class="bi bi-x-lg"></i> }
-          @default { {{ i + 1 }} }
-        }
-      </div>
+  <div class="card-custom-body">
+    <ol class="ui-vsteps m-0 p-0">
+      @for (st of vaStages; track st.title; let i = $index) {
+      <li class="ui-vstep" [class.done]="st.state === 'done'" [class.current]="st.state === 'current'" [class.rejected]="st.state === 'rejected'">
+        <span class="ui-vstep-dot" aria-hidden="true">
+          @switch (st.state) {
+            @case ('done') { <i class="bi bi-check-lg"></i> }
+            @case ('rejected') { <i class="bi bi-x-lg"></i> }
+            @default { {{ i + 1 }} }
+          }
+        </span>
 
-      <div class="ne-va-stage-body">
-        <div class="ne-va-stage-head">
-          <span class="ne-va-stage-title"><i [class]="st.icon"></i> {{ st.title }}</span>
-          <span class="ne-va-state">{{ vaStateLabel(st.state) }}</span>
+        <div class="flex-grow-1 min-w-0">
+          <span class="ui-vstep-label"><i [class]="st.icon"></i> {{ st.title }} · {{ vaStateLabel(st.state) }}</span>
+          @if (st.note) {
+          <p class="field-hint m-0">{{ st.note }}</p>
+          } @else {
+          <div class="ui-kv mt-1">
+            <div class="ui-kv-row"><span>Assigned to</span><span class="ui-kv-val">{{ st.assignee || '—' }}</span></div>
+            <div class="ui-kv-row"><span>{{ st.doneLabel }}</span><span class="ui-kv-val">{{ st.doneBy || st.pending }}</span></div>
+            <div class="ui-kv-row"><span>Remarks</span><span class="ui-kv-val">{{ st.remarks || '—' }}</span></div>
+          </div>
+          }
         </div>
+      </li>
+      }
+    </ol>
 
-        @if (st.note) {
-          <p class="ne-va-note">{{ st.note }}</p>
-        } @else {
-          <dl class="ne-va-meta">
-            <dt>Assigned to</dt>
-            <dd>{{ st.assignee || '—' }}</dd>
-            <dt>{{ st.doneLabel }}</dt>
-            <dd [class.muted]="!st.doneBy">{{ st.doneBy || st.pending }}</dd>
-            <dt>Remarks</dt>
-            <dd [class.muted]="!st.remarks">{{ st.remarks || '—' }}</dd>
-          </dl>
-        }
+    @if (vaStatus === 'rejected') {
+    <div class="ui-banner is-danger mt-3" role="alert">
+      <span class="ui-banner-ico"><i class="bi bi-x-octagon"></i></span>
+      <div>
+        <div class="ui-banner-title">Rejected{{ va.rejectedBy ? ' by ' + va.rejectedBy : '' }}</div>
+        <div class="ui-banner-note">{{ va.rejectRemarks || 'No remarks given.' }}</div>
       </div>
-    </li>
-    }
-  </ol>
-
-  @if (vaStatus === 'rejected') {
-  <div class="ne-va-rejected" role="alert">
-    <i class="bi bi-x-octagon"></i>
-    <div>
-      <strong>Rejected{{ va.rejectedBy ? ' by ' + va.rejectedBy : '' }}</strong>
-      <span>{{ va.rejectRemarks || 'No remarks given.' }}</span>
     </div>
+    }
   </div>
-  }
 </section>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" #Offcanvas>
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title"><i class="bi bi-people me-2" style="color:var(--primary);"></i> Add Employees</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="employee-bulk-panel show">
-            <div class="employee-bulk-dropzone">
-                <div class="mode-icon"><i class="bi bi-cloud-arrow-up"></i></div>
-                <h6>Upload employee spreadsheet</h6>
-                <p>Drop your Excel or CSV file here, or <span class="browse-link">browse</span>.</p>
-                <div class="text-muted" style="font-size:11px;">Supports .xlsx, .xls, .csv</div>
-            </div>
-            <div class="employee-upload-file"><i class="bi bi-file-earmark-excel"></i><span id="employeeUploadFileName"></span></div>
-            <div class="employee-upload-count"><span><i class="bi bi-people me-1"></i> Employees found</span><strong>24</strong></div>
-        </div>
-        <input type="file"  accept=".xlsx,.xls,.csv" hidden>
-    </div>
-    <div class="offcanvas-footer p-3 border-top d-flex justify-content-end">
-        <button type="button" class="btn btn-reject">Cancel</button>
-        <button type="button" class="btn btn-primary ms-2" disabled><i class="bi bi-check-lg"></i> Confirm Upload</button>
-    </div>
+<!-- Bulk upload (Bootstrap offcanvas, opened from the TS) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" #Offcanvas aria-labelledby="bulkTitle">
+  <div class="ui-drawer-head">
+    <h5 class="ui-drawer-title" id="bulkTitle"><span class="ui-ico ui-ico--sm"><i class="bi bi-people"></i></span> Add Employees</h5>
+    <button type="button" class="btn-close-custom" data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="ui-drawer-body">
+    <label class="ui-file-drop d-block">
+      <i class="bi bi-cloud-arrow-up"></i>
+      <div class="ui-file-drop-text">Drop your Excel or CSV file here, or browse</div>
+      <div class="ui-file-drop-hint">Supports .xlsx, .xls, .csv</div>
+      <input type="file" accept=".xlsx,.xls,.csv" hidden>
+    </label>
+    <div class="ui-info-row mt-3"><span><i class="bi bi-people"></i> Employees found</span><span class="ui-info-val">24</span></div>
+  </div>
+  <div class="ui-drawer-foot">
+    <button type="button" class="btn btn-cancel" data-bs-dismiss="offcanvas">Cancel</button>
+    <button type="button" class="btn btn-primary" disabled><i class="bi bi-check-lg"></i> Confirm Upload</button>
+  </div>
 </div>

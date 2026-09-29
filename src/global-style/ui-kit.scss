@@ -23,6 +23,9 @@
      Media row            .ui-media > .ui-media-ico + (.ui-media-title + .ui-media-sub)
      Key/value rows       .ui-kv > .ui-kv-row > span + .ui-kv-val
      Check list           ul.ui-check-list > li > i + text
+     Checkbox grid        .ui-check-grid > label.ui-check > input|p-checkbox + span
+     Repeatable row       .ui-repeat-row > div (label + field) … + .btn-icon (add / remove)
+     Image drop           label.ui-image-drop[.has-image] > img + i + .ui-file-drop-text + .ui-file-drop-hint + input
      Sticky form footer   .ui-sticky-footer (> .card-footer-note + buttons)
      Link button          .ui-link-btn
      Chips input          .ui-chip-input > .ui-chip (> button) + input + .ui-chip-add
@@ -645,6 +648,73 @@ button.ui-media {
   i { color: var(--primary); }
 }
 
+/* ---------------- checkbox grid ---------------- */
+.ui-check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px 12px;
+}
+
+.ui-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+
+  input[type='checkbox'] { accent-color: var(--primary); }
+}
+
+/* ---------------- repeatable field row (fields + add / remove button) ---------------- */
+.ui-repeat-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+
+  > div { flex: 1 1 0; min-width: 0; }
+  > .btn-icon { width: var(--control-h); height: var(--control-h); }
+
+  & + & { margin-top: 12px; }
+
+  @media (max-width: 575.98px) { flex-wrap: wrap; > div { flex-basis: 100%; } }
+}
+
+/* ---------------- image drop (photo upload with preview) ---------------- */
+.ui-image-drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 220px;
+  overflow: hidden;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--card-radius);
+  background: var(--bg-soft);
+  color: var(--text-light);
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
+
+  &:hover { border-color: var(--primary); background: var(--primary-soft); }
+
+  > i { color: var(--primary); font-size: 22px; }
+
+  > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.has-image > :not(img, input) { display: none; }
+}
+
 /* ---------------- sticky form footer ---------------- */
 .ui-sticky-footer {
   position: sticky;
@@ -960,7 +1030,8 @@ button.ui-media {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 
-  &--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  &--4    { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  &--auto { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 
   > div {
     min-width: 0;
@@ -1035,6 +1106,7 @@ button.ui-media {
 
   &.done::before { background: var(--primary); }
   &.current::before { background: linear-gradient(to bottom, var(--primary), var(--border)); }
+  &.rejected::before { background: var(--danger); }
 }
 
 .ui-vstep-dot {
@@ -1064,6 +1136,12 @@ button.ui-media {
     color: var(--primary);
     box-shadow: 0 0 0 4px rgba(var(--primary-rgb), .15);
   }
+
+  .rejected & {
+    border-color: var(--danger);
+    background: var(--danger);
+    color: var(--white);
+  }
 }
 
 .ui-vstep-label {
@@ -1075,6 +1153,7 @@ button.ui-media {
 
   .done & { color: var(--gh-heading); }
   .current & { color: var(--primary-dark); font-weight: 700; }
+  .rejected & { color: var(--danger); font-weight: 700; }
 }
 
 .ui-vstep-caption {

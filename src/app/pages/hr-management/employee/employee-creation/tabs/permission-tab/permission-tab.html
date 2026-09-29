@@ -1,175 +1,58 @@
-<!-- =========================================================
-     PERMISSIONS HEADER
-========================================================= -->
-
-<div class="d-flex align-items-center justify-content-between mb-3">
-
-  <div class="ne-section-title mb-0"><span class="form-section-icon"><i class="bi bi-dot"></i></span>Permissions</div>
-
-  <div style="
-      font-size:12px;
-      color:var(--aw-ink-500,var(--neutral-450));
-    ">
-
-    <a href="javascript:void(0)" class="fw-semibold" style="color:var(--primary);" (click)="selectAll()">
-      Select All
-    </a>
-
-    <span class="mx-1">|</span>
-
-    <a href="javascript:void(0)" class="fw-semibold text-muted" (click)="deselectAll()">
-      Deselect All
-    </a>
-
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <div class="form-section-title m-0 border-0 p-0"><span class="form-section-icon"><i class="bi bi-shield-lock"></i></span>Permissions</div>
+  <div class="d-flex align-items-center gap-2">
+    <button type="button" class="ui-link-btn" (click)="selectAll()">Select All</button>
+    <span class="field-hint m-0">|</span>
+    <button type="button" class="ui-link-btn" (click)="deselectAll()">Deselect All</button>
   </div>
-
 </div>
-
-
-<!-- =========================================================
-     ROLE
-========================================================= -->
 
 <div class="row g-3 mb-3" [formGroup]="permissions">
-
-  <!-- ROLE -->
   <div class="col-lg-4 col-md-6">
-
-    <label class="form-label required-label">
-
-      Role
-
-    </label>
-
+    <label class="form-label required-label">Role</label>
     <app-select formControlName="role" (ngModelChange)="applyRole($event)" [options]="fs.roles" optionLabel="label" optionValue="value" placeholder="—" />
-
   </div>
 
-
-  <!-- ROLE DESCRIPTION -->
   <div class="col-lg-8 col-md-6 d-flex align-items-end">
-
     @if (roleDescription) {
-
-    <div class="ne-role-badge mb-1" [ngClass]="badgeClass">
-
-      <i class="bi bi-info-circle me-1"></i>
-
-      <span>
-        {{ roleDescription }}
-      </span>
-
-    </div>
-
+    <div class="ui-hint mb-1"><i class="bi bi-info-circle"></i> {{ roleDescription }}</div>
     }
-
   </div>
-
 </div>
 
-
-<!-- =========================================================
-     PERMISSION TABLE
-========================================================= -->
-
-<div class="ne-perm-wrapper">
-
-
-  <!-- =======================================================
-       TABLE HEADER
-  ======================================================== -->
-
-  <div class="ne-perm-header">
-
-    <div>
-      Module
-    </div>
-
-    <div>
-      Capabilities
-    </div>
-
-    <div class="text-center">
-      All
-    </div>
-
-  </div>
-
-
-  <!-- =======================================================
-       PERMISSION GROUPS
-  ======================================================== -->
-
-  @for (group of groups; track group.key) {
-
-  <!-- GROUP TITLE -->
-
-  <div class="ne-perm-group-label">
-
-    <i [class]="group.icon"></i>
-
-    {{ group.label }}
-
-  </div>
-
-
-  <!-- =====================================================
-         MODULE ROWS
-    ====================================================== -->
-
-  @for (mod of group.modules; track mod.feature) {
-
-  <div class="ne-perm-row">
-
-
-    <!-- MODULE NAME -->
-
-    <div class="ne-perm-col-feature">
-
-      {{ mod.feature }}
-
-    </div>
-
-
-    <!-- CAPABILITIES -->
-
-    <div class="ne-perm-col-caps">
-
-      @for (cap of mod.caps; track cap.value) {
-
-      <label class="ne-perm-check">
-
-        <input type="checkbox" [checked]="has(cap.value)" (change)="toggle(cap.value)">
-
-        {{ cap.label }}
-
-      </label>
-
+<div class="data-table-wrap">
+  <table class="data-table data-table-left">
+    <thead>
+      <tr>
+        <th class="col-module">Module</th>
+        <th>Capabilities</th>
+        <th class="text-center">All</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (group of groups; track group.key) {
+      <tr class="row-group">
+        <td colspan="3"><i [class]="group.icon"></i>{{ group.label }}</td>
+      </tr>
+      @for (mod of group.modules; track mod.feature) {
+      <tr>
+        <td class="cell-strong">{{ mod.feature }}</td>
+        <td>
+          <div class="d-flex flex-wrap gap-2 column-gap-4">
+            @for (cap of mod.caps; track cap.value) {
+            <label class="ui-check">
+              <input type="checkbox" [checked]="has(cap.value)" (change)="toggle(cap.value)" />
+              {{ cap.label }}
+            </label>
+            }
+          </div>
+        </td>
+        <td class="text-center">
+          <button type="button" class="ui-link-btn" (click)="toggleModule(mod)">{{ allChecked(mod) ? 'Deselect All' : 'Select All' }}</button>
+        </td>
+      </tr>
       }
-
-    </div>
-
-
-    <!-- SELECT ALL -->
-
-    <div class="text-center">
-
-      <span class="ne-perm-check-all" (click)="toggleModule(mod)">
-
-        {{
-        allChecked(mod)
-        ? 'Deselect All'
-        : 'Select All'
-        }}
-
-      </span>
-
-    </div>
-
-  </div>
-
-  }
-
-  }
-
+      }
+    </tbody>
+  </table>
 </div>
