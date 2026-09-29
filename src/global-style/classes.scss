@@ -1550,6 +1550,20 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
   }
 }
 
+/* icon tile before a dialog title — same in .modal-custom and .modal-content dialogs */
+:root .modal-content :is(.modal-icon-circle, .change-icon-circle) {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 18px;
+}
+
 :root .modal-backdrop.show {
   opacity: 0.48;
   background-color: var(--surface-inverse);

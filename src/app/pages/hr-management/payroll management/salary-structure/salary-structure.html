@@ -1,11 +1,11 @@
 <!-- Page header -->
-<header class="page-head">
+<header class="mb-3">
   <h1 class="page-title">Salary Structure</h1>
-  <nav class="crumbs" aria-label="Breadcrumb">
-    <bi-icon class="crumb-icon" name="cash-stack" />
+  <nav class="page-breadcrumb" aria-label="Breadcrumb">
+    <bi-icon class="icon-breadcrumb" name="cash-stack" />
     <span>Payroll Management</span>
-    <bi-icon name="chevron-right" />
-    <span class="crumb-current" aria-current="page">Salary Structure</span>
+    <bi-icon class="separator" name="chevron-right" />
+    <span class="active-crumb" aria-current="page">Salary Structure</span>
   </nav>
 </header>
 
@@ -18,31 +18,26 @@
 </section>
 
 <!-- Base CTC -->
-<section class="base-ctc" aria-label="Base CTC and totals">
-  <label class="ctc-label" for="baseCtc"><bi-icon name="cash-stack" /> Base CTC (Monthly)</label>
-  <input id="baseCtc" class="ctc-input" type="number" min="0" step="1000" [value]="ctcRaw()" (input)="onCtc($event)" />
-
-  <div class="ctc-total">
-    <div class="lbl">Total Earnings</div>
-    <div class="val">{{ inr(totalEarnings()) }}</div>
+<section class="card-custom p-3 mb-3 d-flex flex-wrap align-items-end gap-3" aria-label="Base CTC and totals">
+  <div class="ctc-field">
+    <label class="form-label" for="baseCtc"><bi-icon name="cash-stack" /> Base CTC (Monthly)</label>
+    <input id="baseCtc" class="form-control" type="number" min="0" step="1000" [value]="ctcRaw()" (input)="onCtc($event)" />
   </div>
-  <div class="ctc-total">
-    <div class="lbl">Total Deductions</div>
-    <div class="val val-red">{{ inr(totalDeductions()) }}</div>
-  </div>
-  <div class="ctc-total">
-    <div class="lbl">Net Salary</div>
-    <div class="val">{{ inr(netSalary()) }}</div>
+  <div class="ui-meta-grid ui-meta-grid--auto flex-grow-1">
+    <div><div class="ui-meta-label">Total Earnings</div><div class="ui-meta-value text-success">{{ inr(totalEarnings()) }}</div></div>
+    <div><div class="ui-meta-label">Total Deductions</div><div class="ui-meta-value text-danger">{{ inr(totalDeductions()) }}</div></div>
+    <div><div class="ui-meta-label">Net Salary</div><div class="ui-meta-value">{{ inr(netSalary()) }}</div></div>
   </div>
 </section>
 
 <!-- Earnings + Deductions -->
-<div class="structure-grid">
+<div class="row g-3">
   @for (g of groups(); track g.kind) {
-    <section class="card-custom" [attr.aria-labelledby]="'title-' + g.kind">
+    <div class="col-lg-6">
+    <section class="card-custom h-100" [attr.aria-labelledby]="'title-' + g.kind">
       <header class="card-custom-header">
         <h2 class="card-custom-title d-flex align-items-center gap-2" [id]="'title-' + g.kind">
-          <bi-icon class="title-icon" [class]="g.kind" [name]="g.icon" />
+          <bi-icon [class]="g.kind === 'deduction' ? 'text-danger' : 'text-success'" [name]="g.icon" />
           {{ g.title }}
         </h2>
         <button type="button" class="btn btn-outline-primary btn-sm" (click)="openModal(g.kind, $event)">
@@ -50,35 +45,41 @@
         </button>
       </header>
 
-      <ul class="items card-custom-body">
+      <ul class="card-custom-body ui-list list-unstyled m-0">
         @for (r of g.rows; track r.id) {
-          <li class="item">
-            <div class="item-name"><bi-icon [name]="r.icon" /> <span>{{ r.name }}</span></div>
-            <div class="item-type" [class]="g.kind">{{ r.category }}</div>
-            <div class="item-pct">
-              <span class="pct-label">{{ r.pctLabel }}</span>
-              <span class="pct-amount">{{ r.subLabel }}</span>
+          <li class="ui-row-card is-static" [class.bar-green]="g.kind !== 'deduction'" [class.bar-red]="g.kind === 'deduction'">
+            <span class="ui-ico ui-ico--sm" [class.stat-tone-red]="g.kind === 'deduction'"><bi-icon [name]="r.icon" /></span>
+            <div class="ui-row-body">
+              <div class="ui-row-title">{{ r.name }}</div>
+              <div class="ui-row-sub">{{ r.category }}</div>
+            </div>
+            <div class="text-end">
+              <div class="cell-strong">{{ r.pctLabel }}</div>
+              <div class="ui-cell-sub">{{ r.subLabel }}</div>
             </div>
           </li>
         } @empty {
-          <li class="items-empty">No {{ g.kind }} components yet. Use Add to create one.</li>
+          <li class="empty-state"><div class="e-sub">No {{ g.kind }} components yet. Use Add to create one.</div></li>
         }
       </ul>
     </section>
+    </div>
   }
 </div>
 
 <!-- Add component modal -->
 @if (modalOpen()) {
-  <div class="modal-backdrop" (click)="onBackdrop($event)">
-    <div class="sal-modal modal-content" role="dialog" aria-modal="true" aria-labelledby="compModalTitle">
+  <div class="modal-backdrop-custom" (click)="closeModal()"></div>
+  <div class="ui-dialog" role="dialog" aria-modal="true" aria-labelledby="compModalTitle">
+    <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title" id="compModalTitle">{{ modalTitle() }}</h2>
-        <button type="button" class="modal-close" aria-label="Close" (click)="closeModal()"><bi-icon name="x-lg" /></button>
+        <button type="button" class="btn-close-custom" aria-label="Close" (click)="closeModal()"><bi-icon name="x-lg" /></button>
       </div>
 
-      <form class="modal-body" novalidate (submit)="onSubmit($event)">
-        <div class="field">
+      <form novalidate (submit)="onSubmit($event)">
+        <div class="modal-body">
+        <div class="mb-3">
           <label class="form-label" for="compName">Component Name <span class="req" aria-hidden="true">*</span></label>
           <input
             #nameInput
@@ -97,21 +98,21 @@
           }
         </div>
 
-        <div class="field-row">
-          <div class="field">
+        <div class="ui-field-pair mb-3">
+          <div>
             <label class="form-label" for="compType">Type</label>
             <app-select inputId="compType" [ngModel]="draft().kind" (ngModelChange)="$event && patch({ kind: $event })"
               [options]="[{ label: 'Earning', value: 'earning' }, { label: 'Deduction', value: 'deduction' }]"
               optionLabel="label" optionValue="value" [showClear]="false" />
           </div>
-          <div class="field">
+          <div>
             <label class="form-label" for="compCategory">Category</label>
             <app-select inputId="compCategory" [ngModel]="draft().category"
               (ngModelChange)="$event && patch({ category: $event })" [options]="categories" [showClear]="false" />
           </div>
         </div>
 
-        <div class="field">
+        <div class="mb-3">
           <label class="form-label" for="compPct">Percentage (%)</label>
           <div class="input-group">
             <input
@@ -134,7 +135,8 @@
           }
         </div>
 
-        <div class="modal-actions">
+        </div>
+        <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
           <button type="submit" class="btn btn-primary"><bi-icon name="check-lg" /> Save Component</button>
         </div>

@@ -158,10 +158,6 @@ export class SalaryStructure {
     this.opener?.focus();
   }
 
-  onBackdrop(e: MouseEvent): void {
-    if (e.target === e.currentTarget) this.closeModal();
-  }
-
   patch(changes: Partial<Draft>): void {
     this.draft.update((d) => ({ ...d, ...changes }));
     if ('name' in changes) this.nameError.set(false);

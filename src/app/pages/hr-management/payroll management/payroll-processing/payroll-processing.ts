@@ -157,6 +157,11 @@ export class PayrollProcessing {
     }
   }
 
+  /** status -> shared status-pill colour */
+  statusPill(status: PayrollRow['status']): string {
+    return { paid: 'status-approved', processing: 'status-pending', hold: 'status-rejected' }[status as string] ?? 'status-muted';
+  }
+
   private statusKeyFromLabel(label: string): PayrollRow['status'] {
     switch (label) {
       case 'Paid': return 'paid';
