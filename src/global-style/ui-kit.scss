@@ -52,6 +52,7 @@
                             (or > button.ui-flow-btn > .ui-step-num + text for a clickable stepper)
    — lists —
      Avatar               .ui-avatar (32px; .ui-avatar--sm 28px), background set inline
+     Avatar stack         .ui-avatar-stack > img… + .ui-avatar (the "+3" overflow)
      Row card             .ui-row-card[.is-static][.bar-red|.bar-blue|.bar-pink]
                             > lead + .ui-row-body (.ui-row-title + .ui-row-sub) + trailing badge
      Meter / split bar    .ui-meter > span  ·  .ui-split-bar > span  ·  .ui-legend > .ui-legend-item > .ui-legend-dot
@@ -1269,6 +1270,26 @@ button.ui-media {
   font-weight: 700;
 
   &--sm { width: 28px; height: 28px; font-size: 10.5px; }
+}
+
+img.ui-avatar { object-fit: cover; }
+
+.ui-avatar-stack {
+  display: flex;
+
+  > img,
+  > .ui-avatar {
+    width: 32px;
+    height: 32px;
+    margin-left: -6px;
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    object-fit: cover;
+
+    &:first-child { margin-left: 0; }
+  }
+
+  > .ui-avatar { background: var(--primary-soft); color: var(--primary-dark); }
 }
 
 .ui-msg {

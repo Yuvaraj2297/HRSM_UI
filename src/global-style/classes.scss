@@ -78,6 +78,12 @@ $card: '.card-custom';
   box-shadow: 0 8px 24px rgba(var(--neutral-900-rgb), 0.08) !important;
 }
 
+/* a clickable card that is the current choice */
+:root :is(.card-custom, .card).is-selected:not(.bg-light):not(.border-start):not(.card-plain) {
+  border-color: var(--primary) !important;
+  background: var(--primary-soft) !important;
+}
+
 /* ---------- header / body / footer ----------
      <header class="card-custom-header">
        <span class="card-header-icon"><i class="bi bi-people"></i></span>
