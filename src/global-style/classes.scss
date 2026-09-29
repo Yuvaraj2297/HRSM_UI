@@ -1516,11 +1516,21 @@ $label: '.form-label, .ct-form-label, .form-label-tkt';
     line-height: 1.3;
   }
 
-  > :is(.modal-body, .modal-body-custom) {
+  /* a <form> may wrap body + footer; it passes the column layout through */
+  > form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  > :is(.modal-body, .modal-body-custom),
+  > form > :is(.modal-body, .modal-body-custom) {
     padding: 20px 24px;
   }
 
-  > :is(.modal-footer, .modal-footer-custom) {
+  > :is(.modal-footer, .modal-footer-custom),
+  > form > :is(.modal-footer, .modal-footer-custom) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;

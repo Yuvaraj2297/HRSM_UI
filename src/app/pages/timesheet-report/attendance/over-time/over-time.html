@@ -18,7 +18,7 @@
     <div class="d-flex flex-wrap align-items-center gap-2">
       <button
         type="button"
-        class="btn btn-sm btn-outline-success px-3 d-inline-flex align-items-center gap-2"
+        class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2"
         (click)="openAssignModal()">
         <i class="bi bi-building-add"></i>
         <span>Assign OT (Company / Manager)</span>
@@ -26,7 +26,7 @@
 
       <button
         type="button"
-        class="btn btn-sm btn-success px-3 d-inline-flex align-items-center gap-2 text-white"
+        class="btn btn-sm btn-primary px-3 d-inline-flex align-items-center gap-2 text-white"
         (click)="openRequestModal()">
         <i class="bi bi-person-plus"></i>
         <span>Apply OT Request (Employee)</span>
@@ -49,10 +49,10 @@
   <!-- =========================================================
        NAVIGATION TABS (5 TABS)
   ========================================================== -->
-  <div role="tablist" class="ot-nav-tabs">
+  <nav role="tablist" class="page-tabs mb-3">
     <button role="tab"
       type="button"
-      class="ot-tab-btn"
+      class="page-tab"
       [class.active]="activeTab === 'queue'"
       (click)="switchTab('queue')" [attr.aria-selected]="activeTab === 'queue'">
       <i class="bi bi-inbox-fill"></i>
@@ -62,7 +62,7 @@
 
     <button role="tab"
       type="button"
-      class="ot-tab-btn"
+      class="page-tab"
       [class.active]="activeTab === 'history'"
       (click)="switchTab('history')" [attr.aria-selected]="activeTab === 'history'">
       <i class="bi bi-clock-history"></i>
@@ -72,7 +72,7 @@
 
     <button role="tab"
       type="button"
-      class="ot-tab-btn"
+      class="page-tab"
       [class.active]="activeTab === 'validation'"
       (click)="switchTab('validation')" [attr.aria-selected]="activeTab === 'validation'">
       <i class="bi bi-fingerprint"></i>
@@ -82,7 +82,7 @@
 
     <button role="tab"
       type="button"
-      class="ot-tab-btn"
+      class="page-tab"
       [class.active]="activeTab === 'payroll'"
       (click)="switchTab('payroll')" [attr.aria-selected]="activeTab === 'payroll'">
       <i class="bi bi-cash-stack"></i>
@@ -92,13 +92,13 @@
 
     <button role="tab"
       type="button"
-      class="ot-tab-btn"
+      class="page-tab"
       [class.active]="activeTab === 'reports'"
       (click)="switchTab('reports')" [attr.aria-selected]="activeTab === 'reports'">
       <i class="bi bi-file-earmark-bar-graph"></i>
       <span>OT Reports</span>
     </button>
-  </div>
+  </nav>
 
   <!-- =========================================================
        TAB 1: APPROVAL QUEUE (ASSIGNMENT & REQUESTS)
@@ -106,19 +106,14 @@
   @if (activeTab === 'queue') {
     <div class="tab-content-sec">
       <!-- Complete Flow Stepper -->
-      <div class="flow-stepper mb-3">
-        <div class="flow-step"><span class="flow-step-num">1</span> Initiate (Assign / Request)</div>
-        <i class="bi bi-chevron-right flow-arrow"></i>
-        <div class="flow-step"><span class="flow-step-num">2</span> Manager Review</div>
-        <i class="bi bi-chevron-right flow-arrow"></i>
-        <div class="flow-step"><span class="flow-step-num">3</span> Approve / Reject</div>
-        <i class="bi bi-chevron-right flow-arrow"></i>
-        <div class="flow-step"><span class="flow-step-num">4</span> Attendance Punch Validation</div>
-        <i class="bi bi-chevron-right flow-arrow"></i>
-        <div class="flow-step"><span class="flow-step-num">5</span> Payroll Payout</div>
-        <i class="bi bi-chevron-right flow-arrow"></i>
-        <div class="flow-step text-success"><span class="flow-step-num bg-success text-white">6</span> Complete</div>
-      </div>
+      <ol class="ui-flow mb-3">
+        <li class="ui-flow-step"><span class="ui-step-num">1</span> Initiate (Assign / Request)</li>
+        <li class="ui-flow-step"><span class="ui-step-num">2</span> Manager Review</li>
+        <li class="ui-flow-step"><span class="ui-step-num">3</span> Approve / Reject</li>
+        <li class="ui-flow-step"><span class="ui-step-num">4</span> Attendance Punch Validation</li>
+        <li class="ui-flow-step"><span class="ui-step-num">5</span> Payroll Payout</li>
+        <li class="ui-flow-step is-done"><span class="ui-step-num is-solid">6</span> Complete</li>
+      </ol>
 
       <!-- Filter Bar for Tab 1 -->
       <div class="card-custom mb-3">
@@ -140,11 +135,11 @@
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-search me-1"></i> Search Keyword
               </label>
-              <div class="input-search-wrap">
-                <i class="bi bi-search search-ico"></i>
+              <div class="mt-search-wrap">
+                <i class="bi bi-search mt-search-icon"></i>
                 <input
                   type="text"
-                  class="form-control form-control-sm search-input-styled"
+                  class="form-control form-control-sm mt-search-input"
                   placeholder="Search employee, project..."
                   [(ngModel)]="queueSearchQuery" />
               </div>
@@ -155,9 +150,9 @@
 
       <!-- Queue Table -->
       <div class="card-custom p-0 overflow-hidden">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom table-subbar">
+        <div class="card-custom-header">
           <div class="d-flex align-items-center gap-2 flex-wrap">
-            <span class="badge bg-light text-dark border px-2 py-1">
+            <span class="ui-tag">
               <i class="bi bi-table me-1"></i> Total Pending: {{ filteredQueueList.length }}
             </span>
           </div>
@@ -186,28 +181,28 @@
               @for (item of filteredQueueList; track item.id; let idx = $index) {
                 <tr>
                   <td>{{ idx + 1 }}</td>
-                  <td class="text-nowrap fw-semibold text-secondary">{{ item.date }}</td>
+                  <td class="text-nowrap fw-semibold text-muted">{{ item.date }}</td>
                   <td>
                     <div class=" text-dark">{{ item.empId }} - {{ item.empName }}</div>
                     <div class="text-muted small">{{ item.empEmail }}</div>
                   </td>
                   <td>
-                    <span class="dept-badge">{{ item.dept }}</span>
+                    <span class="category-pill-badge">{{ item.dept }}</span>
                   </td>
                   <td>
                     @if (item.initiatedBy === 'Company Assigned') {
-                      <span class="badge bg-primary-subtle text-primary ">
+                      <span class="ui-count-chip">
                         <i class="bi bi-building me-1"></i> Company Assigned
                       </span>
                     } @else {
-                      <span class="badge bg-info-subtle text-info ">
+                      <span class="ui-tag tone-info">
                         <i class="bi bi-person me-1"></i> Employee Request
                       </span>
                     }
                   </td>
                   <td>
                     <div class=" text-dark">{{ item.timeSlot }}</div>
-                    <span class="badge bg-light text-dark border">{{ item.hoursDisplay }}</span>
+                    <span class="ui-tag">{{ item.hoursDisplay }}</span>
                   </td>
                   <td>
                     <div class=" text-dark">{{ item.project }}</div>
@@ -215,41 +210,41 @@
                   </td>
                   <td>
                     @if (item.otType.includes('Holiday') || item.otType.includes('2.0')) {
-                      <span class="badge bg-danger-subtle text-danger">{{ item.otType }}</span>
+                      <span class="ui-tag tone-danger">{{ item.otType }}</span>
                     } @else if (item.otType.includes('Night')) {
-                      <span class="badge bg-warning-subtle text-warning-emphasis">{{ item.otType }}</span>
+                      <span class="ui-tag tone-warning">{{ item.otType }}</span>
                     } @else {
-                      <span class="badge bg-success-subtle text-success">{{ item.otType }}</span>
+                      <span class="ui-tag tone-success">{{ item.otType }}</span>
                     }
                   </td>
                   <td>
                     @if (item.status === 'Assigned') {
-                      <span class="ot-badge assigned"><i class="bi bi-person-check-fill"></i> Assigned</span>
+                      <span class="ui-tag tone-info"><i class="bi bi-person-check-fill"></i> Assigned</span>
                     } @else if (item.status === 'Pending Approval') {
-                      <span class="ot-badge pending"><i class="bi bi-clock"></i> Pending Approval</span>
+                      <span class="status-pill status-pending"><i class="bi bi-clock"></i> Pending Approval</span>
                     } @else if (item.status === 'Approved') {
-                      <span class="ot-badge approved"><i class="bi bi-check-circle-fill"></i> Approved</span>
+                      <span class="status-pill status-approved"><i class="bi bi-check-circle-fill"></i> Approved</span>
                     } @else {
-                      <span class="ot-badge rejected"><i class="bi bi-x-circle-fill"></i> Rejected</span>
+                      <span class="status-pill status-rejected"><i class="bi bi-x-circle-fill"></i> Rejected</span>
                     }
                   </td>
                   <td class="text-end">
                     @if (item.decisionSummary) {
-                      <span class="badge " [class.bg-success-subtle]="item.status === 'Approved'" [class.text-success]="item.status === 'Approved'" [class.bg-danger-subtle]="item.status === 'Rejected'" [class.text-danger]="item.status === 'Rejected'">
+                      <span class="ui-tag" [class.tone-success]="item.status === 'Approved'" [class.tone-danger]="item.status === 'Rejected'">
                         {{ item.decisionSummary }}
                       </span>
                     } @else {
                       <div class="btn-group">
                         <button
                           type="button"
-                          class="btn btn-sm btn-outline-success text-nowrap d-inline-flex align-items-center gap-1"
+                          class="btn btn-sm btn-outline-primary text-nowrap d-inline-flex align-items-center gap-1"
                           (click)="openReviewModal(item)">
                           <i class="bi bi-shield-check"></i>
                           <span>Review & Approve</span>
                         </button>
                         <button
                           type="button"
-                          class="btn btn-icon btn-sm btn-outline-danger"
+                          class="btn btn-icon btn-sm btn-cancel"
                           title="Reject Request"
                           (click)="quickRejectOT(item)">
                           <i class="bi bi-x-lg"></i>
@@ -260,8 +255,8 @@
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="10" class="text-center py-5 text-muted">
-                    <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+                  <td colspan="10" class="data-table-empty">
+                    <i class="bi bi-inbox"></i>
                     No pending overtime approval requests found.
                   </td>
                 </tr>
@@ -298,11 +293,11 @@
             </div>
             <div class="col-md-3">
               <label class="form-label small  text-muted mb-1">Search Employee / ID</label>
-              <div class="input-search-wrap">
-                <i class="bi bi-search search-ico"></i>
+              <div class="mt-search-wrap">
+                <i class="bi bi-search mt-search-icon"></i>
                 <input
                   type="text"
-                  class="form-control form-control-sm search-input-styled"
+                  class="form-control form-control-sm mt-search-input"
                   placeholder="Name or ID..."
                   [(ngModel)]="histSearchQuery" />
               </div>
@@ -312,9 +307,9 @@
       </div>
 
       <div class="card-custom p-0 overflow-hidden">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom table-subbar">
+        <div class="card-custom-header">
           <div class="d-flex align-items-center gap-2 flex-wrap">
-            <span class="badge bg-light text-dark border px-2 py-1">
+            <span class="ui-tag">
               <i class="bi bi-clock-history me-1"></i> Records: {{ filteredHistoryList.length }}
             </span>
           </div>
@@ -341,11 +336,11 @@
               @for (item of filteredHistoryList; track item.sno; let idx = $index) {
                 <tr>
                   <td>{{ idx + 1 }}</td>
-                  <td class="text-nowrap fw-semibold text-secondary">{{ item.date }}</td>
+                  <td class="text-nowrap fw-semibold text-muted">{{ item.date }}</td>
                   <td class=" text-dark">{{ item.empName }}</td>
-                  <td><span class="dept-badge">{{ item.dept }}</span></td>
+                  <td><span class="category-pill-badge">{{ item.dept }}</span></td>
                   <td class="text-nowrap">{{ item.timeSlot }}</td>
-                  <td><span class="badge bg-light text-dark border">{{ item.hours }}</span></td>
+                  <td><span class="ui-tag">{{ item.hours }}</span></td>
                   <td>{{ item.rateInfo }}</td>
                   <td>
                     @if (item.totalPay > 0) {
@@ -356,9 +351,9 @@
                   </td>
                   <td>
                     @if (item.status === 'Approved') {
-                      <span class="ot-badge approved"><i class="bi bi-check-circle-fill"></i> Approved</span>
+                      <span class="status-pill status-approved"><i class="bi bi-check-circle-fill"></i> Approved</span>
                     } @else {
-                      <span class="ot-badge rejected"><i class="bi bi-x-circle-fill"></i> Rejected</span>
+                      <span class="status-pill status-rejected"><i class="bi bi-x-circle-fill"></i> Rejected</span>
                     }
                   </td>
                   <td class="small text-muted">{{ item.remarks }}</td>
@@ -401,11 +396,11 @@
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-search me-1"></i> Search Validation
               </label>
-              <div class="input-search-wrap">
-                <i class="bi bi-search search-ico"></i>
+              <div class="mt-search-wrap">
+                <i class="bi bi-search mt-search-icon"></i>
                 <input
                   type="text"
-                  class="form-control form-control-sm search-input-styled"
+                  class="form-control form-control-sm mt-search-input"
                   placeholder="Search validation..."
                   [(ngModel)]="valSearchQuery" />
               </div>
@@ -415,9 +410,9 @@
       </div>
 
       <div class="card-custom p-0 overflow-hidden">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom table-subbar">
+        <div class="card-custom-header">
           <div class="d-flex align-items-center gap-2 flex-wrap">
-            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+            <span class="ui-tag tone-success">
               <i class="bi bi-fingerprint me-1"></i> Biometric Verified
             </span>
           </div>
@@ -444,26 +439,26 @@
                 <tr>
                   <td>{{ idx + 1 }}</td>
                   <td class=" text-dark">{{ item.empName }}</td>
-                  <td><span class="dept-badge">{{ item.dept }}</span></td>
+                  <td><span class="category-pill-badge">{{ item.dept }}</span></td>
                   <td class="text-nowrap">{{ item.date }}</td>
                   <td class="text-nowrap">{{ item.shiftHours }}</td>
                   <td>
                     @if (item.isEarlyExit) {
                       <code class="text-danger  fs-6">{{ item.actualPunchOut }}</code>
-                      <span class="badge bg-danger-subtle text-danger ms-1">Early Exit</span>
+                      <span class="ui-tag tone-danger">Early Exit</span>
                     } @else {
                       <code class="text-primary  fs-6">{{ item.actualPunchOut }}</code>
                     }
                   </td>
-                  <td><span class="badge bg-light text-dark border">{{ item.approvedHours }}</span></td>
-                  <td class="fw-semibold text-secondary">{{ item.overstay }}</td>
+                  <td><span class="ui-tag">{{ item.approvedHours }}</span></td>
+                  <td class="fw-semibold text-muted">{{ item.overstay }}</td>
                   <td>
                     @if (item.isWarning) {
-                      <span class="badge bg-warning-subtle text-warning-emphasis ">
+                      <span class="ui-tag tone-warning">
                         <i class="bi bi-exclamation-triangle me-1"></i> {{ item.statusText }}
                       </span>
                     } @else {
-                      <span class="badge bg-success-subtle text-success ">
+                      <span class="ui-tag tone-success">
                         <i class="bi bi-check-all me-1"></i> {{ item.statusText }}
                       </span>
                     }
@@ -507,11 +502,11 @@
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-search me-1"></i> Search Payroll
               </label>
-              <div class="input-search-wrap">
-                <i class="bi bi-search search-ico"></i>
+              <div class="mt-search-wrap">
+                <i class="bi bi-search mt-search-icon"></i>
                 <input
                   type="text"
-                  class="form-control form-control-sm search-input-styled"
+                  class="form-control form-control-sm mt-search-input"
                   placeholder="Search payroll..."
                   [(ngModel)]="paySearchQuery" />
               </div>
@@ -521,11 +516,11 @@
       </div>
 
       <div class="card-custom p-0 overflow-hidden">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom table-subbar">
+        <div class="card-custom-header">
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <button
               type="button"
-              class="btn btn-sm btn-purple d-inline-flex align-items-center gap-1"
+              class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
               (click)="syncPayrollSlips()">
               <i class="bi bi-arrow-repeat"></i>
               <span>Sync to Payroll Slips</span>
@@ -553,13 +548,13 @@
                 <tr>
                   <td>{{ idx + 1 }}</td>
                   <td class=" text-dark">{{ item.empId }} - {{ item.empName }}</td>
-                  <td><span class="dept-badge">{{ item.dept }}</span></td>
+                  <td><span class="category-pill-badge">{{ item.dept }}</span></td>
                   <td>₹ {{ item.baseRate }} / hr</td>
-                  <td><span class="badge bg-light text-dark border">{{ item.approvedHours }} hrs</span></td>
+                  <td><span class="ui-tag">{{ item.approvedHours }} hrs</span></td>
                   <td>{{ item.multiplierText }}</td>
                   <td class=" text-success fs-6">₹ {{ item.grossPayout | number }}</td>
                   <td>
-                    <span class="badge bg-success-subtle text-success">
+                    <span class="ui-tag tone-success">
                       <i class="bi bi-check-circle-fill me-1"></i> {{ item.slipStatus }}
                     </span>
                   </td>
@@ -603,11 +598,11 @@
               <label class="form-label small  text-muted mb-1">
                 <i class="bi bi-search me-1"></i> Search Report
               </label>
-              <div class="input-search-wrap">
-                <i class="bi bi-search search-ico"></i>
+              <div class="mt-search-wrap">
+                <i class="bi bi-search mt-search-icon"></i>
                 <input
                   type="text"
-                  class="form-control form-control-sm search-input-styled"
+                  class="form-control form-control-sm mt-search-input"
                   placeholder="Search department, employee..."
                   [(ngModel)]="rptSearchQuery" />
               </div>
@@ -622,31 +617,11 @@
           <h6 class=" mb-3 text-dark d-flex align-items-center gap-2">
             <i class="bi bi-file-earmark-text text-success"></i> HR Executive Overtime Summary Report
           </h6>
-          <div class="row g-4 mb-4">
-            <div class="col-md-3">
-              <div class="p-3 bg-light rounded-4 border">
-                <div class="text-muted small ">Total OT Requests</div>
-                <div class="fs-4 fw-extrabold text-dark">29 Requests</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-success-subtle rounded-4 border border-success-subtle">
-                <div class="text-success small ">Approved Hours</div>
-                <div class="fs-4 fw-extrabold text-success">170 Hours (91.4%)</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-danger-subtle rounded-4 border border-danger-subtle">
-                <div class="text-danger small ">Rejected Hours</div>
-                <div class="fs-4 fw-extrabold text-danger">16 Hours (8.6%)</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-purple-subtle rounded-4 border border-purple-subtle">
-                <div class="text-purple small ">Total OT Expenditure</div>
-                <div class="fs-4 fw-extrabold text-purple">₹ 28,500</div>
-              </div>
-            </div>
+          <div class="ui-meta-grid ui-meta-grid--4 mb-4">
+            <div><div class="ui-meta-label">Total OT Requests</div><div class="ui-meta-value">29 Requests</div></div>
+            <div><div class="ui-meta-label">Approved Hours</div><div class="ui-meta-value text-success">170 Hours (91.4%)</div></div>
+            <div><div class="ui-meta-label">Rejected Hours</div><div class="ui-meta-value text-danger">16 Hours (8.6%)</div></div>
+            <div><div class="ui-meta-label">Total OT Expenditure</div><div class="ui-meta-value">₹ 28,500</div></div>
           </div>
 
           <!-- Department-Wise OT Summary Table -->
@@ -674,14 +649,14 @@
                       <td>{{ idx + 1 }}</td>
                       <td class=" text-dark">{{ dept.dept }}</td>
                       <td>{{ dept.totalEmployees }}</td>
-                      <td><span class="badge bg-light text-dark border">{{ dept.totalHours }}</span></td>
+                      <td><span class="ui-tag">{{ dept.totalHours }}</span></td>
                       <td class="fw-semibold text-success">{{ dept.approvedHours }}</td>
                       <td class="fw-semibold text-danger">{{ dept.rejectedHours }}</td>
                       <td class=" text-success fs-6">{{ dept.totalCost }}</td>
                       <td class="text-center">
                         <button
                           type="button"
-                          class="btn btn-sm btn-outline-success text-nowrap d-inline-flex align-items-center gap-1"
+                          class="btn btn-sm btn-outline-primary text-nowrap d-inline-flex align-items-center gap-1"
                           (click)="openDeptReportModal(dept)">
                           <i class="bi bi-eye-fill"></i>
                           <span>View Report</span>
@@ -723,17 +698,17 @@
                         <div class=" text-dark">{{ emp.empId }} - {{ emp.empName }}</div>
                         <div class="text-muted small">{{ emp.empEmail }}</div>
                       </td>
-                      <td><span class="dept-badge">{{ emp.dept }}</span></td>
+                      <td><span class="category-pill-badge">{{ emp.dept }}</span></td>
                       <td>{{ emp.monthlySalary }}</td>
                       <td class="fw-semibold text-primary">{{ emp.baseHourlyRate }}</td>
-                      <td><span class="badge bg-light text-dark border ">{{ emp.approvedHours }}</span></td>
+                      <td><span class="ui-tag">{{ emp.approvedHours }}</span></td>
                       <td>{{ emp.standardHours }}</td>
                       <td>{{ emp.holidayHours }}</td>
                       <td class=" text-success fs-6">{{ emp.totalOtSalary }}</td>
                       <td class="text-center">
                         <button
                           type="button"
-                          class="btn btn-sm btn-outline-success text-nowrap d-inline-flex align-items-center gap-1"
+                          class="btn btn-sm btn-outline-primary text-nowrap d-inline-flex align-items-center gap-1"
                           (click)="openSalaryModal(emp)">
                           <i class="bi bi-eye-fill"></i>
                           <span>View OT Salary Details</span>
@@ -756,9 +731,8 @@
 ========================================================== -->
 @if (showAssignModal) {
   <div class="modal-backdrop-custom" (click)="closeAssignModal()"></div>
-  <div class="modal-wrapper-custom">
-    <div class="modal-dialog-custom modal-lg" (click)="$event.stopPropagation()">
-      <div class="modal-content rounded-4 border-0 shadow-lg">
+  <div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true">
+      <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title  text-dark d-flex align-items-center gap-2 mb-0">
             <i class="bi bi-building-add text-success"></i> Company / Manager OT Assignment
@@ -768,8 +742,8 @@
           </button>
         </div>
         <form (ngSubmit)="saveOTAssignment()">
-          <div class="modal-body p-4">
-            <div class="alert alert-info py-2 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2">
+          <div class="modal-body">
+            <div class="ui-hint w-100 mb-3">
               <i class="bi bi-info-circle-fill"></i>
               <span>HR/Manager assigns overtime work for production support, shift coverage, or urgent project deadlines. The employee will receive an instant notification.</span>
             </div>
@@ -859,14 +833,13 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-light" (click)="closeAssignModal()">Cancel</button>
-            <button type="submit" class="btn btn-success px-4 text-white">
+            <button type="button" class="btn btn-secondary" (click)="closeAssignModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary px-4 text-white">
               <i class="bi bi-send-check"></i> Assign OT & Notify Employee
             </button>
           </div>
         </form>
       </div>
-    </div>
   </div>
 }
 
@@ -875,9 +848,8 @@
 ========================================================== -->
 @if (showRequestModal) {
   <div class="modal-backdrop-custom" (click)="closeRequestModal()"></div>
-  <div class="modal-wrapper-custom">
-    <div class="modal-dialog-custom modal-lg" (click)="$event.stopPropagation()">
-      <div class="modal-content rounded-4 border-0 shadow-lg">
+  <div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true">
+      <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title  text-dark d-flex align-items-center gap-2 mb-0">
             <i class="bi bi-person-plus text-primary"></i> Employee OT Self-Request
@@ -887,7 +859,7 @@
           </button>
         </div>
         <form (ngSubmit)="saveOTRequest()">
-          <div class="modal-body p-4">
+          <div class="modal-body">
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label small  text-dark">Select Employee <span class="text-danger">*</span></label>
@@ -954,14 +926,13 @@
             </div>
           </div>
           <div class="modal-footer border-0 pt-0">
-            <button type="button" class="btn btn-light" (click)="closeRequestModal()">Cancel</button>
+            <button type="button" class="btn btn-secondary" (click)="closeRequestModal()">Cancel</button>
             <button type="submit" class="btn btn-primary px-4 text-white">
               <i class="bi bi-send-check"></i> Submit Request for Manager Approval
             </button>
           </div>
         </form>
       </div>
-    </div>
   </div>
 }
 
@@ -970,9 +941,8 @@
 ========================================================== -->
 @if (showReviewModal && reviewItem) {
   <div class="modal-backdrop-custom" (click)="closeReviewModal()"></div>
-  <div class="modal-wrapper-custom">
-    <div class="modal-dialog-custom modal-lg" (click)="$event.stopPropagation()">
-      <div class="modal-content rounded-4 border-0 shadow-lg">
+  <div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true">
+      <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title  text-dark d-flex align-items-center gap-2 mb-0">
             <i class="bi bi-shield-check text-success"></i> Manager / HR Overtime Review
@@ -982,7 +952,7 @@
           </button>
         </div>
         <form (ngSubmit)="saveReviewDecision()">
-          <div class="modal-body p-4">
+          <div class="modal-body">
             <!-- Review Summary Block -->
             <div class="bg-light p-3 rounded-4 mb-4 border">
               <div class="row g-2">
@@ -995,7 +965,7 @@
                 <div class="col-md-6 text-md-end">
                   <span class="text-muted small">Initiation Path:</span>
                   <div>
-                    <span class="badge bg-primary-subtle text-primary">{{ reviewItem.initiatedBy }}</span>
+                    <span class="ui-count-chip">{{ reviewItem.initiatedBy }}</span>
                   </div>
                 </div>
                 <div class="col-md-6 mt-2">
@@ -1007,7 +977,7 @@
                   <div class=" text-dark">{{ reviewItem.date }} ({{ reviewItem.timeSlot }})</div>
                 </div>
                 <div class="col-12 mt-2 pt-2 border-top d-flex justify-content-between flex-wrap gap-2">
-                  <span>Requested Hours: <strong class="text-warning">{{ reviewItem.hoursDisplay }}</strong></span>
+                  <span>Requested Hours: <strong>{{ reviewItem.hoursDisplay }}</strong></span>
                   <span>Work / Project: <strong class="text-dark">{{ reviewItem.project }}</strong></span>
                 </div>
               </div>
@@ -1057,14 +1027,13 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-light" (click)="closeReviewModal()">Cancel</button>
-            <button type="submit" class="btn btn-success px-4 text-white">
+            <button type="button" class="btn btn-secondary" (click)="closeReviewModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary px-4 text-white">
               <i class="bi bi-shield-check"></i> Save Decision & Update Status
             </button>
           </div>
         </form>
       </div>
-    </div>
   </div>
 }
 
@@ -1073,12 +1042,11 @@
 ========================================================== -->
 @if (showSalaryModal && selectedSalaryEmp) {
   <div class="modal-backdrop-custom" (click)="closeSalaryModal()"></div>
-  <div class="modal-wrapper-custom">
-    <div class="modal-dialog-custom modal-lg" (click)="$event.stopPropagation()">
-      <div class="modal-content rounded-4 border-0 shadow-lg">
+  <div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true">
+      <div class="modal-content">
         <div class="modal-header">
           <div class="d-flex align-items-center gap-3">
-            <div class="modal-icon-circle text-white ">
+            <div class="modal-icon-circle">
               <i class="bi bi-wallet2"></i>
             </div>
             <div>
@@ -1090,9 +1058,9 @@
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
-        <div class="modal-body p-4">
+        <div class="modal-body">
           <!-- Summary Banner -->
-          <div class="card p-3 bg-light border-0 mb-4 rounded-3">
+          <div class="ui-sec mb-4">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <div>
                 <h5 class=" text-dark mb-1">{{ selectedSalaryEmp.empName }} ({{ selectedSalaryEmp.empId }})</h5>
@@ -1100,38 +1068,18 @@
                   <i class="bi bi-building me-1"></i> {{ selectedSalaryEmp.dept }} • Official Payroll Status
                 </div>
               </div>
-              <span class="badge bg-success-subtle text-success border border-success-subtle  px-3 py-2">
+              <span class="ui-tag tone-success">
                 <i class="bi bi-check-circle-fill me-1"></i> Synced to Salary Slip
               </span>
             </div>
           </div>
 
           <!-- Salary KPI Grid -->
-          <div class="row g-3 mb-4">
-            <div class="col-md-3">
-              <div class="p-3 bg-white border rounded-3 text-center">
-                <div class="text-muted small ">Monthly Base Salary</div>
-                <div class="fs-6  text-dark">{{ selectedSalaryEmp.monthlySalary }}</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-white border rounded-3 text-center">
-                <div class="text-muted small ">Base Hourly Rate</div>
-                <div class="fs-6  text-primary">{{ selectedSalaryEmp.baseHourlyRate }}</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-white border rounded-3 text-center">
-                <div class="text-muted small ">Approved OT Hours</div>
-                <div class="fs-6  text-warning">{{ selectedSalaryEmp.approvedHours }}</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-success-subtle border border-success-subtle rounded-3 text-center">
-                <div class="text-success small ">Total OT Payout</div>
-                <div class="fs-5 fw-extrabold text-success">{{ selectedSalaryEmp.totalOtSalary }}</div>
-              </div>
-            </div>
+          <div class="ui-meta-grid ui-meta-grid--4 mb-4">
+            <div><div class="ui-meta-label">Monthly Base Salary</div><div class="ui-meta-value">{{ selectedSalaryEmp.monthlySalary }}</div></div>
+            <div><div class="ui-meta-label">Base Hourly Rate</div><div class="ui-meta-value">{{ selectedSalaryEmp.baseHourlyRate }}</div></div>
+            <div><div class="ui-meta-label">Approved OT Hours</div><div class="ui-meta-value">{{ selectedSalaryEmp.approvedHours }}</div></div>
+            <div><div class="ui-meta-label">Total OT Payout</div><div class="ui-meta-value text-success">{{ selectedSalaryEmp.totalOtSalary }}</div></div>
           </div>
 
           <!-- Formula Breakdown Card -->
@@ -1173,7 +1121,7 @@
                     <td>{{ log.hours }}</td>
                     <td>{{ log.multiplier }}</td>
                     <td class="text-end  text-success">{{ log.pay }}</td>
-                    <td><span class="badge bg-success-subtle text-success">{{ log.status }}</span></td>
+                    <td><span class="ui-tag tone-success">{{ log.status }}</span></td>
                   </tr>
                 }
               </tbody>
@@ -1181,13 +1129,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" (click)="printWindow()">
+          <button type="button" class="btn btn-secondary" (click)="printWindow()">
             <i class="bi bi-printer"></i> Print Statement
           </button>
-          <button type="button" class="btn btn-light" (click)="closeSalaryModal()">Close</button>
+          <button type="button" class="btn btn-secondary" (click)="closeSalaryModal()">Close</button>
         </div>
       </div>
-    </div>
   </div>
 }
 
@@ -1196,12 +1143,11 @@
 ========================================================== -->
 @if (showDeptModal && selectedDeptReport) {
   <div class="modal-backdrop-custom" (click)="closeDeptReportModal()"></div>
-  <div class="modal-wrapper-custom">
-    <div class="modal-dialog-custom modal-lg" (click)="$event.stopPropagation()">
-      <div class="modal-content rounded-4 border-0 shadow-lg">
+  <div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true">
+      <div class="modal-content">
         <div class="modal-header">
           <div class="d-flex align-items-center gap-3">
-            <div class="modal-icon-circle text-white ">
+            <div class="modal-icon-circle">
               <i class="bi bi-diagram-3-fill"></i>
             </div>
             <div>
@@ -1213,9 +1159,9 @@
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
-        <div class="modal-body p-4">
+        <div class="modal-body">
           <!-- Department Banner -->
-          <div class="card p-3 bg-light border-0 mb-4 rounded-3">
+          <div class="ui-sec mb-4">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <div>
                 <h5 class=" text-dark mb-1">{{ selectedDeptReport.dept }} Department</h5>
@@ -1223,38 +1169,18 @@
                   <i class="bi bi-file-earmark-bar-graph me-1"></i> Overtime Audit & Financial Expenditure Summary
                 </div>
               </div>
-              <span class="badge bg-primary-subtle text-primary border border-primary-subtle  px-3 py-2">
+              <span class="ui-count-chip">
                 {{ selectedDeptReport.totalEmployees }} Employees
               </span>
             </div>
           </div>
 
           <!-- Department KPI Grid -->
-          <div class="row g-3 mb-4">
-            <div class="col-md-3">
-              <div class="p-3 bg-white border rounded-3 text-center">
-                <div class="text-muted small ">Total Logged</div>
-                <div class="fs-6  text-dark">{{ selectedDeptReport.totalHours }}</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-white border rounded-3 text-center">
-                <div class="text-muted small ">Approved Hours</div>
-                <div class="fs-6  text-success">{{ selectedDeptReport.approvedHours }}</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-white border rounded-3 text-center">
-                <div class="text-muted small ">Rejected Hours</div>
-                <div class="fs-6  text-danger">{{ selectedDeptReport.rejectedHours }}</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 bg-purple-subtle border border-purple-subtle rounded-3 text-center">
-                <div class="text-purple small ">Total Department Cost</div>
-                <div class="fs-5 fw-extrabold text-purple">{{ selectedDeptReport.totalCost }}</div>
-              </div>
-            </div>
+          <div class="ui-meta-grid ui-meta-grid--4 mb-4">
+            <div><div class="ui-meta-label">Total Logged</div><div class="ui-meta-value">{{ selectedDeptReport.totalHours }}</div></div>
+            <div><div class="ui-meta-label">Approved Hours</div><div class="ui-meta-value text-success">{{ selectedDeptReport.approvedHours }}</div></div>
+            <div><div class="ui-meta-label">Rejected Hours</div><div class="ui-meta-value text-danger">{{ selectedDeptReport.rejectedHours }}</div></div>
+            <div><div class="ui-meta-label">Total Department Cost</div><div class="ui-meta-value">{{ selectedDeptReport.totalCost }}</div></div>
           </div>
 
           <!-- Employee OT Breakdown Table inside Department -->
@@ -1281,7 +1207,7 @@
                     <td>{{ b.approvedOt }}</td>
                     <td>{{ b.rateMultiplier }}</td>
                     <td class="text-end  text-success">₹ {{ b.payout | number }}</td>
-                    <td><span class="badge bg-success-subtle text-success">{{ b.status }}</span></td>
+                    <td><span class="ui-tag tone-success">{{ b.status }}</span></td>
                   </tr>
                 }
               </tbody>
@@ -1289,18 +1215,17 @@
           </div>
         </div>
         <div class="modal-footer border-0 pt-0 d-flex justify-content-between flex-wrap gap-2">
-          <button type="button" class="btn btn-outline-secondary" (click)="printWindow()">
+          <button type="button" class="btn btn-secondary" (click)="printWindow()">
             <i class="bi bi-printer"></i> Print / Download PDF
           </button>
           <div class="d-flex gap-2">
-            <button type="button" class="btn btn-success text-white" (click)="downloadDeptReportCSV()">
+            <button type="button" class="btn btn-primary text-white" (click)="downloadDeptReportCSV()">
               <i class="bi bi-file-earmark-spreadsheet"></i> Download CSV Report
             </button>
-            <button type="button" class="btn btn-light" (click)="closeDeptReportModal()">Close</button>
+            <button type="button" class="btn btn-secondary" (click)="closeDeptReportModal()">Close</button>
           </div>
         </div>
       </div>
-    </div>
   </div>
 }
 
@@ -1308,20 +1233,14 @@
      TOAST NOTIFICATION COMPONENT
 ========================================================== -->
 @if (toast) {
-  <div class="toast-wrapper-custom">
-    <div class="toast-card-custom" [class.toast-success]="toast.type === 'success'" [class.toast-danger]="toast.type === 'danger'" [class.toast-warning]="toast.type === 'warning'">
-      <div class="d-flex align-items-start gap-2">
-        <div class="toast-icon">
-          @if (toast.type === 'success') { <i class="bi bi-check-circle-fill"></i> }
-          @else if (toast.type === 'danger') { <i class="bi bi-x-circle-fill"></i> }
-          @else { <i class="bi bi-exclamation-triangle-fill"></i> }
-        </div>
-        <div class="flex-grow-1">
-          <div class=" toast-title">{{ toast.title }}</div>
-          <div class="toast-msg">{{ toast.message }}</div>
-        </div>
-        <button aria-label="Dismiss" type="button" class="btn-close btn-close-sm" (click)="closeToast()"></button>
-      </div>
+  <div class="ui-toast show" role="status" [class.is-danger]="toast.type === 'danger'" [class.is-warning]="toast.type === 'warning'">
+    @if (toast.type === 'success') { <i class="bi bi-check-circle-fill"></i> }
+    @else if (toast.type === 'danger') { <i class="bi bi-x-circle-fill"></i> }
+    @else { <i class="bi bi-exclamation-triangle-fill"></i> }
+    <div>
+      <div>{{ toast.title }}</div>
+      <div class="ui-toast-sub">{{ toast.message }}</div>
     </div>
+    <button type="button" class="ui-toast-close" (click)="closeToast()" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>
   </div>
 }
