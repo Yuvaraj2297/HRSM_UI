@@ -2169,6 +2169,8 @@ $table: '.data-table, .table, .table-modern, .custom-table, .p-datatable-table';
 /* scroll wrapper — rounded frame, horizontal scroll on small screens */
 :is(.data-table-wrap, .table-modern-wrap) {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
   border: 1px solid var(--table-border);
   border-radius: var(--radius-md, var(--radius-md));

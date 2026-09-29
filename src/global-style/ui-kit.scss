@@ -27,6 +27,7 @@
      Link button          .ui-link-btn
      Chips input          .ui-chip-input > .ui-chip (> button) + input + .ui-chip-add
      Soft count chip      .ui-count-chip
+     Corner count badge   .btn > .ui-corner-badge (red count on a button's corner)
      Utility              .min-w-0
 
    — detail views —
@@ -748,6 +749,27 @@
 /* ---------------- utilities ---------------- */
 /* lets a flex child shrink so its text can ellipsis */
 .min-w-0 { min-width: 0; }
+
+/* ---------------- corner count badge ---------------- */
+:has(> .ui-corner-badge) { position: relative; }
+
+.ui-corner-badge {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 6px;
+  border: 2px solid var(--surface);
+  border-radius: var(--radius-pill);
+  background: var(--danger);
+  color: var(--white);
+  font-size: 10.5px;
+  font-weight: 800;
+  pointer-events: none;
+}
 
 /* ---------------- soft count chip ---------------- */
 .ui-count-chip {
