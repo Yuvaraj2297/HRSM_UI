@@ -52,6 +52,8 @@
                           tones also work on .sc-badge / .ui-count-chip)
      Table sub-line       .ui-cell-sub
      List stack           .ui-list (vertical rows, 8px gap)
+     Form + side column   .ui-form-aside > main + aside (240px; stacks under 768px)
+     Paired fields        .ui-field-pair > field + field (from / to; stacks on phones)
      Tinted icon box      .ui-ico[.ui-ico--sm|--lg] + a tone class (.stat-tone-blue …)
    — overlays —
      Dialog               .modal-backdrop-custom + .ui-dialog[.ui-dialog--sm|--lg|--xl] > .modal-content
@@ -1387,9 +1389,11 @@
 }
 
 .ui-legend-dot {
+  flex-shrink: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  background: var(--tone, var(--primary)); /* a .stat-tone-* class or inline colour sets it */
 }
 
 /* ---------------- tag ---------------- */
@@ -1425,6 +1429,24 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* ---------------- form + side column / paired fields ---------------- */
+.ui-form-aside {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 20px;
+
+  @media (max-width: 767.98px) { grid-template-columns: 1fr; }
+}
+
+.ui-field-pair {
+  display: flex;
+  gap: 10px;
+
+  > * { flex: 1 1 0; min-width: 0; }
+
+  @media (max-width: 575.98px) { flex-direction: column; }
 }
 
 /* ---------------- tinted icon box ----------------
@@ -1488,9 +1510,9 @@
   to   { opacity: 1; transform: none; }
 }
 
-/* a dialog opened from inside a drawer stacks above it */
-.ui-drawer ~ .modal-backdrop-custom { z-index: 10008; }
-.ui-drawer ~ .ui-dialog { z-index: 10010; }
+/* a dialog opened from inside a drawer or another dialog stacks above it */
+:is(.ui-drawer, .ui-dialog) ~ .modal-backdrop-custom { z-index: 10008; }
+:is(.ui-drawer, .ui-dialog) ~ .ui-dialog { z-index: 10010; }
 
 /* ---------------- drawer (slides in from the right) ---------------- */
 .ui-drawer-backdrop {

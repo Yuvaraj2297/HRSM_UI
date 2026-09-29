@@ -29,24 +29,9 @@
 
 .leave-row .leave-date { flex: 0 0 180px; }
 
-.apply-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 240px;
-  gap: 20px;
-}
-
-.field-pair {
-  display: flex;
-  gap: 10px;
-
-  > * { flex: 1 1 0; }
-}
-
 .day-type { width: 140px; flex-shrink: 0; }
 
 @media (max-width: 767.98px) {
-  .apply-grid { grid-template-columns: 1fr; }
-  .field-pair { flex-direction: column; }
   .leave-row { flex-wrap: wrap; }
   .leave-row .leave-date { flex-basis: 100%; }
 }

@@ -59,6 +59,9 @@ import { AppSelect } from '../../../../shared/app-select/app-select';
   styleUrl: './leave-report.scss',
 })
 export class LeaveReport implements OnInit {
+  /** leave type -> tone class for the dot in the Leave Type column */
+  readonly typeTone: Record<string, string> = { casual: 'stat-tone-blue', sick: 'stat-tone-amber', earned: 'stat-tone-primary', wfh: 'stat-tone-violet' };
+
   // Navigation Tabs
   activeTab: 'requests' | 'team-calendar' = 'requests';
 
