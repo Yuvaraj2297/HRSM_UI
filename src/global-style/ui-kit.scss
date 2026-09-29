@@ -48,7 +48,8 @@
      Composer             .ui-composer-wrap > .ui-composer (> textarea + .ui-send-btn) + .ui-composer-hint
      Toast                .ui-toast[.show][.is-danger|.is-warning] > i + span | div (> text + .ui-toast-sub)
                             [+ button.ui-toast-close]
-     Process flow         ol.ui-flow > li.ui-flow-step[.is-done] > .ui-step-num + text
+     Process flow         ol.ui-flow > li.ui-flow-step[.is-done|.is-active] > .ui-step-num + text
+                            (or > button.ui-flow-btn > .ui-step-num + text for a clickable stepper)
    — lists —
      Avatar               .ui-avatar (32px; .ui-avatar--sm 28px), background set inline
      Row card             .ui-row-card[.is-static][.bar-red|.bar-blue|.bar-pink]
@@ -1462,7 +1463,29 @@ button.ui-media {
     font-size: 16px;
   }
 
-  &.is-done { color: var(--primary-dark); }
+  &.is-done,
+  &.is-active { color: var(--primary-dark); }
+
+  &.is-done .ui-step-num,
+  &.is-active .ui-step-num { background: var(--primary); color: var(--white); }
+
+  &.is-active .ui-step-num { box-shadow: 0 0 0 4px rgba(var(--primary-rgb), .15); }
+}
+
+.ui-flow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover { background: var(--surface); }
+  &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 }
 
 /* =============================================================
@@ -1918,6 +1941,11 @@ button.ui-media {
   &.is-danger { color: var(--danger); }
   &.is-danger:hover { background: var(--danger-soft); color: var(--danger); }
 }
+
+.ui-menu > hr { margin: 4px 0; border-color: var(--border); opacity: 1; }
+
+/* a menu placed at viewport coordinates (so a scrolling table never clips it) */
+.ui-menu.is-fixed { position: fixed; right: auto; top: auto; }
 
 /* ---------------- collapsible section ---------------- */
 .ui-collapse {
